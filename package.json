@@ -1,0 +1,27 @@
+{
+  "name": "medic-conf-test-harness",
+  "version": "0.1.0",
+  "description": "Test Framework for Medic Projects",
+  "main": "./src/harness.js",
+  "scripts": {
+    "test": "mocha test/*.spec.js --timeout 10000 --slow 500",
+    "build": "./build.sh"
+  },
+  "dependencies": {
+    "enketo-core": "4.41.6",
+    "medic": "git+https://github.com/medic/medic.git",
+    "medic-enketo-xslt": "^1.5.0",
+    "moment": "^2.24.0",
+    "openrosa-xpath-evaluator": "git+https://github.com/medic/openrosa-xpath-evaluator.git",
+    "puppeteer": "^1.12.2",
+    "underscore": "^1.9.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "medic-nootils": "^1.6.0",
+    "raw-loader": "^1.0.0",
+    "rewire": "^4.0.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}

@@ -1,0 +1,770 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Suivi réalisation CPON</h:title>
+    <model>
+      <itext>
+        <translation lang="bm">
+          <text id="/pnc_followup/inputs/contact/_id:hint">
+            <value>Mɔgɔ dɔ sugandi lisi kɔnɔ</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/_id:jr:constraintMsg">
+            <value>Banabagatɔ si mankan ka caya ni san duru (5) ye</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/_id:label">
+            <value>Banabagatɔ tɔgɔ?</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/date_of_birth:label">
+            <value>Bange don</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/name:label">
+            <value>Jamu</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/sex:label">
+            <value>Cɛ/Muso</value>
+          </text>
+          <text id="/pnc_followup/inputs/source:label">
+            <value>Sababu</value>
+          </text>
+          <text id="/pnc_followup/inputs/source_id:label">
+            <value>Lakodonni sababu</value>
+          </text>
+          <text id="/pnc_followup/inputs:label">
+            <value>Banabagatɔ</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc/no:label">
+            <value>Ayi</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc/yes:label">
+            <value>Awɔ</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc:jr:requiredMsg">
+            <value>Ni yɔrɔ lafali ye wajibiye</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc:label">
+            <value>Jibatɔ ka kɔlɔsili kura kɛnɛyasola ye don jumɛn ye ?</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc_date:jr:requiredMsg">
+            <value>Ni yɔrɔ lafali ye wajibiye</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc_date:label">
+            <value>Muso ye don jumɛn suganti a ka jibatɔ kɔlɔsili la?</value>
+          </text>
+          <text id="/pnc_followup/next_pnc:label">
+            <value>Jibatɔ ka kɔlɔsili nata kɛnɛyasola (CPON)</value>
+          </text>
+          <text id="/pnc_followup/patient_age_in_days:label">
+            <value>Tile</value>
+          </text>
+          <text id="/pnc_followup/patient_age_in_months:label">
+            <value>Kalo</value>
+          </text>
+          <text id="/pnc_followup/patient_age_in_years:label">
+            <value>San</value>
+          </text>
+          <text id="/pnc_followup/patient_id:jr:requiredMsg">
+            <value>Ni yɔrɔ lafali ye wajibiye</value>
+          </text>
+          <text id="/pnc_followup/patient_id:label">
+            <value>Banabagatɔ ka nimɔrɔ</value>
+          </text>
+          <text id="/pnc_followup/patient_name:label">
+            <value>Banabagatɔ tɔgɔ n'a jamu</value>
+          </text>
+          <text id="/pnc_followup/patient_sex:label">
+            <value>Cɛ/Muso</value>
+          </text>
+          <text id="/pnc_followup/patient_sex_bm:label">
+            <value>-</value>
+          </text>
+          <text id="/pnc_followup/patient_sex_en:label">
+            <value>-</value>
+          </text>
+          <text id="/pnc_followup/patient_sex_fr:label">
+            <value>-</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_other:jr:requiredMsg">
+            <value>Ni yɔrɔ lafali ye wajibiye</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_other:label">
+            <value>A pereperelatigɛ</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_date:jr:requiredMsg">
+            <value>Ni yɔrɔ lafali ye wajibiye</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_date:label">
+            <value>Jibatɔ tara don jumɛn?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_planned_date:jr:requiredMsg">
+            <value>Ni yɔrɔ lafali ye wajibiye</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_planned_date:label">
+            <value>Jibatɔ kun kan kata kɛnɛyasola don jumɛn?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit/no:label">
+            <value>Ayi</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit/no_come_back:label">
+            <value>Muso ma segin kana SKS ka so</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit/yes:label">
+            <value>Awɔ</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit:jr:requiredMsg">
+            <value>Ni yɔrɔ lafali ye wajibiye</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit:label">
+            <value>Jibatɔ ka kɔlɔsili kɛra kɛnɛyasola wa?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/husband_refusal:label">
+            <value>Furacɛ walima a somɔgɔ donw ma sɔn</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/motivation:label">
+            <value>Muso ma timinadiya sɔrɔ</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/no_time:label">
+            <value>Muso ma masɔrɔ</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/other:label">
+            <value>Kun wɛrɛ</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned:jr:requiredMsg">
+            <value>Ni yɔrɔ lafali ye wajibiye</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned:label">
+            <value>Muna Jibatɔ mata don bolodalen na?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits:label">
+            <value>Jibatɔ ka kɔlɔsili kɛli kɛnɛyasola (CPON)</value>
+          </text>
+          <text id="/pnc_followup/summary/generated_note_name_42:label">
+            <value>Jibatɔ ka kɔlɔsili kunnafoniw&lt;i class="fa fa-user"&gt;&lt;/i&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/next_pnc_not_scheduled:label">
+            <value>&lt;h5 style="text-align:center"&gt;Jibatɔ ka kɔlɔsili nata don ma boloda&lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/no_feedback:label">
+            <value>&lt;h5 style="text-align:center"&gt;kunnafoni fosi te jibatɔ ka kɔlɔsili kan&lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/pnc_not_done:label">
+            <value>&lt;h5 style="text-align:center"&gt;Jibatɔ ka kɔlɔsili makɛ&lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/pnc_not_scheduled:label">
+            <value>&lt;h5 style="text-align:center"&gt;Jibatɔ ka kɔlɔsili ma boloda&lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_follow_up:label">
+            <value>Jibatɔ ka kɔlɔsili nata &lt;i class="fa fa-flag"&gt;&lt;/i&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_follow_up_instructions:label">
+            <value>Jibatɔ ka kɔlɔsili nata don ye <output value=" /pnc_followup/next_pnc/next_pnc_date "/></value>
+          </text>
+          <text id="/pnc_followup/summary/r_next_pnc_date:label">
+            <value>&lt;h5 style=&quot;text-align:center&quot;&gt;Jibatɔ ka kɔlɔsili nata don: <output value=" /pnc_followup/next_pnc/next_pnc_date "/> &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_patient_info:label">
+            <value>&lt;h4 style=&quot;text-align:center;&quot;&gt;<output value=" /pnc_followup/patient_name "/>&lt;/h4&gt;&lt;h5 style=&quot;text-align:center;&quot;&gt;<output value=" /pnc_followup/patient_sex_bm "/> &lt;/h5&gt;&lt;h5 style=&quot;text-align:center;&quot;&gt;<output value=" /pnc_followup/patient_age_display_bm "/> &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_pnc_date:label">
+            <value>&lt;h5 style=&quot;text-align:center&quot;&gt;Jibatɔ ka kɔlɔsili kɛra don min na: <output value=" /pnc_followup/s_pnc_visits/s_pnc_date_show "/> &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_pnc_planned_date:label">
+            <value>&lt;h5 style=&quot;text-align:center&quot;&gt;Don bolodalen jibatɔ ka kɔlɔsili kɔsɔ: <output value=" /pnc_followup/s_pnc_visits/s_pnc_planned_date_show "/>&lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_summary:label">
+            <value>Jibatɔ ka kunnafoniw &lt;I class="fa fa-user"&gt;&lt;/i&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/s_sum_submission:label">
+            <value>&lt;h4 style="text-align:center;"&gt;Dala kafo ki ye ni kunnafonni ninnu ci kaɲɛ walasa ka baara dafa&lt;/h4&gt;</value>
+          </text>
+        </translation>
+        <translation lang="en">
+          <text id="/pnc_followup/inputs/contact/_id:hint">
+            <value>select a person from the list</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/_id:jr:constraintMsg">
+            <value>Patient must be less that 5 years old</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/_id:label">
+            <value>What is the patient name?</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/date_of_birth:label">
+            <value>Date of birth</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/name:label">
+            <value>Name</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/sex:label">
+            <value>Sex</value>
+          </text>
+          <text id="/pnc_followup/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/pnc_followup/inputs/source_id:label">
+            <value>Source ID</value>
+          </text>
+          <text id="/pnc_followup/inputs:label">
+            <value>Patient</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc/no:label">
+            <value>No</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc:label">
+            <value>There is a new PNC visit planned?</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc_date:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc_date:label">
+            <value>When the next PNC visit is planned?</value>
+          </text>
+          <text id="/pnc_followup/next_pnc:label">
+            <value>Next PNC Visit</value>
+          </text>
+          <text id="/pnc_followup/patient_age_in_days:label">
+            <value>Days old</value>
+          </text>
+          <text id="/pnc_followup/patient_age_in_months:label">
+            <value>Months</value>
+          </text>
+          <text id="/pnc_followup/patient_age_in_years:label">
+            <value>Years</value>
+          </text>
+          <text id="/pnc_followup/patient_id:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/pnc_followup/patient_id:label">
+            <value>Patient ID</value>
+          </text>
+          <text id="/pnc_followup/patient_name:label">
+            <value>Patient Name</value>
+          </text>
+          <text id="/pnc_followup/patient_sex:label">
+            <value>Patient Sex</value>
+          </text>
+          <text id="/pnc_followup/patient_sex_bm:label">
+            <value>Patient Sex</value>
+          </text>
+          <text id="/pnc_followup/patient_sex_en:label">
+            <value>Patient Sex</value>
+          </text>
+          <text id="/pnc_followup/patient_sex_fr:label">
+            <value>Patient Sex</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_other:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_other:label">
+            <value>Specify</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_date:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_date:label">
+            <value>When PNC visit was done?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_planned_date:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_planned_date:label">
+            <value>When PNC visit was planned?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit/no:label">
+            <value>No</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit/no_come_back:label">
+            <value>Woman didn't come back to the CHW</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit:label">
+            <value>Did the pregnancy woman perform her PNC Visit?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/husband_refusal:label">
+            <value>Refusal from husband</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/motivation:label">
+            <value>Woman is not motivated</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/no_time:label">
+            <value>Woman didn't have time</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/other:label">
+            <value>Other</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned:label">
+            <value>Why PNC Visit was not done as planned?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits:label">
+            <value>PNC Vsist</value>
+          </text>
+          <text id="/pnc_followup/summary/generated_note_name_42:label">
+            <value>PNC information&lt;i class="fa fa-user"&gt;&lt;/i&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/next_pnc_not_scheduled:label">
+            <value>Next PNC Visit not scheduled</value>
+          </text>
+          <text id="/pnc_followup/summary/no_feedback:label">
+            <value>No information about PNC Visits</value>
+          </text>
+          <text id="/pnc_followup/summary/pnc_not_done:label">
+            <value>PNC Visit not done</value>
+          </text>
+          <text id="/pnc_followup/summary/pnc_not_scheduled:label">
+            <value>PNC Visit not scheduled</value>
+          </text>
+          <text id="/pnc_followup/summary/r_follow_up:label">
+            <value>Follow Up&lt;i class="fa fa-flag"&gt;&lt;/i&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_follow_up_instructions:label">
+            <value><output value=" /pnc_followup/next_pnc/next_pnc_date "/></value>
+          </text>
+          <text id="/pnc_followup/summary/r_next_pnc_date:label">
+            <value>&lt;h5 style=&quot;text-align:center&quot;&gt;Date of next PNC Visit: <output value=" /pnc_followup/next_pnc/next_pnc_date "/> &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_patient_info:label">
+            <value>&lt;h4 style=&quot;text-align:center;&quot;&gt;<output value=" /pnc_followup/patient_name "/>&lt;/h4&gt;&lt;h5 style=&quot;text-align:center;&quot;&gt;<output value=" /pnc_followup/patient_sex_en "/> &lt;/h5&gt;&lt;h5 style=&quot;text-align:center;&quot;&gt;<output value=" /pnc_followup/patient_age_display "/> &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_pnc_date:label">
+            <value>&lt;h5 style=&quot;text-align:center&quot;&gt;PNC Date : <output value=" /pnc_followup/s_pnc_visits/s_pnc_date_show "/> &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_pnc_planned_date:label">
+            <value>&lt;h5 style=&quot;text-align:center&quot;&gt;PNC Scheduled Date: <output value=" /pnc_followup/s_pnc_visits/s_pnc_planned_date_show "/>&lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_summary:label">
+            <value>Patient Summary&lt;I class="fa fa-user"&gt;&lt;/i&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/s_sum_submission:label">
+            <value>&lt;h4 style="text-align:center;"&gt;Be sure you submit to complete this action&lt;/h4&gt;</value>
+          </text>
+        </translation>
+        <translation lang="fr">
+          <text id="/pnc_followup/inputs/contact/_id:hint">
+            <value>Sélectionner une personne dans la liste</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/_id:jr:constraintMsg">
+            <value>L'âge du patient doit être inférieur à 5 ans</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/_id:label">
+            <value>Quel est le nom du patient?</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/date_of_birth:label">
+            <value>Date de naissance</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/name:label">
+            <value>Nom</value>
+          </text>
+          <text id="/pnc_followup/inputs/contact/sex:label">
+            <value>Sexe</value>
+          </text>
+          <text id="/pnc_followup/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/pnc_followup/inputs/source_id:label">
+            <value>Source de l'ID</value>
+          </text>
+          <text id="/pnc_followup/inputs:label">
+            <value>Patient</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc:label">
+            <value>Est-ce qu'il y'a une nouvelle CPON programmée ?</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc_date:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/pnc_followup/next_pnc/s_next_pnc_date:label">
+            <value>Quelle est la date choisie pour la CPON ?</value>
+          </text>
+          <text id="/pnc_followup/next_pnc:label">
+            <value>Prochaine visite CPON</value>
+          </text>
+          <text id="/pnc_followup/patient_age_in_days:label">
+            <value>Jours</value>
+          </text>
+          <text id="/pnc_followup/patient_age_in_months:label">
+            <value>Mois</value>
+          </text>
+          <text id="/pnc_followup/patient_age_in_years:label">
+            <value>Années</value>
+          </text>
+          <text id="/pnc_followup/patient_id:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/pnc_followup/patient_id:label">
+            <value>Identifiant du patient</value>
+          </text>
+          <text id="/pnc_followup/patient_name:label">
+            <value>Nom du patient</value>
+          </text>
+          <text id="/pnc_followup/patient_sex:label">
+            <value>Sex du patient</value>
+          </text>
+          <text id="/pnc_followup/patient_sex_bm:label">
+            <value>Sex du patient</value>
+          </text>
+          <text id="/pnc_followup/patient_sex_en:label">
+            <value>Sex du patient</value>
+          </text>
+          <text id="/pnc_followup/patient_sex_fr:label">
+            <value>Sex du patient</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_other:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_other:label">
+            <value>Spécifier</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_date:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_date:label">
+            <value>Quand est-ce que la CPON a été réalisée ?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_planned_date:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_planned_date:label">
+            <value>Quand est-ce que la CPON avait été programmée ?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit/no_come_back:label">
+            <value>Femme non revenue chez l'ASC</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_pnc_visit:label">
+            <value>Est-ce que la CPON est réalisée par la femme ?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/husband_refusal:label">
+            <value>Refus du mari/autres membres de la famille</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/motivation:label">
+            <value>Manque de motivation de la femme</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/no_time:label">
+            <value>Manque de temps de la femme</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/other:label">
+            <value>Autre</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned:label">
+            <value>Pourquoi la CPON n'a pas été réalisée à la date indiquée?</value>
+          </text>
+          <text id="/pnc_followup/s_pnc_visits:label">
+            <value>Réalisation CPON</value>
+          </text>
+          <text id="/pnc_followup/summary/generated_note_name_42:label">
+            <value>Informations sur les CPN&lt;i class="fa fa-user"&gt;&lt;/i&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/next_pnc_not_scheduled:label">
+            <value>&lt;h5 style="text-align:center"&gt; Prochaine CPON non programmée &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/no_feedback:label">
+            <value>&lt;h5 style="text-align:center"&gt; Aucune Information sur la CPON &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/pnc_not_done:label">
+            <value>&lt;h5 style="text-align:center"&gt;CPON non réalisée &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/pnc_not_scheduled:label">
+            <value>&lt;h5 style="text-align:center"&gt; CPON non programmée &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_follow_up:label">
+            <value>Prochaine visite&lt;i class="fa fa-flag"&gt;&lt;/i&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_follow_up_instructions:label">
+            <value>La prochaine visite de suivi est pour le <output value=" /pnc_followup/next_pnc/next_pnc_date "/></value>
+          </text>
+          <text id="/pnc_followup/summary/r_next_pnc_date:label">
+            <value>&lt;h5 style=&quot;text-align:center&quot;&gt;Date de la prochaine CPON: <output value=" /pnc_followup/next_pnc/next_pnc_date "/> &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_patient_info:label">
+            <value>&lt;h4 style=&quot;text-align:center;&quot;&gt;<output value=" /pnc_followup/patient_name "/>&lt;/h4&gt;&lt;h5 style=&quot;text-align:center;&quot;&gt;<output value=" /pnc_followup/patient_sex_fr "/> &lt;/h5&gt;&lt;h5 style=&quot;text-align:center;&quot;&gt;<output value=" /pnc_followup/patient_age_display_fr "/> &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_pnc_date:label">
+            <value>&lt;h5 style=&quot;text-align:center&quot;&gt;Date de réalisaion de la CPON: <output value=" /pnc_followup/s_pnc_visits/s_pnc_date_show "/> &lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_pnc_planned_date:label">
+            <value>&lt;h5 style=&quot;text-align:center&quot;&gt;Date programmée pour la CPON: <output value=" /pnc_followup/s_pnc_visits/s_pnc_planned_date_show "/>&lt;/h5&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/r_summary:label">
+            <value>Détails du Patient &lt;I class="fa fa-user"&gt;&lt;/i&gt;</value>
+          </text>
+          <text id="/pnc_followup/summary/s_sum_submission:label">
+            <value>&lt;h4 style="text-align:center;"&gt;Soyez sûr que vous avez soumis le formulaire pour compléter cette action&lt;/h4&gt;</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <pnc_followup delimiter="#" id="pnc_followup" prefix="J1!pnc_followup!" version="2017-08-03">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <source>user</source>
+            <source_id/>
+            <contact>
+              <_id/>
+              <name/>
+              <date_of_birth>0</date_of_birth>
+              <sex/>
+            </contact>
+          </inputs>
+          <patient_age_in_years>0</patient_age_in_years>
+          <patient_age_in_months>0</patient_age_in_months>
+          <patient_age_in_days/>
+          <patient_age_display/>
+          <patient_age_display_fr/>
+          <patient_age_display_bm/>
+          <patient_id/>
+          <patient_name/>
+          <patient_sex/>
+          <patient_sex_en/>
+          <patient_sex_fr/>
+          <patient_sex_bm/>
+          <s_pnc_visits>
+            <s_pnc_visit/>
+            <s_pnc_planned_date/>
+            <s_pnc_date/>
+            <s_why_not_pnc_as_planned/>
+            <s_other/>
+            <s_pnc_planned_date_show/>
+            <s_pnc_date_show/>
+          </s_pnc_visits>
+          <next_pnc>
+            <s_next_pnc/>
+            <s_next_pnc_date/>
+            <next_pnc_date/>
+          </next_pnc>
+          <summary>
+            <s_sum_submission/>
+            <r_summary/>
+            <r_patient_info/>
+            <generated_note_name_42/>
+            <r_pnc_planned_date/>
+            <r_pnc_date/>
+            <r_next_pnc_date/>
+            <pnc_not_done/>
+            <pnc_not_scheduled/>
+            <next_pnc_not_scheduled/>
+            <no_feedback/>
+            <r_follow_up/>
+            <r_follow_up_instructions/>
+          </summary>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </pnc_followup>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/pnc_followup/inputs" relevant="./source = 'user'"/>
+      <bind nodeset="/pnc_followup/inputs/source" type="string"/>
+      <bind nodeset="/pnc_followup/inputs/source_id" type="string"/>
+      <bind constraint=" /pnc_followup/patient_age_in_years  &lt; 5" jr:constraintMsg="jr:itext('/pnc_followup/inputs/contact/_id:jr:constraintMsg')" nodeset="/pnc_followup/inputs/contact/_id" type="db:person"/>
+      <bind nodeset="/pnc_followup/inputs/contact/name" type="string"/>
+      <bind nodeset="/pnc_followup/inputs/contact/date_of_birth" type="string"/>
+      <bind nodeset="/pnc_followup/inputs/contact/sex" type="string"/>
+      <bind calculate="floor( difference-in-months(  /pnc_followup/inputs/contact/date_of_birth , today() ) div 12 )" nodeset="/pnc_followup/patient_age_in_years" type="string"/>
+      <bind calculate="difference-in-months(  /pnc_followup/inputs/contact/date_of_birth , today() )" nodeset="/pnc_followup/patient_age_in_months" type="string"/>
+      <bind calculate="floor( decimal-date-time(today()) - decimal-date-time( /pnc_followup/inputs/contact/date_of_birth ) )" nodeset="/pnc_followup/patient_age_in_days" type="string"/>
+      <bind calculate="concat(concat( /pnc_followup/patient_age_in_years , if( /pnc_followup/patient_age_in_years =1,' year and ',' years and ')),concat( /pnc_followup/patient_age_in_months  mod 12, if(( /pnc_followup/patient_age_in_months  mod 12)=1,' month old',' months old')))" nodeset="/pnc_followup/patient_age_display" type="string"/>
+      <bind calculate="concat(concat( /pnc_followup/patient_age_in_years , if( /pnc_followup/patient_age_in_years =1,' an et ',' ans et ')),concat( /pnc_followup/patient_age_in_months  mod 12, if(( /pnc_followup/patient_age_in_months  mod 12)=1,' mois',' mois')))" nodeset="/pnc_followup/patient_age_display_fr" type="string"/>
+      <bind calculate="concat(concat('San ',  /pnc_followup/patient_age_in_years , ' ani '), concat(' Kalo ',  /pnc_followup/patient_age_in_months  mod 12))" nodeset="/pnc_followup/patient_age_display_bm" type="string"/>
+      <bind calculate="../inputs/contact/_id" jr:requiredMsg="jr:itext('/pnc_followup/patient_id:jr:requiredMsg')" nodeset="/pnc_followup/patient_id" required="true()" type="string"/>
+      <bind calculate="../inputs/contact/name" nodeset="/pnc_followup/patient_name" type="string"/>
+      <bind calculate="../inputs/contact/sex" nodeset="/pnc_followup/patient_sex" type="string"/>
+      <bind calculate="if( /pnc_followup/patient_sex  = 'male' or  /pnc_followup/patient_sex  = 'homme' or  /pnc_followup/patient_sex  = 'Homme', 'Male', if( /pnc_followup/patient_sex  = 'female' or  /pnc_followup/patient_sex  = 'femme' or  /pnc_followup/patient_sex  = 'Femme', 'Female', ''))" nodeset="/pnc_followup/patient_sex_en" type="string"/>
+      <bind calculate="if( /pnc_followup/patient_sex  = 'male' or  /pnc_followup/patient_sex  = 'homme' or  /pnc_followup/patient_sex  = 'Homme', 'Homme', if( /pnc_followup/patient_sex  = 'female' or  /pnc_followup/patient_sex  = 'femme' or  /pnc_followup/patient_sex  = 'Femme', 'Femme', ''))" nodeset="/pnc_followup/patient_sex_fr" type="string"/>
+      <bind calculate="if( /pnc_followup/patient_sex  = 'male' or  /pnc_followup/patient_sex  = 'homme' or  /pnc_followup/patient_sex  = 'Homme', 'Cɛ', if( /pnc_followup/patient_sex  = 'female' or  /pnc_followup/patient_sex  = 'femme' or  /pnc_followup/patient_sex  = 'Femme', 'Muso', ''))" nodeset="/pnc_followup/patient_sex_bm" type="string"/>
+      <bind jr:requiredMsg="jr:itext('/pnc_followup/s_pnc_visits/s_pnc_visit:jr:requiredMsg')" nodeset="/pnc_followup/s_pnc_visits/s_pnc_visit" required="true()" type="select1"/>
+      <bind constraint=". &lt; today()" jr:requiredMsg="jr:itext('/pnc_followup/s_pnc_visits/s_pnc_planned_date:jr:requiredMsg')" nodeset="/pnc_followup/s_pnc_visits/s_pnc_planned_date" relevant=" /pnc_followup/s_pnc_visits/s_pnc_visit  = 'yes'" required="true()" type="date"/>
+      <bind constraint=". &lt; today()" jr:requiredMsg="jr:itext('/pnc_followup/s_pnc_visits/s_pnc_date:jr:requiredMsg')" nodeset="/pnc_followup/s_pnc_visits/s_pnc_date" relevant=" /pnc_followup/s_pnc_visits/s_pnc_visit  = 'yes'" required="true()" type="date"/>
+      <bind jr:requiredMsg="jr:itext('/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned:jr:requiredMsg')" nodeset="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned" relevant="decimal-date-time( /pnc_followup/s_pnc_visits/s_pnc_planned_date  ) != decimal-date-time( /pnc_followup/s_pnc_visits/s_pnc_date  ) and  /pnc_followup/s_pnc_visits/s_pnc_date != '' and  /pnc_followup/s_pnc_visits/s_pnc_planned_date != ''" required="true()" type="select1"/>
+      <bind jr:requiredMsg="jr:itext('/pnc_followup/s_pnc_visits/s_other:jr:requiredMsg')" nodeset="/pnc_followup/s_pnc_visits/s_other" relevant=" /pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned  = 'other'" required="true()" type="string"/>
+      <bind calculate="format-date-time( /pnc_followup/s_pnc_visits/s_pnc_planned_date ,&quot;%d/%m/%Y&quot;)" nodeset="/pnc_followup/s_pnc_visits/s_pnc_planned_date_show" type="string"/>
+      <bind calculate="format-date-time( /pnc_followup/s_pnc_visits/s_pnc_date ,&quot;%d/%m/%Y&quot;)" nodeset="/pnc_followup/s_pnc_visits/s_pnc_date_show" type="string"/>
+      <bind nodeset="/pnc_followup/next_pnc" relevant=" /pnc_followup/s_pnc_visits/s_pnc_visit  = 'no' or  /pnc_followup/s_pnc_visits/s_pnc_visit  = 'yes'"/>
+      <bind jr:requiredMsg="jr:itext('/pnc_followup/next_pnc/s_next_pnc:jr:requiredMsg')" nodeset="/pnc_followup/next_pnc/s_next_pnc" required="true()" type="select1"/>
+      <bind constraint=". &gt; today()" jr:requiredMsg="jr:itext('/pnc_followup/next_pnc/s_next_pnc_date:jr:requiredMsg')" nodeset="/pnc_followup/next_pnc/s_next_pnc_date" relevant=" /pnc_followup/next_pnc/s_next_pnc  = 'yes'" required="true()" type="date"/>
+      <bind calculate="format-date-time( /pnc_followup/next_pnc/s_next_pnc_date ,&quot;%d/%m/%Y&quot;)" nodeset="/pnc_followup/next_pnc/next_pnc_date" type="string"/>
+      <bind nodeset="/pnc_followup/summary/s_sum_submission" readonly="true()" type="string"/>
+      <bind nodeset="/pnc_followup/summary/r_summary" readonly="true()" type="string"/>
+      <bind nodeset="/pnc_followup/summary/r_patient_info" readonly="true()" type="string"/>
+      <bind nodeset="/pnc_followup/summary/generated_note_name_42" readonly="true()" type="string"/>
+      <bind nodeset="/pnc_followup/summary/r_pnc_planned_date" readonly="true()" relevant=" /pnc_followup/s_pnc_visits/s_pnc_visit = 'yes'" type="string"/>
+      <bind nodeset="/pnc_followup/summary/r_pnc_date" readonly="true()" relevant=" /pnc_followup/s_pnc_visits/s_pnc_visit = 'yes'" type="string"/>
+      <bind nodeset="/pnc_followup/summary/r_next_pnc_date" readonly="true()" relevant=" /pnc_followup/next_pnc/s_next_pnc = 'yes'" type="string"/>
+      <bind nodeset="/pnc_followup/summary/pnc_not_done" readonly="true()" relevant=" /pnc_followup/s_pnc_visits/s_pnc_visit = 'no'" type="string"/>
+      <bind nodeset="/pnc_followup/summary/pnc_not_scheduled" readonly="true()" relevant=" /pnc_followup/next_pnc/s_next_pnc  = 'no'" type="string"/>
+      <bind nodeset="/pnc_followup/summary/next_pnc_not_scheduled" readonly="true()" relevant=" /pnc_followup/next_pnc/s_next_pnc  = 'no'" type="string"/>
+      <bind nodeset="/pnc_followup/summary/no_feedback" readonly="true()" relevant=" /pnc_followup/s_pnc_visits/s_pnc_visit = 'no_come_back'" type="string"/>
+      <bind nodeset="/pnc_followup/summary/r_follow_up" readonly="true()" relevant=" /pnc_followup/next_pnc/s_next_pnc  = 'yes'" type="string"/>
+      <bind nodeset="/pnc_followup/summary/r_follow_up_instructions" readonly="true()" relevant=" /pnc_followup/next_pnc/s_next_pnc  = 'yes'" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/pnc_followup/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/pnc_followup/inputs">
+      <label ref="jr:itext('/pnc_followup/inputs:label')"/>
+      <input appearance="hidden" ref="/pnc_followup/inputs/source">
+        <label ref="jr:itext('/pnc_followup/inputs/source:label')"/>
+      </input>
+      <input appearance="hidden" ref="/pnc_followup/inputs/source_id">
+        <label ref="jr:itext('/pnc_followup/inputs/source_id:label')"/>
+      </input>
+      <group ref="/pnc_followup/inputs/contact">
+        <input appearance="db-object" ref="/pnc_followup/inputs/contact/_id">
+          <label ref="jr:itext('/pnc_followup/inputs/contact/_id:label')"/>
+          <hint ref="jr:itext('/pnc_followup/inputs/contact/_id:hint')"/>
+        </input>
+        <input appearance="hidden" ref="/pnc_followup/inputs/contact/name">
+          <label ref="jr:itext('/pnc_followup/inputs/contact/name:label')"/>
+        </input>
+        <input appearance="hidden" ref="/pnc_followup/inputs/contact/date_of_birth">
+          <label ref="jr:itext('/pnc_followup/inputs/contact/date_of_birth:label')"/>
+        </input>
+        <input appearance="hidden" ref="/pnc_followup/inputs/contact/sex">
+          <label ref="jr:itext('/pnc_followup/inputs/contact/sex:label')"/>
+        </input>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/pnc_followup/s_pnc_visits">
+      <label ref="jr:itext('/pnc_followup/s_pnc_visits:label')"/>
+      <select1 appearance="horizontal-compact" ref="/pnc_followup/s_pnc_visits/s_pnc_visit">
+        <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_pnc_visit:label')"/>
+        <item>
+          <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_pnc_visit/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_pnc_visit/no:label')"/>
+          <value>no</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_pnc_visit/no_come_back:label')"/>
+          <value>no_come_back</value>
+        </item>
+      </select1>
+      <input appearance="horizontal-compact" ref="/pnc_followup/s_pnc_visits/s_pnc_planned_date">
+        <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_pnc_planned_date:label')"/>
+      </input>
+      <input appearance="horizontal-compact" ref="/pnc_followup/s_pnc_visits/s_pnc_date">
+        <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_pnc_date:label')"/>
+      </input>
+      <select1 appearance="horizontal-compact" ref="/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned">
+        <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned:label')"/>
+        <item>
+          <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/no_time:label')"/>
+          <value>no_time</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/motivation:label')"/>
+          <value>motivation</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/husband_refusal:label')"/>
+          <value>husband_refusal</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_why_not_pnc_as_planned/other:label')"/>
+          <value>other</value>
+        </item>
+      </select1>
+      <input appearance="horizontal-compact" ref="/pnc_followup/s_pnc_visits/s_other">
+        <label ref="jr:itext('/pnc_followup/s_pnc_visits/s_other:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/pnc_followup/next_pnc">
+      <label ref="jr:itext('/pnc_followup/next_pnc:label')"/>
+      <select1 appearance="horizontal-compact" ref="/pnc_followup/next_pnc/s_next_pnc">
+        <label ref="jr:itext('/pnc_followup/next_pnc/s_next_pnc:label')"/>
+        <item>
+          <label ref="jr:itext('/pnc_followup/next_pnc/s_next_pnc/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/pnc_followup/next_pnc/s_next_pnc/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input appearance="horizontal-compact" ref="/pnc_followup/next_pnc/s_next_pnc_date">
+        <label ref="jr:itext('/pnc_followup/next_pnc/s_next_pnc_date:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list summary" ref="/pnc_followup/summary">
+      <input ref="/pnc_followup/summary/s_sum_submission">
+        <label ref="jr:itext('/pnc_followup/summary/s_sum_submission:label')"/>
+      </input>
+      <input appearance="h1 yellow" ref="/pnc_followup/summary/r_summary">
+        <label ref="jr:itext('/pnc_followup/summary/r_summary:label')"/>
+      </input>
+      <input ref="/pnc_followup/summary/r_patient_info">
+        <label ref="jr:itext('/pnc_followup/summary/r_patient_info:label')"/>
+      </input>
+      <input appearance="h1 blue" ref="/pnc_followup/summary/generated_note_name_42">
+        <label ref="jr:itext('/pnc_followup/summary/generated_note_name_42:label')"/>
+      </input>
+      <input ref="/pnc_followup/summary/r_pnc_planned_date">
+        <label ref="jr:itext('/pnc_followup/summary/r_pnc_planned_date:label')"/>
+      </input>
+      <input ref="/pnc_followup/summary/r_pnc_date">
+        <label ref="jr:itext('/pnc_followup/summary/r_pnc_date:label')"/>
+      </input>
+      <input ref="/pnc_followup/summary/r_next_pnc_date">
+        <label ref="jr:itext('/pnc_followup/summary/r_next_pnc_date:label')"/>
+      </input>
+      <input ref="/pnc_followup/summary/pnc_not_done">
+        <label ref="jr:itext('/pnc_followup/summary/pnc_not_done:label')"/>
+      </input>
+      <input ref="/pnc_followup/summary/pnc_not_scheduled">
+        <label ref="jr:itext('/pnc_followup/summary/pnc_not_scheduled:label')"/>
+      </input>
+      <input ref="/pnc_followup/summary/next_pnc_not_scheduled">
+        <label ref="jr:itext('/pnc_followup/summary/next_pnc_not_scheduled:label')"/>
+      </input>
+      <input ref="/pnc_followup/summary/no_feedback">
+        <label ref="jr:itext('/pnc_followup/summary/no_feedback:label')"/>
+      </input>
+      <input appearance="h1 green" ref="/pnc_followup/summary/r_follow_up">
+        <label ref="jr:itext('/pnc_followup/summary/r_follow_up:label')"/>
+      </input>
+      <input ref="/pnc_followup/summary/r_follow_up_instructions">
+        <label ref="jr:itext('/pnc_followup/summary/r_follow_up_instructions:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>
