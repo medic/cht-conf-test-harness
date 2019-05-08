@@ -1,0 +1,13 @@
+{
+  "name": "medic-project-explorer",
+  "version": "1.0.0",
+  "description": "GUI for building and testing forms",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "devDependencies": {
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}

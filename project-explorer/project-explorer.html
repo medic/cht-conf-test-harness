@@ -1,0 +1,30 @@
+<html>
+
+<head>
+  <title>Project Explorer</title>
+  <link rel="stylesheet" type="text/css" href="../dist/inbox.css" />
+  <link rel="stylesheet" type="text/css" href="./project-explorer.css" />
+  <style>body { overflow-y: auto; }</style>
+  <script src="../dist/form-host.dev.js"></script>
+  <script src="../dist/project-explorer.dev.js"></script>
+</head>
+
+<body>
+  <div class="enketo" id="task-report">
+    <div class="left">
+      <a href='#' id='reload' class='btn btn-default'>Reload</a>
+      <div id='formList'></div>
+    </div>
+    <div class="right">
+      <div class="container pages"></div>
+      <div class="form-footer">
+        <div class="loader inline small ng-hide"></div>
+        <button class="btn btn-default previous-page disabled">Prev</button>
+        <button class="btn btn-primary next-page disabled">Next</button>
+        <a class="btn submit btn-primary">Submit</a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
