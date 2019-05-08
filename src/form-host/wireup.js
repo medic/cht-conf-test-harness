@@ -1,9 +1,6 @@
 const $ = require('jquery');
 const EnketoForm = require('enketo-core/src/js/Form');
 
-// TODO: Upchain dependency. This data should be injected through some sort of.
-const { contactSummary } = require('../data.js');
-
 const xmlSerializer = new XMLSerializer();
 class FormWireup {
   constructor(openrosa2html5form, openrosa2xmlmodel) {
@@ -11,9 +8,10 @@ class FormWireup {
     this.modelTransformer = initTransformer(openrosa2xmlmodel);
   }
 
-  render(xformData, content, user) {
+  render(xformData, content, user, contactSummary) {
     if (!xformData || typeof xformData !== 'string') throw new Error('Invalid argument: xformData');
     if (!content || typeof content !== 'object') throw new Error('Invalid argument: content');
+    if (!contactSummary || !Array.isArray(contactSummary)) throw new Error('Invalid argument: contactSummary');
   
     const xform = $.parseXML(xformData);
     setLanguageOnForm(xform, 'en');

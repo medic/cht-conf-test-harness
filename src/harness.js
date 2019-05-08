@@ -1,13 +1,11 @@
 const _ = require('underscore');
 const fs = require('fs');
+const process = require('process');
 const path = require('path');
 const puppeteer = require('puppeteer');
 const getNoolsInstances = require('./get-nools-instances');
 const mergeInstanceToTarget = require('./merge-instances-to-target');
 const toDate = require('./toDate');
-
-// TODO: Inject this data information through some sort of nice interface
-const { user, content } = require('./data');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
 if (!fs.existsSync(pathToHost)) {
@@ -16,15 +14,21 @@ if (!fs.existsSync(pathToHost)) {
 
 class Harness {
   constructor(options = {}) {
+    const defaultDirectory = options.directory || process.cwd();
     this.options = _.defaults(options, {
       verbose: false,
       reportFormErrors: true,
-      xformFolderPath: path.join(__dirname, 'forms'),
-      appSettingsPath: path.join(__dirname, '../../app_settings.json'),
+      xformFolderPath: path.join(defaultDirectory, 'forms'),
+      appSettingsPath: path.join(defaultDirectory, './app_settings.json'),
+      defaultDataPath: path.join(defaultDirectory, './test.defaults.json'),
     });
-    this.log = (...args) => options.verbose && console.log('HarnessRunner', ...args);
-    const appSettingsText = readFileSync(this.options.appSettingsPath);
-    this.appSettings = JSON.parse(appSettingsText);
+
+    const fileBasedDefaults = loadJsonFromFile(this.options.defaultDataPath);
+    this.options = _.defaults(this.options, fileBasedDefaults);
+
+    this.log = (...args) => this.options.verbose && console.log('HarnessRunner', ...args);
+    
+    this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     this.clear();
   }
 
@@ -54,7 +58,7 @@ class Harness {
     this.state = {
       console: [],
       resources: [],
-      contacts: [_.clone(user.parent), _.clone(content.contact)],
+      contacts: [_.clone(this.options.user.parent), _.clone(this.options.content.contact)],
       reports: [],
     };
     this.onConsole = () => {};
@@ -62,11 +66,15 @@ class Harness {
     return this.page && await this.page.evaluate(() => delete window.now);
   }
 
-  async loadForm(formName, formContent = content, formUser = user) {
+  async loadForm(formName,
+    formContent = this.options.content,
+    formUser = this.options.user,
+    formContactSummary = this.options.contactSummary,
+  ) {
     this.log(`Loading form ${formName}...`);
     const xform = readFileSync(this.options.xformFolderPath, `${formName}.xml`);
     this.onConsole = msg => this.state.console.push(msg);
-    await this.page.evaluate((innerFormName, innerForm, innerContent, innerUser) => window.loadXform(innerFormName, innerForm, innerContent, innerUser), formName, xform, formContent, formUser);
+    await this.page.evaluate((innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary), formName, xform, formContent, formUser, formContactSummary);
     this.state.pageContent = await this.page.content();
     return this.state;
   }
@@ -102,9 +110,9 @@ class Harness {
     const [firstParam] = answers;
     if (!Array.isArray(firstParam)) {
       if (typeof firstParam === 'object') {
-        await this.loadForm(firstParam.form, firstParam.content || content, firstParam.user || user);
+        await this.loadForm(firstParam.form, firstParam.content || this.options.content, firstParam.user || this.options.user);
       } else {
-        await this.loadForm(firstParam, content);
+        await this.loadForm(firstParam, this.options.content);
       }
 
       answers.shift();
@@ -132,9 +140,10 @@ class Harness {
       now: () => new Date(this.getNow()),
       resolved: false,
       title: undefined,
+      user: this.options.user,
     });
     
-    const { tasks } = await getNoolsInstances(this.appSettings, user, this.state.contacts, this.state.reports, options.now);
+    const { tasks } = await getNoolsInstances(this.appSettings, options.user, this.state.contacts, this.state.reports, options.now);
     return tasks
       .filter(task => !!options.resolved || !task.resolved)
       .filter(task => !options.title || task.title === options.title);
@@ -144,9 +153,10 @@ class Harness {
     options = _.defaults(options, {
       now: () => new Date(this.getNow()),
       type: undefined,
+      user: this.options.user,
     });
     
-    const { targets } = await getNoolsInstances(this.appSettings, user, this.state.contacts, this.state.reports, options.now);
+    const { targets } = await getNoolsInstances(this.appSettings, options.user, this.state.contacts, this.state.reports, options.now);
     const targetsByUniqId = targets.reduce((prev, curr) => Object.assign(prev, { [curr._id]: curr }), {});
     return Object.values(targetsByUniqId)
       .filter(target =>
@@ -183,15 +193,24 @@ class Harness {
       .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_UNKNOWN_URL_SCHEME');
   }
 
+  get defaultUser() { return _.clone(this.options.user); }
+  get defaultContent() { return _.clone(this.options.content); }
+  get defaultContactSummary() { return _.clone(this.options.contactSummary); }
+
   pushMockedReport(report) {
     report = _.defaults(report, {
-      patient_id: content.contact._id,
+      patient_id: this.options.content.contact._id,
       reported_date: 1,
       fields: {},
     });
 
     this.state.reports.push(report);
   }
+};
+
+const loadJsonFromFile = filePath => {
+  const content = readFileSync(filePath);
+  return JSON.parse(content);
 };
 
 const readFileSync = (...args) => {

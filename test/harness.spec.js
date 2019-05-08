@@ -4,8 +4,8 @@ const HarnessRunner = require('../src/harness');
 
 const formName = 'pnc_followup';
 const harness = new HarnessRunner({
+  directory: path.join(__dirname, 'collateral'),
   xformFolderPath: path.join(__dirname, 'collateral'),
-  appSettingsPath: path.join(__dirname, 'collateral', 'app_settings.json'),
   verbose: false,
   reportFormErrors: false,
 });
@@ -206,9 +206,8 @@ describe('Harness tests', () => {
 
   describe('special forms', () => {
     it('patient_assessment with user-based fields', async () => {
-      const { content, user } = require('../src/data');
-      const mrdtUser = Object.assign({}, user, { is_in_mrdt: true });
-      const result = await harness.fillForm({ form: 'patient_assessment_over_5', content, user: mrdtUser },
+      const mrdtUser = Object.assign({}, harness.defaultUser, { is_in_mrdt: true });
+      const result = await harness.fillForm({ form: 'patient_assessment_over_5', user: mrdtUser },
         ['home_visit'],
         ['c_assessment_time_2', 'c_when_illness_2'],
         ['yes', ...Array(8).fill('no'), 'unavailable', 'watching'],

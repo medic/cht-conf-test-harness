@@ -12,6 +12,7 @@
     "medic": "git+https://github.com/medic/medic.git",
     "medic-enketo-xslt": "^1.5.0",
     "moment": "^2.24.0",
+    "nools": "^0.4.4",
     "openrosa-xpath-evaluator": "git+https://github.com/medic/openrosa-xpath-evaluator.git",
     "puppeteer": "^1.12.2",
     "underscore": "^1.9.1"
@@ -19,6 +20,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "medic-nootils": "^1.6.0",
+    "mocha": "^6.1.4",
     "raw-loader": "^1.0.0",
     "rewire": "^4.0.1",
     "webpack": "^4.29.6",
