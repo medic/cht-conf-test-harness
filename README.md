@@ -58,3 +58,13 @@ A test which confirms a task gets triggered and then resolved:
   });
 ```
 
+## Mocking Contextual Data
+
+Medic's Webapp makes three inputs available to enketo XForms:
+
+1. **User** - This represents the current user that is logged into the system when opening a form, or viewing a task/target. If your form behaves differently for different user roles or user data.
+1. **Content** - The "content" is an arbitrary object that is passed into a form when it is loaded. Tasks have the ability to set this data through the [modifyContent](https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema) interface. And Contact Summaries have the ability to the content via the [context](https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context) attribute. 
+1. **ContactSummary** - This is an xml representation of the [context](https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context) from a Contact Summary and is passed as an Enketo extra. You can read about Enketo extras [here](https://enketo.org/xforms/). 
+
+Together with time, this data represents all of the inputs controlling how your forms, tasks, and targets appear. Medic-config-test-harness provides interfaces for mocking all inputs so you can easily test all possible behaviors of your configuration. To help reduce the verbosity of test cases, you can provide default values for all of these inputs by creating a file called `test.defaults.json` in your configuration project's ([example](https://github.com/medic/medic-conf-test-harness/blob/master/test/collateral/test.defaults.json)).
+
