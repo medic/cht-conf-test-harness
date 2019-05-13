@@ -60,7 +60,7 @@ A test which confirms a task gets triggered and then resolved:
 
 ## Mocking Contextual Data
 
-Medic's Webapp makes three inputs available to enketo XForms:
+Medic's Webapp makes three inputs available to enketo your XForms, contact summary, tasks, and targets.
 
 1. **User** - This represents the current user that is logged into the system when opening a form, or viewing a task/target. If your form behaves differently for different user roles or user data.
 1. **Content** - The "content" is an arbitrary object that is passed into a form when it is loaded. Tasks have the ability to set this data through the [modifyContent](https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema) interface. And Contact Summaries have the ability to the content via the [context](https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context) attribute. 
