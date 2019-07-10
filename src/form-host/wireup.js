@@ -11,7 +11,7 @@ class FormWireup {
   render(xformData, content, user, contactSummary) {
     if (!xformData || typeof xformData !== 'string') throw new Error('Invalid argument: xformData');
     if (!content || typeof content !== 'object') throw new Error('Invalid argument: content');
-    if (!contactSummary || !Array.isArray(contactSummary)) throw new Error('Invalid argument: contactSummary');
+    if (!contactSummary) throw new Error('Invalid argument: contactSummary');
   
     const xform = $.parseXML(xformData);
     setLanguageOnForm(xform, 'en');
