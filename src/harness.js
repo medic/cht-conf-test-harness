@@ -45,7 +45,7 @@ class Harness {
    * @param {string} [options.directory=process' working directory] Path to directory of configuration files being tested
    * @param {string} [options.xformFolderPath=path.join(options.directory, 'forms')] Path to directory containing xform files
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
-   * @param {string} [options.harnessDataPath=path.join(options.directory, 'test.defaults.json')] Path to harness configuration file
+   * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
    * @param {HarnessInputs} [options.inputs=loaded from harnessDataPath] The default {@link HarnessInputs} for loading and completing a form
    * @param {boolean} [options.headless=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
@@ -324,17 +324,17 @@ class Harness {
   }
 
   /**
-   * `user` from the {@link HarnessInputs} set through the constructor of the test.defaults.json file
+   * `user` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
    */
   get user() { return _.clone(this.options.inputs.user); }
 
   /**
-   * `content` from the {@link HarnessInputs} set through the constructor of the test.defaults.json file
+   * `content` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
    */
   get content() { return _.clone(this.options.inputs.content); }
 
   /**
-   * `contactSummary` from the {@link HarnessInputs} set through the constructor of the test.defaults.json file
+   * `contactSummary` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
    */
   get contactSummary() { return _.clone(this.options.inputs.contactSummary); }
 

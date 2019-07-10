@@ -102,7 +102,7 @@
 
         
                 
-<h4 class="name" id="Error">Error</h4>
+<h4 class="name" id="FillError">FillError</h4>
 
 
 
@@ -231,7 +231,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-host_form-filler.js.html">form-host/form-filler.js</a>, <a href="form-host_form-filler.js.html#line21">line 21</a>
+        <a href="form-host_form-filler.js.html">form-host/form-filler.js</a>, <a href="form-host_form-filler.js.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -306,7 +306,7 @@
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;<a href="global.html#Error">Error</a>></span>
+<span class="param-type">Array.&lt;<a href="global.html#FillError">FillError</a>></span>
 
 
             
@@ -402,6 +402,174 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="form-host_form-filler.js.html">form-host/form-filler.js</a>, <a href="form-host_form-filler.js.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="HarnessInputs">HarnessInputs</h4>
+
+
+
+
+<div class="description">
+    Medic's Webapp makes several inputs available to your XForms, tasks, and targets.
+The data of the HarnessInputs represents all of the inputs controlling how forms, tasks, and targets behave within the WebApp. 
+Medic-config-test-harness provides interfaces for mocking all inputs so you can easily test the possible behaviors of your configuration. 
+To help reduce the verbosity of test cases, you can provide default values for all of these inputs by creating a file called `harness.defaults.json` in your configuration project's ([example](https://github.com/medic/medic-conf-test-harness/blob/master/harness.defaults.json.example)).
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>user</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">This represents the current user that is logged into the system. 
+In your XForm, this data mocks the `inputs/user` XPath. And in your task/target code, this data mocks the global `user` object. 
+Use this for testing whenever your forms, tasks, or targets behaves differently for different users or are expected to capture user data.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>content</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The "content" is an object that is passed into the XForm when it is loaded.
+Tasks have the ability to set this data through the <a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema">modifyContent</a> interface.
+Contact Summaries have the ability to set this via the <a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context">context</a> attribute.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>contactSummary</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">This is an xml representation of the <a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context">context</a> from a Contact Summary and is passed as an Enketo extra.
+You can read about <a href="https://enketo.org/xforms/">Enketo extras</a>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jsdocs.js.html">jsdocs.js</a>, <a href="jsdocs.js.html#line32">line 32</a>
     </li></ul></dd>
     
 
@@ -579,6 +747,10 @@
 
 
 
+
+<div class="description">
+    An emitted target. The structure of emitted targets may vary by the version of medic-conf and the version of the medic webapp. In general, target have this structure.
+</div>
 
 
 
@@ -899,7 +1071,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jsdocs.js.html">jsdocs.js</a>, <a href="jsdocs.js.html#line15">line 15</a>
+        <a href="jsdocs.js.html">jsdocs.js</a>, <a href="jsdocs.js.html#line16">line 16</a>
     </li></ul></dd>
     
 
@@ -921,6 +1093,10 @@
 
 
 
+
+<div class="description">
+    An emitted task. The structure of emitted tasks may vary by the version of medic-conf and the version of the medic webapp. In general, tasks have this structure.
+</div>
 
 
 
@@ -1252,7 +1428,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Tue Jul 09 2019 22:01:48 GMT-0700 (PDT)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Wed Jul 10 2019 13:20:32 GMT-0700 (PDT)
 </footer>
 
 <script> prettyPrint(); </script>

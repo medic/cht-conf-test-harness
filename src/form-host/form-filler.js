@@ -12,14 +12,16 @@ class FormFiller {
   }
 
   /**
-   * @typedef {Object} FillResult An object describing the result of filling a form
-   * @property {Error[]} errors A list of errors 
+   * An object describing the result of filling a form
+   * @typedef {Object} FillResult
+   * @property {FillError[]} errors A list of errors 
    * @property {string} section The page number on which the errors occurred
    * @property {Object} report The report object which resulted from submitting the filled report. Undefined if an error blocks form submission.
    */
 
   /**
-   * @typedef {Object} Error An object describing an error which has occurred
+   * An object describing an error which has occurred
+   * @typedef {Object} FillError 
    * @property {string} type A classification of the error [ 'validation', 'general', 'page' ]
    * @property {string} msg Description of the error 
    */

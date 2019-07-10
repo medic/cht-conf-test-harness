@@ -5,8 +5,8 @@
   "main": "./src/harness.js",
   "scripts": {
     "test": "mocha test/*.spec.js --timeout 10000 --slow 500",
-    "build": "./build.sh",
-    "docs": "jsdoc src/*.js src/**/*.js"
+    "build": "npm run docs && ./build.sh",
+    "docs": "jsdoc src/*.js src/**/*.js ./JSDOC.md"
   },
   "dependencies": {
     "enketo-core": "4.41.6",
