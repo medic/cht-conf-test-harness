@@ -104,7 +104,7 @@ const findCurrentElement = function(elem, name, childMatcher) {
   if (childMatcher) {
     var found = elem.find(childMatcher(name));
     if (found.length > 1) {
-      $log.warn('Using the matcher "' + childMatcher() + '" we found ' + found.length + ' elements, ' +
+      console.warn('Using the matcher "' + childMatcher() + '" we found ' + found.length + ' elements, ' +
         'we should only ever bind one.', elem);
     }
     return found;

@@ -1,11 +1,12 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
     "test": "mocha test/*.spec.js --timeout 10000 --slow 500",
-    "build": "./build.sh"
+    "build": "npm run docs && ./build.sh",
+    "docs": "jsdoc src/*.js src/**/*.js ./JSDOC.md"
   },
   "dependencies": {
     "enketo-core": "4.41.6",
