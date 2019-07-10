@@ -104,6 +104,10 @@ class Harness {
     return this.browser && this.browser.close();
   }
 
+  /**
+   * Resets the {@link HarnessState}
+   * @returns {Promise} Resolves when the state of the harness when cleared
+   */
   async clear() {
     this._state = {
       console: [],
@@ -194,7 +198,7 @@ class Harness {
     if (!Array.isArray(firstParam)) {
       if (typeof firstParam === 'object') {
         const inputs = _.defaults(firstParam, this.options.inputs);
-        await this.loadForm(firstParam.form, inputs);
+        await this.loadForm(firstParam.form, inputs);State
       } else {
         await this.loadForm(firstParam);
       }
@@ -227,7 +231,7 @@ class Harness {
    * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
    * 
-   * @returns {Task[]} An array of tasks which would be visible to the user given the current {@link State}
+   * @returns {Task[]} An array of tasks which would be visible to the user given the current {@link HarnessState}
    */
   async getTasks(options) {
     options = _.defaults(options, {
@@ -344,6 +348,7 @@ class Harness {
    * @property {Object[]} console Each element represents an event within Chrome console.
    * @property {Object[]} contacts All contacts known to nools.
    * @property {Object[]} reports All reports known to nools.
+   * @property {string} pageContent The HTML of the current form loaded by the harness.
    */
 
   /**
