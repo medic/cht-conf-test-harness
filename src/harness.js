@@ -198,7 +198,7 @@ class Harness {
     if (!Array.isArray(firstParam)) {
       if (typeof firstParam === 'object') {
         const inputs = _.defaults(firstParam, this.options.inputs);
-        await this.loadForm(firstParam.form, inputs);State
+        await this.loadForm(firstParam.form, inputs);
       } else {
         await this.loadForm(firstParam);
       }
