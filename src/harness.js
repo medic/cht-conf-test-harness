@@ -238,7 +238,7 @@ class Harness {
       now: () => new Date(this.getNow()),
       resolved: false,
       title: undefined,
-      user: this.options.inputs.user,
+      user: this.user,
     });
     
     const { tasks } = await getNoolsInstances(this.appSettings, options.user, this._state.contacts, this._state.reports, options.now);
@@ -251,10 +251,10 @@ class Harness {
     options = _.defaults(options, {
       now: () => new Date(this.getNow()),
       type: undefined,
-      user: this.options.inputs.user,
+      user: this.user,
     });
     
-    const { targets } = await getNoolsInstances(this.appSettings, options.inputs.user, this._state.contacts, this._state.reports, options.now);
+    const { targets } = await getNoolsInstances(this.appSettings, options.user, this._state.contacts, this._state.reports, options.now);
     const targetsByUniqId = targets.reduce((prev, curr) => Object.assign(prev, { [curr._id]: curr }), {});
     return Object.values(targetsByUniqId)
       .filter(target =>
@@ -313,7 +313,7 @@ class Harness {
    * expect(actual).to.be.empty;
    */
   async loadAction(action) {
-    return this.loadForm(action.form, action.content);
+    return this.loadForm(action.form, { content: action.content });
   }
 
   /**

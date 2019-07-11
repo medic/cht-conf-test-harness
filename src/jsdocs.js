@@ -30,17 +30,15 @@
  */
 
 /**
- * Medic's Webapp makes several inputs available to your XForms, tasks, and targets.
- * The data of the HarnessInputs represents all of the inputs controlling how forms, tasks, and targets behave within the WebApp. 
  * Medic-config-test-harness provides interfaces for mocking all inputs so you can easily test the possible behaviors of your configuration. 
- * To help reduce the verbosity of test cases, you can provide default values for all of these inputs by creating a file called `harness.defaults.json` in your configuration project's ([example](https://github.com/medic/medic-conf-test-harness/blob/master/harness.defaults.json.example)).
+ * The data of the HarnessInputs represents all of the inputs controlling how forms, tasks, and targets behave within the WebApp. 
+ * To help reduce the verbosity of harness setup, you can provide default values for these inputs through a file called `harness.defaults.json` in your configuration project's folder ([example](https://github.com/medic/medic-conf-test-harness/blob/master/harness.defaults.json.example)).
  * @typedef HarnessInputs
  * @property {Object} user This represents the current user that is logged into the system. 
- * In your XForm, this data mocks the `inputs/user` XPath. And in your task/target code, this data mocks the global `user` object. 
- * Use this for testing whenever your forms, tasks, or targets behaves differently for different users or are expected to capture user data.
- * @property {Object} content The "content" is an object that is passed into the XForm when it is loaded.
+ * In your XForm, this data mocks the `inputs/user` data. And in the task and target code, this data mocks the global `user` object.
+ * Use this for testing whenever your forms, tasks, or targets behave differently for whenever different users are expected to capture user data.
+ * @property {Object} content This is an object that is passed into the XForm when it is loaded.
  * Tasks have the ability to set this data through the [modifyContent]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema} interface.
  * Contact Summaries have the ability to set this via the [context]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context} attribute.
- * @property {Object} contactSummary This is an xml representation of the [context]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context} from a Contact Summary and is passed as an Enketo extra.
- * You can read about [Enketo extras]{@link https://enketo.org/xforms/}.
+ * @property {Object} contactSummary This is an xml representation of the [context]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context} from a Contact Summary and is passed as an [Enketo extra]{@link https://enketo.org/xforms/}.
  */
