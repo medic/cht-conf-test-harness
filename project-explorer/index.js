@@ -1,6 +1,6 @@
 const $ = require('jquery');
 
-const { content, user, contactSummary } = require('../../config-lg/lg-kenya/harness.defaults.json');
+const { content, user, contactSummary } = require('../dist/harness.defaults.json');
 const projectAssets = require('../dist/project-assets');
 const fileNames = Object.keys(projectAssets);
 

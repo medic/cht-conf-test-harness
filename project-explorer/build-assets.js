@@ -24,6 +24,17 @@ if (!fs.existsSync(pathToProject)) {
 const outputPath = argv['output'] || path.resolve(__dirname, '../dist', 'project-assets.js');
 console.log(`Building assets from project in ${pathToProject}`);
 
+const harnessDefaultSourcePath = path.resolve(pathToProject, 'harness.defaults.json');
+const harnessDefaultDestinationPath = path.resolve(__dirname, '../dist', 'harness.defaults.json');
+if (fs.existsSync(harnessDefaultSourcePath)) {
+  if (fs.existsSync(harnessDefaultDestinationPath)) {
+    fs.unlinkSync(harnessDefaultDestinationPath);
+  }
+
+  console.log(`Copying ${harnessDefaultSourcePath} to ${harnessDefaultDestinationPath}`);
+  fs.copyFileSync(harnessDefaultSourcePath, harnessDefaultDestinationPath);
+}
+
 const formsInDirectory = [
     pathToProject,
     path.join(pathToProject, 'forms'),
