@@ -1,9 +1,9 @@
 const path = require('path');
 const { expect } = require('chai');
-const HarnessRunner = require('../src/harness');
+const Harness = require('../src/harness');
 
 const formName = 'pnc_followup';
-const harness = new HarnessRunner({
+const harness = new Harness({
   directory: path.join(__dirname, 'collateral'),
   xformFolderPath: path.join(__dirname, 'collateral'),
   verbose: false,
@@ -134,73 +134,123 @@ describe('Harness tests', () => {
       });
     });
 
-    describe('getTasks', () => {
-      beforeEach(async () => await harness.setNow('2000-01-01'));
+    describe('multi-select', () => {
+      it('using a list of booleans', async () => {
+        const result = await harness.fillForm('select_multiple', ['true', 'false,true,true,false,false']);
+        expect(result.errors).to.be.empty;
 
-      it('followup task present one day before schedule', async () => {
-        const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
-        expect(formResult.errors).to.be.empty;
-    
-        const tasks = await harness.getTasks({ now: '2000-01-07' });
-        expect(tasks).to.have.property('length', 1);
-        expect(tasks[0]).to.nested.include({
-          'contact._id': 'patient_id_data',
-          resolved: false,
-          icon: 'newborn',
-          'actions[0].form': 'pnc_followup',
+        expect(result.report).to.nested.deep.include({
+          'fields.test_1': {
+            risks_past: 'heart_condition',
+            risks_new: 'asthma high_blood_pressure',
+          },
         });
       });
-    
-      it('followup task present three days after schedule', async () => {
-        const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
-        expect(formResult.errors).to.be.empty;
-    
-        const tasks = await harness.getTasks({ now: '2000-01-10' });
-        expect(tasks).to.have.property('length', 1);
-        expect(tasks[0]).to.nested.include({ resolved: false });
-      });
-    
-      it('followup task not present at time of scheduling', async () => {
-        const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
-        expect(formResult.errors).to.be.empty;
-        expect(await harness.getTasks()).to.be.empty;
-      });
-    });
-    
-    describe('loadAction', () => {
-      beforeEach(async () => await harness.setNow('2000-01-01'));
-      it('tasks action resolves task', async () => {
-        const scheduledDate = '2000-01-07';
-        const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', scheduledDate]);
-        expect(initialResult.errors).to.be.empty;
-    
-        await harness.setNow(scheduledDate);
-        const tasks = await harness.getTasks();
-        expect(tasks).to.have.property('length', 1);
-        
-        await harness.loadAction(tasks[0].actions[0]);
-        const followupResult = await harness.fillForm(['no_come_back']);
-        expect(followupResult.errors).to.be.empty;
 
-        // This data is the result of a build-time shim forced into enketo
-        expect(followupResult.report).to.nested.include({
-          'fields.inputs.source': 'task',
-          'fields.inputs.source_id': '1',
+      it('using a list of values', async () => {
+        const result = await harness.fillForm('select_multiple', ['none', 'asthma,high_blood_pressure']);
+        expect(result.errors).to.be.empty;
+
+        expect(result.report).to.nested.deep.include({
+          'fields.test_1': {
+            risks_past: 'none',
+            risks_new: 'asthma high_blood_pressure',
+          },
         });
-    
-        const actual = await harness.getTasks();
-        expect(actual).to.be.empty;
+      });
+
+      it('using an array of booleans', async () => {
+        const result = await harness.fillForm('select_multiple', [[true], [false,true,true,false,false]]);
+        expect(result.errors).to.be.empty;
+
+        expect(result.report).to.nested.deep.include({
+          'fields.test_1': {
+            risks_past: 'heart_condition',
+            risks_new: 'asthma high_blood_pressure',
+          },
+        });
+      });
+
+      it('using an array of values', async () => {
+        const result = await harness.fillForm('select_multiple', [['none'], ['asthma', 'high_blood_pressure']]);
+        expect(result.errors).to.be.empty;
+
+        expect(result.report).to.nested.deep.include({
+          'fields.test_1': {
+            risks_past: 'none',
+            risks_new: 'asthma high_blood_pressure',
+          },
+        });
       });
     });
+  });
 
-    it('control now', async () => {
-      const expectedDate = '01/01/1990';
-      harness.setNow(expectedDate);
-      const result = await harness.fillForm(formName, ['no_come_back']);
-      expect(result.report.reported_date).to.eq(new Date(expectedDate).getTime());
-      expect(result.report.fields).to.include({
-        patient_age_in_years: '19',
+  describe('getTasks', () => {
+    beforeEach(async () => await harness.setNow('2000-01-01'));
+
+    it('followup task present one day before schedule', async () => {
+      const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
+      expect(formResult.errors).to.be.empty;
+  
+      const tasks = await harness.getTasks({ now: '2000-01-07' });
+      expect(tasks).to.have.property('length', 1);
+      expect(tasks[0]).to.nested.include({
+        'contact._id': 'patient_id_data',
+        resolved: false,
+        icon: 'newborn',
+        'actions[0].form': 'pnc_followup',
       });
+    });
+  
+    it('followup task present three days after schedule', async () => {
+      const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
+      expect(formResult.errors).to.be.empty;
+  
+      const tasks = await harness.getTasks({ now: '2000-01-10' });
+      expect(tasks).to.have.property('length', 1);
+      expect(tasks[0]).to.nested.include({ resolved: false });
+    });  
+  
+    it('followup task not present at time of scheduling', async () => {
+      const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
+      expect(formResult.errors).to.be.empty;
+      expect(await harness.getTasks()).to.be.empty;
+    });
+  });
+  
+  describe('loadAction', () => {
+    beforeEach(async () => await harness.setNow('2000-01-01'));
+    it('tasks action resolves task', async () => {
+      const scheduledDate = '2000-01-07';
+      const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', scheduledDate]);
+      expect(initialResult.errors).to.be.empty;
+  
+      await harness.setNow(scheduledDate);
+      const tasks = await harness.getTasks();
+      expect(tasks).to.have.property('length', 1);
+      
+      await harness.loadAction(tasks[0].actions[0]);
+      const followupResult = await harness.fillForm(['no_come_back']);
+      expect(followupResult.errors).to.be.empty;
+
+      // This data is the result of a build-time shim forced into enketo
+      expect(followupResult.report).to.nested.include({
+        'fields.inputs.source': 'task',
+        'fields.inputs.source_id': '1',
+      });
+  
+      const actual = await harness.getTasks();
+      expect(actual).to.be.empty;
+    });
+  });
+
+  it('control now', async () => {
+    const expectedDate = '01/01/1990';
+    harness.setNow(expectedDate);
+    const result = await harness.fillForm(formName, ['no_come_back']);
+    expect(result.report.reported_date).to.eq(new Date(expectedDate).getTime());
+    expect(result.report.fields).to.include({
+      patient_age_in_years: '19',
     });
   });
 

@@ -139,8 +139,27 @@ const fillQuestion = (question, answer) => {
       $question.find('input').val(answer).trigger('change');
       break;
     case 'checkbox':
-      // for a collection of three checkboxes, pass in "true,false,true"
-      answer.split(',').forEach((val, index) => $question.find(`input:nth(${index})`).prop('checked', val).trigger('change'));
+      /*
+      There are two accepted formats for multi-select checkboxes
+      Option 1 - A set of comma-delimited boolean strings representing the state of the boxes. eg. "true,false,true" checks the first and third box
+      Option 2 - A set of comma-delimited values to be checked. eg. "heart_condition,none" checks the two boxes with 
+      */
+      const answerArray = Array.isArray(answer) ? answer.map(answer => answer.toString()) : answer.split(',');
+      const isNonBooleanString = str => !str || !['true', 'false'].includes(str.toLowerCase());
+      const answerContainsSpecificValues = answerArray.some(isNonBooleanString)
+      
+      // [value != ""] is necessary because blank lines in `choices` table of xlsx can cause empty unrendered input
+      const options = $question.find('input[value!=""]');
+
+      if (!answerContainsSpecificValues) {
+        answerArray.forEach((val, index) => {
+          const propValue = val === true || val.toLowerCase() === 'true' ? 'checked' : '';
+          $(options[index]).prop('checked', propValue).trigger('change');
+        });
+      } else {
+        options.prop('checked', '');
+        answerArray.forEach(val => $question.find(`input[value="${val}"]`).prop('checked', 'checked').trigger('change'));
+      }
       break;
     default:
       throw `Unhandled input type ${firstInput.type}`;

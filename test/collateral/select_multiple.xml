@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Test Choice Filter</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/test_cf_harness/test_1/risks_new:label">
+            <value>New Risks</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact/parent:label">
+            <value>Parent</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_past/none:label">
+            <value>None of the above</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_new/heart_condition:label">
+            <value>Heart Condition</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_new/diabetes:label">
+            <value>Diabetes</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact/name:label">
+            <value>Name</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_new/asthma:label">
+            <value>Asthma</value>
+          </text>
+          <text id="/test_cf_harness/inputs:label">
+            <value>Patient</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_new/none:label">
+            <value>None of the above</value>
+          </text>
+          <text id="/test_cf_harness/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_past/asthma:label">
+            <value>Asthma</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_past/diabetes:label">
+            <value>Diabetes</value>
+          </text>
+          <text id="/test_cf_harness/inputs/source_id:label">
+            <value>Source ID</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact/_id:label">
+            <value>What is the patient's name?</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact/sex:label">
+            <value>Sex</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact/parent/parent/contact/phone:label">
+            <value>CHW phone</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact/parent/parent/contact/chw_name:label">
+            <value>CHW name</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact/patient_id:label">
+            <value>Patient ID</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact:label">
+            <value>Contact</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_past/heart_condition:label">
+            <value>Heart Condition</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_new/high_blood_pressure:label">
+            <value>High blood pressure</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact/parent/parent/contact:label">
+            <value>Contact</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact/parent/parent:label">
+            <value>Parent</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_past:label">
+            <value>Past Risks</value>
+          </text>
+          <text id="/test_cf_harness/test_1:label">
+            <value>Based on choice</value>
+          </text>
+          <text id="/test_cf_harness/inputs/contact/date_of_birth:label">
+            <value>Date of Birth</value>
+          </text>
+          <text id="/test_cf_harness/test_1/risks_past/high_blood_pressure:label">
+            <value>High blood pressure</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <test_cf_harness delimiter="#" id="test_cf_harness" prefix="J1!test_cf_harness!" version="2019-07-23 18:15:02">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <source>user</source>
+            <source_id/>
+            <contact>
+              <_id/>
+              <name/>
+              <patient_id/>
+              <date_of_birth>0</date_of_birth>
+              <sex/>
+              <parent>
+                <parent>
+                  <contact>
+                    <chw_name/>
+                    <phone/>
+                  </contact>
+                </parent>
+              </parent>
+            </contact>
+          </inputs>
+          <patient_age_in_years/>
+          <patient_uuid/>
+          <patient_id/>
+          <patient_name/>
+          <test_1>
+            <risks_past/>
+            <risks_new/>
+          </test_1>
+          <meta>
+            <instanceID/>
+          </meta>
+        </test_cf_harness>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/test_cf_harness/inputs" relevant="./source = 'user'"/>
+      <bind nodeset="/test_cf_harness/inputs/source" type="string"/>
+      <bind nodeset="/test_cf_harness/inputs/source_id" type="string"/>
+      <bind nodeset="/test_cf_harness/inputs/contact/_id" type="db:person"/>
+      <bind nodeset="/test_cf_harness/inputs/contact/name" type="string"/>
+      <bind nodeset="/test_cf_harness/inputs/contact/patient_id" type="string"/>
+      <bind nodeset="/test_cf_harness/inputs/contact/date_of_birth" type="string"/>
+      <bind nodeset="/test_cf_harness/inputs/contact/sex" type="string"/>
+      <bind nodeset="/test_cf_harness/inputs/contact/parent/parent/contact/chw_name" type="string"/>
+      <bind nodeset="/test_cf_harness/inputs/contact/parent/parent/contact/phone" type="string"/>
+      <bind calculate="floor( difference-in-months( ../inputs/contact/date_of_birth, today() ) div 12 )" nodeset="/test_cf_harness/patient_age_in_years" type="string"/>
+      <bind calculate="../inputs/contact/_id" nodeset="/test_cf_harness/patient_uuid" type="string"/>
+      <bind calculate="../inputs/contact/_id" nodeset="/test_cf_harness/patient_id" required="true()" type="string"/>
+      <bind calculate="../inputs/contact/name" nodeset="/test_cf_harness/patient_name" type="string"/>
+      <bind nodeset="/test_cf_harness/test_1/risks_past" required="true()" type="select"/>
+      <bind nodeset="/test_cf_harness/test_1/risks_new" required="true()" type="select"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/test_cf_harness/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/test_cf_harness/inputs">
+      <label ref="jr:itext('/test_cf_harness/inputs:label')"/>
+      <group ref="/test_cf_harness/inputs/contact">
+        <label ref="jr:itext('/test_cf_harness/inputs/contact:label')"/>
+        <input appearance="db-object" ref="/test_cf_harness/inputs/contact/_id">
+          <label ref="jr:itext('/test_cf_harness/inputs/contact/_id:label')"/>
+        </input>
+        <group ref="/test_cf_harness/inputs/contact/parent">
+          <label ref="jr:itext('/test_cf_harness/inputs/contact/parent:label')"/>
+          <group ref="/test_cf_harness/inputs/contact/parent/parent">
+            <label ref="jr:itext('/test_cf_harness/inputs/contact/parent/parent:label')"/>
+            <group ref="/test_cf_harness/inputs/contact/parent/parent/contact">
+              <label ref="jr:itext('/test_cf_harness/inputs/contact/parent/parent/contact:label')"/>
+            </group>
+          </group>
+        </group>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/test_cf_harness/test_1">
+      <label ref="jr:itext('/test_cf_harness/test_1:label')"/>
+      <select ref="/test_cf_harness/test_1/risks_past">
+        <label ref="jr:itext('/test_cf_harness/test_1/risks_past:label')"/>
+        <item>
+          <label ref="jr:itext('/test_cf_harness/test_1/risks_past/heart_condition:label')"/>
+          <value>heart_condition</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/test_cf_harness/test_1/risks_past/asthma:label')"/>
+          <value>asthma</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/test_cf_harness/test_1/risks_past/high_blood_pressure:label')"/>
+          <value>high_blood_pressure</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/test_cf_harness/test_1/risks_past/diabetes:label')"/>
+          <value>diabetes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/test_cf_harness/test_1/risks_past/none:label')"/>
+          <value>none</value>
+        </item>
+      </select>
+      <select ref="/test_cf_harness/test_1/risks_new">
+        <label ref="jr:itext('/test_cf_harness/test_1/risks_new:label')"/>
+        <item>
+          <label ref="jr:itext('/test_cf_harness/test_1/risks_new/heart_condition:label')"/>
+          <value>heart_condition</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/test_cf_harness/test_1/risks_new/asthma:label')"/>
+          <value>asthma</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/test_cf_harness/test_1/risks_new/high_blood_pressure:label')"/>
+          <value>high_blood_pressure</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/test_cf_harness/test_1/risks_new/diabetes:label')"/>
+          <value>diabetes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/test_cf_harness/test_1/risks_new/none:label')"/>
+          <value>none</value>
+        </item>
+      </select>
+    </group>
+  </h:body>
+</h:html>
