@@ -3,6 +3,7 @@ const fs = require('fs');
 const process = require('process');
 const path = require('path');
 const puppeteer = require('puppeteer');
+const { getPatientId } = require('medic/shared-libs/registration-utils/src');
 const getNoolsInstances = require('./get-nools-instances');
 const mergeInstanceToTarget = require('./merge-instances-to-target');
 const toDate = require('./toDate');
@@ -369,6 +370,46 @@ class Harness {
     });
 
     this._state.reports.push(report);
+  }
+
+  /**
+   * @typedef ContactSummary
+   * As defined in the [guide to developing community health applications]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#contact-summaries}
+   * @property {Field[]} fields
+   * @property {Card[]} cards
+   * @property {Context} context
+   */
+
+  /**
+   * Obtains the result of the running the contact-summary.js or the compiled contact-summary.templated.js scripts from the project folder
+   * @param {string} [contact] The contact doc that will be passed into the contactSummary script. Given a {string}, a contact will be loaded from {@link HarnessState}. If left empty, the content's contact will be used if one exists.
+   * @param {Object[]} [reports] An array of reports associated with contact. If left empty, the contact's reports will be loaded from {@link HarnessState}.
+   * @param {Object[]} [lineage] An array of the contact's hydrated ancestors. If left empty, the contact's ancestors will be used from {@link HarnessState}.
+   * @returns {ContactSummary} The result of the contact summary under test.
+   */
+  getContactSummary(contact = this.content.contact && this.content.contact._id, reports, lineage) {
+    const self = this;
+
+    const getContactById = id => self._state.contacts.find(contact => contact._id === id);
+    const resolvedContact = typeof contact === 'string' ? getContactById(contact) : contact;
+    if (typeof resolvedContact !== 'object') {
+      throw `Harness: Cannot get summary for unknown or invalid contact.`;
+    }
+
+    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => getPatientId(report) === contact);
+    
+    const resolvedLineage = [];
+    if (Array.isArray(lineage)) {
+      resolvedLineage.push(...lineage);
+    } else {
+      for (let current = resolvedContact.parent; !!current; current = current.parent) {
+        const parent = current._id ? getContactById(current._id) || current : current;
+        resolvedLineage.push(parent);
+      }
+    }
+    
+    const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
+    return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
   }
 };
 

@@ -48,13 +48,7 @@
       "person_type": "hors_zone_adult",
       "type": "person",
       "parent": {
-        "_id": "parent_id_data",
-        "parent": {
-          "_id": "e00adbfe-ab12-44e2-aa9c-db95cd6a4cc8",
-          "parent": {
-            "_id": "7149fcd2-b3ff-4f5d-ab7d-185aa54c85ed"
-          }
-        }
+        "_id": "parent_id_data"
       },
       "name": "Patient Name",
       "role": "patient",
