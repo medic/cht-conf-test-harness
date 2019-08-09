@@ -98,7 +98,7 @@ const fillPage = async (self, pageAnswer) => {
         errors: [{
           type: 'page',
           answers: pageAnswer,
-          section: `page-${i}`,
+          section: `answer-${i}`,
           msg: `Attempted to fill ${pageAnswer.length} questions, but only ${$questions.length} are visible.`,
         }],
       };
@@ -172,7 +172,13 @@ const getVisibleQuestions = form => {
     return currentPage;
   }
 
-  return currentPage.children(':not(h4):not(.disabled,.note)');
+  const questionsThatAreChildren = currentPage.children(':not(h4):not(.disabled,.note)');
+  const questionsThatAreGrandchildren = questionsThatAreChildren.children('section.or-repeat').children(':not(h4,span):not(.disabled,.note)');
+
+  return [
+    ...questionsThatAreChildren,
+    ...questionsThatAreGrandchildren,
+  ].filter(question => !questionsThatAreGrandchildren.parents().is(question));
 };
 
 const getRecordForCompletedForm = (form, formName, now) => {

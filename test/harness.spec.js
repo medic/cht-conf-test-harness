@@ -278,9 +278,6 @@ describe('Harness tests', () => {
     }));
 
     it('contact summary for patient_id_data', async () => {
-      await harness.setNow('2000-01-01');
-      const report = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
-      expect(report.errors).to.be.empty;
       const contactSummary = harness.getContactSummary('patient_id_data');
       
       expect(contactSummary.cards).to.deep.eq([]);
@@ -315,6 +312,27 @@ describe('Harness tests', () => {
         ['yes']);
       expect(result.errors).to.be.empty;
       expect(result.report.fields.inputs.user.is_in_mrdt).to.eq('true');
+    });
+
+    const repeatingAnswers = [
+      ['method_lmp'],
+      ['1999-08-01'], [], ['4'],
+      ['no', 'no', 'no', 'no'], // this is the page with the repeating multi-select
+      ['no'], [], ['no', 'no'], ['none', 'no'], Array(11).fill('no'), ['no'],
+      ['no'], [], ['no'], ['no'], []
+    ];
+
+    it('repeating prompt all nos', async () => {
+      await harness.setNow('1999-10-10');
+      const result = await harness.fillForm('pregnancy', ...repeatingAnswers); 
+      expect(result.errors).to.be.empty;
+    });
+
+    it('repeating prompt with answers', async () => {
+      await harness.setNow('1999-10-10');
+      const withAnswers = Object.assign(repeatingAnswers, { 4: ['yes', '2020-09-01', 'no', 'no', 'no'] });
+      const result = await harness.fillForm('pregnancy', ...withAnswers); 
+      expect(result.errors[0].msg).to.include('Date must be within this pregnancy and cannot be in the future.');
     });
   });
 });
