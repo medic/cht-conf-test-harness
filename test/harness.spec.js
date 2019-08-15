@@ -95,7 +95,7 @@ describe('Harness tests', () => {
       expect(result).to.nested.include({
         'errors[0].msg': 'Attempted to fill 5 questions, but only 4 are visible.',
         'errors[0].type': 'page',
-        'errors[0].section': 'page-4',
+        'errors[0].section': 'answer-4',
       });
       expect(result.errors[0].answers).to.deep.eq(answers);
       expect(result).to.not.haveOwnProperty('report');
@@ -333,6 +333,22 @@ describe('Harness tests', () => {
       const withAnswers = Object.assign(repeatingAnswers, { 4: ['yes', '2020-09-01', 'no', 'no', 'no'] });
       const result = await harness.fillForm('pregnancy', ...withAnswers); 
       expect(result.errors[0].msg).to.include('Date must be within this pregnancy and cannot be in the future.');
+    });
+
+    it('form with many nested .or repeating prompts', async () => {
+      const oneChildHealth = [
+        ['alive_well'],
+        Array(5).fill('no'),
+        ['1', '1', '1999-09-15', 'health_facility', 'vaginal', 'skilled'],
+        ['alive_well', 'Baby-1', 'female', 'yes', '2500', 'yes', '45', 'bcg_and_birth_polio', 'yes', 'yes'].concat(Array(9).fill('no')),
+        [],
+        ['within_24_hrs'],
+        []
+      ];
+
+      await harness.setNow('1999-10-10');
+      const result = await harness.fillForm('delivery', ...oneChildHealth);
+      expect(result.errors).to.be.empty;
     });
   });
 });

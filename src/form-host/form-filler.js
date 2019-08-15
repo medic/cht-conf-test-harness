@@ -30,6 +30,7 @@ class FormFiller {
     const results = [];
     for (let pageIndex in multiPageAnswer) {
       const pageAnswer = multiPageAnswer[pageIndex];
+      makeNoteFieldsNotRequired();
       const result = await fillPage(this, pageAnswer);
       results.push(result);
 
@@ -172,13 +173,7 @@ const getVisibleQuestions = form => {
     return currentPage;
   }
 
-  const questionsThatAreChildren = currentPage.children(':not(h4):not(.disabled,.note)');
-  const questionsThatAreGrandchildren = questionsThatAreChildren.children('section.or-repeat').children(':not(h4,span):not(.disabled,.note)');
-
-  return [
-    ...questionsThatAreChildren,
-    ...questionsThatAreGrandchildren,
-  ].filter(question => !questionsThatAreGrandchildren.parents().is(question));
+  return currentPage.add(currentPage.find('section')).children('fieldset:not(.disabled,.note), label:not(.disabled,.note)');
 };
 
 const getRecordForCompletedForm = (form, formName, now) => {
@@ -251,6 +246,15 @@ function withElements(nodes) {
     .filter(function(n) {
       return n.nodeType === Node.ELEMENT_NODE;
     });
+}
+
+  /*
+  Not sure why the input element for the 'note' labels is a required field or how this
+  doesn't trigger warnings in webapp. As a workaround, just update notes so that they are not
+  required
+  */
+function makeNoteFieldsNotRequired() {
+  $$('label.note > input').attr('data-required', '');
 }
 
 module.exports = FormFiller;
