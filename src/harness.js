@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const fs = require('fs');
+const jsonToXml = require('pojo2xml');
 const process = require('process');
 const path = require('path');
 const puppeteer = require('puppeteer');
@@ -68,6 +69,10 @@ class Harness {
     
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     this.clear();
+
+    if (!this.options.inputs.contactSummary) {
+      this.options.inputs.contactSummary = this.getContactSummary();
+    }
   }
 
   /**
@@ -135,7 +140,8 @@ class Harness {
     inputs = _.defaults(inputs, this.options.inputs);
 
     const formNameWithoutDirectory = path.basename(formName);
-    await this.page.evaluate((innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary), formNameWithoutDirectory, xform, inputs.content, inputs.user, inputs.contactSummary);
+    const serializedContactSummary = serializeContactSummary(inputs.contactSummary);
+    await this.page.evaluate((innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary), formNameWithoutDirectory, xform, inputs.content, inputs.user, serializedContactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
@@ -426,6 +432,23 @@ const readFileSync = (...args) => {
     console.error(`File path does not exist at ${filePath}`);
   }
   return fs.readFileSync(filePath).toString();
+};
+
+const serializeContactSummary = contactSummary => {
+  if (typeof contactSummary !== 'object') {
+    throw Error('Invalid contactSummary. Object is expected');
+  }
+
+  if (contactSummary.xmlStr) {
+    return contactSummary;
+  }
+
+  const serialize = cs => ({ id: 'contact-summary', xmlStr: jsonToXml(cs) });
+  if (contactSummary.context) {
+    return serialize({ context: contactSummary.context });
+  }
+
+  return serialize({ context: contactSummary });
 };
 
 module.exports = Harness;

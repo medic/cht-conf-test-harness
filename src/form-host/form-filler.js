@@ -143,7 +143,7 @@ const fillQuestion = (question, answer) => {
       /*
       There are two accepted formats for multi-select checkboxes
       Option 1 - A set of comma-delimited boolean strings representing the state of the boxes. eg. "true,false,true" checks the first and third box
-      Option 2 - A set of comma-delimited values to be checked. eg. "heart_condition,none" checks the two boxes with 
+      Option 2 - A set of comma-delimited values to be checked. eg. "heart_condition,none" checks the two boxes with corresponding values
       */
       const answerArray = Array.isArray(answer) ? answer.map(answer => answer.toString()) : answer.split(',');
       const isNonBooleanString = str => !str || !['true', 'false'].includes(str.toLowerCase());
@@ -173,7 +173,7 @@ const getVisibleQuestions = form => {
     return currentPage;
   }
 
-  return currentPage.add(currentPage.find('section')).children('fieldset:not(.disabled,.note), label:not(.disabled,.note)');
+  return currentPage.add(currentPage.find('section')).children('fieldset:not(.disabled,.note,.or-appearance-hidden), label:not(.disabled,.note,.or-appearance-hidden)');
 };
 
 const getRecordForCompletedForm = (form, formName, now) => {

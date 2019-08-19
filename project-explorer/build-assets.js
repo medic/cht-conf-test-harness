@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const Harness = require('..');
+const jsonToXml = require('pojo2xml');
 
 const usage = `Usage: build-assets --path=[DIRECTORY]
   
@@ -24,16 +26,22 @@ if (!fs.existsSync(pathToProject)) {
 const outputPath = argv['output'] || path.resolve(__dirname, '../dist', 'project-assets.js');
 console.log(`Building assets from project in ${pathToProject}`);
 
-const harnessDefaultSourcePath = path.resolve(pathToProject, 'harness.defaults.json');
+const harness = new Harness({ directory: pathToProject });
 const harnessDefaultDestinationPath = path.resolve(__dirname, '../dist', 'harness.defaults.json');
-if (fs.existsSync(harnessDefaultSourcePath)) {
-  if (fs.existsSync(harnessDefaultDestinationPath)) {
-    fs.unlinkSync(harnessDefaultDestinationPath);
-  }
-
-  console.log(`Copying ${harnessDefaultSourcePath} to ${harnessDefaultDestinationPath}`);
-  fs.copyFileSync(harnessDefaultSourcePath, harnessDefaultDestinationPath);
+if (fs.existsSync(harnessDefaultDestinationPath)) {
+  fs.unlinkSync(harnessDefaultDestinationPath);
 }
+
+console.log(`Writing ${harnessDefaultDestinationPath}`);
+const fileContent = JSON.stringify({
+  user: harness.user,
+  content: harness.content,
+  contactSummary: {
+    id: 'contact-summary',
+    xmlStr: jsonToXml({ context: harness.getContactSummary().context }),
+  },
+}, null, 2);
+fs.writeFileSync(harnessDefaultDestinationPath, fileContent);
 
 const formsInDirectory = [
     pathToProject,
@@ -56,4 +64,3 @@ fs.writeFileSync(outputPath, `module.exports = {
   ${data}
 };`);
 console.log(`Compiling to ${outputPath}`);
-

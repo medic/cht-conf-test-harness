@@ -77,9 +77,5 @@
       "_id": "patient_id_data",
       "_rev": "1-b"
     }
-  },
-  "contactSummary": {
-    "id": "contact-summary",
-    "xmlStr": "<context><muted>false</muted></context>"
   }
 }
