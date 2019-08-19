@@ -347,8 +347,9 @@ describe('Harness tests', () => {
       ];
 
       await harness.setNow('1999-10-10');
-      const result = await harness.fillForm('delivery', ...oneChildHealth);
+      const result = await harness.fillForm('subfolder/delivery', ...oneChildHealth);
       expect(result.errors).to.be.empty;
+      expect(result.report.form).to.eq('delivery');
     });
   });
 });

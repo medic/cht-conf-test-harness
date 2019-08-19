@@ -133,7 +133,9 @@ class Harness {
     this.onConsole = msg => self.state.console.push(msg);
 
     inputs = _.defaults(inputs, this.options.inputs);
-    await this.page.evaluate((innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary), formName, xform, inputs.content, inputs.user, inputs.contactSummary);
+
+    const formNameWithoutDirectory = path.basename(formName);
+    await this.page.evaluate((innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary), formNameWithoutDirectory, xform, inputs.content, inputs.user, inputs.contactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
