@@ -69,10 +69,6 @@ class Harness {
     
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     this.clear();
-
-    if (!this.options.inputs.contactSummary) {
-      this.options.inputs.contactSummary = this.getContactSummary();
-    }
   }
 
   /**
@@ -140,7 +136,7 @@ class Harness {
     inputs = _.defaults(inputs, this.options.inputs);
 
     const formNameWithoutDirectory = path.basename(formName);
-    const serializedContactSummary = serializeContactSummary(inputs.contactSummary);
+    const serializedContactSummary = serializeContactSummary(inputs.contactSummary || this.contactSummary);
     await this.page.evaluate((innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary), formNameWithoutDirectory, xform, inputs.content, inputs.user, serializedContactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
@@ -234,7 +230,7 @@ class Harness {
 
   /**
    * Check which tasks are emitted
-    * @param {Object=} options Some options when checking for tasks
+   * @param {Object=} options Some options when checking for tasks
    * @param {Date} [options.now=getNow()] The mocked time to look for tasks
    * @param {boolean} [options.resolved=false] When true, tasks which are resolved will be included in the returned tasks.
    * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
@@ -347,9 +343,12 @@ class Harness {
   get content() { return _.clone(this.options.inputs.content); }
 
   /**
-   * `contactSummary` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
+   * `contactSummary` can be set explicitly through the {@link HarnessInputs} via the constructor or the harness.defaults.json file. 
+   * If no contactSummary is explicitly defined, returns the calculation from getContactSummary().
    */
-  get contactSummary() { return _.clone(this.options.inputs.contactSummary); }
+  get contactSummary() {
+    return _.clone(this.options.inputs.contactSummary) || this.getContactSummary();
+  }
 
 
   /**
