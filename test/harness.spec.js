@@ -356,5 +356,23 @@ describe('Harness tests', () => {
       const result = await harness.fillForm('on', ['yes', 'this is a note']);
       expect(result.errors).to.be.empty;
     });
+
+    it('cht-reference "delivery" form - repeat areas', async () => {
+      await harness.setNow('2000-04-30');
+      const oneChildHealthyOneDeceasedOneStillbirth = [
+        ['alive_well'],
+        Array(5).fill('no'),
+        ['3', '1', '2000-04-22', 'health_facility', 'vaginal'],
+        ['2000-04-22', 'health_facility', 'yes', '', '2000-04-23', 'home', 'no', ''],
+        ['alive_well', 'Baby-1', 'female', 'yes', '2500', 'yes', '45', 'bcg_and_birth_polio', 'yes', 'yes'].concat(Array(9).fill('no')),
+        [],
+        ['within_24_hrs'],
+        []
+      ];
+      const result = await harness.fillForm('delivery', ...oneChildHealthyOneDeceasedOneStillbirth);
+      expect(result.errors).to.be.empty;
+      expect(result.report.fields.babys_condition.baby_repeat).to.have.property('length', 1);
+      expect(result.report.fields.baby_death.baby_death_repeat).to.have.property('length', 2);
+    });
   });
 });

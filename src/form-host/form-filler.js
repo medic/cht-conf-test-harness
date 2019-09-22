@@ -2,9 +2,10 @@ const _ = require('underscore');
 const $ = require('jquery');
 
 class FormFiller {
-  constructor(formName, form, options) {
+  constructor(formName, form, formXml, options) {
     this.form = form;
     this.formName = formName,
+    this.formXml = formXml;
     this.options = _.defaults(options, {
       verbose: true,
     });
@@ -50,7 +51,7 @@ class FormFiller {
     return {
       errors: [...incompleteError, ...errors],
       section: 'general',
-      report: isComplete ? getRecordForCompletedForm(this.form, this.formName, window.now) : undefined,
+      report: isComplete ? getRecordForCompletedForm(this.form, this.formXml, this.formName, window.now) : undefined,
     };
   }
 
@@ -181,7 +182,7 @@ const getVisibleQuestions = form => {
   return currentPage.add(currentPage.find('section')).children('fieldset:not(.disabled,.note,.or-appearance-hidden), label:not(.disabled,.note,.or-appearance-hidden)');
 };
 
-const getRecordForCompletedForm = (form, formName, now) => {
+const getRecordForCompletedForm = (form, formXml, formName, now) => {
   const record = form.getDataStr({ irrelevant: false });
   return {
     form: formName,
@@ -190,7 +191,7 @@ const getRecordForCompletedForm = (form, formName, now) => {
     reported_date: now ? now.getTime() : Date.now(),
     // contact: ExtractLineage(contact),
     // from: contact && contact.phone,
-    fields: reportRecordToJs(record, form),
+    fields: reportRecordToJs(record, formXml),
   };
 };
 

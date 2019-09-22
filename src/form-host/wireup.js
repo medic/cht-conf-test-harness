@@ -8,12 +8,12 @@ class FormWireup {
     this.modelTransformer = initTransformer(openrosa2xmlmodel);
   }
 
-  render(xformData, content, user, contactSummary) {
-    if (!xformData || typeof xformData !== 'string') throw new Error('Invalid argument: xformData');
+  render(formXml, content, user, contactSummary) {
+    if (!formXml || typeof formXml !== 'string') throw new Error('Invalid argument: xformData');
     if (!content || typeof content !== 'object') throw new Error('Invalid argument: content');
     if (!contactSummary) throw new Error('Invalid argument: contactSummary');
   
-    const xform = $.parseXML(xformData);
+    const xform = $.parseXML(formXml);
     setLanguageOnForm(xform, 'en');
 
     const html = this.htmlTransformer(xform);
