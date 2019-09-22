@@ -351,5 +351,10 @@ describe('Harness tests', () => {
       expect(result.errors).to.be.empty;
       expect(result.report.form).to.eq('delivery');
     });
+
+    it('standard "on" form - contains textarea note', async () => {
+      const result = await harness.fillForm('on', ['yes', 'this is a note']);
+      expect(result.errors).to.be.empty;
+    });
   });
 });

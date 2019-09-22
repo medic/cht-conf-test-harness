@@ -124,10 +124,15 @@ const fillQuestion = (question, answer) => {
   if (!answer) return;
   
   const $question = $(question);
-  const firstInput = Array.from($question.find('input'))[0];
+  const allInputs = $question.find('input,textarea');
+  const firstInput = Array.from(allInputs)[0];
   
   if (!firstInput) {
     throw 'No input field found within question';
+  }
+
+  if (firstInput.localName === 'textarea') {
+    return allInputs.val(answer).trigger('change');
   }
 
   switch (firstInput.type) {
@@ -137,7 +142,7 @@ const fillQuestion = (question, answer) => {
     case 'date':
     case 'text':
     case 'number':
-      $question.find('input').val(answer).trigger('change');
+        allInputs.val(answer).trigger('change');
       break;
     case 'checkbox':
       /*
