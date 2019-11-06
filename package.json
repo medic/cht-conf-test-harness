@@ -1,6 +1,6 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
@@ -9,20 +9,20 @@
     "docs": "jsdoc src/*.js src/**/*.js ./JSDOC.md"
   },
   "dependencies": {
-    "enketo-core": "4.41.6",
-    "medic": "git+https://github.com/medic/medic.git#3.6.x",
-    "medic-enketo-xslt": "^1.5.0",
     "moment": "^2.24.0",
     "nools": "^0.4.4",
-    "openrosa-xpath-evaluator": "^1.5.1",
     "pojo2xml": "^1.7.2",
     "puppeteer": "^1.12.2",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "enketo-core": "4.41.6",
+    "medic": "git+https://github.com/medic/medic.git#3.6.x",
+    "medic-enketo-xslt": "^1.5.0",
     "medic-nootils": "^3.0.2",
     "mocha": "^6.1.4",
+    "openrosa-xpath-evaluator": "^1.5.1",
     "raw-loader": "^1.0.0",
     "rewire": "^4.0.1",
     "webpack": "^4.29.6",
