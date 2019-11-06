@@ -9,8 +9,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'openrosa-xpath-extensions': 'openrosa-xpath-evaluator/src/openrosa-xpath-extensions',
-      'extended-xpath': 'openrosa-xpath-evaluator/src/extended-xpath',
+      'openrosa-xpath-extensions': path.join(__dirname, 'node_modules/openrosa-xpath-evaluator/src/openrosa-xpath-extensions'),
+      'extended-xpath': path.join(__dirname, 'node_modules/openrosa-xpath-evaluator/src/extended-xpath'),
       './xpath-evaluator-binding': path.join(__dirname, 'ext/OpenrosaXpathEvaluatorBinding'),
     }
   },

@@ -1,6 +1,6 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "medic-enketo-xslt": "^1.5.0",
     "moment": "^2.24.0",
     "nools": "^0.4.4",
-    "openrosa-xpath-evaluator": "git+https://github.com/medic/openrosa-xpath-evaluator.git",
+    "openrosa-xpath-evaluator": "^1.5.1",
     "pojo2xml": "^1.7.2",
     "puppeteer": "^1.12.2",
     "underscore": "^1.9.1"
