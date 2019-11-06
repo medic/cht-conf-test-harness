@@ -1,6 +1,6 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "enketo-core": "4.41.6",
-    "medic": "git+https://github.com/medic/medic.git",
+    "medic": "git+https://github.com/medic/medic.git#3.6.x",
     "medic-enketo-xslt": "^1.5.0",
     "moment": "^2.24.0",
     "nools": "^0.4.4",
