@@ -49,7 +49,7 @@ class Harness {
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
    * @param {HarnessInputs} [options.inputs=loaded from harnessDataPath] The default {@link HarnessInputs} for loading and completing a form
-   * @param {boolean} [options.headless=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
+   * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    */
   constructor(options = {}) {
@@ -62,12 +62,15 @@ class Harness {
       harnessDataPath: path.join(defaultDirectory, './harness.defaults.json'),
     });
 
+    this.log = (...args) => this.options.verbose && console.log('Harness', ...args);
+
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
     this.options.inputs = _.defaults(options.inputs, fileBasedDefaults);
-
-    this.log = (...args) => this.options.verbose && console.log('Harness', ...args);
     
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
+    if (!this.appSettings) {
+      throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
+    }
     this.clear();
   }
 
@@ -111,9 +114,18 @@ class Harness {
    * @returns {Promise} Resolves when the state of the harness when cleared
    */
   async clear() {
+    const contacts = [];
+    if (this.options.inputs.user && this.options.inputs.user.parent) {
+      contacts.push(_.clone(this.options.inputs.user.parent));
+    }
+
+    if (this.options.inputs.content && this.options.inputs.content.contact) {
+      contacts.push(_.clone(this.options.inputs.content.contact));
+    }
+
     this._state = {
       console: [],
-      contacts: [_.clone(this.options.inputs.user.parent), _.clone(this.options.inputs.content.contact)],
+      contacts,
       reports: [],
     };
     this.onConsole = () => {};
@@ -283,7 +295,9 @@ class Harness {
       type: undefined,
     });
     
-    const targetTemplates = this.appSettings.tasks.targets.items.map(item => _.clone(item));
+    const targetTemplates = this.appSettings.tasks.targets &&
+      this.appSettings.tasks.targets.items &&
+      this.appSettings.tasks.targets.items.map(item => _.clone(item)) || [];
     const instances = await this.getEmittedTargetInstances(options);
     instances.forEach(instance => mergeInstanceToTarget(targetTemplates, instance, options.now));
     return targetTemplates
@@ -369,14 +383,17 @@ class Harness {
    * Push a mocked report directly into the state
    * @param {Object} report The report document
    */
-  pushMockedReport(report) {
-    report = _.defaults(report, {
-      patient_id: this.options.inputs.content.contact._id,
-      reported_date: 1,
-      fields: {},
-    });
+  pushMockedReport(...reports) {
+    const patient_id = this.options.inputs.content && this.options.inputs.content.contact && this.options.inputs.content.contact._id;
+    for (let report of reports) {
+      report = _.defaults(report, {
+        patient_id,
+        reported_date: 1,
+        fields: {},
+      });
 
-    this._state.reports.push(report);
+      this._state.reports.push(report);
+    }
   }
 
   /**
@@ -422,14 +439,15 @@ class Harness {
 
 const loadJsonFromFile = filePath => {
   const content = readFileSync(filePath);
-  return JSON.parse(content);
+  return content && JSON.parse(content);
 };
 
 const readFileSync = (...args) => {
   const filePath = path.join(...args);
   if (!fs.existsSync(filePath)) {
-    console.error(`File path does not exist at ${filePath}`);
+    return;
   }
+
   return fs.readFileSync(filePath).toString();
 };
 
