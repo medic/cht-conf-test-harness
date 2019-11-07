@@ -1,6 +1,6 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "docs": "jsdoc src/*.js src/**/*.js ./JSDOC.md"
   },
   "dependencies": {
-    "medic-nootils": "^3.0.2",
+    "medic-nootils": "^4.0.1",
     "moment": "^2.24.0",
     "nools": "^0.4.4",
     "pojo2xml": "^1.7.2",
@@ -25,6 +25,7 @@
     "openrosa-xpath-evaluator": "^1.5.1",
     "raw-loader": "^1.0.0",
     "rewire": "^4.0.1",
+    "sinon": "^7.5.0",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   }
