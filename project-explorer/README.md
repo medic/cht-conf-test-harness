@@ -7,6 +7,9 @@ Under construction
 Clone this repository and then:
 
 1. `sudo npm i -g webpack`
+1. `sudo npm i -g webpack-cli`
+1. `cd /path/to/medic-conf-test-harness`
+1. `npm ci`
 1. `cd /path/to/medic-conf-test-harness/project-explorer`
 1. `node build-assets --path=/path/to/your/project`
 1. `webpack`
