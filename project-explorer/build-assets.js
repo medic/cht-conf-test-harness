@@ -57,8 +57,9 @@ if (formsInDirectory.length === 0) {
   return -1;
 }
 
+const windowsEscaping = str => str.replace(/\\/g, '\\\\');
 const data = formsInDirectory
-  .map(fullPath => `  '${path.basename(fullPath)}': require('${fullPath}'),`)
+  .map(fullPath => `  '${path.basename(fullPath)}': require('${windowsEscaping(fullPath)}'),`)
   .join('\n');
 fs.writeFileSync(outputPath, `module.exports = {
   ${data}
