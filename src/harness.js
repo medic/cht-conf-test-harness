@@ -142,7 +142,11 @@ class Harness {
   async loadForm(formName, inputs) {
     const self = this;
     this.log(`Loading form ${formName}...`);
-    const xform = readFileSync(this.options.xformFolderPath, `${formName}.xml`);
+    const xformFilePath = path.resolve(this.options.xformFolderPath, `${formName}.xml`);
+    const xform = readFileSync(xformFilePath);
+    if (!xform) {
+      throw Error(`XForm not available at path: ${xformFilePath}`);
+    }
     this.onConsole = msg => self.state.console.push(msg);
 
     inputs = _.defaults(inputs, this.options.inputs);

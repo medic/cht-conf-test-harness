@@ -11,7 +11,7 @@ Builds the content of a project folder for user in project explorer.
 `;
 
 const argv = require('minimist')(process.argv.slice(2));
-const { path: pathToProject } = argv;
+const pathToProject = path.resolve(argv.path);
 
 if (!pathToProject) {
   console.error(usage);
@@ -43,14 +43,23 @@ const fileContent = JSON.stringify({
 }, null, 2);
 fs.writeFileSync(harnessDefaultDestinationPath, fileContent);
 
-const formsInDirectory = [
-    pathToProject,
-    path.join(pathToProject, 'forms'),
-    path.join(pathToProject, 'forms/app'),
-    path.join(pathToProject, 'forms/contact'),
-  ]
-  .reduce((agg, curr) => [...agg, ...fs.readdirSync(curr).map(file => path.join(curr, file))], [])
-  .filter(f => f.endsWith('.xml'));
+const directoriesToScan = [
+  pathToProject,
+  path.join(pathToProject, 'forms'),
+  path.join(pathToProject, 'forms/app'),
+  path.join(pathToProject, 'forms/contact'),
+  path.join(pathToProject, 'forms/collect'),
+];
+
+const formsInDirectory = [];
+for (const formDirectory of directoriesToScan) {
+  if (fs.existsSync(formDirectory)) {
+    const filePaths = fs.readdirSync(formDirectory).map(file => path.join(formDirectory, file)).filter(f => f.endsWith('.xml'));
+    formsInDirectory.push(...filePaths);
+  } else {
+    console.warn(`Expected directory of forms does not exist at: ${formDirectory}`);
+  }
+}
 
 if (formsInDirectory.length === 0) {
   console.warn(`No xml files found in folder: ${pathToProject}`);
