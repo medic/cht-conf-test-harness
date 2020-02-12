@@ -375,6 +375,28 @@ describe('Harness tests', () => {
       });
     });
 
+    it('d-tree infant child form attempts to fill questions in disabled section of form', async () => {
+      const inputs = [
+        [],
+        ['yes'],
+        [],
+        Array(10).fill('yes'),
+        ['green','present'],
+        ['no'],
+        ['mother', 'stage_9mo_to_12mo', 'yes', 'does_not_talk'],
+        ['moves', 'yes', 'no'],
+        ['no','no','played','mother','2','no','no','no','no', '5', 'no', '1', '1', 'yes', 'no'],
+        ['no'],
+        ['no'],
+        [],
+        ['no'],
+        []		
+      ];
+  
+      const result = await harness.fillForm('dtree-infant-child', ...inputs);
+      expect(result.errors).to.be.empty;
+    });
+
     it('standard "on" form - contains textarea note', async () => {
       const result = await harness.fillForm('on', ['yes', 'this is a note']);
       expect(result.errors).to.be.empty;

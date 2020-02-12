@@ -182,7 +182,7 @@ const getVisibleQuestions = form => {
     return currentPage;
   }
 
-  return currentPage.add(currentPage.find('section')).children('fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label), label:not(.disabled,.note,.or-appearance-hidden)');
+  return currentPage.add(currentPage.find('section:not(.disabled)')).children('fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label), label:not(.disabled,.note,.or-appearance-hidden)');
 };
 
 const getRecordForCompletedForm = (form, formXml, formName, now) => {
