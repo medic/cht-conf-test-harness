@@ -1,12 +1,13 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
     "test": "mocha test/*.spec.js --timeout 10000 --slow 500",
     "build": "npm run docs && ./build.sh",
-    "docs": "jsdoc src/*.js src/**/*.js ./JSDOC.md"
+    "docs": "node ./node_modules/jsdoc/jsdoc src/*.js src/**/*.js ./JSDOC.md",
+    "explore": "node ./project-explorer/build-assets.js --path=./test/collateral && cd project-explorer && webpack && google-chrome ./project-explorer.html"
   },
   "dependencies": {
     "medic-nootils": "^4.0.1",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "enketo-core": "4.41.6",
+    "jsdoc": "^3.6.3",
     "medic": "git+https://github.com/medic/medic.git#3.6.x",
     "medic-enketo-xslt": "^1.5.0",
     "mocha": "^6.1.4",
