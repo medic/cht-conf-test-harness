@@ -1,10 +1,10 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
-    "test": "mocha test/*.spec.js --timeout 10000 --slow 500",
+    "test": "mocha test/*.spec.js --timeout 25000 --slow 500",
     "build": "npm run docs && ./build.sh",
     "docs": "node ./node_modules/jsdoc/jsdoc src/*.js src/**/*.js ./JSDOC.md",
     "explore": "node ./project-explorer/build-assets.js --path=./test/collateral && cd project-explorer && webpack && google-chrome ./project-explorer.html"
