@@ -9,6 +9,8 @@ const harness = new Harness({
   directory: path.join(__dirname, 'collateral'),
   xformFolderPath: path.join(__dirname, 'collateral'),
   verbose: false,
+  // headless: false,
+  // slowMo: 250,
   reportFormErrors: false,
 });
 
@@ -63,6 +65,15 @@ describe('Harness tests', () => {
         'errors[1].msg': 'This field is required',
       });
       expect(result.report).to.eq(undefined);
+    });
+
+    it('throw on absent form', async () => {
+      try {
+        await harness.fillForm('dne', ['yes']);
+        expect.fail('Should throw');
+      } catch (err) {
+        expect(err.message).to.include('not available');
+      }
     });
 
     it('a different list of validation errors', async () => {
@@ -350,6 +361,18 @@ describe('Harness tests', () => {
       const result = await harness.fillForm('subfolder/delivery', ...oneChildHealth);
       expect(result.errors).to.be.empty;
       expect(result.report.form).to.eq('delivery');
+    });
+
+    it('d-tree postpartum form adds element "above" the first question', async () => {
+      const inputs = [
+        [], [], [], Array(3).fill('no'), Array(15).fill('yes'), [], [], [], []
+      ];
+      const result = await harness.fillForm('dtree-table-list', ...inputs);
+
+      expect(result.errors).to.be.empty;
+      expect(result.report.fields).to.deep.include({
+        refer_postpartum_emergency_danger_sign_flag: '0',
+      });
     });
 
     it('standard "on" form - contains textarea note', async () => {

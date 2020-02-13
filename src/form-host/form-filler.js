@@ -92,6 +92,7 @@ class FormFiller {
 const fillPage = async (self, pageAnswer) => {
   self.log(`Answering ${pageAnswer.length} questions.`);
 
+  const answeredQuestions = new Set();
   for (let i = 0; i < pageAnswer.length; i++) {
     const answer = pageAnswer[i];
     const $questions = getVisibleQuestions(self);
@@ -106,7 +107,9 @@ const fillPage = async (self, pageAnswer) => {
       };
     }
 
-    fillQuestion($questions[i], answer);
+    const nextUnansweredQuestion = Array.from($questions).find(question => !answeredQuestions.has(question));
+    answeredQuestions.add(nextUnansweredQuestion);
+    fillQuestion(nextUnansweredQuestion, answer);
   }
   
   const success = await form.pages.next();
@@ -179,7 +182,7 @@ const getVisibleQuestions = form => {
     return currentPage;
   }
 
-  return currentPage.add(currentPage.find('section')).children('fieldset:not(.disabled,.note,.or-appearance-hidden), label:not(.disabled,.note,.or-appearance-hidden)');
+  return currentPage.add(currentPage.find('section')).children('fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label), label:not(.disabled,.note,.or-appearance-hidden)');
 };
 
 const getRecordForCompletedForm = (form, formXml, formName, now) => {
