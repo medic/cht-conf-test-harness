@@ -237,8 +237,13 @@ class Harness {
     }
 
     if (fillResult.report) {
-      this._state.reports.push(fillResult.report);
-      fillResult.report._id = this._state.reports.length.toString();
+      const ContactTypes = ['contact', 'district_hospital', 'health_center', 'clinic', 'person'];
+      const isContact = doc => doc && ContactTypes.includes(doc.type);
+      const resultingDocs = [fillResult.report, ...fillResult.additionalDocs];
+      for (const doc of resultingDocs) {
+        const container = isContact(doc) ? this._state.contacts : this._state.reports;
+        container.push(doc);
+      }
     }
 
     return fillResult;
