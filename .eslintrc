@@ -1,0 +1,17 @@
+{
+  "extends": "@medic",
+  "env": {
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "rules": {
+    "max-len": ["error", 200, { "ignoreStrings": true, "ignoreComments": true }],
+    "no-console": "off",
+    "guard-for-in": "off"
+  },
+  "globals": {
+    "window": true
+  }
+}

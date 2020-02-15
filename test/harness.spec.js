@@ -58,7 +58,7 @@ describe('Harness tests', () => {
       expect(result).to.nested.include({
         'errors[0].msg': 'This field is required',
         'errors[0].type': 'validation',
-        'errors[0].question': "When PNC visit was planned?*\nThis field is required",
+        'errors[0].question': 'When PNC visit was planned?*\nThis field is required',
 
         'errors[1].msg': 'This field is required',
       });
@@ -79,7 +79,7 @@ describe('Harness tests', () => {
       expect(result).to.nested.include({
         'errors[0].msg': 'Value not allowed',
         'errors[0].type': 'validation',
-        'errors[0].question': "When PNC visit was planned?*\nValue not allowed",
+        'errors[0].question': 'When PNC visit was planned?*\nValue not allowed',
 
         'errors[1].msg': 'Value not allowed',
       });
@@ -258,7 +258,8 @@ describe('Harness tests', () => {
   });
 
   describe('getContactSummary', () => {
-    let functionStub, basicReport;
+    let functionStub;
+    let basicReport;
 
     before(async () => {
       await harness.setNow('2000-01-01');
@@ -271,7 +272,9 @@ describe('Harness tests', () => {
     });
 
     it('passthrough if all args given', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
-      const contact = {}, reports = [], lineage = [];
+      const contact = {};
+      const reports = [];
+      const lineage = [];
       harness.getContactSummary(contact, reports, lineage);
       expect(functionStub.args[0]).to.deep.eq([contact, reports, lineage]);
     }));
@@ -429,7 +432,7 @@ describe('Harness tests', () => {
       expect(harness.state.reports).to.deep.eq([
         result.report,
         result.additionalDocs[0],
-      ])
+      ]);
     });
 
     it('cht-reference "delivery" form - repeat areas', async () => {

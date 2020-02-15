@@ -6,7 +6,7 @@ const getRecordForCompletedForm = require('./get-record-from-form');
 class FormFiller {
   constructor(formName, form, formXml, options) {
     this.form = form;
-    this.formName = formName,
+    this.formName = formName;
     this.formXml = formXml;
     this.options = _.defaults(options, {
       verbose: true,
@@ -32,7 +32,7 @@ class FormFiller {
   async fill(multiPageAnswer) {
     this.log(`Filling in ${multiPageAnswer.length} pages.`);
     const results = [];
-    for (let pageIndex in multiPageAnswer) {
+    for (const pageIndex in multiPageAnswer) {
       const pageAnswer = multiPageAnswer[pageIndex];
       makeNoteFieldsNotRequired();
       const result = await fillPage(this, pageAnswer);
@@ -74,12 +74,13 @@ class FormFiller {
       return self.form.validateInput( $elem.eq( 0 ) );
     }).toArray();
 
-    return Promise.all( validations ).then(() => {
+    return Promise.all( validations )
+      .then(() => {
         const validationErrors = $container
           .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
           .children('span.active:not(.question-label)')
           .filter(function() {
-            return $(this).css('display') == 'block';
+            return $(this).css('display') === 'block';
           });
 
         return Array.from(validationErrors)
@@ -94,7 +95,7 @@ class FormFiller {
         msg: err,
       }]);
   }
-};
+}
 
 const fillPage = async (self, pageAnswer) => {
   self.log(`Answering ${pageAnswer.length} questions.`);
@@ -119,7 +120,7 @@ const fillPage = async (self, pageAnswer) => {
     fillQuestion(nextUnansweredQuestion, answer);
   }
   
-  const success = await form.pages.next();
+  const success = await window.form.pages.next();
   const validationErrors = await self.getVisibleValidationErrors();
   const advanceFailure = success || validationErrors.length ? [] : [{
     type: 'general',
@@ -129,10 +130,12 @@ const fillPage = async (self, pageAnswer) => {
   return {
     errors: [...advanceFailure, ...validationErrors],
   };
-}
+};
 
 const fillQuestion = (question, answer) => {
-  if (!answer) return;
+  if (!answer) {
+    return;
+  }
   
   const $question = $(question);
   const allInputs = $question.find('input,textarea');
@@ -147,39 +150,40 @@ const fillQuestion = (question, answer) => {
   }
 
   switch (firstInput.type) {
-    case 'radio':
-      $question.find(`input[value="${answer}"]`).click();
-      break;
-    case 'date':
-    case 'text':
-    case 'number':
-        allInputs.val(answer).trigger('change');
-      break;
-    case 'checkbox':
-      /*
-      There are two accepted formats for multi-select checkboxes
-      Option 1 - A set of comma-delimited boolean strings representing the state of the boxes. eg. "true,false,true" checks the first and third box
-      Option 2 - A set of comma-delimited values to be checked. eg. "heart_condition,none" checks the two boxes with corresponding values
-      */
-      const answerArray = Array.isArray(answer) ? answer.map(answer => answer.toString()) : answer.split(',');
-      const isNonBooleanString = str => !str || !['true', 'false'].includes(str.toLowerCase());
-      const answerContainsSpecificValues = answerArray.some(isNonBooleanString)
-      
-      // [value != ""] is necessary because blank lines in `choices` table of xlsx can cause empty unrendered input
-      const options = $question.find('input[value!=""]');
+  case 'radio':
+    $question.find(`input[value="${answer}"]`).click();
+    break;
+  case 'date':
+  case 'text':
+  case 'number':
+    allInputs.val(answer).trigger('change');
+    break;
+  case 'checkbox': {
+    /*
+    There are two accepted formats for multi-select checkboxes
+    Option 1 - A set of comma-delimited boolean strings representing the state of the boxes. eg. "true,false,true" checks the first and third box
+    Option 2 - A set of comma-delimited values to be checked. eg. "heart_condition,none" checks the two boxes with corresponding values
+    */
+    const answerArray = Array.isArray(answer) ? answer.map(answer => answer.toString()) : answer.split(',');
+    const isNonBooleanString = str => !str || !['true', 'false'].includes(str.toLowerCase());
+    const answerContainsSpecificValues = answerArray.some(isNonBooleanString);
+    
+    // [value != ""] is necessary because blank lines in `choices` table of xlsx can cause empty unrendered input
+    const options = $question.find('input[value!=""]');
 
-      if (!answerContainsSpecificValues) {
-        answerArray.forEach((val, index) => {
-          const propValue = val === true || val.toLowerCase() === 'true' ? 'checked' : '';
-          $(options[index]).prop('checked', propValue).trigger('change');
-        });
-      } else {
-        options.prop('checked', '');
-        answerArray.forEach(val => $question.find(`input[value="${val}"]`).prop('checked', 'checked').trigger('change'));
-      }
-      break;
-    default:
-      throw `Unhandled input type ${firstInput.type}`;
+    if (!answerContainsSpecificValues) {
+      answerArray.forEach((val, index) => {
+        const propValue = val === true || val.toLowerCase() === 'true' ? 'checked' : '';
+        $(options[index]).prop('checked', propValue).trigger('change');
+      });
+    } else {
+      options.prop('checked', '');
+      answerArray.forEach(val => $question.find(`input[value="${val}"]`).prop('checked', 'checked').trigger('change'));
+    }
+    break;
+  }
+  default:
+    throw `Unhandled input type ${firstInput.type}`;
   }
 };
 
@@ -198,7 +202,7 @@ doesn't trigger warnings in webapp. As a workaround, just update notes so that t
 required
 */
 function makeNoteFieldsNotRequired() {
-  $$('label.note > input').attr('data-required', '');
+  window.$$('label.note > input').attr('data-required', '');
 }
 
 module.exports = FormFiller;

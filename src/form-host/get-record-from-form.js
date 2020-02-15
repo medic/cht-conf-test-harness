@@ -23,11 +23,11 @@ const getRecordForForm = (form, formXml, formName, now) => {
 
 /* Enketo-Translation reportRecordToJs */
 const reportRecordToJs = function(record, formXml) {
-  var root = $.parseXML(record).firstChild;
+  const root = $.parseXML(record).firstChild;
   if (!formXml) {
     return nodesToJs(root.childNodes);
   }
-  var repeatPaths = $(formXml)
+  const repeatPaths = $(formXml)
     .find('repeat[nodeset]')
     .map(function() {
       return $(this).attr('nodeset');
@@ -40,19 +40,19 @@ const reportRecordToJs = function(record, formXml) {
 const nodesToJs = function(data, repeatPaths, path) {
   repeatPaths = repeatPaths || [];
   path = path || '';
-  var result = {};
+  const result = {};
   withElements(data)
     .each(function(n) {
-      var dbDocAttribute = n.attributes.getNamedItem('db-doc');
+      const dbDocAttribute = n.attributes.getNamedItem('db-doc');
       if (dbDocAttribute && dbDocAttribute.value === 'true') {
         return;
       }
 
-      var typeAttribute = n.attributes.getNamedItem('type');
-      var updatedPath = path + '/' + n.nodeName;
-      var value;
+      const typeAttribute = n.attributes.getNamedItem('type');
+      const updatedPath = path + '/' + n.nodeName;
+      let value;
 
-      var hasChildren = withElements(n.childNodes).size().value();
+      const hasChildren = withElements(n.childNodes).size().value();
       if(hasChildren) {
         value = nodesToJs(n.childNodes, repeatPaths, updatedPath);
       } else if (typeAttribute && typeAttribute.value === 'binary') {
@@ -77,7 +77,7 @@ const nodesToJs = function(data, repeatPaths, path) {
 function withElements(nodes) {
   return _.chain(nodes)
     .filter(function(n) {
-      return n.nodeType === Node.ELEMENT_NODE;
+      return n.nodeType === window.Node.ELEMENT_NODE;
     });
 }
 
@@ -97,7 +97,7 @@ const xmlToDocs = function(doc, formXml, record, now) {
 
   function getId(xpath) {
     return recordDoc
-      .evaluate(xpath, recordDoc, null, XPathResult.ANY_TYPE, null)
+      .evaluate(xpath, recordDoc, null, window.XPathResult.ANY_TYPE, null)
       .iterateNext()
       ._couchId;
   }

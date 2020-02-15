@@ -7,7 +7,9 @@
     "test": "mocha test/*.spec.js --timeout 25000 --slow 500",
     "build": "npm run docs && ./build.sh",
     "docs": "node ./node_modules/jsdoc/jsdoc src/*.js src/**/*.js ./JSDOC.md",
-    "explore": "node ./project-explorer/build-assets.js --path=./test/collateral && cd project-explorer && webpack && google-chrome ./project-explorer.html"
+    "explore": "node ./project-explorer/build-assets.js --path=./test/collateral && cd project-explorer && webpack && google-chrome ./project-explorer.html",
+    "eslint": "node ./node_modules/eslint/bin/eslint.js .",
+    "travis": "npm run build && npm run eslint && npm test"
   },
   "dependencies": {
     "medic-nootils": "^4.0.1",
@@ -19,8 +21,10 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@medic/eslint-config": "^1.1.0",
     "chai": "^4.2.0",
     "enketo-core": "4.41.6",
+    "eslint": "^6.8.0",
     "jsdoc": "^3.6.3",
     "medic": "git+https://github.com/medic/medic.git#3.6.x",
     "medic-enketo-xslt": "^1.5.0",
