@@ -153,7 +153,8 @@ class Harness {
 
     const formNameWithoutDirectory = path.basename(formName);
     const serializedContactSummary = serializeContactSummary(inputs.contactSummary || this.contactSummary);
-    await this.page.evaluate((innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary), formNameWithoutDirectory, xform, inputs.content, inputs.user, serializedContactSummary);
+    const loadXformWrapper = (innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary);
+    await this.page.evaluate(loadXformWrapper, formNameWithoutDirectory, xform, inputs.content, inputs.user, serializedContactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
@@ -193,7 +194,7 @@ class Harness {
         hours   * 1000 * 60 * 60 +
         minutes * 1000 * 60 +
         seconds * 1000 +
-        ms
+        ms;
     } else { // shorthand is for days
       now += amount * 24 * 60 * 60 * 1000;
     }
@@ -237,8 +238,13 @@ class Harness {
     }
 
     if (fillResult.report) {
-      this._state.reports.push(fillResult.report);
-      fillResult.report._id = this._state.reports.length.toString();
+      const ContactTypes = ['contact', 'district_hospital', 'health_center', 'clinic', 'person'];
+      const isContact = doc => doc && ContactTypes.includes(doc.type);
+      const resultingDocs = [fillResult.report, ...fillResult.additionalDocs];
+      for (const doc of resultingDocs) {
+        const container = isContact(doc) ? this._state.contacts : this._state.reports;
+        container.push(doc);
+      }
     }
 
     return fillResult;
@@ -430,7 +436,7 @@ class Harness {
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
     } else {
-      for (let current = resolvedContact.parent; !!current; current = current.parent) {
+      for (let current = resolvedContact.parent; current; current = current.parent) {
         const parent = current._id ? getContactById(current._id) || current : current;
         resolvedLineage.push(parent);
       }
@@ -439,7 +445,7 @@ class Harness {
     const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
     return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
   }
-};
+}
 
 const loadJsonFromFile = filePath => {
   const content = readFileSync(filePath);

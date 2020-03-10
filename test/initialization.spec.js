@@ -1,6 +1,5 @@
 const { expect } = require('chai');
 const path = require('path');
-const sinon = require('sinon');
 
 const Harness = require('../src/harness');
 

@@ -13,12 +13,18 @@ const getInstances = async (appSettings, user, contacts, reports, now) => {
 };
 
 const calculateNow = input => {
-  if (!input) return new Date();
+  if (!input) {
+    return new Date();
+  }
+
   if (typeof input === 'function') {
     input = input();
   }
   
-  if (typeof input === 'object') return input; // is a Date object
+  if (typeof input === 'object') {
+    return input; // is a Date object
+  }
+
   return toDate(input);
 };
 
@@ -28,10 +34,10 @@ const doGetInstances = async (appSettings, user, contacts, reports, now) => {
 
   // TODO: patch this bug in medic-nootils (<= vs <)
   Utils.isTimely = (date, event) => {
-    var due = new Date(date);
-    var start = Utils.now();
+    const due = new Date(date);
+    const start = Utils.now();
     start.setDate(start.getDate() + event.start);
-    var end = Utils.now();
+    const end = Utils.now();
     end.setDate(end.getDate() - event.end - 1);
     return due.getTime() <= start.getTime() && due.getTime() > end.getTime();
   };
@@ -54,7 +60,7 @@ const doGetInstances = async (appSettings, user, contacts, reports, now) => {
     );
 
   const contactFacts = contacts.map(contact => new Contact({ contact, reports: [] }));
-  for (let report of reports) {
+  for (const report of reports) {
     const associatedContactId = getContactId(report);
     let contact = contactFacts.find(fact => contactHasId(fact.contact, associatedContactId));
     if (!contact) {
@@ -63,7 +69,7 @@ const doGetInstances = async (appSettings, user, contacts, reports, now) => {
       contactFacts.push(contact);
     }
     contact.reports.push(report);
-  };
+  }
 
   const tasks = [];
   const targets = [];

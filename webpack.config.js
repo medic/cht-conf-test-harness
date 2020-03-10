@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const path = require('path');
 
 module.exports = {

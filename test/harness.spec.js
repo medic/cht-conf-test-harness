@@ -9,8 +9,6 @@ const harness = new Harness({
   directory: path.join(__dirname, 'collateral'),
   xformFolderPath: path.join(__dirname, 'collateral'),
   verbose: false,
-  // headless: false,
-  // slowMo: 250,
   reportFormErrors: false,
 });
 
@@ -60,7 +58,7 @@ describe('Harness tests', () => {
       expect(result).to.nested.include({
         'errors[0].msg': 'This field is required',
         'errors[0].type': 'validation',
-        'errors[0].question': "When PNC visit was planned?*\nThis field is required",
+        'errors[0].question': 'When PNC visit was planned?*\nThis field is required',
 
         'errors[1].msg': 'This field is required',
       });
@@ -81,7 +79,7 @@ describe('Harness tests', () => {
       expect(result).to.nested.include({
         'errors[0].msg': 'Value not allowed',
         'errors[0].type': 'validation',
-        'errors[0].question': "When PNC visit was planned?*\nValue not allowed",
+        'errors[0].question': 'When PNC visit was planned?*\nValue not allowed',
 
         'errors[1].msg': 'Value not allowed',
       });
@@ -98,6 +96,7 @@ describe('Harness tests', () => {
         'errors[1].type': 'validation',
       });
       expect(result.report).to.eq(undefined);
+      expect(result.additionalDocs).to.deep.eq([]);
     });
 
     it('too many inputs for a page', async () => {
@@ -158,6 +157,7 @@ describe('Harness tests', () => {
             risks_new: 'asthma high_blood_pressure',
           },
         });
+        expect(result.additionalDocs).to.deep.eq([]);
       });
 
       it('using a list of values', async () => {
@@ -249,7 +249,7 @@ describe('Harness tests', () => {
       // This data is the result of a build-time shim forced into enketo
       expect(followupResult.report).to.nested.include({
         'fields.inputs.source': 'task',
-        'fields.inputs.source_id': '1',
+        'fields.inputs.source_id': initialResult.report._id,
       });
   
       const actual = await harness.getTasks();
@@ -258,7 +258,8 @@ describe('Harness tests', () => {
   });
 
   describe('getContactSummary', () => {
-    let functionStub, basicReport;
+    let functionStub;
+    let basicReport;
 
     before(async () => {
       await harness.setNow('2000-01-01');
@@ -271,7 +272,9 @@ describe('Harness tests', () => {
     });
 
     it('passthrough if all args given', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
-      const contact = {}, reports = [], lineage = [];
+      const contact = {};
+      const reports = [];
+      const lineage = [];
       harness.getContactSummary(contact, reports, lineage);
       expect(functionStub.args[0]).to.deep.eq([contact, reports, lineage]);
     }));
@@ -400,6 +403,36 @@ describe('Harness tests', () => {
     it('standard "on" form - contains textarea note', async () => {
       const result = await harness.fillForm('on', ['yes', 'this is a note']);
       expect(result.errors).to.be.empty;
+    });
+
+    it('db-doc=true yields additionalDoc', async () => {
+      const now = new Date('2000-01-01');
+      await harness.setNow(now);
+
+      expect(harness.state.reports).to.have.property('length', 0);
+      const result = await harness.fillForm('add_doc', ['rellocation', 'yes']);
+      expect(result.errors).to.be.empty;
+      expect(result.report).to.nested.include({
+        form: 'add_doc',
+        reported_date: now.getTime(),
+        'fields.group_muting.reason_for_muting': 'rellocation',
+        'fields.group_muting.muting_confirm': 'yes',
+      });
+
+      expect(result.additionalDocs).to.have.property('length', 1);
+      expect(result.additionalDocs[0]).to.nested.include({
+        type: 'data_record',
+        content_type: 'xml',
+        created_by_doc: result.report._id,
+        reported_date: now.getTime(),
+        form: 'muting-approve-request',
+        'fields.muting_reason': 'rellocation',
+        'fields.name': 'Patient Name',
+      });
+      expect(harness.state.reports).to.deep.eq([
+        result.report,
+        result.additionalDocs[0],
+      ]);
     });
 
     it('cht-reference "delivery" form - repeat areas', async () => {

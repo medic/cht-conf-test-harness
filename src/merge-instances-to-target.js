@@ -2,15 +2,21 @@
 
 const _ = require('underscore');
 const moment = require('moment');
-const toDate = require('./toDate')
+const toDate = require('./toDate');
 
 const calculateNow = input => {
-  if (!input) return new Date();
+  if (!input) {
+    return new Date();
+  }
+
   if (typeof input === 'function') {
     input = input();
   }
   
-  if (typeof input === 'object') return input; // is a Date object
+  if (typeof input === 'object') {
+    return input; // is a Date object
+  }
+
   return toDate(input);
 };
 
@@ -53,7 +59,7 @@ const calculateValue = function(target) {
 };
 
 const mergeTarget = function(targets, instance, now) {
-  let target = _.findWhere(targets, { id: instance.type });
+  const target = _.findWhere(targets, { id: instance.type });
   if (!target) {
     console.warn(`Unconfigured target instance emitted: ${instance.type}`);
     return;

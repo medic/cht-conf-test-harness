@@ -1,7 +1,7 @@
 const $ = require('jquery');
 const EnketoForm = require('enketo-core/src/js/Form');
 
-const xmlSerializer = new XMLSerializer();
+const xmlSerializer = new window.XMLSerializer();
 class FormWireup {
   constructor(openrosa2html5form, openrosa2xmlmodel) {
     this.htmlTransformer = initTransformer(openrosa2html5form);
@@ -9,9 +9,17 @@ class FormWireup {
   }
 
   render(formXml, content, user, contactSummary) {
-    if (!formXml || typeof formXml !== 'string') throw new Error('Invalid argument: xformData');
-    if (!content || typeof content !== 'object') throw new Error('Invalid argument: content');
-    if (!contactSummary) throw new Error('Invalid argument: contactSummary');
+    if (!formXml || typeof formXml !== 'string') {
+      throw new Error('Invalid argument: xformData');
+    }
+    
+    if (!content || typeof content !== 'object') {
+      throw new Error('Invalid argument: content');
+    }
+
+    if (!contactSummary) {
+      throw new Error('Invalid argument: contactSummary');
+    }
   
     const xform = $.parseXML(formXml);
     setLanguageOnForm(xform, 'en');
@@ -41,10 +49,12 @@ class FormWireup {
 }
 
 const initTransformer = transform => {
-  if (!transform) throw new Error('Invalid argument: value');
+  if (!transform) {
+    throw new Error('Invalid argument: value');
+  }
 
   const xlt = $.parseXML(transform);
-  const processor = new XSLTProcessor();
+  const processor = new window.XSLTProcessor();
   processor.importStylesheet(xlt);
 
   return xform => {
@@ -52,7 +62,7 @@ const initTransformer = transform => {
     const rootElement = transformedDoc.documentElement.firstElementChild;
     return xmlSerializer.serializeToString(rootElement); 
   };
-}
+};
 
 // set the user's language as default so it'll be used for itext translations
 const setLanguageOnForm = function(xform, language) {
@@ -78,15 +88,15 @@ const bindDataToModel = (model, data, user) => {
     bindJsonToXml(userRoot, user);
   }
 
-  return new XMLSerializer().serializeToString(bindRoot[0]);
+  return new window.XMLSerializer().serializeToString(bindRoot[0]);
 };
 
 /* Enketo Translation Service */
 const bindJsonToXml = function(elem, data, childMatcher) {
   Object.keys(data).map(key => [key, data[key]])
     .forEach(function(pair) {
-      var current = findCurrentElement(elem, pair[0], childMatcher);
-      var value = pair[1];
+      const current = findCurrentElement(elem, pair[0], childMatcher);
+      const value = pair[1];
 
       if (typeof value === 'object') {
         if(current.children().length) {
@@ -102,7 +112,7 @@ const bindJsonToXml = function(elem, data, childMatcher) {
 
 const findCurrentElement = function(elem, name, childMatcher) {
   if (childMatcher) {
-    var found = elem.find(childMatcher(name));
+    const found = elem.find(childMatcher(name));
     if (found.length > 1) {
       console.warn('Using the matcher "' + childMatcher(name) + '" we found ' + found.length + ' elements, ' +
         'we should only ever bind one.', elem);

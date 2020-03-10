@@ -2,7 +2,9 @@
 
 const toDate = val => {
   let parsedDate = new Date(val);
-  if (isNaN(parsedDate.getTime())) return undefined;
+  if (isNaN(parsedDate.getTime())) {
+    return undefined;
+  }
 
   /*
   Most date formats are interpretted as local time, but this specific date form is UTC
