@@ -71,6 +71,7 @@ const nodesToJs = function(data, repeatPaths, path) {
         result[n.nodeName] = value;
       }
     });
+
   return result;
 };
 
