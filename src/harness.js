@@ -461,7 +461,7 @@ const readFileSync = (...args) => {
   return fs.readFileSync(filePath).toString();
 };
 
-const serializeContactSummary = contactSummary => {
+const serializeContactSummary = (contactSummary = {}) => {
   if (typeof contactSummary !== 'object') {
     throw Error('Invalid contactSummary. Object is expected');
   }
