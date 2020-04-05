@@ -455,7 +455,7 @@ describe('Harness tests', () => {
           await harness.fillForm('plus_repeat', ['click']);
           expect.fail('to throw');
         } catch (err) {
-          expect(err.message).to.include('expects an integer');
+          expect(err.message).to.include('answer which is an integer');
         }
       });
 
