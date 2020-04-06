@@ -435,6 +435,40 @@ describe('Harness tests', () => {
       ]);
     });
 
+    describe('repeat section "+" button - #42', () => {
+      it('valid input', async () => {
+        const result = await harness.fillForm('plus_repeat', [3, 'one', 'two', 'three']);
+        expect(result.errors).to.be.empty;
+        expect(result.report).to.nested.deep.include({
+          form: 'plus_repeat',
+          'fields.contacts.n_contacts': '',
+          'fields.contacts.contact_repeat': [
+            {'text':'one'},
+            {'text':'two'},
+            {'text':'three'}
+          ]
+        });
+      });
+
+      it('throw on non-integer input', async () => {
+        try {
+          await harness.fillForm('plus_repeat', ['click']);
+          expect.fail('to throw');
+        } catch (err) {
+          expect(err.message).to.include('answer which is an integer');
+        }
+      });
+
+      it('no input is allowed', async () => {
+        const result = await harness.fillForm('plus_repeat');
+        expect(result.errors).to.be.empty;
+        expect(result.report).to.nested.deep.include({
+          form: 'plus_repeat',
+          'fields.contacts': { n_contacts: '' },
+        });
+      });
+    });
+
     it('cht-reference "delivery" form - repeat areas', async () => {
       await harness.setNow('2000-04-30');
       const oneChildHealthyOneDeceasedOneStillbirth = [

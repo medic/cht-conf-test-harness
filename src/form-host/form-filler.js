@@ -138,7 +138,7 @@ const fillQuestion = (question, answer) => {
   }
   
   const $question = $(question);
-  const allInputs = $question.find('input,textarea');
+  const allInputs = $question.find('input,textarea,button');
   const firstInput = Array.from(allInputs)[0];
   
   if (!firstInput) {
@@ -147,6 +147,18 @@ const fillQuestion = (question, answer) => {
 
   if (firstInput.localName === 'textarea') {
     return allInputs.val(answer).trigger('change');
+  }
+
+  if (firstInput.localName === 'button') {
+    if (!Number.isInteger(answer)) {
+      throw `Failed to answer question which is a "+" for repeat section. This question expects an answer which is an integer - representing how many times to click the +. "${answer}"`;
+    }
+
+    for (let i = 0; i < answer; ++i) {
+      allInputs.click();
+    }
+
+    return;
   }
 
   switch (firstInput.type) {
@@ -193,7 +205,13 @@ const getVisibleQuestions = form => {
     return currentPage;
   }
 
-  return currentPage.add(currentPage.find('section:not(.disabled)')).children('fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label), label:not(.disabled,.note,.or-appearance-hidden)');
+  return currentPage
+    .add(currentPage.find('section:not(.disabled)'))
+    .children(`
+      fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label),
+      label:not(.disabled,.note,.or-appearance-hidden),
+      div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count])
+    `);
 };
 
 /*
