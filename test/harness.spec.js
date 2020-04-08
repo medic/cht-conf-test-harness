@@ -435,6 +435,18 @@ describe('Harness tests', () => {
       ]);
     });
 
+    it('support for input type tel', async () => {
+      const result = await harness.fillForm('tel', [1, '17786043495']);
+      expect(result.errors).to.be.empty;
+      expect(result.report).to.nested.deep.include({
+        form: 'tel',
+        'fields.contacts.n_contacts': '',
+        'fields.contacts.contact_repeat': [
+          { text: '17786043495' },
+        ]
+      });
+    });
+
     describe('repeat section "+" button - #42', () => {
       it('valid input', async () => {
         const result = await harness.fillForm('plus_repeat', [3, 'one', 'two', 'three']);
