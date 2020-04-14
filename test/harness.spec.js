@@ -447,6 +447,12 @@ describe('Harness tests', () => {
       });
     });
 
+    it('null values are allowed in content object', async () => {
+      const result = await harness.fillForm({ form: 'tel', content: { foo: null } }, [1, '17786043495']);
+      expect(result.errors).to.be.empty;
+      expect(result.report).to.nested.deep.include({ form: 'tel' });
+    });
+
     describe('repeat section "+" button - #42', () => {
       it('valid input', async () => {
         const result = await harness.fillForm('plus_repeat', [3, 'one', 'two', 'three']);
