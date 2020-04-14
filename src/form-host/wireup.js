@@ -98,7 +98,7 @@ const bindJsonToXml = function(elem, data, childMatcher) {
       const current = findCurrentElement(elem, pair[0], childMatcher);
       const value = pair[1];
 
-      if (typeof value === 'object') {
+      if (value !== null && typeof value === 'object') {
         if(current.children().length) {
           bindJsonToXml(current, value);
         } else {
