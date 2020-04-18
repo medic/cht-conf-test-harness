@@ -315,6 +315,51 @@ describe('Harness tests', () => {
     });
   });
 
+  describe('clear', () => {
+    it('content attribute is reset', () => {
+      const originalDoB = harness.content.contact.date_of_birth;
+      harness.content.foo = 'bar';
+      expect(originalDoB).to.be.not.undefined;
+      expect(harness.content.foo).to.eq('bar');
+      
+      harness.content.contact.date_of_birth = 'not_original';
+      harness.clear();
+
+      expect(harness.content.contact.date_of_birth).to.eq(originalDoB);
+      expect(harness.content.foo).to.be.undefined;
+    });
+
+    it('contact summary is cleared', () => {
+      // defaults to calculated value
+      expect(harness.contactSummary.fields.length).to.be.gt(1);
+      harness.contactSummary = { fields: [], cards: [] };
+      expect(harness.contactSummary.fields.length).to.eq(0);
+      
+      harness.clear();
+      expect(harness.contactSummary.fields.length).to.be.gt(1);
+    });
+
+    it('contact summary can be unassigned', () => {
+      harness.contactSummary = { fields: [], cards: [] };
+      expect(harness.contactSummary.fields.length).to.eq(0);
+
+      harness.contactSummary = undefined;
+      expect(harness.contactSummary.fields.length).to.be.gt(1);
+    });
+
+    it('user is reset', () => {
+      harness.user.foo = 'bar';
+      expect(harness.user.name).to.eq('CHW');
+      expect(harness.user.foo).to.eq('bar');
+      
+      harness.content.contact.date_of_birth = 'not_original';
+      harness.clear();
+
+      expect(harness.user.name).to.eq('CHW');
+      expect(harness.user.foo).to.be.undefined;
+    });
+  });
+
   describe('special forms', () => {
     it('patient_assessment with user-based fields', async () => {
       const mrdtUser = Object.assign({}, harness.defaultUser, { is_in_mrdt: true });

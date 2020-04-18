@@ -1,6 +1,6 @@
 /* A modification of the TargetGenerator Service */
 
-const _ = require('underscore');
+const _ = require('lodash');
 const moment = require('moment');
 const toDate = require('./toDate');
 
@@ -59,7 +59,7 @@ const calculateValue = function(target) {
 };
 
 const mergeTarget = function(targets, instance, now) {
-  const target = _.findWhere(targets, { id: instance.type });
+  const target = _.find(targets, { id: instance.type });
   if (!target) {
     console.warn(`Unconfigured target instance emitted: ${instance.type}`);
     return;
