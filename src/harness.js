@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const fs = require('fs');
 const jsonToXml = require('pojo2xml');
 const process = require('process');
@@ -65,13 +65,13 @@ class Harness {
     this.log = (...args) => this.options.verbose && console.log('Harness', ...args);
 
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
-    this.options.inputs = _.defaults(options.inputs, fileBasedDefaults);
-    
+    this.defaultInputs = _.defaults(this.options.inputs, fileBasedDefaults);
+
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
     }
-    this.clear();
+    this.clear();  
   }
 
   /**
@@ -115,12 +115,14 @@ class Harness {
    */
   async clear() {
     const contacts = [];
+
+    this.options.inputs = _.cloneDeep(this.defaultInputs);
     if (this.options.inputs.user && this.options.inputs.user.parent) {
-      contacts.push(_.clone(this.options.inputs.user.parent));
+      contacts.push(_.cloneDeep(this.options.inputs.user.parent));
     }
 
     if (this.options.inputs.content && this.options.inputs.content.contact) {
-      contacts.push(_.clone(this.options.inputs.content.contact));
+      contacts.push(_.cloneDeep(this.options.inputs.content.contact));
     }
 
     this._state = {
@@ -130,6 +132,7 @@ class Harness {
     };
     this.onConsole = () => {};
     this._now = undefined;
+
     return this.page && await this.page.evaluate(() => delete window.now);
   }
 
@@ -359,21 +362,23 @@ class Harness {
   /**
    * `user` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
    */
-  get user() { return _.clone(this.options.inputs.user); }
+  get user() { return this.options.inputs.user; }
 
   /**
    * `content` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
    */
-  get content() { return _.clone(this.options.inputs.content); }
+  get content() { return this.options.inputs.content; }
 
   /**
    * `contactSummary` can be set explicitly through the {@link HarnessInputs} via the constructor or the harness.defaults.json file. 
    * If no contactSummary is explicitly defined, returns the calculation from getContactSummary().
    */
   get contactSummary() {
-    return _.clone(this.options.inputs.contactSummary) || this.getContactSummary();
+    return this.options.inputs.contactSummary || this.getContactSummary();
   }
-
+  set contactSummary(value) {
+    this.options.inputs.contactSummary = value;
+  }
 
   /**
    * @typedef HarnessState
