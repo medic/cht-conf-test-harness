@@ -1,7 +1,8 @@
 const _ = require('underscore');
 const $ = require('jquery');
 
-const getRecordForCompletedForm = require('./get-record-from-form');
+const getRecordForCompletedForm = require('./enketo');
+const saveContact = require('./save-contact');
 
 class FormFiller {
   constructor(formName, form, formXml, options) {
@@ -29,36 +30,28 @@ class FormFiller {
    * @property {string} type A classification of the error [ 'validation', 'general', 'page' ]
    * @property {string} msg Description of the error 
    */
-  async fill(multiPageAnswer) {
-    this.log(`Filling in ${multiPageAnswer.length} pages.`);
-    const results = [];
-    for (const pageIndex in multiPageAnswer) {
-      const pageAnswer = multiPageAnswer[pageIndex];
-      makeNoteFieldsNotRequired();
-      const result = await fillPage(this, pageAnswer);
-      results.push(result);
 
-      if (result.errors.length > 0) {
-        return {
-          errors: result.errors,
-          section: `page-${pageIndex}`,
-          answers: pageAnswer,
-        };
-      }
-    }
-
-    this.form.validateAll();
-    const errors = await this.getVisibleValidationErrors();
-    const isComplete = this.form.pages.getCurrentIndex() === this.form.pages.$activePages.length - 1;
-    const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
-
+  async fillAppForm(multiPageAnswer) {
+    const { isComplete, errors } = await fillForm(this, multiPageAnswer);
     const resultingDocs = isComplete ? getRecordForCompletedForm(this.form, this.formXml, this.formName, window.now) : [];
     const [report, ...additionalDocs] = resultingDocs;
+
     return {
-      errors: [...incompleteError, ...errors],
+      errors,
       section: 'general',
       report,
       additionalDocs,
+    };
+  }
+
+  async fillContactForm(multiPageAnswer) {
+    const { isComplete, errors } = await fillForm(this, multiPageAnswer);
+    const contacts = isComplete ? saveContact(this.form, window.now) : [];
+
+    return {
+      errors,
+      section: 'general',
+      contacts
     };
   }
 
@@ -96,6 +89,35 @@ class FormFiller {
       }]);
   }
 }
+
+const fillForm = async (self, multiPageAnswer) => {
+  self.log(`Filling form in ${multiPageAnswer.length} pages.`);
+  const results = [];
+  for (const pageIndex in multiPageAnswer) {
+    const pageAnswer = multiPageAnswer[pageIndex];
+    makeNoteFieldsNotRequired();
+    const result = await fillPage(self, pageAnswer);
+    results.push(result);
+
+    if (result.errors.length > 0) {
+      return {
+        errors: result.errors,
+        section: `page-${pageIndex}`,
+        answers: pageAnswer,
+      };
+    }
+  }
+
+  self.form.validateAll();
+  const errors = await self.getVisibleValidationErrors();
+  const isComplete = self.form.pages.getCurrentIndex() === self.form.pages.$activePages.length - 1;
+  const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
+
+  return {
+    isComplete,
+    errors: [...incompleteError, ...errors],
+  };
+};
 
 const fillPage = async (self, pageAnswer) => {
   self.log(`Answering ${pageAnswer.length} questions.`);

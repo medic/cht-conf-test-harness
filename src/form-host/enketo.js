@@ -1,9 +1,10 @@
 /*
 This code is a slightly altered fork of https://github.com/medic/cht-core/blob/3.8.x/webapp/src/js/services/enketo.js
 */
-const _ = require('underscore');
 const $ = require('jquery');
 const uuid = require('uuid/v4');
+
+const { reportRecordToJs } = require('./enketo-translation');
 
 const getRecordForForm = (form, formXml, formName, now) => {
   $('form.or').trigger('beforesave');
@@ -20,67 +21,6 @@ const getRecordForForm = (form, formXml, formName, now) => {
   
   return xmlToDocs(doc, formXml, record, now);
 };
-
-/* Enketo-Translation reportRecordToJs */
-const reportRecordToJs = function(record, formXml) {
-  const root = $.parseXML(record).firstChild;
-  if (!formXml) {
-    return nodesToJs(root.childNodes);
-  }
-  const repeatPaths = $(formXml)
-    .find('repeat[nodeset]')
-    .map(function() {
-      return $(this).attr('nodeset');
-    })
-    .get();
-  
-  return nodesToJs(root.childNodes, repeatPaths, '/' + root.nodeName);
-};
-
-const nodesToJs = function(data, repeatPaths, path) {
-  repeatPaths = repeatPaths || [];
-  path = path || '';
-  const result = {};
-  withElements(data)
-    .each(function(n) {
-      const dbDocAttribute = n.attributes.getNamedItem('db-doc');
-      if (dbDocAttribute && dbDocAttribute.value === 'true') {
-        return;
-      }
-
-      const typeAttribute = n.attributes.getNamedItem('type');
-      const updatedPath = path + '/' + n.nodeName;
-      let value;
-
-      const hasChildren = withElements(n.childNodes).size().value();
-      if(hasChildren) {
-        value = nodesToJs(n.childNodes, repeatPaths, updatedPath);
-      } else if (typeAttribute && typeAttribute.value === 'binary') {
-        // this is attached to the doc instead of inlined
-        value = '';
-      } else {
-        value = n.textContent;
-      }
-
-      if (repeatPaths.indexOf(updatedPath) !== -1) {
-        if (!result[n.nodeName]) {
-          result[n.nodeName] = [];
-        }
-        result[n.nodeName].push(value);
-      } else {
-        result[n.nodeName] = value;
-      }
-    });
-
-  return result;
-};
-
-function withElements(nodes) {
-  return _.chain(nodes)
-    .filter(function(n) {
-      return n.nodeType === window.Node.ELEMENT_NODE;
-    });
-}
 
 const xmlToDocs = function(doc, formXml, record, now) {
   function mapOrAssignId(e, id) {

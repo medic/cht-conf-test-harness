@@ -232,7 +232,7 @@ class Harness {
     }
   
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-    const fillResult = await this.page.evaluate(async innerAnswer => await window.formFiller.fill(innerAnswer), answers);
+    const fillResult = await this.page.evaluate(async innerAnswer => await window.formFiller.fillAppForm(innerAnswer), answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
     if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
