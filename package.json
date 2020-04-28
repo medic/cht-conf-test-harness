@@ -1,6 +1,6 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
@@ -23,6 +23,7 @@
   "devDependencies": {
     "@medic/eslint-config": "^1.1.0",
     "chai": "^4.2.0",
+    "chai-exclude": "^2.0.2",
     "enketo-core": "4.41.6",
     "eslint": "^6.8.0",
     "jsdoc": "^3.6.3",
