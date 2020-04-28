@@ -43,34 +43,47 @@ const fileContent = JSON.stringify({
 }, null, 2);
 fs.writeFileSync(harnessDefaultDestinationPath, fileContent);
 
-const directoriesToScan = [
+const appFormPaths = [
   pathToProject,
   path.join(pathToProject, 'forms'),
   path.join(pathToProject, 'forms/app'),
-  path.join(pathToProject, 'forms/contact'),
   path.join(pathToProject, 'forms/collect'),
 ];
 
-const formsInDirectory = [];
-for (const formDirectory of directoriesToScan) {
-  if (fs.existsSync(formDirectory)) {
-    const filePaths = fs.readdirSync(formDirectory).map(file => path.join(formDirectory, file)).filter(f => f.endsWith('.xml'));
-    formsInDirectory.push(...filePaths);
-  } else {
-    console.warn(`Expected directory of forms does not exist at: ${formDirectory}`);
-  }
-}
+const contactFormPaths = [
+  path.join(pathToProject, 'forms/contact')
+];
 
-if (formsInDirectory.length === 0) {
-  console.warn(`No xml files found in folder: ${pathToProject}`);
+const getFilesInFolders = directoriesToScan => {
+  const formsInDirectory = [];
+  for (const formDirectory of directoriesToScan) {
+    if (fs.existsSync(formDirectory)) {
+      const filePaths = fs.readdirSync(formDirectory).map(file => path.join(formDirectory, file)).filter(f => f.endsWith('.xml'));
+      formsInDirectory.push(...filePaths);
+    } else {
+      console.warn(`Expected directory of forms does not exist at: ${formDirectory}`);
+    }
+  }
+
+  return formsInDirectory;
+};
+
+const appForms = getFilesInFolders(appFormPaths);
+if (appForms.length === 0) {
+  console.error(`No xml files found in folders: ${pathToProject}`);
   return -1;
 }
 
 const windowsEscaping = str => str.replace(/\\/g, '\\\\');
-const data = formsInDirectory
+const formsAsRequirements = formPaths => formPaths
   .map(fullPath => `  '${path.basename(fullPath)}': require('${windowsEscaping(fullPath)}'),`)
   .join('\n');
 fs.writeFileSync(outputPath, `module.exports = {
-  ${data}
+  appForms: {
+  ${formsAsRequirements(appForms)}
+  },
+  contactForms: {
+  ${formsAsRequirements(getFilesInFolders(contactFormPaths))}
+  }
 };`);
 console.log(`Compiling to ${outputPath}`);
