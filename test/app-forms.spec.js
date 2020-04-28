@@ -203,4 +203,18 @@ describe('forms that have caused bugs', () => {
     expect(result.report.fields.babys_condition.baby_repeat).to.have.property('length', 1);
     expect(result.report.fields.baby_death.baby_death_repeat).to.have.property('length', 2);
   });
+
+  it('select_one minimal', async () => {
+    await harness.setNow('2000-04-30');
+    const result = await harness.fillForm('samu',
+      ['yes', 'nom', 'prenom', '12', 'years', 'male', '12345678', '87654321', 'alert', 'agadez', 'bilma' ],
+      [Array(11).fill(true), 'reason', 'reacheable'],
+      []
+    );
+    expect(result.errors).to.be.empty;
+    expect(result.report).to.nested.include({
+      'fields.g_details.region': 'agadez',
+      'fields.g_details.district_agadez': 'bilma',
+    });
+  });
 });

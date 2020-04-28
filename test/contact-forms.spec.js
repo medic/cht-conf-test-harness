@@ -97,5 +97,8 @@ describe('contact forms', () => {
       },
       contact_type: 'person',
     });
+
+    expect(harness.state.contacts).to.deep.include(result.contacts[0]);
+    expect(harness.state.contacts).to.deep.include(result.contacts[1]);
   });
 });

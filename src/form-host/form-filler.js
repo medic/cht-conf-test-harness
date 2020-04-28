@@ -171,19 +171,25 @@ const fillQuestion = (question, answer) => {
     return allInputs.val(answer).trigger('change');
   }
 
-  if (firstInput.localName === 'button') {
-    if (!Number.isInteger(answer)) {
-      throw `Failed to answer question which is a "+" for repeat section. This question expects an answer which is an integer - representing how many times to click the +. "${answer}"`;
-    }
-
-    for (let i = 0; i < answer; ++i) {
-      allInputs.click();
-    }
-
-    return;
-  }
-
   switch (firstInput.type) {
+  case 'button':
+    // select_one appearance:minimal
+    if (firstInput.className.includes('dropdown-toggle')) {
+      $question.find(`input[value="${answer}"]`).click();
+    } 
+    
+    // repeate section
+    else {
+      
+      if (!Number.isInteger(answer)) {
+        throw `Failed to answer question which is a "+" for repeat section. This question expects an answer which is an integer - representing how many times to click the +. "${answer}"`;
+      }
+
+      for (let i = 0; i < answer; ++i) {
+        allInputs.click();
+      }
+    }
+    break;
   case 'radio':
     $question.find(`input[value="${answer}"]`).click();
     break;

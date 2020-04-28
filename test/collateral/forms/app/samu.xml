@@ -1,0 +1,1496 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>SAMU</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/samu/g_details/age:label">
+            <value>Age</value>
+          </text>
+          <text id="/samu/g_details/case_number:label">
+            <value>N° enregistrement</value>
+          </text>
+          <text id="/samu/g_details/covid_call/no:label">
+            <value>No</value>
+          </text>
+          <text id="/samu/g_details/covid_call/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/samu/g_details/covid_call:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/samu/g_details/covid_call:label">
+            <value>Appelez-vous pour le COVID?</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/aderbissinat:label">
+            <value>Aderbissinat</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/agadez:label">
+            <value>Agadez</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/arlit:label">
+            <value>Arlit</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/bilma:label">
+            <value>Bilma</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/iferouane:label">
+            <value>Iferouane</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/ingall:label">
+            <value>Ingall</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/tchirozerine:label">
+            <value>Tchirozerine</value>
+          </text>
+          <text id="/samu/g_details/district_agadez:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/bosso:label">
+            <value>Bosso</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/diffa:label">
+            <value>Diffa</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/goudoumaria:label">
+            <value>Goudoumaria</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/mainesoroa:label">
+            <value>Maine-Soroa</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/ngourti:label">
+            <value>N'Gourti</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/nguigmi:label">
+            <value>N'Guigmi</value>
+          </text>
+          <text id="/samu/g_details/district_diffa:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/boboye:label">
+            <value>Boboye</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/dioundiou:label">
+            <value>Dioundiou</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/dogondoutchi:label">
+            <value>Dogondoutchi</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/dosso:label">
+            <value>Dosso</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/falmey:label">
+            <value>Falmey</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/gaya:label">
+            <value>Gaya</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/loga:label">
+            <value>Loga</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/tibiri:label">
+            <value>Tibiri</value>
+          </text>
+          <text id="/samu/g_details/district_dosso:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/aguie:label">
+            <value>Aguie</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/bermo:label">
+            <value>Bermo</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/dakoro:label">
+            <value>Dakoro</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/gazaoua:label">
+            <value>Gazaoua</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/guidanroumdji:label">
+            <value>Guidan-Roumdji</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/madarounfa:label">
+            <value>Madarounfa</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/maradi:label">
+            <value>Maradi</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/mayahi:label">
+            <value>Mayahi</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/tessaoua:label">
+            <value>Tessaoua</value>
+          </text>
+          <text id="/samu/g_details/district_maradi:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_niamey/niamey1:label">
+            <value>Niamey 1</value>
+          </text>
+          <text id="/samu/g_details/district_niamey/niamey2:label">
+            <value>Niamey 2</value>
+          </text>
+          <text id="/samu/g_details/district_niamey/niamey3:label">
+            <value>Niamey 3</value>
+          </text>
+          <text id="/samu/g_details/district_niamey/niamey4:label">
+            <value>Niamey 4</value>
+          </text>
+          <text id="/samu/g_details/district_niamey/niamey5:label">
+            <value>Niamey 5</value>
+          </text>
+          <text id="/samu/g_details/district_niamey:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/abalak:label">
+            <value>Abalak</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/bagaroua:label">
+            <value>Bagaroua</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/birninkonni:label">
+            <value>Birni N'Konni</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/bouza:label">
+            <value>Bouza</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/illela:label">
+            <value>Illela</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/keita:label">
+            <value>Keita</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/madaoua:label">
+            <value>Madaoua</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/malbaza:label">
+            <value>Malbaza</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/tahouacommune:label">
+            <value>Tahoua Commune</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/tahouadept:label">
+            <value>Tahoua Dept</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/tassara:label">
+            <value>Tassara</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/tchintabaraden:label">
+            <value>Tchintabaraden</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/tillia:label">
+            <value>Tillia</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/abala:label">
+            <value>Abala</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/ayorou:label">
+            <value>Ayorou</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/balleyara:label">
+            <value>Balleyara</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/banibangou:label">
+            <value>Banibangou</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/bankilare:label">
+            <value>Bankilare</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/filingue:label">
+            <value>Filingue</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/gotheye:label">
+            <value>Gotheye</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/kollo:label">
+            <value>Kollo</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/ouallam:label">
+            <value>Ouallam</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/say:label">
+            <value>Say</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/tera:label">
+            <value>Tera</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/tillaberi:label">
+            <value>Tillaberi</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/torodi:label">
+            <value>Torodi</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/belbedji:label">
+            <value>Belbedji</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/damagaramtakaya:label">
+            <value>Damagaram Takaya</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/dungass:label">
+            <value>Dungass</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/goure:label">
+            <value>Goure</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/magaria:label">
+            <value>Magaria</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/takeita:label">
+            <value>Takeita</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/tanout:label">
+            <value>Tanout</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/zinder:label">
+            <value>Zinder</value>
+          </text>
+          <text id="/samu/g_details/district_zinder:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/firstname_of_patient:label">
+            <value>Prénom</value>
+          </text>
+          <text id="/samu/g_details/lastname_of_patient:label">
+            <value>Nom</value>
+          </text>
+          <text id="/samu/g_details/months_or_years/months:label">
+            <value>In months</value>
+          </text>
+          <text id="/samu/g_details/months_or_years/years:label">
+            <value>In years</value>
+          </text>
+          <text id="/samu/g_details/number_of_patient_1:jr:constraintMsg">
+            <value>Please enter a valid local number. For example: XX XX XX XX</value>
+          </text>
+          <text id="/samu/g_details/number_of_patient_1:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/samu/g_details/number_of_patient_1:label">
+            <value>N° de contact 1</value>
+          </text>
+          <text id="/samu/g_details/number_of_patient_2:jr:constraintMsg">
+            <value>Please enter a valid local number. For example: XX XX XX XX</value>
+          </text>
+          <text id="/samu/g_details/number_of_patient_2:label">
+            <value>N° de contact 2</value>
+          </text>
+          <text id="/samu/g_details/patient_current_location:label">
+            <value>Lieu où se trouve le cas alerté</value>
+          </text>
+          <text id="/samu/g_details/region/agadez:label">
+            <value>Agadez</value>
+          </text>
+          <text id="/samu/g_details/region/diffa:label">
+            <value>Diffa</value>
+          </text>
+          <text id="/samu/g_details/region/dosso:label">
+            <value>Dosso</value>
+          </text>
+          <text id="/samu/g_details/region/maradi:label">
+            <value>Maradi</value>
+          </text>
+          <text id="/samu/g_details/region/niamey:label">
+            <value>Niamey</value>
+          </text>
+          <text id="/samu/g_details/region/tahoua:label">
+            <value>Tahoua</value>
+          </text>
+          <text id="/samu/g_details/region/tillaberi:label">
+            <value>Tillaberi</value>
+          </text>
+          <text id="/samu/g_details/region/zinder:label">
+            <value>Zinder</value>
+          </text>
+          <text id="/samu/g_details/region:label">
+            <value>Région</value>
+          </text>
+          <text id="/samu/g_details/riposte_id:label">
+            <value>Riposte</value>
+          </text>
+          <text id="/samu/g_details/sex_of_patient/female:label">
+            <value>Féminin</value>
+          </text>
+          <text id="/samu/g_details/sex_of_patient/male:label">
+            <value>Masculin</value>
+          </text>
+          <text id="/samu/g_details/sex_of_patient:label">
+            <value>Sexe</value>
+          </text>
+          <text id="/samu/g_details:label">
+            <value>Détails du cas</value>
+          </text>
+          <text id="/samu/g_symptoms/call_outcome/reacheable:label">
+            <value>Joignable</value>
+          </text>
+          <text id="/samu/g_symptoms/call_outcome/unreacheable:label">
+            <value>Injoignable</value>
+          </text>
+          <text id="/samu/g_symptoms/call_outcome:label">
+            <value>Le cas alerté est-il joignable sur le (s) numéro(s)?</value>
+          </text>
+          <text id="/samu/g_symptoms/other_symptoms:label">
+            <value>Précisez</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/abdominal_pain:label">
+            <value>Douleur abdominal</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/cold:label">
+            <value>Rhume</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/contact_with_positive_case:label">
+            <value>Contacte avec un cas positif</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/cough:label">
+            <value>Toux</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/fever:label">
+            <value>Fièvre</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/headache:label">
+            <value>Céphalée</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/myalgia_or_general_fatigue:label">
+            <value>Myaligie et/ou fatigue générale</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/other_complaint:label">
+            <value>Autre plainte</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/respiratory_problem:label">
+            <value>Problème respiratoire</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/sore_throat:label">
+            <value>Mal de gorge</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/travel_to_a_foreign_country:label">
+            <value>Voyage dans un pays étranger</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms:label">
+            <value>Quels sont les signes/symptômes que présente le cas alerté?</value>
+          </text>
+          <text id="/samu/g_symptoms:label">
+            <value>Symptômes du cas</value>
+          </text>
+          <text id="/samu/inputs/contact/_id:label">
+            <value>Contact Id</value>
+          </text>
+          <text id="/samu/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/samu/inputs/source_id:label">
+            <value>Source ID</value>
+          </text>
+          <text id="/samu/inputs/user/contact_id:label">
+            <value>Contact ID</value>
+          </text>
+          <text id="/samu/inputs/user/facility_id:label">
+            <value>Facility ID</value>
+          </text>
+          <text id="/samu/inputs/user/name:label">
+            <value>Name</value>
+          </text>
+          <text id="/samu/inputs/user/phone:label">
+            <value>Phone</value>
+          </text>
+          <text id="/samu/inputs/user:label">
+            <value>User</value>
+          </text>
+          <text id="/samu/inputs:label">
+            <value>Select Your Riposte</value>
+          </text>
+          <text id="/samu/patient_id:label">
+            <value>Not Covid report on user contact</value>
+          </text>
+          <text id="/samu/place_id:label">
+            <value>Covid report on riposte</value>
+          </text>
+          <text id="/samu/summary-group/n_all_symptoms:label">
+            <value><output value=" /samu/selected_symptoms "/></value>
+          </text>
+          <text id="/samu/summary-group/n_details_current_location:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /samu/g_details/patient_current_location "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/samu/summary-group/n_details_firstname:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /samu/g_details/firstname_of_patient "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/samu/summary-group/n_details_number_1:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /samu/g_details/number_of_patient_1 "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/samu/summary-group/n_details_number_2:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /samu/g_details/number_of_patient_2 "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/samu/summary-group/n_region:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /samu/summary-group/selected_region "/> <output value=" /samu/summary-group/selected_district "/>&lt;/ h4&gt;</value>
+          </text>
+          <text id="/samu/summary-group/n_symptoms:label">
+            <value>Symptômes</value>
+          </text>
+          <text id="/samu/summary-group/patient_details:label">
+            <value>Détails du cas alerté</value>
+          </text>
+        </translation>
+        <translation lang="fr">
+          <text id="/samu/g_details/age:label">
+            <value>Age</value>
+          </text>
+          <text id="/samu/g_details/case_number:label">
+            <value>N° enregistrement</value>
+          </text>
+          <text id="/samu/g_details/covid_call/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/samu/g_details/covid_call/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/samu/g_details/covid_call:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/samu/g_details/covid_call:label">
+            <value>Appelez-vous pour le COVID?</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/aderbissinat:label">
+            <value>Aderbissinat</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/agadez:label">
+            <value>Agadez</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/arlit:label">
+            <value>Arlit</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/bilma:label">
+            <value>Bilma</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/iferouane:label">
+            <value>Iferouane</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/ingall:label">
+            <value>Ingall</value>
+          </text>
+          <text id="/samu/g_details/district_agadez/tchirozerine:label">
+            <value>Tchirozerine</value>
+          </text>
+          <text id="/samu/g_details/district_agadez:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/bosso:label">
+            <value>Bosso</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/diffa:label">
+            <value>Diffa</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/goudoumaria:label">
+            <value>Goudoumaria</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/mainesoroa:label">
+            <value>Maine-Soroa</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/ngourti:label">
+            <value>N'Gourti</value>
+          </text>
+          <text id="/samu/g_details/district_diffa/nguigmi:label">
+            <value>N'Guigmi</value>
+          </text>
+          <text id="/samu/g_details/district_diffa:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/boboye:label">
+            <value>Boboye</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/dioundiou:label">
+            <value>Dioundiou</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/dogondoutchi:label">
+            <value>Dogondoutchi</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/dosso:label">
+            <value>Dosso</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/falmey:label">
+            <value>Falmey</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/gaya:label">
+            <value>Gaya</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/loga:label">
+            <value>Loga</value>
+          </text>
+          <text id="/samu/g_details/district_dosso/tibiri:label">
+            <value>Tibiri</value>
+          </text>
+          <text id="/samu/g_details/district_dosso:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/aguie:label">
+            <value>Aguie</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/bermo:label">
+            <value>Bermo</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/dakoro:label">
+            <value>Dakoro</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/gazaoua:label">
+            <value>Gazaoua</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/guidanroumdji:label">
+            <value>Guidan-Roumdji</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/madarounfa:label">
+            <value>Madarounfa</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/maradi:label">
+            <value>Maradi</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/mayahi:label">
+            <value>Mayahi</value>
+          </text>
+          <text id="/samu/g_details/district_maradi/tessaoua:label">
+            <value>Tessaoua</value>
+          </text>
+          <text id="/samu/g_details/district_maradi:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_niamey/niamey1:label">
+            <value>Niamey 1</value>
+          </text>
+          <text id="/samu/g_details/district_niamey/niamey2:label">
+            <value>Niamey 2</value>
+          </text>
+          <text id="/samu/g_details/district_niamey/niamey3:label">
+            <value>Niamey 3</value>
+          </text>
+          <text id="/samu/g_details/district_niamey/niamey4:label">
+            <value>Niamey 4</value>
+          </text>
+          <text id="/samu/g_details/district_niamey/niamey5:label">
+            <value>Niamey 5</value>
+          </text>
+          <text id="/samu/g_details/district_niamey:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/abalak:label">
+            <value>Abalak</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/bagaroua:label">
+            <value>Bagaroua</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/birninkonni:label">
+            <value>Birni N'Konni</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/bouza:label">
+            <value>Bouza</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/illela:label">
+            <value>Illela</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/keita:label">
+            <value>Keita</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/madaoua:label">
+            <value>Madaoua</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/malbaza:label">
+            <value>Malbaza</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/tahouacommune:label">
+            <value>Tahoua Commune</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/tahouadept:label">
+            <value>Tahoua Dept</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/tassara:label">
+            <value>Tassara</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/tchintabaraden:label">
+            <value>Tchintabaraden</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua/tillia:label">
+            <value>Tillia</value>
+          </text>
+          <text id="/samu/g_details/district_tahoua:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/abala:label">
+            <value>Abala</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/ayorou:label">
+            <value>Ayorou</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/balleyara:label">
+            <value>Balleyara</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/banibangou:label">
+            <value>Banibangou</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/bankilare:label">
+            <value>Bankilare</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/filingue:label">
+            <value>Filingue</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/gotheye:label">
+            <value>Gotheye</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/kollo:label">
+            <value>Kollo</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/ouallam:label">
+            <value>Ouallam</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/say:label">
+            <value>Say</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/tera:label">
+            <value>Tera</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/tillaberi:label">
+            <value>Tillaberi</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi/torodi:label">
+            <value>Torodi</value>
+          </text>
+          <text id="/samu/g_details/district_tillaberi:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/belbedji:label">
+            <value>Belbedji</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/damagaramtakaya:label">
+            <value>Damagaram Takaya</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/dungass:label">
+            <value>Dungass</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/goure:label">
+            <value>Goure</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/magaria:label">
+            <value>Magaria</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/takeita:label">
+            <value>Takeita</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/tanout:label">
+            <value>Tanout</value>
+          </text>
+          <text id="/samu/g_details/district_zinder/zinder:label">
+            <value>Zinder</value>
+          </text>
+          <text id="/samu/g_details/district_zinder:label">
+            <value>District</value>
+          </text>
+          <text id="/samu/g_details/firstname_of_patient:label">
+            <value>Prénom</value>
+          </text>
+          <text id="/samu/g_details/lastname_of_patient:label">
+            <value>Nom</value>
+          </text>
+          <text id="/samu/g_details/months_or_years/months:label">
+            <value>En mois</value>
+          </text>
+          <text id="/samu/g_details/months_or_years/years:label">
+            <value>En années</value>
+          </text>
+          <text id="/samu/g_details/number_of_patient_1:jr:constraintMsg">
+            <value>Veuillez entrer un numéro local valide. Par exemple: XX XX XX XX</value>
+          </text>
+          <text id="/samu/g_details/number_of_patient_1:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/samu/g_details/number_of_patient_1:label">
+            <value>N° de contact 1</value>
+          </text>
+          <text id="/samu/g_details/number_of_patient_2:jr:constraintMsg">
+            <value>Veuillez entrer un numéro local valide. Par exemple: XX XX XX XX</value>
+          </text>
+          <text id="/samu/g_details/number_of_patient_2:label">
+            <value>N° de contact 2</value>
+          </text>
+          <text id="/samu/g_details/patient_current_location:label">
+            <value>Lieu où se trouve le cas alerté</value>
+          </text>
+          <text id="/samu/g_details/region/agadez:label">
+            <value>Agadez</value>
+          </text>
+          <text id="/samu/g_details/region/diffa:label">
+            <value>Diffa</value>
+          </text>
+          <text id="/samu/g_details/region/dosso:label">
+            <value>Dosso</value>
+          </text>
+          <text id="/samu/g_details/region/maradi:label">
+            <value>Maradi</value>
+          </text>
+          <text id="/samu/g_details/region/niamey:label">
+            <value>Niamey</value>
+          </text>
+          <text id="/samu/g_details/region/tahoua:label">
+            <value>Tahoua</value>
+          </text>
+          <text id="/samu/g_details/region/tillaberi:label">
+            <value>Tillaberi</value>
+          </text>
+          <text id="/samu/g_details/region/zinder:label">
+            <value>Zinder</value>
+          </text>
+          <text id="/samu/g_details/region:label">
+            <value>Région</value>
+          </text>
+          <text id="/samu/g_details/riposte_id:label">
+            <value>Riposte</value>
+          </text>
+          <text id="/samu/g_details/sex_of_patient/female:label">
+            <value>Féminin</value>
+          </text>
+          <text id="/samu/g_details/sex_of_patient/male:label">
+            <value>Masculin</value>
+          </text>
+          <text id="/samu/g_details/sex_of_patient:label">
+            <value>Sexe</value>
+          </text>
+          <text id="/samu/g_details:label">
+            <value>Détails du cas</value>
+          </text>
+          <text id="/samu/g_symptoms/call_outcome/reacheable:label">
+            <value>Joignable</value>
+          </text>
+          <text id="/samu/g_symptoms/call_outcome/unreacheable:label">
+            <value>Injoignable</value>
+          </text>
+          <text id="/samu/g_symptoms/call_outcome:label">
+            <value>Le cas alerté est-il joignable sur le (s) numéro(s)?</value>
+          </text>
+          <text id="/samu/g_symptoms/other_symptoms:label">
+            <value>Précisez</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/abdominal_pain:label">
+            <value>Douleur abdominal</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/cold:label">
+            <value>Rhume</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/contact_with_positive_case:label">
+            <value>Contacte avec un cas positif</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/cough:label">
+            <value>Toux</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/fever:label">
+            <value>Fièvre</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/headache:label">
+            <value>Céphalée</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/myalgia_or_general_fatigue:label">
+            <value>Myaligie et/ou fatigue générale</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/other_complaint:label">
+            <value>Autre plainte</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/respiratory_problem:label">
+            <value>Problème respiratoire</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/sore_throat:label">
+            <value>Mal de gorge</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms/travel_to_a_foreign_country:label">
+            <value>Voyage dans un pays étranger</value>
+          </text>
+          <text id="/samu/g_symptoms/symptoms:label">
+            <value>Quels sont les signes/symptômes que présente le cas alerté?</value>
+          </text>
+          <text id="/samu/g_symptoms:label">
+            <value>Symptômes du cas</value>
+          </text>
+          <text id="/samu/inputs/contact/_id:label">
+            <value>-</value>
+          </text>
+          <text id="/samu/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/samu/inputs/source_id:label">
+            <value>Source ID</value>
+          </text>
+          <text id="/samu/inputs/user/contact_id:label">
+            <value>Contact ID</value>
+          </text>
+          <text id="/samu/inputs/user/facility_id:label">
+            <value>Facility ID</value>
+          </text>
+          <text id="/samu/inputs/user/name:label">
+            <value>-</value>
+          </text>
+          <text id="/samu/inputs/user/phone:label">
+            <value>-</value>
+          </text>
+          <text id="/samu/inputs/user:label">
+            <value>User</value>
+          </text>
+          <text id="/samu/inputs:label">
+            <value>Patient</value>
+          </text>
+          <text id="/samu/summary-group/n_all_symptoms:label">
+            <value><output value=" /samu/selected_symptoms "/></value>
+          </text>
+          <text id="/samu/summary-group/n_details_current_location:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /samu/g_details/patient_current_location "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/samu/summary-group/n_details_firstname:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /samu/g_details/firstname_of_patient "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/samu/summary-group/n_details_number_1:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /samu/g_details/number_of_patient_1 "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/samu/summary-group/n_details_number_2:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /samu/g_details/number_of_patient_2 "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/samu/summary-group/n_region:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /samu/summary-group/selected_region "/> <output value=" /samu/summary-group/selected_district "/>&lt;/ h4&gt;</value>
+          </text>
+          <text id="/samu/summary-group/n_symptoms:label">
+            <value>Symptômes</value>
+          </text>
+          <text id="/samu/summary-group/patient_details:label">
+            <value>Détails du cas alerté</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <samu delimiter="#" id="samu" prefix="J1!samu!" version="2020-04-24  14-42">
+          <inputs tag="hidden">
+            <source tag="hidden">user</source>
+            <source_id tag="hidden"/>
+            <user tag="hidden">
+              <name tag="hidden"/>
+              <phone tag="hidden"/>
+              <contact_id tag="hidden"/>
+              <facility_id tag="hidden"/>
+            </user>
+            <contact tag="hidden">
+              <_id tag="hidden"/>
+            </contact>
+          </inputs>
+          <place_id tag="hidden"/>
+          <patient_id tag="hidden"/>
+          <patient_fullname tag="hidden"/>
+          <patient_phone/>
+          <send_to_riposte/>
+          <g_details tag="hidden">
+            <covid_call tag="hidden"/>
+            <riposte_id tag="hidden">a19011ff-d673-403a-bb33-46891a61493e</riposte_id>
+            <case_number tag="hidden"/>
+            <lastname_of_patient tag="hidden"/>
+            <firstname_of_patient tag="hidden"/>
+            <age tag="hidden"/>
+            <months_or_years tag="hidden"/>
+            <sex_of_patient tag="hidden"/>
+            <number_of_patient_1 tag="hidden"/>
+            <number_of_patient_2 tag="hidden"/>
+            <patient_current_location tag="hidden"/>
+            <region/>
+            <district_agadez tag="hidden"/>
+            <district_diffa/>
+            <district_dosso/>
+            <district_maradi/>
+            <district_niamey/>
+            <district_tahoua/>
+            <district_tillaberi/>
+            <district_zinder/>
+          </g_details>
+          <selected_symptoms tag="hidden"/>
+          <g_symptoms tag="hidden">
+            <symptoms tag="hidden"/>
+            <other_symptoms tag="hidden"/>
+            <call_outcome tag="hidden"/>
+          </g_symptoms>
+          <summary-group tag="hidden">
+            <patient_details tag="hidden"/>
+            <selected_region tag="hidden"/>
+            <selected_district tag="hidden"/>
+            <n_details_firstname tag="hidden"/>
+            <n_details_current_location tag="hidden"/>
+            <n_details_number_1 tag="hidden"/>
+            <n_details_number_2 tag="hidden"/>
+            <n_region tag="hidden"/>
+            <n_symptoms tag="hidden"/>
+            <n_all_symptoms tag="hidden"/>
+          </summary-group>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </samu>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/samu/inputs" relevant="false()"/>
+      <bind nodeset="/samu/inputs/source" type="string"/>
+      <bind nodeset="/samu/inputs/source_id" type="string"/>
+      <bind nodeset="/samu/inputs/user/name" type="string"/>
+      <bind nodeset="/samu/inputs/user/phone" type="string"/>
+      <bind nodeset="/samu/inputs/user/contact_id" type="string"/>
+      <bind nodeset="/samu/inputs/user/facility_id" type="string"/>
+      <bind nodeset="/samu/inputs/contact/_id" type="string"/>
+      <bind calculate="if( /samu/send_to_riposte ='yes', /samu/g_details/riposte_id ,&quot;&quot;)" nodeset="/samu/place_id" type="string"/>
+      <bind calculate="if( /samu/send_to_riposte ='yes',&quot;&quot;,../inputs/user/contact_id)" nodeset="/samu/patient_id" type="string"/>
+      <bind calculate=" /samu/g_details/firstname_of_patient  + ' ' +  /samu/g_details/lastname_of_patient " nodeset="/samu/patient_fullname" type="string"/>
+      <bind calculate=" /samu/g_details/number_of_patient_1 " nodeset="/samu/patient_phone" type="string"/>
+      <bind calculate=" /samu/g_details/covid_call " nodeset="/samu/send_to_riposte" type="string"/>
+      <bind jr:requiredMsg="jr:itext('/samu/g_details/covid_call:jr:requiredMsg')" nodeset="/samu/g_details/covid_call" required="true()" type="select1"/>
+      <bind nodeset="/samu/g_details/riposte_id" relevant=" /samu/g_details/covid_call  = 'yes'" required="true()" type="db:riposte"/>
+      <bind calculate="uuid()" nodeset="/samu/g_details/case_number" relevant=" /samu/g_details/covid_call  = 'yes'" type="string"/>
+      <bind nodeset="/samu/g_details/lastname_of_patient" relevant=" /samu/g_details/covid_call  = 'yes'" type="string"/>
+      <bind nodeset="/samu/g_details/firstname_of_patient" relevant=" /samu/g_details/covid_call  = 'yes'" type="string"/>
+      <bind constraint=".&gt;0" nodeset="/samu/g_details/age" relevant=" /samu/g_details/covid_call  = 'yes'" type="int"/>
+      <bind nodeset="/samu/g_details/months_or_years" relevant=" /samu/g_details/covid_call  = 'yes'" type="select1"/>
+      <bind nodeset="/samu/g_details/sex_of_patient" relevant=" /samu/g_details/covid_call  = 'yes'" type="select1"/>
+      <bind constraint="regex(.,'^(\d{2}\s?){4}$')" jr:constraintMsg="jr:itext('/samu/g_details/number_of_patient_1:jr:constraintMsg')" jr:requiredMsg="jr:itext('/samu/g_details/number_of_patient_1:jr:requiredMsg')" nodeset="/samu/g_details/number_of_patient_1" relevant=" /samu/g_details/covid_call  = 'yes'" required="true()" type="string"/>
+      <bind constraint="regex(.,'^(\d{2}\s?){4}$')" jr:constraintMsg="jr:itext('/samu/g_details/number_of_patient_2:jr:constraintMsg')" nodeset="/samu/g_details/number_of_patient_2" relevant=" /samu/g_details/covid_call  = 'yes'" type="string"/>
+      <bind nodeset="/samu/g_details/patient_current_location" relevant=" /samu/g_details/covid_call  = 'yes'" type="string"/>
+      <bind nodeset="/samu/g_details/region" relevant=" /samu/g_details/covid_call  = 'yes'" type="select1"/>
+      <bind nodeset="/samu/g_details/district_agadez" relevant="selected( /samu/g_details/region ,'agadez')" type="select1"/>
+      <bind nodeset="/samu/g_details/district_diffa" relevant="selected( /samu/g_details/region ,'diffa')" type="select1"/>
+      <bind nodeset="/samu/g_details/district_dosso" relevant="selected( /samu/g_details/region ,'dosso')" type="select1"/>
+      <bind nodeset="/samu/g_details/district_maradi" relevant="selected( /samu/g_details/region ,'maradi')" type="select1"/>
+      <bind nodeset="/samu/g_details/district_niamey" relevant="selected( /samu/g_details/region ,'niamey')" type="select1"/>
+      <bind nodeset="/samu/g_details/district_tahoua" relevant="selected( /samu/g_details/region ,'tahoua')" type="select1"/>
+      <bind nodeset="/samu/g_details/district_tillaberi" relevant="selected( /samu/g_details/region ,'tillaberi')" type="select1"/>
+      <bind nodeset="/samu/g_details/district_zinder" relevant="selected( /samu/g_details/region ,'zinder')" type="select1"/>
+      <bind calculate="concat(
+if(selected( /samu/g_symptoms/symptoms , 'headache'), 'Céphalée, ',''),
+if(selected( /samu/g_symptoms/symptoms , 'fever'), 'Fièvre, ',''),
+if(selected( /samu/g_symptoms/symptoms , 'cough'), 'Toux, ',''),
+if(selected( /samu/g_symptoms/symptoms , 'cold'), 'Rhume, ',''),
+if(selected( /samu/g_symptoms/symptoms , 'myalgia_or_general_fatigue'), 'Myaligie et/ou fatigue générale, ',''),
+if(selected( /samu/g_symptoms/symptoms , 'abdominal_pain'), 'Douleur abdominal, ',''),
+if(selected( /samu/g_symptoms/symptoms , 'sore_throat'), 'Mal de gorge, ',''),
+if(selected( /samu/g_symptoms/symptoms , 'respiratory_problem'), 'Problème respiratoire, ',''),
+if(selected( /samu/g_symptoms/symptoms , 'other_complaint'),  /samu/g_symptoms/other_symptoms + ', ',''),
+if(selected( /samu/g_symptoms/symptoms , 'contact_with_positive_case'), 'Contacte avec un cas positif, ',''),
+if(selected( /samu/g_symptoms/symptoms , 'travel_to_a_foreign_country'), 'Voyage dans un pays étranger ','')
+)" nodeset="/samu/selected_symptoms" type="string"/>
+      <bind nodeset="/samu/g_symptoms" relevant=" /samu/g_details/covid_call  = 'yes'"/>
+      <bind nodeset="/samu/g_symptoms/symptoms" type="select"/>
+      <bind nodeset="/samu/g_symptoms/other_symptoms" relevant="selected( /samu/g_symptoms/symptoms , 'other_complaint')" type="string"/>
+      <bind nodeset="/samu/g_symptoms/call_outcome" relevant=" /samu/g_details/covid_call  = 'yes'" type="select1"/>
+      <bind nodeset="/samu/summary-group" relevant=" /samu/g_details/covid_call  = 'yes'"/>
+      <bind nodeset="/samu/summary-group/patient_details" readonly="true()" type="string"/>
+      <bind calculate="jr:choice-name( /samu/g_details/region ,' /samu/g_details/region ')" nodeset="/samu/summary-group/selected_region" type="string"/>
+      <bind calculate="coalesce( /samu/g_details/district_agadez ,coalesce( /samu/g_details/district_diffa ,coalesce( /samu/g_details/district_dosso ,coalesce( /samu/g_details/district_maradi ,coalesce( /samu/g_details/district_niamey ,coalesce( /samu/g_details/district_tahoua ,coalesce( /samu/g_details/district_tillaberi , /samu/g_details/district_zinder )))))))" nodeset="/samu/summary-group/selected_district" type="string"/>
+      <bind nodeset="/samu/summary-group/n_details_firstname" readonly="true()" relevant=" /samu/g_details/firstname_of_patient !=''" type="string"/>
+      <bind nodeset="/samu/summary-group/n_details_current_location" readonly="true()" relevant=" /samu/g_details/patient_current_location !=''" type="string"/>
+      <bind nodeset="/samu/summary-group/n_details_number_1" readonly="true()" relevant=" /samu/g_details/number_of_patient_1 !=''" type="string"/>
+      <bind nodeset="/samu/summary-group/n_details_number_2" readonly="true()" relevant=" /samu/g_details/number_of_patient_2 !=''" type="string"/>
+      <bind nodeset="/samu/summary-group/n_region" readonly="true()" type="string"/>
+      <bind nodeset="/samu/summary-group/n_symptoms" readonly="true()" type="string"/>
+      <bind nodeset="/samu/summary-group/n_all_symptoms" readonly="true()" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/samu/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/samu/inputs">
+      <label ref="jr:itext('/samu/inputs:label')"/>
+      <input appearance="hidden" ref="/samu/inputs/source">
+        <label ref="jr:itext('/samu/inputs/source:label')"/>
+      </input>
+      <input appearance="hidden" ref="/samu/inputs/source_id">
+        <label ref="jr:itext('/samu/inputs/source_id:label')"/>
+      </input>
+      <group ref="/samu/inputs/user">
+        <label ref="jr:itext('/samu/inputs/user:label')"/>
+        <input appearance="hidden" ref="/samu/inputs/user/contact_id">
+          <label ref="jr:itext('/samu/inputs/user/contact_id:label')"/>
+        </input>
+        <input appearance="hidden" ref="/samu/inputs/user/facility_id">
+          <label ref="jr:itext('/samu/inputs/user/facility_id:label')"/>
+        </input>
+      </group>
+      <group ref="/samu/inputs/contact"/>
+    </group>
+    <group appearance="field-list" ref="/samu/g_details">
+      <label ref="jr:itext('/samu/g_details:label')"/>
+      <select1 ref="/samu/g_details/covid_call">
+        <label ref="jr:itext('/samu/g_details/covid_call:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/covid_call/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/covid_call/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input appearance="hidden" ref="/samu/g_details/riposte_id">
+        <label ref="jr:itext('/samu/g_details/riposte_id:label')"/>
+      </input>
+      <input ref="/samu/g_details/lastname_of_patient">
+        <label ref="jr:itext('/samu/g_details/lastname_of_patient:label')"/>
+      </input>
+      <input ref="/samu/g_details/firstname_of_patient">
+        <label ref="jr:itext('/samu/g_details/firstname_of_patient:label')"/>
+      </input>
+      <input ref="/samu/g_details/age">
+        <label ref="jr:itext('/samu/g_details/age:label')"/>
+      </input>
+      <select1 ref="/samu/g_details/months_or_years">
+        <item>
+          <label ref="jr:itext('/samu/g_details/months_or_years/months:label')"/>
+          <value>months</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/months_or_years/years:label')"/>
+          <value>years</value>
+        </item>
+      </select1>
+      <select1 ref="/samu/g_details/sex_of_patient">
+        <label ref="jr:itext('/samu/g_details/sex_of_patient:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/sex_of_patient/male:label')"/>
+          <value>male</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/sex_of_patient/female:label')"/>
+          <value>female</value>
+        </item>
+      </select1>
+      <input ref="/samu/g_details/number_of_patient_1">
+        <label ref="jr:itext('/samu/g_details/number_of_patient_1:label')"/>
+      </input>
+      <input ref="/samu/g_details/number_of_patient_2">
+        <label ref="jr:itext('/samu/g_details/number_of_patient_2:label')"/>
+      </input>
+      <input ref="/samu/g_details/patient_current_location">
+        <label ref="jr:itext('/samu/g_details/patient_current_location:label')"/>
+      </input>
+      <select1 appearance="minimal" ref="/samu/g_details/region">
+        <label ref="jr:itext('/samu/g_details/region:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/region/agadez:label')"/>
+          <value>agadez</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/region/diffa:label')"/>
+          <value>diffa</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/region/dosso:label')"/>
+          <value>dosso</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/region/maradi:label')"/>
+          <value>maradi</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/region/niamey:label')"/>
+          <value>niamey</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/region/tahoua:label')"/>
+          <value>tahoua</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/region/tillaberi:label')"/>
+          <value>tillaberi</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/region/zinder:label')"/>
+          <value>zinder</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/samu/g_details/district_agadez">
+        <label ref="jr:itext('/samu/g_details/district_agadez:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_agadez/aderbissinat:label')"/>
+          <value>aderbissinat</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_agadez/agadez:label')"/>
+          <value>agadez</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_agadez/arlit:label')"/>
+          <value>arlit</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_agadez/bilma:label')"/>
+          <value>bilma</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_agadez/iferouane:label')"/>
+          <value>iferouane</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_agadez/ingall:label')"/>
+          <value>ingall</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_agadez/tchirozerine:label')"/>
+          <value>tchirozerine</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/samu/g_details/district_diffa">
+        <label ref="jr:itext('/samu/g_details/district_diffa:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_diffa/bosso:label')"/>
+          <value>bosso</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_diffa/diffa:label')"/>
+          <value>diffa</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_diffa/goudoumaria:label')"/>
+          <value>goudoumaria</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_diffa/mainesoroa:label')"/>
+          <value>mainesoroa</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_diffa/ngourti:label')"/>
+          <value>ngourti</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_diffa/nguigmi:label')"/>
+          <value>nguigmi</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/samu/g_details/district_dosso">
+        <label ref="jr:itext('/samu/g_details/district_dosso:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_dosso/boboye:label')"/>
+          <value>boboye</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_dosso/dioundiou:label')"/>
+          <value>dioundiou</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_dosso/dogondoutchi:label')"/>
+          <value>dogondoutchi</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_dosso/dosso:label')"/>
+          <value>dosso</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_dosso/falmey:label')"/>
+          <value>falmey</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_dosso/gaya:label')"/>
+          <value>gaya</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_dosso/loga:label')"/>
+          <value>loga</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_dosso/tibiri:label')"/>
+          <value>tibiri</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/samu/g_details/district_maradi">
+        <label ref="jr:itext('/samu/g_details/district_maradi:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_maradi/aguie:label')"/>
+          <value>aguie</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_maradi/bermo:label')"/>
+          <value>bermo</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_maradi/dakoro:label')"/>
+          <value>dakoro</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_maradi/gazaoua:label')"/>
+          <value>gazaoua</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_maradi/guidanroumdji:label')"/>
+          <value>guidanroumdji</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_maradi/madarounfa:label')"/>
+          <value>madarounfa</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_maradi/maradi:label')"/>
+          <value>maradi</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_maradi/mayahi:label')"/>
+          <value>mayahi</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_maradi/tessaoua:label')"/>
+          <value>tessaoua</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/samu/g_details/district_niamey">
+        <label ref="jr:itext('/samu/g_details/district_niamey:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_niamey/niamey1:label')"/>
+          <value>niamey1</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_niamey/niamey2:label')"/>
+          <value>niamey2</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_niamey/niamey3:label')"/>
+          <value>niamey3</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_niamey/niamey4:label')"/>
+          <value>niamey4</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_niamey/niamey5:label')"/>
+          <value>niamey5</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/samu/g_details/district_tahoua">
+        <label ref="jr:itext('/samu/g_details/district_tahoua:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/abalak:label')"/>
+          <value>abalak</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/bagaroua:label')"/>
+          <value>bagaroua</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/birninkonni:label')"/>
+          <value>birninkonni</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/bouza:label')"/>
+          <value>bouza</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/illela:label')"/>
+          <value>illela</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/keita:label')"/>
+          <value>keita</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/madaoua:label')"/>
+          <value>madaoua</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/malbaza:label')"/>
+          <value>malbaza</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/tahouacommune:label')"/>
+          <value>tahouacommune</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/tahouadept:label')"/>
+          <value>tahouadept</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/tassara:label')"/>
+          <value>tassara</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/tchintabaraden:label')"/>
+          <value>tchintabaraden</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tahoua/tillia:label')"/>
+          <value>tillia</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/samu/g_details/district_tillaberi">
+        <label ref="jr:itext('/samu/g_details/district_tillaberi:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/abala:label')"/>
+          <value>abala</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/ayorou:label')"/>
+          <value>ayorou</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/balleyara:label')"/>
+          <value>balleyara</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/banibangou:label')"/>
+          <value>banibangou</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/bankilare:label')"/>
+          <value>bankilare</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/filingue:label')"/>
+          <value>filingue</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/gotheye:label')"/>
+          <value>gotheye</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/kollo:label')"/>
+          <value>kollo</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/ouallam:label')"/>
+          <value>ouallam</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/say:label')"/>
+          <value>say</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/tera:label')"/>
+          <value>tera</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/tillaberi:label')"/>
+          <value>tillaberi</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_tillaberi/torodi:label')"/>
+          <value>torodi</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/samu/g_details/district_zinder">
+        <label ref="jr:itext('/samu/g_details/district_zinder:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_zinder/belbedji:label')"/>
+          <value>belbedji</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_zinder/damagaramtakaya:label')"/>
+          <value>damagaramtakaya</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_zinder/dungass:label')"/>
+          <value>dungass</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_zinder/goure:label')"/>
+          <value>goure</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_zinder/magaria:label')"/>
+          <value>magaria</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_zinder/takeita:label')"/>
+          <value>takeita</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_zinder/tanout:label')"/>
+          <value>tanout</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_details/district_zinder/zinder:label')"/>
+          <value>zinder</value>
+        </item>
+      </select1>
+    </group>
+    <group appearance="field-list" ref="/samu/g_symptoms">
+      <label ref="jr:itext('/samu/g_symptoms:label')"/>
+      <select ref="/samu/g_symptoms/symptoms">
+        <label ref="jr:itext('/samu/g_symptoms/symptoms:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/headache:label')"/>
+          <value>headache</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/fever:label')"/>
+          <value>fever</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/cough:label')"/>
+          <value>cough</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/cold:label')"/>
+          <value>cold</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/myalgia_or_general_fatigue:label')"/>
+          <value>myalgia_or_general_fatigue</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/abdominal_pain:label')"/>
+          <value>abdominal_pain</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/sore_throat:label')"/>
+          <value>sore_throat</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/respiratory_problem:label')"/>
+          <value>respiratory_problem</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/other_complaint:label')"/>
+          <value>other_complaint</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/contact_with_positive_case:label')"/>
+          <value>contact_with_positive_case</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/symptoms/travel_to_a_foreign_country:label')"/>
+          <value>travel_to_a_foreign_country</value>
+        </item>
+      </select>
+      <input ref="/samu/g_symptoms/other_symptoms">
+        <label ref="jr:itext('/samu/g_symptoms/other_symptoms:label')"/>
+      </input>
+      <select1 ref="/samu/g_symptoms/call_outcome">
+        <label ref="jr:itext('/samu/g_symptoms/call_outcome:label')"/>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/call_outcome/reacheable:label')"/>
+          <value>reacheable</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/samu/g_symptoms/call_outcome/unreacheable:label')"/>
+          <value>unreacheable</value>
+        </item>
+      </select1>
+    </group>
+    <group appearance="field-list summary" ref="/samu/summary-group">
+      <input appearance="h1 yellow" ref="/samu/summary-group/patient_details">
+        <label ref="jr:itext('/samu/summary-group/patient_details:label')"/>
+      </input>
+      <input ref="/samu/summary-group/n_details_firstname">
+        <label ref="jr:itext('/samu/summary-group/n_details_firstname:label')"/>
+      </input>
+      <input ref="/samu/summary-group/n_details_current_location">
+        <label ref="jr:itext('/samu/summary-group/n_details_current_location:label')"/>
+      </input>
+      <input ref="/samu/summary-group/n_details_number_1">
+        <label ref="jr:itext('/samu/summary-group/n_details_number_1:label')"/>
+      </input>
+      <input ref="/samu/summary-group/n_details_number_2">
+        <label ref="jr:itext('/samu/summary-group/n_details_number_2:label')"/>
+      </input>
+      <input ref="/samu/summary-group/n_region">
+        <label ref="jr:itext('/samu/summary-group/n_region:label')"/>
+      </input>
+      <input appearance="h1 blue" ref="/samu/summary-group/n_symptoms">
+        <label ref="jr:itext('/samu/summary-group/n_symptoms:label')"/>
+      </input>
+      <input ref="/samu/summary-group/n_all_symptoms">
+        <label ref="jr:itext('/samu/summary-group/n_all_symptoms:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>
