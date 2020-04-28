@@ -142,9 +142,9 @@ const fillPage = async (self, pageAnswer) => {
     fillQuestion(nextUnansweredQuestion, answer);
   }
   
-  const success = await window.form.pages.next();
+  const allPagesSuccessful = hasPages(window.form) ? await window.form.pages.next() : true;
   const validationErrors = await self.getVisibleValidationErrors();
-  const advanceFailure = success || validationErrors.length ? [] : [{
+  const advanceFailure = allPagesSuccessful || validationErrors.length ? [] : [{
     type: 'general',
     msg: 'Failed to advance to next page',
   }];
@@ -229,7 +229,12 @@ const fillQuestion = (question, answer) => {
 };
 
 const getVisibleQuestions = form => {
-  const currentPage = form.form.pages.getCurrent();
+  const currentPage = hasPages(form.form) ? form.form.pages.getCurrent() : form.form.pages.form.view.$;
+
+  if (!currentPage) {
+    throw Error('Form has no active pages');
+  }
+
   if (currentPage.hasClass('question')) {
     return currentPage;
   }
@@ -263,5 +268,7 @@ required
 function makeNoteFieldsNotRequired() {
   window.$$('label.note > input').attr('data-required', '');
 }
+
+const hasPages = form => form.pages.getCurrent().length > 0;
 
 module.exports = FormFiller;

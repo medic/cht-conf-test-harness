@@ -730,7 +730,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line373">line 373</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line372">line 372</a>
     </li></ul></dd>
     
 
@@ -798,7 +798,7 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line393">line 393</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line392">line 392</a>
     </li></ul></dd>
     
 
@@ -860,7 +860,7 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line387">line 387</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line386">line 386</a>
     </li></ul></dd>
     
 
@@ -922,7 +922,7 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line412">line 412</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line411">line 411</a>
     </li></ul></dd>
     
 
@@ -984,7 +984,7 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line382">line 382</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line381">line 381</a>
     </li></ul></dd>
     
 
@@ -1122,12 +1122,16 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
 
     
-    <h4 class="name" id="fillContactForm"><span class="type-signature">(async) </span>fillContactForm<span class="signature">(contactType, inputs<span class="signature-attributes">opt</span>, &hellip;answers)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="fillContactForm"><span class="type-signature">(async) </span>fillContactForm<span class="signature">(contactType, &hellip;answers)</span><span class="type-signature"></span></h4>
     
 
     
 
 
+
+<div class="description">
+    Loads and fills a contact form,
+</div>
 
 
 
@@ -1153,8 +1157,6 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
         <th>Attributes</th>
         
 
-        
-        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -1189,51 +1191,8 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
             <td class="description last">Type of contact that should be created</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>inputs</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#HarnessInputs">HarnessInputs</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    Default values specified via constructor
-                
-                </td>
-            
-
-            <td class="description last">You can override some or all of the <a href="global.html#HarnessInputs">HarnessInputs</a> attributes.</td>
         </tr>
 
     
@@ -1246,7 +1205,7 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
             <td class="type">
             
                 
-<span class="param-type">any</span>
+<span class="param-type">Array.&lt;string></span>
 
 
             
@@ -1265,12 +1224,8 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
-            <td class="description last">See fillForm</td>
+            <td class="description last">Provide an array for the answers given on each page. See fillForm for more details.</td>
         </tr>
 
     
@@ -1311,7 +1266,7 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line167">line 167</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -1495,7 +1450,7 @@ If an Object is provided, it can have attributes { form, user, content, contactS
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line244">line 244</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line243">line 243</a>
     </li></ul></dd>
     
 
@@ -1667,7 +1622,7 @@ const result = await harness.fillForm('my_form', ['1', '2'], ['3']});</code></pr
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line213">line 213</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -1888,7 +1843,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line456">line 456</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line455">line 455</a>
     </li></ul></dd>
     
 
@@ -1998,7 +1953,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line202">line 202</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line201">line 201</a>
     </li></ul></dd>
     
 
@@ -2278,7 +2233,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line322">line 322</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line321">line 321</a>
     </li></ul></dd>
     
 
@@ -2633,7 +2588,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line283">line 283</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line282">line 282</a>
     </li></ul></dd>
     
 
@@ -2792,7 +2747,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line364">line 364</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line363">line 363</a>
     </li></ul></dd>
     
 
@@ -2858,7 +2813,7 @@ expect(actual).to.be.empty;</code></pre>
 
 
 <div class="description">
-    Load a form into the harness for testing
+    Load a form from the app folder into the harness for testing
 </div>
 
 
@@ -2994,6 +2949,8 @@ expect(actual).to.be.empty;</code></pre>
     
 
     
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>Use fillForm interface (#40)</li></ul></dd>
+    
 
     
 
@@ -3006,7 +2963,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line151">line 151</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line153">line 153</a>
     </li></ul></dd>
     
 
@@ -3177,7 +3134,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line418">line 418</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line417">line 417</a>
     </li></ul></dd>
     
 
@@ -3320,7 +3277,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line192">line 192</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line191">line 191</a>
     </li></ul></dd>
     
 
@@ -3602,7 +3559,7 @@ expect(actual).to.be.empty;</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Mon Apr 27 2020 17:34:25 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Apr 28 2020 14:36:47 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

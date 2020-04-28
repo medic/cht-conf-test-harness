@@ -101,4 +101,44 @@ describe('contact forms', () => {
     expect(harness.state.contacts).to.deep.include(result.contacts[0]);
     expect(harness.state.contacts).to.deep.include(result.contacts[1]);
   });
+
+  it('form without pages', async () => {
+    const now = moment('2000-01-01');
+    await harness.setNow(now.valueOf());
+    const result = await harness.fillContactForm('no_pages', [
+      undefined,
+      'chw', '123', 'full name', '1990-10-08', undefined, 'male', '555-123-4567', 'no', 'english',
+      'yes', 'second', 'no', 'unknown', ['diabetes'], 'true', 'notes'
+    ]);
+    expect(result.errors).to.be.empty;
+
+    expect(result.contacts[0]).to.deep.include({
+      type: 'contact',
+      role: 'chw',
+      arv_number: '123',
+      name: 'full name',
+      date_of_birth: '1990-10-08',
+      date_of_birth_method: '',
+      ephemeral_dob: {
+        dob_calendar: '1990-10-08',
+        dob_method: '',
+        ephemeral_months: '1',
+        ephemeral_years: '2000',
+        dob_approx: '2000-01-01',
+        dob_raw: '1990-10-08',
+        dob_iso: '1990-10-08'
+      },
+      sex: 'male',
+      phone: '555-123-4567',
+      shared_phone: '',
+      preferred_language: '',
+      arv: { arv_status: 'yes', arv_line: 'second', stable: 'no' },
+      tb: { tb_status: 'unknown' },
+      chronic_disease: 'diabetes',
+      opt_out: 'yes',
+      notes: 'notes',
+      contact_type: 'no_pages',
+      reported_date: now.valueOf()
+    });
+  });
 });
