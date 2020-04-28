@@ -127,16 +127,17 @@ const prepareAndAttachSiblingDocs = function(doc, original, siblings) {
   return promiseChain.then(() => preparedSiblings);
 };
 
-module.exports = async function(form, docId, type) {
+module.exports = async (form, contactType, now) => {
   const submitted = contactRecordToJs(form.getDataStr({ irrelevant: false }));
-  if (ContactTypes_isHardcodedType(type)) {
+  if (ContactTypes_isHardcodedType(contactType)) {
     // default hierarchy - maintain backwards compatibility
-    submitted.doc.type = type;
+    submitted.doc.type = contactType;
   } else {
     // configured hierarchy
     submitted.doc.type = 'contact';
-    submitted.doc.contact_type = type;
+    submitted.doc.contact_type = contactType;
   }
   const preparedDocs = await prepareSubmittedDocsForSave(undefined, submitted);
+  preparedDocs.preparedDocs.forEach(doc => doc.reported_date = now ? now.getTime() : Date.now());
   return preparedDocs.preparedDocs;
 };

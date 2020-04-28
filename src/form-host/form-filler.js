@@ -44,9 +44,9 @@ class FormFiller {
     };
   }
 
-  async fillContactForm(multiPageAnswer) {
+  async fillContactForm(contactType, multiPageAnswer) {
     const { isComplete, errors } = await fillForm(this, multiPageAnswer);
-    const contacts = isComplete ? saveContact(this.form, window.now) : [];
+    const contacts = isComplete ? await saveContact(this.form, contactType, window.now) : [];
 
     return {
       errors,
@@ -228,13 +228,25 @@ const getVisibleQuestions = form => {
     return currentPage;
   }
 
-  return currentPage
-    .add(currentPage.find('section:not(.disabled)'))
-    .children(`
-      fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label),
-      label:not(.disabled,.note,.or-appearance-hidden),
-      div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count])
-    `);
+  const findQuestionsInSection = section => {
+    const inquisitiveChildren = Array.from($(section)
+      .children(`
+        section:not(.disabled),
+        fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label),
+        label:not(.disabled,.note,.or-appearance-hidden),
+        div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count])
+      `));
+
+    const result = [];
+    for (const child of inquisitiveChildren) {
+      const questions = child.localName === 'section' ? findQuestionsInSection(child) : [child];
+      result.push(...questions);
+    }
+
+    return result;
+  };
+
+  return findQuestionsInSection(currentPage);
 };
 
 /*
