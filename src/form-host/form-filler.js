@@ -196,6 +196,7 @@ const fillQuestion = (question, answer) => {
   case 'date':
   case 'text':
   case 'tel':
+  case 'time':
   case 'number':
     allInputs.val(answer).trigger('change');
     break;
