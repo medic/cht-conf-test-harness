@@ -243,7 +243,7 @@ const getVisibleQuestions = form => {
   const findQuestionsInSection = section => {
     const inquisitiveChildren = Array.from($(section)
       .children(`
-        section:not(.disabled),
+        section:not(.disabled,.or-appearance-hidden),
         fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label,#or-calculated-items),
         label:not(.disabled,.note,.or-appearance-hidden),
         div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count])
