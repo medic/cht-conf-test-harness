@@ -160,7 +160,7 @@ const fillQuestion = (question, answer) => {
   }
   
   const $question = $(question);
-  const allInputs = $question.find('input,textarea,button');
+  const allInputs = $question.find('input:not([type="hidden"]),textarea,button');
   const firstInput = Array.from(allInputs)[0];
   
   if (!firstInput) {
@@ -244,7 +244,7 @@ const getVisibleQuestions = form => {
     const inquisitiveChildren = Array.from($(section)
       .children(`
         section:not(.disabled),
-        fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label),
+        fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label,#or-calculated-items),
         label:not(.disabled,.note,.or-appearance-hidden),
         div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count])
       `));
