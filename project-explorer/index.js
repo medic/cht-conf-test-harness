@@ -31,6 +31,6 @@ ${contactHtml}`);
 
   const defaultForm = window.location.hash.substr(1);
   if (defaultForm) {
-    $(`.formLink[data-name="${defaultForm}]"`).click();
+    $(`.formLink[data-name="${defaultForm}"]`).click();
   }
 });
