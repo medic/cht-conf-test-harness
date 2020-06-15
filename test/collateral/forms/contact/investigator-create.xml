@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>New Investigator Area</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/data/contact/name:label">
+            <value>Name</value>
+          </text>
+          <text id="/data/contact:label">
+            <value>New Person</value>
+          </text>
+        </translation>
+        <translation lang="fr">
+          <text id="/data/contact/name:label">
+            <value>Nom</value>
+          </text>
+          <text id="/data/contact:label">
+            <value>Nouvelle personne</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data delimiter="#" id="contact:investigator:create" prefix="J1!contact:investigator:create!" version="2020-04-24 10-32">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <user>
+              <contact_id/>
+              <facility_id/>
+              <name/>
+            </user>
+          </inputs>
+          <investigator>
+            <parent>PARENT</parent>
+            <type>investigator</type>
+            <contact>NEW</contact>
+            <name/>
+          </investigator>
+          <contact>
+            <parent>PARENT</parent>
+            <type>contact</type>
+            <contact_type>person</contact_type>
+            <name/>
+          </contact>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/inputs" relevant="false()"/>
+      <bind nodeset="/data/inputs/user/contact_id" type="string"/>
+      <bind nodeset="/data/inputs/user/facility_id" type="string"/>
+      <bind nodeset="/data/inputs/user/name" type="string"/>
+      <bind nodeset="/data/contact/parent" type="string"/>
+      <bind nodeset="/data/contact/type" type="string"/>
+      <bind nodeset="/data/contact/contact_type" type="string"/>
+      <bind nodeset="/data/contact/name" required="true()" type="string"/>
+      <bind nodeset="/data/investigator/parent" type="string"/>
+      <bind nodeset="/data/investigator/type" type="string"/>
+      <bind nodeset="/data/investigator/contact" type="string"/>
+      <bind calculate="../../contact/name" nodeset="/data/investigator/name" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/data/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/inputs">
+      <group ref="/data/inputs/user">
+        <input ref="/data/inputs/user/contact_id"/>
+        <input ref="/data/inputs/user/facility_id"/>
+        <input ref="/data/inputs/user/name"/>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/data/contact">
+      <label ref="jr:itext('/data/contact:label')"/>
+      <input ref="/data/contact/name">
+        <label ref="jr:itext('/data/contact/name:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/data/investigator"/>
+  </h:body>
+</h:html>

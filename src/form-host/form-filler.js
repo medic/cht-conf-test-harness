@@ -1,7 +1,8 @@
 const _ = require('underscore');
 const $ = require('jquery');
 
-const getRecordForCompletedForm = require('./get-record-from-form');
+const getRecordForCompletedForm = require('./enketo');
+const saveContact = require('./save-contact');
 
 class FormFiller {
   constructor(formName, form, formXml, options) {
@@ -29,36 +30,28 @@ class FormFiller {
    * @property {string} type A classification of the error [ 'validation', 'general', 'page' ]
    * @property {string} msg Description of the error 
    */
-  async fill(multiPageAnswer) {
-    this.log(`Filling in ${multiPageAnswer.length} pages.`);
-    const results = [];
-    for (const pageIndex in multiPageAnswer) {
-      const pageAnswer = multiPageAnswer[pageIndex];
-      makeNoteFieldsNotRequired();
-      const result = await fillPage(this, pageAnswer);
-      results.push(result);
 
-      if (result.errors.length > 0) {
-        return {
-          errors: result.errors,
-          section: `page-${pageIndex}`,
-          answers: pageAnswer,
-        };
-      }
-    }
-
-    this.form.validateAll();
-    const errors = await this.getVisibleValidationErrors();
-    const isComplete = this.form.pages.getCurrentIndex() === this.form.pages.$activePages.length - 1;
-    const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
-
+  async fillAppForm(multiPageAnswer) {
+    const { isComplete, errors } = await fillForm(this, multiPageAnswer);
     const resultingDocs = isComplete ? getRecordForCompletedForm(this.form, this.formXml, this.formName, window.now) : [];
     const [report, ...additionalDocs] = resultingDocs;
+
     return {
-      errors: [...incompleteError, ...errors],
+      errors,
       section: 'general',
       report,
       additionalDocs,
+    };
+  }
+
+  async fillContactForm(contactType, multiPageAnswer) {
+    const { isComplete, errors } = await fillForm(this, multiPageAnswer);
+    const contacts = isComplete ? await saveContact(this.form, contactType, window.now) : [];
+
+    return {
+      errors,
+      section: 'general',
+      contacts
     };
   }
 
@@ -97,6 +90,35 @@ class FormFiller {
   }
 }
 
+const fillForm = async (self, multiPageAnswer) => {
+  self.log(`Filling form in ${multiPageAnswer.length} pages.`);
+  const results = [];
+  for (const pageIndex in multiPageAnswer) {
+    const pageAnswer = multiPageAnswer[pageIndex];
+    makeNoteFieldsNotRequired();
+    const result = await fillPage(self, pageAnswer);
+    results.push(result);
+
+    if (result.errors.length > 0) {
+      return {
+        errors: result.errors,
+        section: `page-${pageIndex}`,
+        answers: pageAnswer,
+      };
+    }
+  }
+
+  self.form.validateAll();
+  const errors = await self.getVisibleValidationErrors();
+  const isComplete = self.form.pages.getCurrentIndex() === self.form.pages.$activePages.length - 1;
+  const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
+
+  return {
+    isComplete,
+    errors: [...incompleteError, ...errors],
+  };
+};
+
 const fillPage = async (self, pageAnswer) => {
   self.log(`Answering ${pageAnswer.length} questions.`);
 
@@ -120,9 +142,9 @@ const fillPage = async (self, pageAnswer) => {
     fillQuestion(nextUnansweredQuestion, answer);
   }
   
-  const success = await window.form.pages.next();
+  const allPagesSuccessful = hasPages(window.form) ? await window.form.pages.next() : true;
   const validationErrors = await self.getVisibleValidationErrors();
-  const advanceFailure = success || validationErrors.length ? [] : [{
+  const advanceFailure = allPagesSuccessful || validationErrors.length ? [] : [{
     type: 'general',
     msg: 'Failed to advance to next page',
   }];
@@ -138,7 +160,7 @@ const fillQuestion = (question, answer) => {
   }
   
   const $question = $(question);
-  const allInputs = $question.find('input,textarea');
+  const allInputs = $question.find('input:not([type="hidden"]),textarea,button');
   const firstInput = Array.from(allInputs)[0];
   
   if (!firstInput) {
@@ -150,11 +172,31 @@ const fillQuestion = (question, answer) => {
   }
 
   switch (firstInput.type) {
+  case 'button':
+    // select_one appearance:minimal
+    if (firstInput.className.includes('dropdown-toggle')) {
+      $question.find(`input[value="${answer}"]`).click();
+    } 
+    
+    // repeate section
+    else {
+      
+      if (!Number.isInteger(answer)) {
+        throw `Failed to answer question which is a "+" for repeat section. This question expects an answer which is an integer - representing how many times to click the +. "${answer}"`;
+      }
+
+      for (let i = 0; i < answer; ++i) {
+        allInputs.click();
+      }
+    }
+    break;
   case 'radio':
     $question.find(`input[value="${answer}"]`).click();
     break;
   case 'date':
   case 'text':
+  case 'tel':
+  case 'time':
   case 'number':
     allInputs.val(answer).trigger('change');
     break;
@@ -188,12 +230,35 @@ const fillQuestion = (question, answer) => {
 };
 
 const getVisibleQuestions = form => {
-  const currentPage = form.form.pages.getCurrent();
+  const currentPage = hasPages(form.form) ? form.form.pages.getCurrent() : form.form.pages.form.view.$;
+
+  if (!currentPage) {
+    throw Error('Form has no active pages');
+  }
+
   if (currentPage.hasClass('question')) {
     return currentPage;
   }
 
-  return currentPage.add(currentPage.find('section:not(.disabled)')).children('fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label), label:not(.disabled,.note,.or-appearance-hidden)');
+  const findQuestionsInSection = section => {
+    const inquisitiveChildren = Array.from($(section)
+      .children(`
+        section:not(.disabled,.or-appearance-hidden),
+        fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label,#or-calculated-items),
+        label:not(.disabled,.note,.or-appearance-hidden),
+        div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count])
+      `));
+
+    const result = [];
+    for (const child of inquisitiveChildren) {
+      const questions = child.localName === 'section' ? findQuestionsInSection(child) : [child];
+      result.push(...questions);
+    }
+
+    return result;
+  };
+
+  return findQuestionsInSection(currentPage);
 };
 
 /*
@@ -204,5 +269,7 @@ required
 function makeNoteFieldsNotRequired() {
   window.$$('label.note > input').attr('data-required', '');
 }
+
+const hasPages = form => form.pages.getCurrent().length > 0;
 
 module.exports = FormFiller;

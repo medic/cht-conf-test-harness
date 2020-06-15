@@ -16,10 +16,6 @@ class FormWireup {
     if (!content || typeof content !== 'object') {
       throw new Error('Invalid argument: content');
     }
-
-    if (!contactSummary) {
-      throw new Error('Invalid argument: contactSummary');
-    }
   
     const xform = $.parseXML(formXml);
     setLanguageOnForm(xform, 'en');
@@ -92,13 +88,13 @@ const bindDataToModel = (model, data, user) => {
 };
 
 /* Enketo Translation Service */
-const bindJsonToXml = function(elem, data, childMatcher) {
+const bindJsonToXml = function(elem, data={}, childMatcher) {
   Object.keys(data).map(key => [key, data[key]])
     .forEach(function(pair) {
       const current = findCurrentElement(elem, pair[0], childMatcher);
       const value = pair[1];
 
-      if (typeof value === 'object') {
+      if (value !== null && typeof value === 'object') {
         if(current.children().length) {
           bindJsonToXml(current, value);
         } else {

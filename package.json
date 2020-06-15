@@ -1,6 +1,6 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "0.1.22",
+  "version": "0.1.33",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
@@ -12,17 +12,18 @@
     "travis": "npm run build && npm run eslint && npm test"
   },
   "dependencies": {
+    "lodash": "^4.17.15",
     "medic-nootils": "^4.0.1",
     "moment": "^2.24.0",
     "nools": "^0.4.4",
     "pojo2xml": "^1.7.2",
     "puppeteer": "^1.12.2",
-    "underscore": "^1.9.1",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@medic/eslint-config": "^1.1.0",
     "chai": "^4.2.0",
+    "chai-exclude": "^2.0.2",
     "enketo-core": "4.41.6",
     "eslint": "^6.8.0",
     "jsdoc": "^3.6.3",
@@ -33,6 +34,7 @@
     "raw-loader": "^1.0.0",
     "rewire": "^4.0.1",
     "sinon": "^7.5.0",
+    "underscore": "^1.10.2",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   }

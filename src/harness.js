@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const fs = require('fs');
 const jsonToXml = require('pojo2xml');
 const process = require('process');
@@ -46,6 +46,8 @@ class Harness {
    * @param {boolean} [options.logFormErrors=false] Errors displayed by forms will be logged via console when true
    * @param {string} [options.directory=process' working directory] Path to directory of configuration files being tested
    * @param {string} [options.xformFolderPath=path.join(options.directory, 'forms')] Path to directory containing xform files
+   * @param {string} [options.appXFormFolderPath=path.join(options.xformFolderPath, 'app')] Path used by the loadForm interface
+   * @param {string} [options.contactXFormFolderPath=path.join(options.xformFolderPath, 'contact')] Path used by the fillContactForm interface
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
    * @param {HarnessInputs} [options.inputs=loaded from harnessDataPath] The default {@link HarnessInputs} for loading and completing a form
@@ -61,17 +63,21 @@ class Harness {
       appSettingsPath: path.join(defaultDirectory, './app_settings.json'),
       harnessDataPath: path.join(defaultDirectory, './harness.defaults.json'),
     });
+    this.options = _.defaults(options, {
+      appXFormFolderPath: path.join(this.options.xformFolderPath, 'app'),
+      contactXFormFolderPath: path.join(this.options.xformFolderPath, 'contact'),
+    });
 
     this.log = (...args) => this.options.verbose && console.log('Harness', ...args);
 
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
-    this.options.inputs = _.defaults(options.inputs, fileBasedDefaults);
-    
+    this.defaultInputs = _.defaults(this.options.inputs, fileBasedDefaults);
+
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
     }
-    this.clear();
+    this.clear();  
   }
 
   /**
@@ -115,12 +121,14 @@ class Harness {
    */
   async clear() {
     const contacts = [];
+
+    this.options.inputs = _.cloneDeep(this.defaultInputs);
     if (this.options.inputs.user && this.options.inputs.user.parent) {
-      contacts.push(_.clone(this.options.inputs.user.parent));
+      contacts.push(_.cloneDeep(this.options.inputs.user.parent));
     }
 
     if (this.options.inputs.content && this.options.inputs.content.contact) {
-      contacts.push(_.clone(this.options.inputs.content.contact));
+      contacts.push(_.cloneDeep(this.options.inputs.content.contact));
     }
 
     this._state = {
@@ -130,33 +138,50 @@ class Harness {
     };
     this.onConsole = () => {};
     this._now = undefined;
+
     return this.page && await this.page.evaluate(() => delete window.now);
   }
 
   /**
-   * Load a form into the harness for testing
+   * Load a form from the app folder into the harness for testing
+   * 
    * @param {string} formName Filename of an Xml file describing an XForm to load for testing
    * @param {HarnessInputs} [inputs=Default values specified via constructor] You can override some or all of the {@link HarnessInputs} attributes.
    * @returns {HarnessState} The current state of the form
+   * @deprecated Use fillForm interface (#40)
    */
   async loadForm(formName, inputs) {
-    const self = this;
-    this.log(`Loading form ${formName}...`);
-    const xformFilePath = path.resolve(this.options.xformFolderPath, `${formName}.xml`);
-    const xform = readFileSync(xformFilePath);
-    if (!xform) {
-      throw Error(`XForm not available at path: ${xformFilePath}`);
-    }
-    this.onConsole = msg => self.state.console.push(msg);
-
+    const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
+    
     inputs = _.defaults(inputs, this.options.inputs);
-
-    const formNameWithoutDirectory = path.basename(formName);
     const serializedContactSummary = serializeContactSummary(inputs.contactSummary || this.contactSummary);
-    const loadXformWrapper = (innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary);
-    await this.page.evaluate(loadXformWrapper, formNameWithoutDirectory, xform, inputs.content, inputs.user, serializedContactSummary);
+    await doLoadForm(this, this.page, xformFilePath, inputs.content, inputs.user, serializedContactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
+  }
+
+  /**
+   * Loads and fills a contact form, 
+   * 
+   * @param {string} contactType Type of contact that should be created
+   * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
+   */
+  async fillContactForm(contactType, ...answers) {
+    const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
+    await doLoadForm(this, this.page, xformFilePath, {}, this.options.user);
+    this._state.pageContent = await this.page.content();
+    
+    this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
+    const fillResult = await this.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
+    this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
+
+    if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
+      /* this.log respects verbose option, use logFormErrors here */
+      console.error(`Error encountered while filling form:`, JSON.stringify(fillResult.errors, null, 2));
+    }
+
+    this.pushMockedDoc(...fillResult.contacts);
+    return fillResult;
   }
 
   /**
@@ -229,7 +254,7 @@ class Harness {
     }
   
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-    const fillResult = await this.page.evaluate(async innerAnswer => await window.formFiller.fill(innerAnswer), answers);
+    const fillResult = await this.page.evaluate(async innerAnswer => await window.formFiller.fillAppForm(innerAnswer), answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
     if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
@@ -238,13 +263,7 @@ class Harness {
     }
 
     if (fillResult.report) {
-      const ContactTypes = ['contact', 'district_hospital', 'health_center', 'clinic', 'person'];
-      const isContact = doc => doc && ContactTypes.includes(doc.type);
-      const resultingDocs = [fillResult.report, ...fillResult.additionalDocs];
-      for (const doc of resultingDocs) {
-        const container = isContact(doc) ? this._state.contacts : this._state.reports;
-        container.push(doc);
-      }
+      this.pushMockedDoc(fillResult.report, ...fillResult.additionalDocs);
     }
 
     return fillResult;
@@ -359,21 +378,23 @@ class Harness {
   /**
    * `user` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
    */
-  get user() { return _.clone(this.options.inputs.user); }
+  get user() { return this.options.inputs.user; }
 
   /**
    * `content` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
    */
-  get content() { return _.clone(this.options.inputs.content); }
+  get content() { return this.options.inputs.content; }
 
   /**
    * `contactSummary` can be set explicitly through the {@link HarnessInputs} via the constructor or the harness.defaults.json file. 
    * If no contactSummary is explicitly defined, returns the calculation from getContactSummary().
    */
   get contactSummary() {
-    return _.clone(this.options.inputs.contactSummary) || this.getContactSummary();
+    return this.options.inputs.contactSummary || this.getContactSummary();
   }
-
+  set contactSummary(value) {
+    this.options.inputs.contactSummary = value;
+  }
 
   /**
    * @typedef HarnessState
@@ -390,19 +411,29 @@ class Harness {
   get state() { return this._state; }
 
   /**
-   * Push a mocked report directly into the state
-   * @param {Object} report The report document
+   * Push a mocked document directly into the state
+   * @param {Object} docs The document to push
    */
-  pushMockedReport(...reports) {
-    const patient_id = this.options.inputs.content && this.options.inputs.content.contact && this.options.inputs.content.contact._id;
-    for (let report of reports) {
-      report = _.defaults(report, {
-        patient_id,
-        reported_date: 1,
-        fields: {},
-      });
+  pushMockedDoc(...docs) {
+    const ContactTypes = ['contact', 'district_hospital', 'health_center', 'clinic', 'person'];
 
-      this._state.reports.push(report);
+    for (const doc of docs) {
+      if (Array.isArray(doc)) {
+        this.pushMockedDoc(...doc);
+        continue;
+      }
+
+      const isContact = doc && ContactTypes.includes(doc.type);
+      if (isContact) {
+        this._state.contacts.push(doc);
+      } else {
+        const report = _.defaults(doc, {
+          reported_date: 1,
+          fields: {},
+        });
+
+        this._state.reports.push(report);
+      }
     }
   }
 
@@ -422,8 +453,11 @@ class Harness {
    * @returns {ContactSummary} The result of the contact summary under test.
    */
   getContactSummary(contact = this.content.contact && this.content.contact._id, reports, lineage) {
-    const self = this;
+    if (!contact) {
+      return {};
+    }
 
+    const self = this;
     const getContactById = id => self._state.contacts.find(contact => contact._id === id);
     const resolvedContact = typeof contact === 'string' ? getContactById(contact) : contact;
     if (typeof resolvedContact !== 'object') {
@@ -459,6 +493,19 @@ const readFileSync = (...args) => {
   }
 
   return fs.readFileSync(filePath).toString();
+};
+
+const doLoadForm = async (self, page, xformFilePath, content, user, contactSummary) => {
+  self.log(`Loading form ${path.basename(xformFilePath)}...`);
+  const xform = readFileSync(xformFilePath);
+  if (!xform) {
+    throw Error(`XForm not available at path: ${xformFilePath}`);
+  }
+  self.onConsole = msg => self.state.console.push(msg);
+
+  const formNameWithoutDirectory = path.basename(xformFilePath, '.xml');
+  const loadXformWrapper = (innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary);
+  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, xform, content, user, contactSummary);
 };
 
 const serializeContactSummary = (contactSummary = {}) => {

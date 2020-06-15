@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Repeat form</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/repeat/contacts/contact_repeat/text2:label">
+            <value>Text2</value>
+          </text>
+          <text id="/repeat/contacts/contact_repeat/text:label">
+            <value>Text</value>
+          </text>
+          <text id="/repeat/contacts/n_contacts:label">
+            <value>Click on the "+" button below to add something</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <repeat delimiter="#" id="repeat" prefix="J1!repeat!" version="2020-04-06 1-11">
+          <contacts>
+            <n_contacts tag="hidden"/>
+            <contact_repeat jr:template="">
+              <text tag="hidden"/>
+            </contact_repeat>
+          </contacts>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </repeat>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/repeat/contacts/n_contacts" readonly="true()" type="string"/>
+      <bind nodeset="/repeat/contacts/contact_repeat/text" type="tel"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/repeat/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/repeat/contacts">
+      <input ref="/repeat/contacts/n_contacts">
+        <label ref="jr:itext('/repeat/contacts/n_contacts:label')"/>
+      </input>
+      <group ref="/repeat/contacts/contact_repeat">
+        <label ref="jr:itext('/repeat/contacts/contact_repeat:label')"/>
+        <repeat nodeset="/repeat/contacts/contact_repeat">
+          <input ref="/repeat/contacts/contact_repeat/text">
+            <label ref="jr:itext('/repeat/contacts/contact_repeat/text:label')"/>
+          </input>
+          <input ref="/repeat/contacts/contact_repeat/text2">
+            <label ref="jr:itext('/repeat/contacts/contact_repeat/text2:label')"/>
+          </input>
+        </repeat>
+      </group>
+    </group>
+  </h:body>
+</h:html>

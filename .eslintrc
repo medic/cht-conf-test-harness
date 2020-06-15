@@ -9,7 +9,8 @@
   "rules": {
     "max-len": ["error", 200, { "ignoreStrings": true, "ignoreComments": true }],
     "no-console": "off",
-    "guard-for-in": "off"
+    "guard-for-in": "off",
+    "quotes": ["error", "single", { "allowTemplateLiterals": true, "avoidEscape": true }]
   },
   "globals": {
     "window": true
