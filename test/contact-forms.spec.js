@@ -102,6 +102,27 @@ describe('contact forms', () => {
     expect(harness.state.contacts).to.deep.include(result.contacts[1]);
   });
 
+  it('#59 - msf-goma create person', async () => {
+    const result = await harness.fillContactForm('goma-person', [
+      'PARENT', 'patient', '123', 'Full Name', '1990-10-08', 'male',
+      '555-123-4567', 'false', 'eng', 'yes', 'second', 'no', 'unknown',
+      ['diabetes'], '', 'notes'
+    ]);
+
+    expect(result.errors).to.be.empty;
+  });
+
+  it('#59 - msf-goma-2 create person', async () => {
+    const result = await harness.fillContactForm('goma-person-2', [
+      '123', 'Full Name', '1990-10-08', 'male',
+      'yes', 'second', 'no', 
+      'unknown',
+      ['diabetes']
+    ]);
+
+    expect(result.errors).to.be.empty;
+  });
+
   it('form without pages', async () => {
     const now = moment('2000-01-01');
     await harness.setNow(now.valueOf());
