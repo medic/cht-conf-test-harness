@@ -28,4 +28,9 @@ ${contactHtml}`);
     $('#reload').click(doLoad);
     doLoad();
   });
+
+  const defaultForm = window.location.hash.substr(1);
+  if (defaultForm) {
+    $(`.formLink[data-name="${defaultForm}"]`).click();
+  }
 });

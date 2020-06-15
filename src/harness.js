@@ -508,7 +508,7 @@ const doLoadForm = async (self, page, xformFilePath, content, user, contactSumma
   await page.evaluate(loadXformWrapper, formNameWithoutDirectory, xform, content, user, contactSummary);
 };
 
-const serializeContactSummary = contactSummary => {
+const serializeContactSummary = (contactSummary = {}) => {
   if (typeof contactSummary !== 'object') {
     throw Error('Invalid contactSummary. Object is expected');
   }
