@@ -1,0 +1,3611 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Investigation</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/investigation/g_alterations/alt_age:label">
+            <value>Age</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_case_number:label">
+            <value>N° enregistrement</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_commune:label">
+            <value>Commune</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_district:label">
+            <value>District</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_firstname_of_patient:label">
+            <value>Prénom</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_lastname_of_patient:label">
+            <value>Nom</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_months_or_years/months:label">
+            <value>Mois</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_months_or_years/years:label">
+            <value>Années</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_number_of_patient_1:jr:constraintMsg">
+            <value>Please enter a valid local number. For example: XX XX XX XX</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_number_of_patient_1:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_number_of_patient_1:label">
+            <value>N° de contact 1</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_number_of_patient_2:jr:constraintMsg">
+            <value>Please enter a valid local number. For example: XX XX XX XX</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_number_of_patient_2:label">
+            <value>N° de contact 2</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_patient_current_location:label">
+            <value>Lieu où se trouve le cas alerté</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_quartier:label">
+            <value>Quartier</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/agadez:label">
+            <value>Agadez</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/diffa:label">
+            <value>Diffa</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/dosso:label">
+            <value>Dosso</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/maradi:label">
+            <value>Maradi</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/niamey:label">
+            <value>Niamey</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/tahoua:label">
+            <value>Tahoua</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/tillaberi:label">
+            <value>Tillaberi</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/zinder:label">
+            <value>Zinder</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region:label">
+            <value>Région</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_sex_of_patient/female:label">
+            <value>Féminin</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_sex_of_patient/male:label">
+            <value>Masculin</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_sex_of_patient:label">
+            <value>Sexe</value>
+          </text>
+          <text id="/investigation/g_alterations/n_case_identification:label">
+            <value>&lt;h4 style="color: #337ab7;margin:0;padding:0;"&gt; Identification des cas &lt;/h4&gt;</value>
+          </text>
+          <text id="/investigation/g_alterations/n_location_session:label">
+            <value>&lt;h4 style="color: #337ab7;margin:0;padding:0;"&gt; Lieu de l'investigation &lt;/h4&gt;</value>
+          </text>
+          <text id="/investigation/g_alterations/place_of_residence:label">
+            <value>Lieu de résidence habituelle</value>
+          </text>
+          <text id="/investigation/g_alterations/profession:label">
+            <value>Profession</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_date:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_date:label">
+            <value>Date de notification</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure/health_structure:label">
+            <value>Formation sanitaire</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure/other:label">
+            <value>Autre</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure/poe:label">
+            <value>Point d'entrée (PoE)</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure/samu:label">
+            <value>SAMU</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure:label">
+            <value>Structure de notification</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notified_by_place_of_detection/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notified_by_place_of_detection/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notified_by_place_of_detection:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notified_by_place_of_detection:label">
+            <value>Cas notifié par la meme structure que celle l'ayant détecté?</value>
+          </text>
+          <text id="/investigation/g_case_notifications/other_person_who_notified:label">
+            <value>Précisez autre</value>
+          </text>
+          <text id="/investigation/g_case_notifications/person_who_notified/community_agent:label">
+            <value>Agent communautaire</value>
+          </text>
+          <text id="/investigation/g_case_notifications/person_who_notified/followup_agent:label">
+            <value>Agent de suivi</value>
+          </text>
+          <text id="/investigation/g_case_notifications/person_who_notified/health_agent:label">
+            <value>Agent de sante</value>
+          </text>
+          <text id="/investigation/g_case_notifications/person_who_notified/other_agent:label">
+            <value>Autre</value>
+          </text>
+          <text id="/investigation/g_case_notifications/person_who_notified:label">
+            <value>Personne ayant notifié le cas</value>
+          </text>
+          <text id="/investigation/g_case_notifications/specify_notification_structure_name:label">
+            <value>Précisez le nom de la structure de notification</value>
+          </text>
+          <text id="/investigation/g_case_notifications/specify_other_notification_structure:label">
+            <value>Autre (spécifier)</value>
+          </text>
+          <text id="/investigation/g_case_notifications:label">
+            <value>Notification des cas</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/admission_to_health_center/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/admission_to_health_center/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/admission_to_health_center:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/admission_to_health_center:label">
+            <value>Admission au Centre de santé</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/date_of_admission_to_health_center:label">
+            <value>Date d'admission</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/date_of_first_consultation:label">
+            <value>Date de première consultation</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/first_symptoms_onset_date:label">
+            <value>Date d'apparition des premiers symptômes</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/health_facility_frequented:label">
+            <value>Structure sanitaire fréquentée</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/cough:label">
+            <value>Toux</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/dyspnea:label">
+            <value>Dyspnée</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/fever:label">
+            <value>Fièvre / frissons</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/none:label">
+            <value>Aucun</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/other:label">
+            <value>Autre</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/rhinorrhea:label">
+            <value>Rhinorrhée</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/sore_throat:label">
+            <value>Mal de gorge</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history:label">
+            <value>Le patient a t-il l'un ou plusieurs de antécédents médicaux suivants?</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/other_symptoms_of_the_patient:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/other_symptoms_of_the_patient:label">
+            <value>Précisez autre</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/pre-existing_pathological_history/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/pre-existing_pathological_history/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/pre-existing_pathological_history:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/pre-existing_pathological_history:label">
+            <value>Le patient a-t-il des Antécédents pathologiques préexistantes?</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/specify_medical_history:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/specify_medical_history:label">
+            <value>Précisez autre</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/specify_medications_taken:label">
+            <value>Précisez</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/specify_pre-existing_pathological_history:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/specify_pre-existing_pathological_history:label">
+            <value>Précisez</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient/cough:label">
+            <value>Toux</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient/difficulty_breathing:label">
+            <value>Difficulté respiratoire</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient/fever:label">
+            <value>Fièvre</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient/none:label">
+            <value>Aucun</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient/other_symptom:label">
+            <value>Autre</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient:label">
+            <value>Signes et symptômes du malade</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/taking_medications/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/taking_medications/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/taking_medications:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/taking_medications:label">
+            <value>Le patient prend -il des médicaments pour le (s) cas?</value>
+          </text>
+          <text id="/investigation/g_cinic_informations:label">
+            <value>Informations cliniques</value>
+          </text>
+          <text id="/investigation/g_detection_location/date_of_detection:label">
+            <value>Date de détection</value>
+          </text>
+          <text id="/investigation/g_detection_location/epidemiological_classification/confirmed_case:label">
+            <value>Cas confirmé</value>
+          </text>
+          <text id="/investigation/g_detection_location/epidemiological_classification/probable_case:label">
+            <value>Cas probable</value>
+          </text>
+          <text id="/investigation/g_detection_location/epidemiological_classification/suspected_case:label">
+            <value>Cas suspect</value>
+          </text>
+          <text id="/investigation/g_detection_location/epidemiological_classification:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_detection_location/epidemiological_classification:label">
+            <value>Classification épidémiologique du cas</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection/containment_site:label">
+            <value>Site de confinement</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection/family_house:label">
+            <value>Maison familiale</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection/health_structure:label">
+            <value>Structure de santé</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection/other:label">
+            <value>Autre</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection/poe:label">
+            <value>Point d'entrée (PoE)</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection:label">
+            <value>Lieu de détection</value>
+          </text>
+          <text id="/investigation/g_detection_location/specify_other_place:label">
+            <value>Autre (spécifier)</value>
+          </text>
+          <text id="/investigation/g_detection_location/specify_place_of_detection_name:label">
+            <value>Précisez le nom du lieu de détection</value>
+          </text>
+          <text id="/investigation/g_detection_location:label">
+            <value>Lieu de détection des cas</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection:label">
+            <value>Été en contact avec une personne atteinte d'une infection respiratoire aiguë</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/case_id_number:label">
+            <value>Numéro(s) d'identification du cas confirmé ou probable</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/case_name:label">
+            <value>Nom du cas connfirmé ou probable</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/contact_with_case/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/contact_with_case/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/contact_with_case:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/contact_with_case:label">
+            <value>Été en contact avec un cas probable ou confirmé ?</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/date_of_mass_meeting:label">
+            <value>Précisez la date</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/date_of_visit:label">
+            <value>Date de visite</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/infected_person_contact:jr:constraintMsg">
+            <value>Please enter a valid local number. For example: XX XX XX XX</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/infected_person_contact:label">
+            <value>contact</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/infected_person_name:label">
+            <value>Nom de la personne</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/location_of_mass_meeting:label">
+            <value>Précisez le lieu</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/n_symptoms_onset_last_14_days:label">
+            <value>&lt;h4 style="color: #337ab7;margin:0;padding:0;"&gt; Le patient a-t-il au cours des 14 jours précédant l'apparition des symptômes: &lt;/h4&gt;</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/other_exposed_people:label">
+            <value>Autres personnes exposées</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/participated_in_mass_meeting/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/participated_in_mass_meeting/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/participated_in_mass_meeting:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/participated_in_mass_meeting:label">
+            <value>Participé à une rencontre de masse (mariage, baptême, foyandi, enterrement, etc.)</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/place_of_contact:label">
+            <value>Spécifiez le lieu de contact</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/specify_place_infection:label">
+            <value>Spécifiez le lieu</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/specify_visited_health_facility:label">
+            <value>Préciser l'établissement</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/travel_before_symptoms_onset/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/travel_before_symptoms_onset/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/travel_before_symptoms_onset:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/travel_before_symptoms_onset:label">
+            <value>Voyage dans une zone/pays en épidémie &gt; 14 jours précédant l'apparition des symptômes ?</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/visited_a_health_facility/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/visited_a_health_facility/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/visited_a_health_facility:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/visited_a_health_facility:label">
+            <value>Visité un établissement de santé</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/zone_or_country:label">
+            <value>Zones/pays</value>
+          </text>
+          <text id="/investigation/g_exposure_travel:label">
+            <value>Exposition et voyage</value>
+          </text>
+          <text id="/investigation/g_lab_informations/other_collection/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_lab_informations/other_collection/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_lab_informations/other_collection:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_lab_informations/other_collection:label">
+            <value>Autre prélèvement</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_bis/no:label">
+            <value>No</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_bis/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_bis:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_bis:label">
+            <value>Prélèvement fait?</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_date_bis:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_date_bis:label">
+            <value>Date de prélèvement de l'échantillon</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab/maradi_chr:label">
+            <value>Maradi CHR</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab/niamey_cermes:label">
+            <value>Niamey CERMES</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab/tahoua_chr:label">
+            <value>Tahoua CHR</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab/zinder_chr:label">
+            <value>Zinder CHR</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab:label">
+            <value>Laboratoire ayant effectué le prélèvement</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_type/nasopharyngeal:label">
+            <value>Nasopharyngé</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_type/oropharyngeal:label">
+            <value>Oropharyngé</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_type:label">
+            <value>Type de d'échantillon</value>
+          </text>
+          <text id="/investigation/g_lab_informations/specify_other_collection:label">
+            <value>Précisez</value>
+          </text>
+          <text id="/investigation/g_lab_informations:label">
+            <value>Informations sur le laboratoire</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/declined:label">
+            <value>Refus</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/false_alert:label">
+            <value>Fausse alerte</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/invalid:label">
+            <value>Invalide</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/unreachable:label">
+            <value>Injoignable</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/valid:label">
+            <value>Valide</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/wrong_assignation:label">
+            <value>Mauvaise assignation</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis:label">
+            <value>Validation</value>
+          </text>
+          <text id="/investigation/inputs/contact/_id:hint">
+            <value>select a person from the list</value>
+          </text>
+          <text id="/investigation/inputs/contact/_id:jr:constraintMsg">
+            <value>Patient must be less that 5 years old</value>
+          </text>
+          <text id="/investigation/inputs/contact/contact/_id:label">
+            <value>-</value>
+          </text>
+          <text id="/investigation/inputs/contact/contact:label">
+            <value>Parent</value>
+          </text>
+          <text id="/investigation/inputs/contact/name:label">
+            <value>Name</value>
+          </text>
+          <text id="/investigation/inputs/contact:label">
+            <value>Contact</value>
+          </text>
+          <text id="/investigation/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/investigation/inputs/source_id:label">
+            <value>Source ID</value>
+          </text>
+          <text id="/investigation/inputs:label">
+            <value>Patient</value>
+          </text>
+          <text id="/investigation/investigation/investigation_done:label">
+            <value>Investigation Faite</value>
+          </text>
+          <text id="/investigation/investigation/n_details_contact:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /investigation/g_alterations/alt_number_of_patient_1 "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/investigation/investigation/n_details_firstname:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /investigation/g_alterations/alt_firstname_of_patient "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/investigation/investigation/n_details_lastname:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /investigation/g_alterations/alt_lastname_of_patient "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/investigation/investigation/n_investigation_details:label">
+            <value>Détails de l'investigation</value>
+          </text>
+          <text id="/investigation/investigation/n_sample:label">
+            <value>Le prélèvement a été fait pour ce patient. Une tâche s'affichera dans 12h pour renseigner le résultat du prélèvement</value>
+          </text>
+          <text id="/investigation/investigation/n_sample_other:label">
+            <value>Autre prélèvement : <output value=" /investigation/g_lab_informations/specify_other_collection "/></value>
+          </text>
+          <text id="/investigation/investigation/n_validation:label">
+            <value><output value=" /investigation/selected_validation "/></value>
+          </text>
+          <text id="/investigation/investigation/sample_collection:label">
+            <value>Prélèvement</value>
+          </text>
+          <text id="/investigation/investigation/sample_collection_date:label">
+            <value>Date de prélèvement</value>
+          </text>
+          <text id="/investigation/investigation/summary:label">
+            <value>Résumé</value>
+          </text>
+          <text id="/investigation/investigation/validation:label">
+            <value>Validation</value>
+          </text>
+          <text id="/investigation/muso_id:label">
+            <value>-</value>
+          </text>
+          <text id="/investigation/patient_id:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/investigation/patient_id:label">
+            <value>Patient ID</value>
+          </text>
+          <text id="/investigation/patient_name:label">
+            <value>Patient Name</value>
+          </text>
+          <text id="static_instance-c_care_received-0">
+            <value>Hospitalisation</value>
+          </text>
+          <text id="static_instance-c_care_received-1">
+            <value>Auto isolement</value>
+          </text>
+          <text id="static_instance-c_epidemiological_classification-0">
+            <value>Cas suspect</value>
+          </text>
+          <text id="static_instance-c_epidemiological_classification-1">
+            <value>Cas probable</value>
+          </text>
+          <text id="static_instance-c_epidemiological_classification-2">
+            <value>Cas confirmé</value>
+          </text>
+          <text id="static_instance-c_medical_history-0">
+            <value>Fièvre / frissons</value>
+          </text>
+          <text id="static_instance-c_medical_history-1">
+            <value>Mal de gorge</value>
+          </text>
+          <text id="static_instance-c_medical_history-2">
+            <value>Toux</value>
+          </text>
+          <text id="static_instance-c_medical_history-3">
+            <value>Rhinorrhée</value>
+          </text>
+          <text id="static_instance-c_medical_history-4">
+            <value>Dyspnée</value>
+          </text>
+          <text id="static_instance-c_medical_history-5">
+            <value>Aucun</value>
+          </text>
+          <text id="static_instance-c_medical_history-6">
+            <value>Autre</value>
+          </text>
+          <text id="static_instance-c_notification_structure-0">
+            <value>Formation sanitaire</value>
+          </text>
+          <text id="static_instance-c_notification_structure-1">
+            <value>Point d'entrée (PoE)</value>
+          </text>
+          <text id="static_instance-c_notification_structure-2">
+            <value>SAMU</value>
+          </text>
+          <text id="static_instance-c_notification_structure-3">
+            <value>Autre</value>
+          </text>
+          <text id="static_instance-c_observation-0">
+            <value>Auto isolement à domicile</value>
+          </text>
+          <text id="static_instance-c_observation-1">
+            <value>Besoin urgent de soins</value>
+          </text>
+          <text id="static_instance-c_observation-2">
+            <value>Pas d'isolement</value>
+          </text>
+          <text id="static_instance-c_observation-3">
+            <value>Hospitalisé</value>
+          </text>
+          <text id="static_instance-c_person_who_notified-0">
+            <value>Agent de sante</value>
+          </text>
+          <text id="static_instance-c_person_who_notified-1">
+            <value>Agent communautaire</value>
+          </text>
+          <text id="static_instance-c_person_who_notified-2">
+            <value>Agent de suivi</value>
+          </text>
+          <text id="static_instance-c_person_who_notified-3">
+            <value>Autre</value>
+          </text>
+          <text id="static_instance-c_place_of_detection-0">
+            <value>Point d'entrée (PoE)</value>
+          </text>
+          <text id="static_instance-c_place_of_detection-1">
+            <value>Maison familiale</value>
+          </text>
+          <text id="static_instance-c_place_of_detection-2">
+            <value>Structure de santé</value>
+          </text>
+          <text id="static_instance-c_place_of_detection-3">
+            <value>Site de confinement</value>
+          </text>
+          <text id="static_instance-c_place_of_detection-4">
+            <value>Autre</value>
+          </text>
+          <text id="static_instance-c_sample_collection_lab-0">
+            <value>Niamey CERMES</value>
+          </text>
+          <text id="static_instance-c_sample_collection_lab-1">
+            <value>Maradi CHR</value>
+          </text>
+          <text id="static_instance-c_sample_collection_lab-2">
+            <value>Tahoua CHR</value>
+          </text>
+          <text id="static_instance-c_sample_collection_lab-3">
+            <value>Zinder CHR</value>
+          </text>
+          <text id="static_instance-c_sample_type-0">
+            <value>Nasopharyngé</value>
+          </text>
+          <text id="static_instance-c_sample_type-1">
+            <value>Oropharyngé</value>
+          </text>
+          <text id="static_instance-c_symptoms_of_the_patient-0">
+            <value>Fièvre</value>
+          </text>
+          <text id="static_instance-c_symptoms_of_the_patient-1">
+            <value>Difficulté respiratoire</value>
+          </text>
+          <text id="static_instance-c_symptoms_of_the_patient-2">
+            <value>Toux</value>
+          </text>
+          <text id="static_instance-c_symptoms_of_the_patient-3">
+            <value>Aucun</value>
+          </text>
+          <text id="static_instance-c_symptoms_of_the_patient-4">
+            <value>Autre</value>
+          </text>
+          <text id="static_instance-c_validation-0">
+            <value>Fausse alerte</value>
+          </text>
+          <text id="static_instance-c_validation-1">
+            <value>Valide</value>
+          </text>
+          <text id="static_instance-c_validation-2">
+            <value>Invalide</value>
+          </text>
+          <text id="static_instance-c_validation-3">
+            <value>Injoignable</value>
+          </text>
+          <text id="static_instance-c_validation-4">
+            <value>Refus</value>
+          </text>
+          <text id="static_instance-c_validation-5">
+            <value>Mauvaise assignation</value>
+          </text>
+          <text id="static_instance-call_outcomes-0">
+            <value>Joignable</value>
+          </text>
+          <text id="static_instance-call_outcomes-1">
+            <value>Injoignable</value>
+          </text>
+          <text id="static_instance-district-0">
+            <value>Aderbissinat</value>
+          </text>
+          <text id="static_instance-district-1">
+            <value>Agadez</value>
+          </text>
+          <text id="static_instance-district-10">
+            <value>Maine-Soroa</value>
+          </text>
+          <text id="static_instance-district-11">
+            <value>N'Gourti</value>
+          </text>
+          <text id="static_instance-district-12">
+            <value>N'Guigmi</value>
+          </text>
+          <text id="static_instance-district-13">
+            <value>Boboye</value>
+          </text>
+          <text id="static_instance-district-14">
+            <value>Dioundiou</value>
+          </text>
+          <text id="static_instance-district-15">
+            <value>Dogondoutchi</value>
+          </text>
+          <text id="static_instance-district-16">
+            <value>Dosso</value>
+          </text>
+          <text id="static_instance-district-17">
+            <value>Falmey</value>
+          </text>
+          <text id="static_instance-district-18">
+            <value>Gaya</value>
+          </text>
+          <text id="static_instance-district-19">
+            <value>Loga</value>
+          </text>
+          <text id="static_instance-district-2">
+            <value>Arlit</value>
+          </text>
+          <text id="static_instance-district-20">
+            <value>Tibiri</value>
+          </text>
+          <text id="static_instance-district-21">
+            <value>Aguie</value>
+          </text>
+          <text id="static_instance-district-22">
+            <value>Bermo</value>
+          </text>
+          <text id="static_instance-district-23">
+            <value>Dakoro</value>
+          </text>
+          <text id="static_instance-district-24">
+            <value>Gazaoua</value>
+          </text>
+          <text id="static_instance-district-25">
+            <value>Guidan-Roumdji</value>
+          </text>
+          <text id="static_instance-district-26">
+            <value>Madarounfa</value>
+          </text>
+          <text id="static_instance-district-27">
+            <value>Maradi</value>
+          </text>
+          <text id="static_instance-district-28">
+            <value>Mayahi</value>
+          </text>
+          <text id="static_instance-district-29">
+            <value>Tessaoua</value>
+          </text>
+          <text id="static_instance-district-3">
+            <value>Bilma</value>
+          </text>
+          <text id="static_instance-district-30">
+            <value>Niamey 1</value>
+          </text>
+          <text id="static_instance-district-31">
+            <value>Niamey 2</value>
+          </text>
+          <text id="static_instance-district-32">
+            <value>Niamey 3</value>
+          </text>
+          <text id="static_instance-district-33">
+            <value>Niamey 4</value>
+          </text>
+          <text id="static_instance-district-34">
+            <value>Niamey 5</value>
+          </text>
+          <text id="static_instance-district-35">
+            <value>Abalak</value>
+          </text>
+          <text id="static_instance-district-36">
+            <value>Bagaroua</value>
+          </text>
+          <text id="static_instance-district-37">
+            <value>Birni N'Konni</value>
+          </text>
+          <text id="static_instance-district-38">
+            <value>Bouza</value>
+          </text>
+          <text id="static_instance-district-39">
+            <value>Illela</value>
+          </text>
+          <text id="static_instance-district-4">
+            <value>Iferouane</value>
+          </text>
+          <text id="static_instance-district-40">
+            <value>Keita</value>
+          </text>
+          <text id="static_instance-district-41">
+            <value>Madaoua</value>
+          </text>
+          <text id="static_instance-district-42">
+            <value>Malbaza</value>
+          </text>
+          <text id="static_instance-district-43">
+            <value>Tahoua Commune</value>
+          </text>
+          <text id="static_instance-district-44">
+            <value>Tahoua Dept</value>
+          </text>
+          <text id="static_instance-district-45">
+            <value>Tassara</value>
+          </text>
+          <text id="static_instance-district-46">
+            <value>Tchintabaraden</value>
+          </text>
+          <text id="static_instance-district-47">
+            <value>Tillia</value>
+          </text>
+          <text id="static_instance-district-48">
+            <value>Abala</value>
+          </text>
+          <text id="static_instance-district-49">
+            <value>Ayorou</value>
+          </text>
+          <text id="static_instance-district-5">
+            <value>Ingall</value>
+          </text>
+          <text id="static_instance-district-50">
+            <value>Balleyara</value>
+          </text>
+          <text id="static_instance-district-51">
+            <value>Banibangou</value>
+          </text>
+          <text id="static_instance-district-52">
+            <value>Bankilare</value>
+          </text>
+          <text id="static_instance-district-53">
+            <value>Filingue</value>
+          </text>
+          <text id="static_instance-district-54">
+            <value>Gotheye</value>
+          </text>
+          <text id="static_instance-district-55">
+            <value>Kollo</value>
+          </text>
+          <text id="static_instance-district-56">
+            <value>Ouallam</value>
+          </text>
+          <text id="static_instance-district-57">
+            <value>Say</value>
+          </text>
+          <text id="static_instance-district-58">
+            <value>Tera</value>
+          </text>
+          <text id="static_instance-district-59">
+            <value>Tillaberi</value>
+          </text>
+          <text id="static_instance-district-6">
+            <value>Tchirozerine</value>
+          </text>
+          <text id="static_instance-district-60">
+            <value>Torodi</value>
+          </text>
+          <text id="static_instance-district-61">
+            <value>Belbedji</value>
+          </text>
+          <text id="static_instance-district-62">
+            <value>Damagaram Takaya</value>
+          </text>
+          <text id="static_instance-district-63">
+            <value>Dungass</value>
+          </text>
+          <text id="static_instance-district-64">
+            <value>Goure</value>
+          </text>
+          <text id="static_instance-district-65">
+            <value>Magaria</value>
+          </text>
+          <text id="static_instance-district-66">
+            <value>Takeita</value>
+          </text>
+          <text id="static_instance-district-67">
+            <value>Tanout</value>
+          </text>
+          <text id="static_instance-district-68">
+            <value>Zinder</value>
+          </text>
+          <text id="static_instance-district-7">
+            <value>Bosso</value>
+          </text>
+          <text id="static_instance-district-8">
+            <value>Diffa</value>
+          </text>
+          <text id="static_instance-district-9">
+            <value>Goudoumaria</value>
+          </text>
+          <text id="static_instance-months_years-0">
+            <value>Mois</value>
+          </text>
+          <text id="static_instance-months_years-1">
+            <value>Années</value>
+          </text>
+          <text id="static_instance-region-0">
+            <value>Agadez</value>
+          </text>
+          <text id="static_instance-region-1">
+            <value>Diffa</value>
+          </text>
+          <text id="static_instance-region-2">
+            <value>Dosso</value>
+          </text>
+          <text id="static_instance-region-3">
+            <value>Maradi</value>
+          </text>
+          <text id="static_instance-region-4">
+            <value>Niamey</value>
+          </text>
+          <text id="static_instance-region-5">
+            <value>Tahoua</value>
+          </text>
+          <text id="static_instance-region-6">
+            <value>Tillaberi</value>
+          </text>
+          <text id="static_instance-region-7">
+            <value>Zinder</value>
+          </text>
+          <text id="static_instance-sex-0">
+            <value>Masculin</value>
+          </text>
+          <text id="static_instance-sex-1">
+            <value>Féminin</value>
+          </text>
+          <text id="static_instance-symptoms_list-0">
+            <value>Céphalée</value>
+          </text>
+          <text id="static_instance-symptoms_list-1">
+            <value>Fièvre</value>
+          </text>
+          <text id="static_instance-symptoms_list-10">
+            <value>Voyage dans un pays étranger</value>
+          </text>
+          <text id="static_instance-symptoms_list-2">
+            <value>Toux</value>
+          </text>
+          <text id="static_instance-symptoms_list-3">
+            <value>Rhume</value>
+          </text>
+          <text id="static_instance-symptoms_list-4">
+            <value>Myaligie et/ou fatigue générale</value>
+          </text>
+          <text id="static_instance-symptoms_list-5">
+            <value>Douleur abdominal</value>
+          </text>
+          <text id="static_instance-symptoms_list-6">
+            <value>Mal de gorge</value>
+          </text>
+          <text id="static_instance-symptoms_list-7">
+            <value>Problème respiratoire</value>
+          </text>
+          <text id="static_instance-symptoms_list-8">
+            <value>Autre plainte</value>
+          </text>
+          <text id="static_instance-symptoms_list-9">
+            <value>Contacte avec un cas positif</value>
+          </text>
+          <text id="static_instance-yes_no-0">
+            <value>Yes</value>
+          </text>
+          <text id="static_instance-yes_no-1">
+            <value>No</value>
+          </text>
+        </translation>
+        <translation lang="fr">
+          <text id="/investigation/g_alterations/alt_age:label">
+            <value>Age</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_case_number:label">
+            <value>N° enregistrement</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_commune:label">
+            <value>Commune</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_district:label">
+            <value>District</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_firstname_of_patient:label">
+            <value>Prénom</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_lastname_of_patient:label">
+            <value>Nom</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_months_or_years/months:label">
+            <value>Mois</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_months_or_years/years:label">
+            <value>Années</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_number_of_patient_1:jr:constraintMsg">
+            <value>Veuillez entrer un numéro local valide. Par exemple: XX XX XX XX</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_number_of_patient_1:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_number_of_patient_1:label">
+            <value>N° de contact 1</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_number_of_patient_2:jr:constraintMsg">
+            <value>Veuillez entrer un numéro local valide. Par exemple: XX XX XX XX</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_number_of_patient_2:label">
+            <value>N° de contact 2</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_patient_current_location:label">
+            <value>Lieu où se trouve le cas alerté</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_quartier:label">
+            <value>Quartier</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/agadez:label">
+            <value>Agadez</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/diffa:label">
+            <value>Diffa</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/dosso:label">
+            <value>Dosso</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/maradi:label">
+            <value>Maradi</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/niamey:label">
+            <value>Niamey</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/tahoua:label">
+            <value>Tahoua</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/tillaberi:label">
+            <value>Tillaberi</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region/zinder:label">
+            <value>Zinder</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_region:label">
+            <value>Région</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_sex_of_patient/female:label">
+            <value>Féminin</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_sex_of_patient/male:label">
+            <value>Masculin</value>
+          </text>
+          <text id="/investigation/g_alterations/alt_sex_of_patient:label">
+            <value>Sexe</value>
+          </text>
+          <text id="/investigation/g_alterations/n_case_identification:label">
+            <value>&lt;h4 style="color: #337ab7;margin:0;padding:0;"&gt; Identification des cas &lt;/h4&gt;</value>
+          </text>
+          <text id="/investigation/g_alterations/n_location_session:label">
+            <value>&lt;h4 style="color: #337ab7;margin:0;padding:0;"&gt; Lieu de l'investigation &lt;/h4&gt;</value>
+          </text>
+          <text id="/investigation/g_alterations/place_of_residence:label">
+            <value>Lieu de résidence habituelle</value>
+          </text>
+          <text id="/investigation/g_alterations/profession:label">
+            <value>Profession</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_date:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_date:label">
+            <value>Date de notification</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure/health_structure:label">
+            <value>Formation sanitaire</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure/other:label">
+            <value>Autre</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure/poe:label">
+            <value>Point d'entrée (PoE)</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure/samu:label">
+            <value>SAMU</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notification_structure:label">
+            <value>Structure de notification</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notified_by_place_of_detection/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notified_by_place_of_detection/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notified_by_place_of_detection:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_case_notifications/notified_by_place_of_detection:label">
+            <value>Cas notifié par la meme structure que celle l'ayant détecté?</value>
+          </text>
+          <text id="/investigation/g_case_notifications/other_person_who_notified:label">
+            <value>Précisez autre</value>
+          </text>
+          <text id="/investigation/g_case_notifications/person_who_notified/community_agent:label">
+            <value>Agent communautaire</value>
+          </text>
+          <text id="/investigation/g_case_notifications/person_who_notified/followup_agent:label">
+            <value>Agent de suivi</value>
+          </text>
+          <text id="/investigation/g_case_notifications/person_who_notified/health_agent:label">
+            <value>Agent de sante</value>
+          </text>
+          <text id="/investigation/g_case_notifications/person_who_notified/other_agent:label">
+            <value>Autre</value>
+          </text>
+          <text id="/investigation/g_case_notifications/person_who_notified:label">
+            <value>Personne ayant notifié le cas</value>
+          </text>
+          <text id="/investigation/g_case_notifications/specify_notification_structure_name:label">
+            <value>Précisez le nom de la structure de notification</value>
+          </text>
+          <text id="/investigation/g_case_notifications/specify_other_notification_structure:label">
+            <value>Autre (spécifier)</value>
+          </text>
+          <text id="/investigation/g_case_notifications:label">
+            <value>Notification des cas</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/admission_to_health_center/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/admission_to_health_center/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/admission_to_health_center:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/admission_to_health_center:label">
+            <value>Admission au centre de santé</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/date_of_admission_to_health_center:label">
+            <value>Date d'admission</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/date_of_first_consultation:label">
+            <value>Date de première consultation</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/first_symptoms_onset_date:label">
+            <value>Date d'apparition des premiers symptômes</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/health_facility_frequented:label">
+            <value>Structure sanitaire fréquentée</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/cough:label">
+            <value>Toux</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/dyspnea:label">
+            <value>Dyspnée</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/fever:label">
+            <value>Fièvre / frissons</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/none:label">
+            <value>Aucun</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/other:label">
+            <value>Autre</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/rhinorrhea:label">
+            <value>Rhinorrhée</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history/sore_throat:label">
+            <value>Mal de gorge</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/medical_history:label">
+            <value>Le patient a t-il l'un ou plusieurs de antécédents médicaux suivants?</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/other_symptoms_of_the_patient:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/other_symptoms_of_the_patient:label">
+            <value>Précisez autre</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/pre-existing_pathological_history/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/pre-existing_pathological_history/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/pre-existing_pathological_history:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/pre-existing_pathological_history:label">
+            <value>Le patient a-t-il des Antécédents pathologiques préexistantes?</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/specify_medical_history:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/specify_medical_history:label">
+            <value>Précisez autre</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/specify_medications_taken:label">
+            <value>Précisez</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/specify_pre-existing_pathological_history:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/specify_pre-existing_pathological_history:label">
+            <value>Précisez</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient/cough:label">
+            <value>Toux</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient/difficulty_breathing:label">
+            <value>Difficulté respiratoire</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient/fever:label">
+            <value>Fièvre</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient/none:label">
+            <value>Aucun</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient/other_symptom:label">
+            <value>Autre</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/symptoms_of_the_patient:label">
+            <value>Signes et symptômes du malade</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/taking_medications/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/taking_medications/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/taking_medications:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_cinic_informations/taking_medications:label">
+            <value>Le patient prend -il des médicaments pour le (s) cas?</value>
+          </text>
+          <text id="/investigation/g_cinic_informations:label">
+            <value>Informations cliniques</value>
+          </text>
+          <text id="/investigation/g_detection_location/date_of_detection:label">
+            <value>Date de détection</value>
+          </text>
+          <text id="/investigation/g_detection_location/epidemiological_classification/confirmed_case:label">
+            <value>Cas confirmé</value>
+          </text>
+          <text id="/investigation/g_detection_location/epidemiological_classification/probable_case:label">
+            <value>Cas probable</value>
+          </text>
+          <text id="/investigation/g_detection_location/epidemiological_classification/suspected_case:label">
+            <value>Cas suspect</value>
+          </text>
+          <text id="/investigation/g_detection_location/epidemiological_classification:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_detection_location/epidemiological_classification:label">
+            <value>Classification épidémiologique du cas</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection/containment_site:label">
+            <value>Site de confinement</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection/family_house:label">
+            <value>Maison familiale</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection/health_structure:label">
+            <value>Structure de santé</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection/other:label">
+            <value>Autre</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection/poe:label">
+            <value>Point d'entrée (PoE)</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_detection_location/place_of_detection:label">
+            <value>Lieu de détection</value>
+          </text>
+          <text id="/investigation/g_detection_location/specify_other_place:label">
+            <value>Autre (spécifier)</value>
+          </text>
+          <text id="/investigation/g_detection_location/specify_place_of_detection_name:label">
+            <value>Précisez le nom du lieu de détection</value>
+          </text>
+          <text id="/investigation/g_detection_location:label">
+            <value>Lieu de détection des cas</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection:label">
+            <value>Été en contact avec une personne atteinte d'une infection respiratoire aiguë</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/case_id_number:label">
+            <value>Numéro(s) d'identification du cas confirmé ou probable</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/case_name:label">
+            <value>Nom du cas confirmé ou probable</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/contact_with_case/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/contact_with_case/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/contact_with_case:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/contact_with_case:label">
+            <value>Été en contact avec un cas probable ou confirmé ?</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/date_of_mass_meeting:label">
+            <value>Précisez la date</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/date_of_visit:label">
+            <value>Date de visite</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/infected_person_contact:jr:constraintMsg">
+            <value>-</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/infected_person_contact:label">
+            <value>contact</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/infected_person_name:label">
+            <value>Nom de la personne</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/location_of_mass_meeting:label">
+            <value>Précisez le lieu</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/n_symptoms_onset_last_14_days:label">
+            <value>&lt;h4 style="color: #337ab7;margin:0;padding:0;"&gt; Le patient a-t-il au cours des 14 jours précédant l'apparition des symptômes: &lt;/h4&gt;</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/other_exposed_people:label">
+            <value>Autres personnes exposées</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/participated_in_mass_meeting/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/participated_in_mass_meeting/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/participated_in_mass_meeting:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/participated_in_mass_meeting:label">
+            <value>Participé à une rencontre de masse (mariage, baptême, foyandi, enterrement, etc.)</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/place_of_contact:label">
+            <value>Spécifiez le lieu de contact</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/specify_place_infection:label">
+            <value>Spécifiez le lieu</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/specify_visited_health_facility:label">
+            <value>Préciser l'établissement</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/travel_before_symptoms_onset/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/travel_before_symptoms_onset/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/travel_before_symptoms_onset:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/travel_before_symptoms_onset:label">
+            <value>Voyage dans une zone/pays en épidémie &gt; 14 jours précédant l'apparition des symptômes ?</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/visited_a_health_facility/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/visited_a_health_facility/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/visited_a_health_facility:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/visited_a_health_facility:label">
+            <value>Visité un établissement de santé</value>
+          </text>
+          <text id="/investigation/g_exposure_travel/zone_or_country:label">
+            <value>Zones/pays</value>
+          </text>
+          <text id="/investigation/g_exposure_travel:label">
+            <value>Exposition et voyage</value>
+          </text>
+          <text id="/investigation/g_lab_informations/other_collection/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_lab_informations/other_collection/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_lab_informations/other_collection:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_lab_informations/other_collection:label">
+            <value>Autre prélèvement</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_bis/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_bis/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_bis:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_bis:label">
+            <value>Prélèvement fait?</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_date_bis:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_date_bis:label">
+            <value>Date de prélèvement de l'échantillon</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab/maradi_chr:label">
+            <value>Maradi CHR</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab/niamey_cermes:label">
+            <value>Niamey CERMES</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab/tahoua_chr:label">
+            <value>Tahoua CHR</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab/zinder_chr:label">
+            <value>Zinder CHR</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_collection_lab:label">
+            <value>Laboratoire ayant effectué le prélèvement</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_type/nasopharyngeal:label">
+            <value>Nasopharyngé</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_type/oropharyngeal:label">
+            <value>Oropharyngé</value>
+          </text>
+          <text id="/investigation/g_lab_informations/sample_type:label">
+            <value>Type de d'échantillon</value>
+          </text>
+          <text id="/investigation/g_lab_informations/specify_other_collection:label">
+            <value>Précisez</value>
+          </text>
+          <text id="/investigation/g_lab_informations:label">
+            <value>Informations sur le laboratoire</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/declined:label">
+            <value>Refus</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/false_alert:label">
+            <value>Fausse alerte</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/invalid:label">
+            <value>Invalide</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/unreachable:label">
+            <value>Injoignable</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/valid:label">
+            <value>Valide</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis/wrong_assignation:label">
+            <value>Mauvaise assignation</value>
+          </text>
+          <text id="/investigation/g_validation/validation_bis:label">
+            <value>Validation</value>
+          </text>
+          <text id="/investigation/inputs/contact/_id:hint">
+            <value>Choisir une personne dans la liste</value>
+          </text>
+          <text id="/investigation/inputs/contact/_id:jr:constraintMsg">
+            <value>L'âge du patient doit être inférieur ou égal à 5 ans</value>
+          </text>
+          <text id="/investigation/inputs/contact/contact/_id:label">
+            <value>Parent ID</value>
+          </text>
+          <text id="/investigation/inputs/contact/contact:label">
+            <value>Parent</value>
+          </text>
+          <text id="/investigation/inputs/contact/name:label">
+            <value>Nom</value>
+          </text>
+          <text id="/investigation/inputs/contact:label">
+            <value>Contact</value>
+          </text>
+          <text id="/investigation/inputs/g_details:label">
+            <value>-</value>
+          </text>
+          <text id="/investigation/inputs/g_symptoms:label">
+            <value>-</value>
+          </text>
+          <text id="/investigation/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/investigation/inputs/source_id:label">
+            <value>Source de l'Identifiant</value>
+          </text>
+          <text id="/investigation/inputs:label">
+            <value>Patient</value>
+          </text>
+          <text id="/investigation/investigation/investigation_done:label">
+            <value>Investigation Faite</value>
+          </text>
+          <text id="/investigation/investigation/n_details_contact:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /investigation/g_alterations/alt_number_of_patient_1 "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/investigation/investigation/n_details_firstname:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /investigation/g_alterations/alt_firstname_of_patient "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/investigation/investigation/n_details_lastname:label">
+            <value>&lt;h4 style = &quot;text-align: center;padding:0;&quot;&gt;<output value=" /investigation/g_alterations/alt_lastname_of_patient "/> &lt;/ h4&gt;</value>
+          </text>
+          <text id="/investigation/investigation/n_investigation_details:label">
+            <value>Détails de l'investigation</value>
+          </text>
+          <text id="/investigation/investigation/n_sample:label">
+            <value>Le prélèvement a été fait pour ce patient. Une tâche s'affichera dans 12h pour renseigner le résultat du prélèvement</value>
+          </text>
+          <text id="/investigation/investigation/n_sample_other:label">
+            <value>Autre prélèvement : <output value=" /investigation/g_lab_informations/specify_other_collection "/></value>
+          </text>
+          <text id="/investigation/investigation/n_validation:label">
+            <value><output value=" /investigation/selected_validation "/></value>
+          </text>
+          <text id="/investigation/investigation/sample_collection:label">
+            <value>Prélèvement</value>
+          </text>
+          <text id="/investigation/investigation/sample_collection_date:label">
+            <value>Date de prélèvement</value>
+          </text>
+          <text id="/investigation/investigation/summary:label">
+            <value>Résumé</value>
+          </text>
+          <text id="/investigation/investigation/validation:label">
+            <value>Validation</value>
+          </text>
+          <text id="/investigation/muso_id:label">
+            <value>Muso ID</value>
+          </text>
+          <text id="/investigation/patient_id:jr:requiredMsg">
+            <value>Ce champ est obligatoire</value>
+          </text>
+          <text id="/investigation/patient_id:label">
+            <value>Identifiant Patient</value>
+          </text>
+          <text id="/investigation/patient_name:label">
+            <value>Nom du Patient</value>
+          </text>
+          <text id="static_instance-c_care_received-0">
+            <value>Hospitalisation</value>
+          </text>
+          <text id="static_instance-c_care_received-1">
+            <value>Auto isolement</value>
+          </text>
+          <text id="static_instance-c_epidemiological_classification-0">
+            <value>Cas suspect</value>
+          </text>
+          <text id="static_instance-c_epidemiological_classification-1">
+            <value>Cas probable</value>
+          </text>
+          <text id="static_instance-c_epidemiological_classification-2">
+            <value>Cas confirmé</value>
+          </text>
+          <text id="static_instance-c_medical_history-0">
+            <value>Fièvre / frissons</value>
+          </text>
+          <text id="static_instance-c_medical_history-1">
+            <value>Mal de gorge</value>
+          </text>
+          <text id="static_instance-c_medical_history-2">
+            <value>Toux</value>
+          </text>
+          <text id="static_instance-c_medical_history-3">
+            <value>Rhinorrhée</value>
+          </text>
+          <text id="static_instance-c_medical_history-4">
+            <value>Dyspnée</value>
+          </text>
+          <text id="static_instance-c_medical_history-5">
+            <value>Aucun</value>
+          </text>
+          <text id="static_instance-c_medical_history-6">
+            <value>Autre</value>
+          </text>
+          <text id="static_instance-c_notification_structure-0">
+            <value>Formation sanitaire</value>
+          </text>
+          <text id="static_instance-c_notification_structure-1">
+            <value>Point d'entrée (PoE)</value>
+          </text>
+          <text id="static_instance-c_notification_structure-2">
+            <value>SAMU</value>
+          </text>
+          <text id="static_instance-c_notification_structure-3">
+            <value>Autre</value>
+          </text>
+          <text id="static_instance-c_observation-0">
+            <value>Auto isolement à domicile</value>
+          </text>
+          <text id="static_instance-c_observation-1">
+            <value>Besoin urgent de soins</value>
+          </text>
+          <text id="static_instance-c_observation-2">
+            <value>Pas d'isolement</value>
+          </text>
+          <text id="static_instance-c_observation-3">
+            <value>Hospitalisé</value>
+          </text>
+          <text id="static_instance-c_person_who_notified-0">
+            <value>Agent de sante</value>
+          </text>
+          <text id="static_instance-c_person_who_notified-1">
+            <value>Agent communautaire</value>
+          </text>
+          <text id="static_instance-c_person_who_notified-2">
+            <value>Agent de suivi</value>
+          </text>
+          <text id="static_instance-c_person_who_notified-3">
+            <value>Autre</value>
+          </text>
+          <text id="static_instance-c_place_of_detection-0">
+            <value>Point d'entrée (PoE)</value>
+          </text>
+          <text id="static_instance-c_place_of_detection-1">
+            <value>Maison familiale</value>
+          </text>
+          <text id="static_instance-c_place_of_detection-2">
+            <value>Structure de santé</value>
+          </text>
+          <text id="static_instance-c_place_of_detection-3">
+            <value>Site de confinement</value>
+          </text>
+          <text id="static_instance-c_place_of_detection-4">
+            <value>Autre</value>
+          </text>
+          <text id="static_instance-c_sample_collection_lab-0">
+            <value>Niamey CERMES</value>
+          </text>
+          <text id="static_instance-c_sample_collection_lab-1">
+            <value>Maradi CHR</value>
+          </text>
+          <text id="static_instance-c_sample_collection_lab-2">
+            <value>Tahoua CHR</value>
+          </text>
+          <text id="static_instance-c_sample_collection_lab-3">
+            <value>Zinder CHR</value>
+          </text>
+          <text id="static_instance-c_sample_type-0">
+            <value>Nasopharyngé</value>
+          </text>
+          <text id="static_instance-c_sample_type-1">
+            <value>Oropharyngé</value>
+          </text>
+          <text id="static_instance-c_symptoms_of_the_patient-0">
+            <value>Fièvre</value>
+          </text>
+          <text id="static_instance-c_symptoms_of_the_patient-1">
+            <value>Difficulté respiratoire</value>
+          </text>
+          <text id="static_instance-c_symptoms_of_the_patient-2">
+            <value>Toux</value>
+          </text>
+          <text id="static_instance-c_symptoms_of_the_patient-3">
+            <value>Aucun</value>
+          </text>
+          <text id="static_instance-c_symptoms_of_the_patient-4">
+            <value>Autre</value>
+          </text>
+          <text id="static_instance-c_validation-0">
+            <value>Fausse alerte</value>
+          </text>
+          <text id="static_instance-c_validation-1">
+            <value>Valide</value>
+          </text>
+          <text id="static_instance-c_validation-2">
+            <value>Invalide</value>
+          </text>
+          <text id="static_instance-c_validation-3">
+            <value>Injoignable</value>
+          </text>
+          <text id="static_instance-c_validation-4">
+            <value>Refus</value>
+          </text>
+          <text id="static_instance-c_validation-5">
+            <value>Mauvaise assignation</value>
+          </text>
+          <text id="static_instance-call_outcomes-0">
+            <value>Joignable</value>
+          </text>
+          <text id="static_instance-call_outcomes-1">
+            <value>Injoignable</value>
+          </text>
+          <text id="static_instance-district-0">
+            <value>Aderbissinat</value>
+          </text>
+          <text id="static_instance-district-1">
+            <value>Agadez</value>
+          </text>
+          <text id="static_instance-district-10">
+            <value>Maine-Soroa</value>
+          </text>
+          <text id="static_instance-district-11">
+            <value>N'Gourti</value>
+          </text>
+          <text id="static_instance-district-12">
+            <value>N'Guigmi</value>
+          </text>
+          <text id="static_instance-district-13">
+            <value>Boboye</value>
+          </text>
+          <text id="static_instance-district-14">
+            <value>Dioundiou</value>
+          </text>
+          <text id="static_instance-district-15">
+            <value>Dogondoutchi</value>
+          </text>
+          <text id="static_instance-district-16">
+            <value>Dosso</value>
+          </text>
+          <text id="static_instance-district-17">
+            <value>Falmey</value>
+          </text>
+          <text id="static_instance-district-18">
+            <value>Gaya</value>
+          </text>
+          <text id="static_instance-district-19">
+            <value>Loga</value>
+          </text>
+          <text id="static_instance-district-2">
+            <value>Arlit</value>
+          </text>
+          <text id="static_instance-district-20">
+            <value>Tibiri</value>
+          </text>
+          <text id="static_instance-district-21">
+            <value>Aguie</value>
+          </text>
+          <text id="static_instance-district-22">
+            <value>Bermo</value>
+          </text>
+          <text id="static_instance-district-23">
+            <value>Dakoro</value>
+          </text>
+          <text id="static_instance-district-24">
+            <value>Gazaoua</value>
+          </text>
+          <text id="static_instance-district-25">
+            <value>Guidan-Roumdji</value>
+          </text>
+          <text id="static_instance-district-26">
+            <value>Madarounfa</value>
+          </text>
+          <text id="static_instance-district-27">
+            <value>Maradi</value>
+          </text>
+          <text id="static_instance-district-28">
+            <value>Mayahi</value>
+          </text>
+          <text id="static_instance-district-29">
+            <value>Tessaoua</value>
+          </text>
+          <text id="static_instance-district-3">
+            <value>Bilma</value>
+          </text>
+          <text id="static_instance-district-30">
+            <value>Niamey 1</value>
+          </text>
+          <text id="static_instance-district-31">
+            <value>Niamey 2</value>
+          </text>
+          <text id="static_instance-district-32">
+            <value>Niamey 3</value>
+          </text>
+          <text id="static_instance-district-33">
+            <value>Niamey 4</value>
+          </text>
+          <text id="static_instance-district-34">
+            <value>Niamey 5</value>
+          </text>
+          <text id="static_instance-district-35">
+            <value>Abalak</value>
+          </text>
+          <text id="static_instance-district-36">
+            <value>Bagaroua</value>
+          </text>
+          <text id="static_instance-district-37">
+            <value>Birni N'Konni</value>
+          </text>
+          <text id="static_instance-district-38">
+            <value>Bouza</value>
+          </text>
+          <text id="static_instance-district-39">
+            <value>Illela</value>
+          </text>
+          <text id="static_instance-district-4">
+            <value>Iferouane</value>
+          </text>
+          <text id="static_instance-district-40">
+            <value>Keita</value>
+          </text>
+          <text id="static_instance-district-41">
+            <value>Madaoua</value>
+          </text>
+          <text id="static_instance-district-42">
+            <value>Malbaza</value>
+          </text>
+          <text id="static_instance-district-43">
+            <value>Tahoua Commune</value>
+          </text>
+          <text id="static_instance-district-44">
+            <value>Tahoua Dept</value>
+          </text>
+          <text id="static_instance-district-45">
+            <value>Tassara</value>
+          </text>
+          <text id="static_instance-district-46">
+            <value>Tchintabaraden</value>
+          </text>
+          <text id="static_instance-district-47">
+            <value>Tillia</value>
+          </text>
+          <text id="static_instance-district-48">
+            <value>Abala</value>
+          </text>
+          <text id="static_instance-district-49">
+            <value>Ayorou</value>
+          </text>
+          <text id="static_instance-district-5">
+            <value>Ingall</value>
+          </text>
+          <text id="static_instance-district-50">
+            <value>Balleyara</value>
+          </text>
+          <text id="static_instance-district-51">
+            <value>Banibangou</value>
+          </text>
+          <text id="static_instance-district-52">
+            <value>Bankilare</value>
+          </text>
+          <text id="static_instance-district-53">
+            <value>Filingue</value>
+          </text>
+          <text id="static_instance-district-54">
+            <value>Gotheye</value>
+          </text>
+          <text id="static_instance-district-55">
+            <value>Kollo</value>
+          </text>
+          <text id="static_instance-district-56">
+            <value>Ouallam</value>
+          </text>
+          <text id="static_instance-district-57">
+            <value>Say</value>
+          </text>
+          <text id="static_instance-district-58">
+            <value>Tera</value>
+          </text>
+          <text id="static_instance-district-59">
+            <value>Tillaberi</value>
+          </text>
+          <text id="static_instance-district-6">
+            <value>Tchirozerine</value>
+          </text>
+          <text id="static_instance-district-60">
+            <value>Torodi</value>
+          </text>
+          <text id="static_instance-district-61">
+            <value>Belbedji</value>
+          </text>
+          <text id="static_instance-district-62">
+            <value>Damagaram Takaya</value>
+          </text>
+          <text id="static_instance-district-63">
+            <value>Dungass</value>
+          </text>
+          <text id="static_instance-district-64">
+            <value>Goure</value>
+          </text>
+          <text id="static_instance-district-65">
+            <value>Magaria</value>
+          </text>
+          <text id="static_instance-district-66">
+            <value>Takeita</value>
+          </text>
+          <text id="static_instance-district-67">
+            <value>Tanout</value>
+          </text>
+          <text id="static_instance-district-68">
+            <value>Zinder</value>
+          </text>
+          <text id="static_instance-district-7">
+            <value>Bosso</value>
+          </text>
+          <text id="static_instance-district-8">
+            <value>Diffa</value>
+          </text>
+          <text id="static_instance-district-9">
+            <value>Goudoumaria</value>
+          </text>
+          <text id="static_instance-months_years-0">
+            <value>Mois</value>
+          </text>
+          <text id="static_instance-months_years-1">
+            <value>Années</value>
+          </text>
+          <text id="static_instance-region-0">
+            <value>Agadez</value>
+          </text>
+          <text id="static_instance-region-1">
+            <value>Diffa</value>
+          </text>
+          <text id="static_instance-region-2">
+            <value>Dosso</value>
+          </text>
+          <text id="static_instance-region-3">
+            <value>Maradi</value>
+          </text>
+          <text id="static_instance-region-4">
+            <value>Niamey</value>
+          </text>
+          <text id="static_instance-region-5">
+            <value>Tahoua</value>
+          </text>
+          <text id="static_instance-region-6">
+            <value>Tillaberi</value>
+          </text>
+          <text id="static_instance-region-7">
+            <value>Zinder</value>
+          </text>
+          <text id="static_instance-sex-0">
+            <value>Masculin</value>
+          </text>
+          <text id="static_instance-sex-1">
+            <value>Féminin</value>
+          </text>
+          <text id="static_instance-symptoms_list-0">
+            <value>Céphalée</value>
+          </text>
+          <text id="static_instance-symptoms_list-1">
+            <value>Fièvre</value>
+          </text>
+          <text id="static_instance-symptoms_list-10">
+            <value>Voyage dans un pays étranger</value>
+          </text>
+          <text id="static_instance-symptoms_list-2">
+            <value>Toux</value>
+          </text>
+          <text id="static_instance-symptoms_list-3">
+            <value>Rhume</value>
+          </text>
+          <text id="static_instance-symptoms_list-4">
+            <value>Myaligie et/ou fatigue générale</value>
+          </text>
+          <text id="static_instance-symptoms_list-5">
+            <value>Douleur abdominal</value>
+          </text>
+          <text id="static_instance-symptoms_list-6">
+            <value>Mal de gorge</value>
+          </text>
+          <text id="static_instance-symptoms_list-7">
+            <value>Problème respiratoire</value>
+          </text>
+          <text id="static_instance-symptoms_list-8">
+            <value>Autre plainte</value>
+          </text>
+          <text id="static_instance-symptoms_list-9">
+            <value>Contacte avec un cas positif</value>
+          </text>
+          <text id="static_instance-yes_no-0">
+            <value>Oui</value>
+          </text>
+          <text id="static_instance-yes_no-1">
+            <value>Non</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <investigation delimiter="#" id="investigation" prefix="J1!investigation!" version="2017-11-24">
+          <inputs tag="hidden">
+            <source tag="hidden">user</source>
+            <source_id tag="hidden"/>
+            <g_details tag="hidden">
+              <case_number tag="hidden"/>
+              <lastname_of_patient tag="hidden"/>
+              <firstname_of_patient tag="hidden"/>
+              <age tag="hidden"/>
+              <months_or_years tag="hidden"/>
+              <sex_of_patient tag="hidden"/>
+              <number_of_patient_1 tag="hidden"/>
+              <number_of_patient_2 tag="hidden"/>
+              <patient_current_location tag="hidden"/>
+              <region tag="hidden"/>
+              <district tag="hidden"/>
+              <commune tag="hidden"/>
+              <quartier tag="hidden"/>
+            </g_details>
+            <g_symptoms tag="hidden">
+              <symptoms tag="hidden"/>
+              <other_symptoms tag="hidden"/>
+              <call_outcome tag="hidden"/>
+            </g_symptoms>
+            <contact tag="hidden">
+              <_id tag="hidden"/>
+              <name tag="hidden"/>
+              <contact tag="hidden">
+                <_id tag="hidden"/>
+              </contact>
+            </contact>
+          </inputs>
+          <patient_id tag="hidden"/>
+          <muso_id tag="hidden"/>
+          <patient_name tag="hidden"/>
+          <selected_validation tag="hidden"/>
+          <g_validation tag="hidden">
+            <validation_bis tag="hidden"/>
+          </g_validation>
+          <g_alterations tag="hidden">
+            <alt_case_number tag="hidden"/>
+            <n_location_session tag="hidden"/>
+            <alt_region tag="hidden"/>
+            <alt_district tag="hidden"/>
+            <alt_commune tag="hidden"/>
+            <alt_quartier tag="hidden"/>
+            <n_case_identification tag="hidden"/>
+            <alt_lastname_of_patient tag="hidden"/>
+            <alt_firstname_of_patient tag="hidden"/>
+            <alt_age tag="hidden"/>
+            <alt_months_or_years tag="hidden"/>
+            <alt_sex_of_patient tag="hidden"/>
+            <profession tag="hidden"/>
+            <place_of_residence tag="hidden"/>
+            <alt_number_of_patient_1 tag="hidden"/>
+            <alt_number_of_patient_2 tag="hidden"/>
+            <alt_patient_current_location tag="hidden"/>
+            <once tag="hidden"/>
+          </g_alterations>
+          <g_detection_location>
+            <place_of_detection/>
+            <specify_place_of_detection_name/>
+            <specify_other_place/>
+            <date_of_detection/>
+            <epidemiological_classification/>
+          </g_detection_location>
+          <g_case_notifications>
+            <notified_by_place_of_detection/>
+            <notification_date/>
+            <notification_structure/>
+            <specify_notification_structure_name/>
+            <specify_other_notification_structure/>
+            <person_who_notified/>
+            <other_person_who_notified/>
+          </g_case_notifications>
+          <g_cinic_informations>
+            <symptoms_of_the_patient/>
+            <other_symptoms_of_the_patient/>
+            <first_symptoms_onset_date/>
+            <admission_to_health_center/>
+            <date_of_admission_to_health_center/>
+            <date_of_first_consultation/>
+            <health_facility_frequented/>
+            <medical_history/>
+            <specify_medical_history/>
+            <pre-existing_pathological_history/>
+            <specify_pre-existing_pathological_history/>
+            <taking_medications/>
+            <specify_medications_taken/>
+          </g_cinic_informations>
+          <g_exposure_travel>
+            <travel_before_symptoms_onset/>
+            <zone_or_country/>
+            <date_of_visit/>
+            <n_symptoms_onset_last_14_days/>
+            <visited_a_health_facility/>
+            <specify_visited_health_facility/>
+            <been_in_contact_with_respiratory_infection/>
+            <specify_place_infection/>
+            <infected_person_name/>
+            <infected_person_contact/>
+            <other_exposed_people/>
+            <contact_with_case/>
+            <case_name/>
+            <case_id_number/>
+            <place_of_contact/>
+            <participated_in_mass_meeting/>
+            <date_of_mass_meeting/>
+            <location_of_mass_meeting/>
+          </g_exposure_travel>
+          <g_lab_informations>
+            <sample_collection_bis/>
+            <sample_type/>
+            <sample_collection_date_bis/>
+            <sample_collection_lab/>
+            <other_collection/>
+            <specify_other_collection/>
+          </g_lab_informations>
+          <investigation tag="hidden">
+            <summary tag="hidden"/>
+            <validation tag="hidden"/>
+            <investigation_done tag="hidden"/>
+            <sample_collection tag="hidden"/>
+            <sample_collection_date tag="hidden"/>
+            <n_details_lastname/>
+            <n_details_firstname/>
+            <n_details_contact/>
+            <n_investigation_details/>
+            <n_validation tag="hidden"/>
+            <n_sample_other tag="hidden"/>
+            <n_sample tag="hidden"/>
+          </investigation>
+          <patient_fullname tag="hidden"/>
+          <patient_phone tag="hidden"/>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </investigation>
+      </instance>
+      <instance id="contact-summary"/>
+      <instance id="c_epidemiological_classification">
+        <root>
+          <item>
+            <itextId>static_instance-c_epidemiological_classification-0</itextId>
+            <name>suspected_case</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_epidemiological_classification-1</itextId>
+            <name>probable_case</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_epidemiological_classification-2</itextId>
+            <name>confirmed_case</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="call_outcomes">
+        <root>
+          <item>
+            <itextId>static_instance-call_outcomes-0</itextId>
+            <name>reacheable</name>
+          </item>
+          <item>
+            <itextId>static_instance-call_outcomes-1</itextId>
+            <name>unreacheable</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="district">
+        <root>
+          <item>
+            <itextId>static_instance-district-0</itextId>
+            <region>agadez</region>
+            <name>aderbissinat</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-1</itextId>
+            <region>agadez</region>
+            <name>agadez</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-2</itextId>
+            <region>agadez</region>
+            <name>arlit</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-3</itextId>
+            <region>agadez</region>
+            <name>bilma</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-4</itextId>
+            <region>agadez</region>
+            <name>iferouane</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-5</itextId>
+            <region>agadez</region>
+            <name>ingall</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-6</itextId>
+            <region>agadez</region>
+            <name>tchirozerine</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-7</itextId>
+            <region>diffa</region>
+            <name>bosso</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-8</itextId>
+            <region>diffa</region>
+            <name>diffa</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-9</itextId>
+            <region>diffa</region>
+            <name>goudoumaria</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-10</itextId>
+            <region>diffa</region>
+            <name>mainesoroa</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-11</itextId>
+            <region>diffa</region>
+            <name>ngourti</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-12</itextId>
+            <region>diffa</region>
+            <name>nguigmi</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-13</itextId>
+            <region>dosso</region>
+            <name>boboye</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-14</itextId>
+            <region>dosso</region>
+            <name>dioundiou</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-15</itextId>
+            <region>dosso</region>
+            <name>dogondoutchi</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-16</itextId>
+            <region>dosso</region>
+            <name>dosso</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-17</itextId>
+            <region>dosso</region>
+            <name>falmey</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-18</itextId>
+            <region>dosso</region>
+            <name>gaya</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-19</itextId>
+            <region>dosso</region>
+            <name>loga</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-20</itextId>
+            <region>dosso</region>
+            <name>tibiri</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-21</itextId>
+            <region>maradi</region>
+            <name>aguie</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-22</itextId>
+            <region>maradi</region>
+            <name>bermo</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-23</itextId>
+            <region>maradi</region>
+            <name>dakoro</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-24</itextId>
+            <region>maradi</region>
+            <name>gazaoua</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-25</itextId>
+            <region>maradi</region>
+            <name>guidanroumdji</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-26</itextId>
+            <region>maradi</region>
+            <name>madarounfa</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-27</itextId>
+            <region>maradi</region>
+            <name>maradi</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-28</itextId>
+            <region>maradi</region>
+            <name>mayahi</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-29</itextId>
+            <region>maradi</region>
+            <name>tessaoua</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-30</itextId>
+            <region>niamey</region>
+            <name>niamey1</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-31</itextId>
+            <region>niamey</region>
+            <name>niamey2</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-32</itextId>
+            <region>niamey</region>
+            <name>niamey3</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-33</itextId>
+            <region>niamey</region>
+            <name>niamey4</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-34</itextId>
+            <region>niamey</region>
+            <name>niamey5</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-35</itextId>
+            <region>tahoua</region>
+            <name>abalak</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-36</itextId>
+            <region>tahoua</region>
+            <name>bagaroua</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-37</itextId>
+            <region>tahoua</region>
+            <name>birninkonni</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-38</itextId>
+            <region>tahoua</region>
+            <name>bouza</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-39</itextId>
+            <region>tahoua</region>
+            <name>illela</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-40</itextId>
+            <region>tahoua</region>
+            <name>keita</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-41</itextId>
+            <region>tahoua</region>
+            <name>madaoua</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-42</itextId>
+            <region>tahoua</region>
+            <name>malbaza</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-43</itextId>
+            <region>tahoua</region>
+            <name>tahouacommune</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-44</itextId>
+            <region>tahoua</region>
+            <name>tahouadept</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-45</itextId>
+            <region>tahoua</region>
+            <name>tassara</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-46</itextId>
+            <region>tahoua</region>
+            <name>tchintabaraden</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-47</itextId>
+            <region>tahoua</region>
+            <name>tillia</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-48</itextId>
+            <region>tillaberi</region>
+            <name>abala</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-49</itextId>
+            <region>tillaberi</region>
+            <name>ayorou</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-50</itextId>
+            <region>tillaberi</region>
+            <name>balleyara</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-51</itextId>
+            <region>tillaberi</region>
+            <name>banibangou</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-52</itextId>
+            <region>tillaberi</region>
+            <name>bankilare</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-53</itextId>
+            <region>tillaberi</region>
+            <name>filingue</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-54</itextId>
+            <region>tillaberi</region>
+            <name>gotheye</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-55</itextId>
+            <region>tillaberi</region>
+            <name>kollo</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-56</itextId>
+            <region>tillaberi</region>
+            <name>ouallam</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-57</itextId>
+            <region>tillaberi</region>
+            <name>say</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-58</itextId>
+            <region>tillaberi</region>
+            <name>tera</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-59</itextId>
+            <region>tillaberi</region>
+            <name>tillaberi</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-60</itextId>
+            <region>tillaberi</region>
+            <name>torodi</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-61</itextId>
+            <region>zinder</region>
+            <name>belbedji</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-62</itextId>
+            <region>zinder</region>
+            <name>damagaramtakaya</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-63</itextId>
+            <region>zinder</region>
+            <name>dungass</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-64</itextId>
+            <region>zinder</region>
+            <name>goure</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-65</itextId>
+            <region>zinder</region>
+            <name>magaria</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-66</itextId>
+            <region>zinder</region>
+            <name>takeita</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-67</itextId>
+            <region>zinder</region>
+            <name>tanout</name>
+          </item>
+          <item>
+            <itextId>static_instance-district-68</itextId>
+            <region>zinder</region>
+            <name>zinder</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="c_place_of_detection">
+        <root>
+          <item>
+            <itextId>static_instance-c_place_of_detection-0</itextId>
+            <name>poe</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_place_of_detection-1</itextId>
+            <name>family_house</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_place_of_detection-2</itextId>
+            <name>health_structure</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_place_of_detection-3</itextId>
+            <name>containment_site</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_place_of_detection-4</itextId>
+            <name>other</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="c_care_received">
+        <root>
+          <item>
+            <itextId>static_instance-c_care_received-0</itextId>
+            <name>hospitalization</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_care_received-1</itextId>
+            <name>auto_isolation</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="c_sample_collection_lab">
+        <root>
+          <item>
+            <itextId>static_instance-c_sample_collection_lab-0</itextId>
+            <name>niamey_cermes</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_sample_collection_lab-1</itextId>
+            <name>maradi_chr</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_sample_collection_lab-2</itextId>
+            <name>tahoua_chr</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_sample_collection_lab-3</itextId>
+            <name>zinder_chr</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="c_symptoms_of_the_patient">
+        <root>
+          <item>
+            <itextId>static_instance-c_symptoms_of_the_patient-0</itextId>
+            <name>fever</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_symptoms_of_the_patient-1</itextId>
+            <name>difficulty_breathing</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_symptoms_of_the_patient-2</itextId>
+            <name>cough</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_symptoms_of_the_patient-3</itextId>
+            <name>none</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_symptoms_of_the_patient-4</itextId>
+            <name>other_symptom</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="months_years">
+        <root>
+          <item>
+            <itextId>static_instance-months_years-0</itextId>
+            <name>months</name>
+          </item>
+          <item>
+            <itextId>static_instance-months_years-1</itextId>
+            <name>years</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="sex">
+        <root>
+          <item>
+            <itextId>static_instance-sex-0</itextId>
+            <name>male</name>
+          </item>
+          <item>
+            <itextId>static_instance-sex-1</itextId>
+            <name>female</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="c_observation">
+        <root>
+          <item>
+            <itextId>static_instance-c_observation-0</itextId>
+            <name>auto_isolation_home</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_observation-1</itextId>
+            <name>need_care</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_observation-2</itextId>
+            <name>no_isolation</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_observation-3</itextId>
+            <name>hospitalized</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="c_sample_type">
+        <root>
+          <item>
+            <itextId>static_instance-c_sample_type-0</itextId>
+            <name>nasopharyngeal</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_sample_type-1</itextId>
+            <name>oropharyngeal</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="symptoms_list">
+        <root>
+          <item>
+            <itextId>static_instance-symptoms_list-0</itextId>
+            <name>headache</name>
+          </item>
+          <item>
+            <itextId>static_instance-symptoms_list-1</itextId>
+            <name>fever</name>
+          </item>
+          <item>
+            <itextId>static_instance-symptoms_list-2</itextId>
+            <name>cough</name>
+          </item>
+          <item>
+            <itextId>static_instance-symptoms_list-3</itextId>
+            <name>cold</name>
+          </item>
+          <item>
+            <itextId>static_instance-symptoms_list-4</itextId>
+            <name>myalgia_or_general_fatigue</name>
+          </item>
+          <item>
+            <itextId>static_instance-symptoms_list-5</itextId>
+            <name>abdominal_pain</name>
+          </item>
+          <item>
+            <itextId>static_instance-symptoms_list-6</itextId>
+            <name>sore_throat</name>
+          </item>
+          <item>
+            <itextId>static_instance-symptoms_list-7</itextId>
+            <name>respiratory_problem</name>
+          </item>
+          <item>
+            <itextId>static_instance-symptoms_list-8</itextId>
+            <name>other_complaint</name>
+          </item>
+          <item>
+            <itextId>static_instance-symptoms_list-9</itextId>
+            <name>contact_with_positive_case</name>
+          </item>
+          <item>
+            <itextId>static_instance-symptoms_list-10</itextId>
+            <name>travel_to_a_foreign_country</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="c_validation">
+        <root>
+          <item>
+            <itextId>static_instance-c_validation-0</itextId>
+            <name>false_alert</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_validation-1</itextId>
+            <name>valid</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_validation-2</itextId>
+            <name>invalid</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_validation-3</itextId>
+            <name>unreachable</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_validation-4</itextId>
+            <name>declined</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_validation-5</itextId>
+            <name>wrong_assignation</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="c_notification_structure">
+        <root>
+          <item>
+            <itextId>static_instance-c_notification_structure-0</itextId>
+            <name>health_structure</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_notification_structure-1</itextId>
+            <name>poe</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_notification_structure-2</itextId>
+            <name>samu</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_notification_structure-3</itextId>
+            <name>other</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="c_person_who_notified">
+        <root>
+          <item>
+            <itextId>static_instance-c_person_who_notified-0</itextId>
+            <name>health_agent</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_person_who_notified-1</itextId>
+            <name>community_agent</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_person_who_notified-2</itextId>
+            <name>followup_agent</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_person_who_notified-3</itextId>
+            <name>other_agent</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="c_medical_history">
+        <root>
+          <item>
+            <itextId>static_instance-c_medical_history-0</itextId>
+            <name>fever</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_medical_history-1</itextId>
+            <name>sore_throat</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_medical_history-2</itextId>
+            <name>cough</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_medical_history-3</itextId>
+            <name>rhinorrhea</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_medical_history-4</itextId>
+            <name>dyspnea</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_medical_history-5</itextId>
+            <name>none</name>
+          </item>
+          <item>
+            <itextId>static_instance-c_medical_history-6</itextId>
+            <name>other</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="region">
+        <root>
+          <item>
+            <itextId>static_instance-region-0</itextId>
+            <name>agadez</name>
+          </item>
+          <item>
+            <itextId>static_instance-region-1</itextId>
+            <name>diffa</name>
+          </item>
+          <item>
+            <itextId>static_instance-region-2</itextId>
+            <name>dosso</name>
+          </item>
+          <item>
+            <itextId>static_instance-region-3</itextId>
+            <name>maradi</name>
+          </item>
+          <item>
+            <itextId>static_instance-region-4</itextId>
+            <name>niamey</name>
+          </item>
+          <item>
+            <itextId>static_instance-region-5</itextId>
+            <name>tahoua</name>
+          </item>
+          <item>
+            <itextId>static_instance-region-6</itextId>
+            <name>tillaberi</name>
+          </item>
+          <item>
+            <itextId>static_instance-region-7</itextId>
+            <name>zinder</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="yes_no">
+        <root>
+          <item>
+            <itextId>static_instance-yes_no-0</itextId>
+            <name>yes</name>
+          </item>
+          <item>
+            <itextId>static_instance-yes_no-1</itextId>
+            <name>no</name>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/investigation/inputs" relevant="false()"/>
+      <bind nodeset="/investigation/inputs/source" type="string"/>
+      <bind nodeset="/investigation/inputs/source_id" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details" required=""/>
+      <bind nodeset="/investigation/inputs/g_details/case_number" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/lastname_of_patient" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/firstname_of_patient" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/age" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/months_or_years" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/sex_of_patient" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/number_of_patient_1" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/number_of_patient_2" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/patient_current_location" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/region" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/district" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/commune" type="string"/>
+      <bind nodeset="/investigation/inputs/g_details/quartier" type="string"/>
+      <bind nodeset="/investigation/inputs/g_symptoms" required=""/>
+      <bind nodeset="/investigation/inputs/g_symptoms/symptoms" type="string"/>
+      <bind nodeset="/investigation/inputs/g_symptoms/other_symptoms" type="string"/>
+      <bind nodeset="/investigation/inputs/g_symptoms/call_outcome" type="string"/>
+      <bind jr:constraintMsg="jr:itext('/investigation/inputs/contact/_id:jr:constraintMsg')" nodeset="/investigation/inputs/contact/_id" type="db:investigator"/>
+      <bind nodeset="/investigation/inputs/contact/name" type="string"/>
+      <bind nodeset="/investigation/inputs/contact/contact/_id" type="string"/>
+      <bind calculate="../inputs/contact/_id" jr:requiredMsg="jr:itext('/investigation/patient_id:jr:requiredMsg')" nodeset="/investigation/patient_id" required="true()" type="string"/>
+      <bind calculate="../inputs/contact/external_id" nodeset="/investigation/muso_id" type="string"/>
+      <bind calculate="../inputs/contact/name" nodeset="/investigation/patient_name" type="string"/>
+      <bind calculate="if(selected( /investigation/g_validation/validation_bis , 'false_alert'),'Ceci est une fausse alerte',
+ if(selected( /investigation/g_validation/validation_bis , 'unreachable'),'Le suspect est injoignable',
+ if(selected( /investigation/g_validation/validation_bis , 'valid'),'Investigation valide',
+ if(selected( /investigation/g_validation/validation_bis , 'invalid'),'Investigation non valide',
+ if(selected( /investigation/g_validation/validation_bis , 'declined'),'Refus',
+ if(selected( /investigation/g_validation/validation_bis , 'wrong_assignation'),'Mauvaise assignation',
+ ''
+ ))))))" nodeset="/investigation/selected_validation" type="string"/>
+      <bind nodeset="/investigation/g_validation/validation_bis" type="select1"/>
+      <bind nodeset="/investigation/g_alterations" relevant=" /investigation/g_validation/validation_bis  = 'valid'"/>
+      <bind calculate="../../inputs/g_details/case_number" nodeset="/investigation/g_alterations/alt_case_number" readonly="true()" type="string"/>
+      <bind nodeset="/investigation/g_alterations/n_location_session" readonly="true()" type="string"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/region, /investigation/g_alterations/alt_region )" nodeset="/investigation/g_alterations/alt_region" type="select1"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/district, /investigation/g_alterations/alt_district )" nodeset="/investigation/g_alterations/alt_district" relevant=" /investigation/g_alterations/alt_region !=''" type="select1"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/commune, /investigation/g_alterations/alt_commune )" nodeset="/investigation/g_alterations/alt_commune" type="string"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/quartier, /investigation/g_alterations/alt_quartier )" nodeset="/investigation/g_alterations/alt_quartier" type="string"/>
+      <bind nodeset="/investigation/g_alterations/n_case_identification" readonly="true()" type="string"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/lastname_of_patient, /investigation/g_alterations/alt_lastname_of_patient )" nodeset="/investigation/g_alterations/alt_lastname_of_patient" type="string"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/firstname_of_patient, /investigation/g_alterations/alt_firstname_of_patient )" nodeset="/investigation/g_alterations/alt_firstname_of_patient" type="string"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/age, /investigation/g_alterations/alt_age )" constraint=".&gt;0" nodeset="/investigation/g_alterations/alt_age" type="int"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/months_or_years, /investigation/g_alterations/alt_months_or_years )" nodeset="/investigation/g_alterations/alt_months_or_years" type="select1"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/sex_of_patient, /investigation/g_alterations/alt_sex_of_patient )" nodeset="/investigation/g_alterations/alt_sex_of_patient" type="select1"/>
+      <bind nodeset="/investigation/g_alterations/profession" type="string"/>
+      <bind nodeset="/investigation/g_alterations/place_of_residence" type="string"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/number_of_patient_1, /investigation/g_alterations/alt_number_of_patient_1 )" constraint="regex(.,'^(\d{2}\s?){4}$')" jr:constraintMsg="jr:itext('/investigation/g_alterations/alt_number_of_patient_1:jr:constraintMsg')" jr:requiredMsg="jr:itext('/investigation/g_alterations/alt_number_of_patient_1:jr:requiredMsg')" nodeset="/investigation/g_alterations/alt_number_of_patient_1" required="true()" type="string"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/number_of_patient_2, /investigation/g_alterations/alt_number_of_patient_2 )" constraint="regex(.,'^(\d{2}\s?){4}$')" jr:constraintMsg="jr:itext('/investigation/g_alterations/alt_number_of_patient_2:jr:constraintMsg')" nodeset="/investigation/g_alterations/alt_number_of_patient_2" type="string"/>
+      <bind calculate="if( /investigation/g_alterations/once ='',../../inputs/g_details/patient_current_location, /investigation/g_alterations/alt_patient_current_location )" nodeset="/investigation/g_alterations/alt_patient_current_location" type="string"/>
+      <bind calculate="true()" nodeset="/investigation/g_alterations/once" type="string"/>
+      <bind nodeset="/investigation/g_detection_location" relevant=" /investigation/g_validation/validation_bis  = 'valid'"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_detection_location/place_of_detection:jr:requiredMsg')" nodeset="/investigation/g_detection_location/place_of_detection" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_detection_location/specify_place_of_detection_name" relevant=" /investigation/g_detection_location/place_of_detection  != 'other' and  /investigation/g_detection_location/place_of_detection  != ''" type="string"/>
+      <bind nodeset="/investigation/g_detection_location/specify_other_place" relevant=" /investigation/g_detection_location/place_of_detection  = 'other'" type="string"/>
+      <bind nodeset="/investigation/g_detection_location/date_of_detection" type="date"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_detection_location/epidemiological_classification:jr:requiredMsg')" nodeset="/investigation/g_detection_location/epidemiological_classification" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_case_notifications" relevant=" /investigation/g_validation/validation_bis  = 'valid'"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_case_notifications/notified_by_place_of_detection:jr:requiredMsg')" nodeset="/investigation/g_case_notifications/notified_by_place_of_detection" required="true()" type="select1"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_case_notifications/notification_date:jr:requiredMsg')" nodeset="/investigation/g_case_notifications/notification_date" relevant=" /investigation/g_case_notifications/notified_by_place_of_detection  != 'no'" required="true()" type="date"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_case_notifications/notification_structure:jr:requiredMsg')" nodeset="/investigation/g_case_notifications/notification_structure" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_case_notifications/specify_notification_structure_name" relevant=" /investigation/g_case_notifications/notification_structure  != 'other' and  /investigation/g_case_notifications/notification_structure  != 'samu' and  /investigation/g_case_notifications/notification_structure  != ''" type="string"/>
+      <bind nodeset="/investigation/g_case_notifications/specify_other_notification_structure" relevant=" /investigation/g_case_notifications/notification_structure  = 'other'" type="string"/>
+      <bind nodeset="/investigation/g_case_notifications/person_who_notified" type="select1"/>
+      <bind nodeset="/investigation/g_case_notifications/other_person_who_notified" relevant=" /investigation/g_case_notifications/person_who_notified  = 'other_agent'" type="string"/>
+      <bind nodeset="/investigation/g_cinic_informations" relevant=" /investigation/g_validation/validation_bis  = 'valid'"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_cinic_informations/symptoms_of_the_patient:jr:requiredMsg')" nodeset="/investigation/g_cinic_informations/symptoms_of_the_patient" required="true()" type="select"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_cinic_informations/other_symptoms_of_the_patient:jr:requiredMsg')" nodeset="/investigation/g_cinic_informations/other_symptoms_of_the_patient" relevant="selected( /investigation/g_cinic_informations/symptoms_of_the_patient , 'other_symptom')" required="true()" type="string"/>
+      <bind nodeset="/investigation/g_cinic_informations/first_symptoms_onset_date" relevant="count-selected( /investigation/g_cinic_informations/symptoms_of_the_patient ) &gt; 0 and  /investigation/g_cinic_informations/symptoms_of_the_patient  != 'none'" type="date"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_cinic_informations/admission_to_health_center:jr:requiredMsg')" nodeset="/investigation/g_cinic_informations/admission_to_health_center" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_cinic_informations/date_of_admission_to_health_center" relevant=" /investigation/g_cinic_informations/admission_to_health_center  = 'yes'" type="date"/>
+      <bind nodeset="/investigation/g_cinic_informations/date_of_first_consultation" relevant=" /investigation/g_cinic_informations/admission_to_health_center  = 'yes'" type="date"/>
+      <bind nodeset="/investigation/g_cinic_informations/health_facility_frequented" relevant=" /investigation/g_cinic_informations/admission_to_health_center  = 'yes'" type="string"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_cinic_informations/medical_history:jr:requiredMsg')" nodeset="/investigation/g_cinic_informations/medical_history" required="true()" type="select"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_cinic_informations/specify_medical_history:jr:requiredMsg')" nodeset="/investigation/g_cinic_informations/specify_medical_history" relevant="selected( /investigation/g_cinic_informations/medical_history , 'other')" required="true()" type="string"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_cinic_informations/pre-existing_pathological_history:jr:requiredMsg')" nodeset="/investigation/g_cinic_informations/pre-existing_pathological_history" required="true()" type="select1"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_cinic_informations/specify_pre-existing_pathological_history:jr:requiredMsg')" nodeset="/investigation/g_cinic_informations/specify_pre-existing_pathological_history" relevant=" /investigation/g_cinic_informations/pre-existing_pathological_history  = 'yes'" required="true()" type="string"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_cinic_informations/taking_medications:jr:requiredMsg')" nodeset="/investigation/g_cinic_informations/taking_medications" relevant=" /investigation/g_cinic_informations/pre-existing_pathological_history  = 'yes'" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_cinic_informations/specify_medications_taken" relevant=" /investigation/g_cinic_informations/taking_medications  = 'yes'" type="string"/>
+      <bind nodeset="/investigation/g_exposure_travel" relevant=" /investigation/g_validation/validation_bis  = 'valid'"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_exposure_travel/travel_before_symptoms_onset:jr:requiredMsg')" nodeset="/investigation/g_exposure_travel/travel_before_symptoms_onset" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_exposure_travel/zone_or_country" relevant=" /investigation/g_exposure_travel/travel_before_symptoms_onset  = 'yes'" type="string"/>
+      <bind nodeset="/investigation/g_exposure_travel/date_of_visit" relevant=" /investigation/g_exposure_travel/travel_before_symptoms_onset  = 'yes'" type="date"/>
+      <bind nodeset="/investigation/g_exposure_travel/n_symptoms_onset_last_14_days" readonly="true()" type="string"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_exposure_travel/visited_a_health_facility:jr:requiredMsg')" nodeset="/investigation/g_exposure_travel/visited_a_health_facility" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_exposure_travel/specify_visited_health_facility" relevant=" /investigation/g_exposure_travel/visited_a_health_facility  = 'yes'" type="string"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection:jr:requiredMsg')" nodeset="/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_exposure_travel/specify_place_infection" relevant=" /investigation/g_exposure_travel/been_in_contact_with_respiratory_infection  = 'yes'" type="string"/>
+      <bind nodeset="/investigation/g_exposure_travel/infected_person_name" relevant=" /investigation/g_exposure_travel/been_in_contact_with_respiratory_infection  = 'yes'" type="string"/>
+      <bind constraint="regex(.,'^(\d{2}\s?){4}$')" jr:constraintMsg="jr:itext('/investigation/g_exposure_travel/infected_person_contact:jr:constraintMsg')" nodeset="/investigation/g_exposure_travel/infected_person_contact" relevant=" /investigation/g_exposure_travel/been_in_contact_with_respiratory_infection  = 'yes'" type="string"/>
+      <bind nodeset="/investigation/g_exposure_travel/other_exposed_people" relevant=" /investigation/g_exposure_travel/been_in_contact_with_respiratory_infection  = 'yes'" type="string"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_exposure_travel/contact_with_case:jr:requiredMsg')" nodeset="/investigation/g_exposure_travel/contact_with_case" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_exposure_travel/case_name" relevant=" /investigation/g_exposure_travel/contact_with_case  = 'yes'" type="string"/>
+      <bind nodeset="/investigation/g_exposure_travel/case_id_number" relevant=" /investigation/g_exposure_travel/contact_with_case  = 'yes'" type="string"/>
+      <bind nodeset="/investigation/g_exposure_travel/place_of_contact" relevant=" /investigation/g_exposure_travel/contact_with_case  = 'yes'" type="string"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_exposure_travel/participated_in_mass_meeting:jr:requiredMsg')" nodeset="/investigation/g_exposure_travel/participated_in_mass_meeting" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_exposure_travel/date_of_mass_meeting" relevant=" /investigation/g_exposure_travel/participated_in_mass_meeting  = 'yes'" type="date"/>
+      <bind nodeset="/investigation/g_exposure_travel/location_of_mass_meeting" relevant=" /investigation/g_exposure_travel/participated_in_mass_meeting  = 'yes'" type="string"/>
+      <bind nodeset="/investigation/g_lab_informations" relevant=" /investigation/g_validation/validation_bis  = 'valid'"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_lab_informations/sample_collection_bis:jr:requiredMsg')" nodeset="/investigation/g_lab_informations/sample_collection_bis" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_lab_informations/sample_type" relevant=" /investigation/g_lab_informations/sample_collection_bis  = 'yes'" type="select1"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_lab_informations/sample_collection_date_bis:jr:requiredMsg')" nodeset="/investigation/g_lab_informations/sample_collection_date_bis" relevant=" /investigation/g_lab_informations/sample_collection_bis  = 'yes'" required="true()" type="date"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_lab_informations/sample_collection_lab:jr:requiredMsg')" nodeset="/investigation/g_lab_informations/sample_collection_lab" relevant=" /investigation/g_lab_informations/sample_collection_bis  = 'yes'" required="true()" type="select1"/>
+      <bind jr:requiredMsg="jr:itext('/investigation/g_lab_informations/other_collection:jr:requiredMsg')" nodeset="/investigation/g_lab_informations/other_collection" relevant=" /investigation/g_lab_informations/sample_collection_bis  = 'yes'" required="true()" type="select1"/>
+      <bind nodeset="/investigation/g_lab_informations/specify_other_collection" relevant=" /investigation/g_lab_informations/other_collection  = 'yes' and  /investigation/g_lab_informations/sample_collection_bis  = 'yes'" type="string"/>
+      <bind nodeset="/investigation/investigation/summary" readonly="true()" type="string"/>
+      <bind calculate=" /investigation/g_validation/validation_bis " nodeset="/investigation/investigation/validation" type="string"/>
+      <bind calculate="if( /investigation/g_validation/validation_bis ='valid','yes','no')" nodeset="/investigation/investigation/investigation_done" type="string"/>
+      <bind calculate=" /investigation/g_lab_informations/sample_collection_bis " nodeset="/investigation/investigation/sample_collection" type="string"/>
+      <bind calculate=" /investigation/g_lab_informations/sample_collection_date_bis " nodeset="/investigation/investigation/sample_collection_date" type="string"/>
+      <bind nodeset="/investigation/investigation/n_details_lastname" readonly="true()" relevant=" /investigation/g_alterations/alt_lastname_of_patient  !=''" type="string"/>
+      <bind nodeset="/investigation/investigation/n_details_firstname" readonly="true()" relevant=" /investigation/g_alterations/alt_firstname_of_patient  !=''" type="string"/>
+      <bind nodeset="/investigation/investigation/n_details_contact" readonly="true()" relevant=" /investigation/g_alterations/alt_number_of_patient_1  !=''" type="string"/>
+      <bind nodeset="/investigation/investigation/n_investigation_details" readonly="true()" type="string"/>
+      <bind nodeset="/investigation/investigation/n_validation" readonly="true()" relevant=" /investigation/selected_validation !=''" type="string"/>
+      <bind nodeset="/investigation/investigation/n_sample_other" readonly="true()" relevant=" /investigation/g_lab_informations/specify_other_collection  != ''" type="string"/>
+      <bind nodeset="/investigation/investigation/n_sample" readonly="true()" relevant=" /investigation/investigation/sample_collection  ='yes'" type="string"/>
+      <bind calculate=" /investigation/g_alterations/alt_firstname_of_patient  + ' ' +  /investigation/g_alterations/alt_lastname_of_patient " nodeset="/investigation/patient_fullname" type="string"/>
+      <bind calculate=" /investigation/g_alterations/alt_number_of_patient_1 " nodeset="/investigation/patient_phone" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/investigation/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/investigation/inputs">
+      <label ref="jr:itext('/investigation/inputs:label')"/>
+      <input appearance="hidden" ref="/investigation/inputs/source">
+        <label ref="jr:itext('/investigation/inputs/source:label')"/>
+      </input>
+      <input appearance="hidden" ref="/investigation/inputs/source_id">
+        <label ref="jr:itext('/investigation/inputs/source_id:label')"/>
+      </input>
+      <group ref="/investigation/inputs/g_details">
+        <input ref="/investigation/inputs/g_details/case_number"/>
+        <input ref="/investigation/inputs/g_details/lastname_of_patient"/>
+        <input ref="/investigation/inputs/g_details/firstname_of_patient"/>
+        <input ref="/investigation/inputs/g_details/age"/>
+        <input ref="/investigation/inputs/g_details/months_or_years"/>
+        <input ref="/investigation/inputs/g_details/sex_of_patient"/>
+        <input ref="/investigation/inputs/g_details/number_of_patient_1"/>
+        <input ref="/investigation/inputs/g_details/number_of_patient_2"/>
+        <input ref="/investigation/inputs/g_details/patient_current_location"/>
+        <input ref="/investigation/inputs/g_details/region"/>
+        <input ref="/investigation/inputs/g_details/district"/>
+        <input ref="/investigation/inputs/g_details/commune"/>
+        <input ref="/investigation/inputs/g_details/quartier"/>
+      </group>
+      <group ref="/investigation/inputs/g_symptoms">
+        <input ref="/investigation/inputs/g_symptoms/symptoms"/>
+        <input ref="/investigation/inputs/g_symptoms/other_symptoms"/>
+        <input ref="/investigation/inputs/g_symptoms/call_outcome"/>
+      </group>
+      <group ref="/investigation/inputs/contact">
+        <label ref="jr:itext('/investigation/inputs/contact:label')"/>
+        <input appearance="db-object" ref="/investigation/inputs/contact/_id"/>
+        <input appearance="hidden" ref="/investigation/inputs/contact/name">
+          <label ref="jr:itext('/investigation/inputs/contact/name:label')"/>
+        </input>
+        <group ref="/investigation/inputs/contact/contact">
+          <label ref="jr:itext('/investigation/inputs/contact/contact:label')"/>
+          <input ref="/investigation/inputs/contact/contact/_id">
+            <label ref="jr:itext('/investigation/inputs/contact/contact/_id:label')"/>
+          </input>
+        </group>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/investigation/g_validation">
+      <select1 ref="/investigation/g_validation/validation_bis">
+        <label ref="jr:itext('/investigation/g_validation/validation_bis:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_validation/validation_bis/false_alert:label')"/>
+          <value>false_alert</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_validation/validation_bis/valid:label')"/>
+          <value>valid</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_validation/validation_bis/invalid:label')"/>
+          <value>invalid</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_validation/validation_bis/unreachable:label')"/>
+          <value>unreachable</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_validation/validation_bis/declined:label')"/>
+          <value>declined</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_validation/validation_bis/wrong_assignation:label')"/>
+          <value>wrong_assignation</value>
+        </item>
+      </select1>
+    </group>
+    <group appearance="field-list" ref="/investigation/g_alterations">
+      <input ref="/investigation/g_alterations/alt_case_number">
+        <label ref="jr:itext('/investigation/g_alterations/alt_case_number:label')"/>
+      </input>
+      <input ref="/investigation/g_alterations/n_location_session">
+        <label ref="jr:itext('/investigation/g_alterations/n_location_session:label')"/>
+      </input>
+      <select1 appearance="minimal" ref="/investigation/g_alterations/alt_region">
+        <label ref="jr:itext('/investigation/g_alterations/alt_region:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_region/agadez:label')"/>
+          <value>agadez</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_region/diffa:label')"/>
+          <value>diffa</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_region/dosso:label')"/>
+          <value>dosso</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_region/maradi:label')"/>
+          <value>maradi</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_region/niamey:label')"/>
+          <value>niamey</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_region/tahoua:label')"/>
+          <value>tahoua</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_region/tillaberi:label')"/>
+          <value>tillaberi</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_region/zinder:label')"/>
+          <value>zinder</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/investigation/g_alterations/alt_district">
+        <label ref="jr:itext('/investigation/g_alterations/alt_district:label')"/>
+        <itemset nodeset="instance('district')/root/item[region= /investigation/g_alterations/alt_region ]">
+          <value ref="name"/>
+          <label ref="jr:itext(itextId)"/>
+        </itemset>
+      </select1>
+      <input ref="/investigation/g_alterations/alt_commune">
+        <label ref="jr:itext('/investigation/g_alterations/alt_commune:label')"/>
+      </input>
+      <input ref="/investigation/g_alterations/alt_quartier">
+        <label ref="jr:itext('/investigation/g_alterations/alt_quartier:label')"/>
+      </input>
+      <input ref="/investigation/g_alterations/n_case_identification">
+        <label ref="jr:itext('/investigation/g_alterations/n_case_identification:label')"/>
+      </input>
+      <input ref="/investigation/g_alterations/alt_lastname_of_patient">
+        <label ref="jr:itext('/investigation/g_alterations/alt_lastname_of_patient:label')"/>
+      </input>
+      <input ref="/investigation/g_alterations/alt_firstname_of_patient">
+        <label ref="jr:itext('/investigation/g_alterations/alt_firstname_of_patient:label')"/>
+      </input>
+      <input ref="/investigation/g_alterations/alt_age">
+        <label ref="jr:itext('/investigation/g_alterations/alt_age:label')"/>
+      </input>
+      <select1 ref="/investigation/g_alterations/alt_months_or_years">
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_months_or_years/months:label')"/>
+          <value>months</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_months_or_years/years:label')"/>
+          <value>years</value>
+        </item>
+      </select1>
+      <select1 ref="/investigation/g_alterations/alt_sex_of_patient">
+        <label ref="jr:itext('/investigation/g_alterations/alt_sex_of_patient:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_sex_of_patient/male:label')"/>
+          <value>male</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_alterations/alt_sex_of_patient/female:label')"/>
+          <value>female</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_alterations/profession">
+        <label ref="jr:itext('/investigation/g_alterations/profession:label')"/>
+      </input>
+      <input ref="/investigation/g_alterations/place_of_residence">
+        <label ref="jr:itext('/investigation/g_alterations/place_of_residence:label')"/>
+      </input>
+      <input ref="/investigation/g_alterations/alt_number_of_patient_1">
+        <label ref="jr:itext('/investigation/g_alterations/alt_number_of_patient_1:label')"/>
+      </input>
+      <input ref="/investigation/g_alterations/alt_number_of_patient_2">
+        <label ref="jr:itext('/investigation/g_alterations/alt_number_of_patient_2:label')"/>
+      </input>
+      <input ref="/investigation/g_alterations/alt_patient_current_location">
+        <label ref="jr:itext('/investigation/g_alterations/alt_patient_current_location:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/investigation/g_detection_location">
+      <label ref="jr:itext('/investigation/g_detection_location:label')"/>
+      <select1 ref="/investigation/g_detection_location/place_of_detection">
+        <label ref="jr:itext('/investigation/g_detection_location/place_of_detection:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_detection_location/place_of_detection/poe:label')"/>
+          <value>poe</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_detection_location/place_of_detection/family_house:label')"/>
+          <value>family_house</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_detection_location/place_of_detection/health_structure:label')"/>
+          <value>health_structure</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_detection_location/place_of_detection/containment_site:label')"/>
+          <value>containment_site</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_detection_location/place_of_detection/other:label')"/>
+          <value>other</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_detection_location/specify_place_of_detection_name">
+        <label ref="jr:itext('/investigation/g_detection_location/specify_place_of_detection_name:label')"/>
+      </input>
+      <input ref="/investigation/g_detection_location/specify_other_place">
+        <label ref="jr:itext('/investigation/g_detection_location/specify_other_place:label')"/>
+      </input>
+      <input ref="/investigation/g_detection_location/date_of_detection">
+        <label ref="jr:itext('/investigation/g_detection_location/date_of_detection:label')"/>
+      </input>
+      <select1 ref="/investigation/g_detection_location/epidemiological_classification">
+        <label ref="jr:itext('/investigation/g_detection_location/epidemiological_classification:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_detection_location/epidemiological_classification/suspected_case:label')"/>
+          <value>suspected_case</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_detection_location/epidemiological_classification/probable_case:label')"/>
+          <value>probable_case</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_detection_location/epidemiological_classification/confirmed_case:label')"/>
+          <value>confirmed_case</value>
+        </item>
+      </select1>
+    </group>
+    <group appearance="field-list" ref="/investigation/g_case_notifications">
+      <label ref="jr:itext('/investigation/g_case_notifications:label')"/>
+      <select1 ref="/investigation/g_case_notifications/notified_by_place_of_detection">
+        <label ref="jr:itext('/investigation/g_case_notifications/notified_by_place_of_detection:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_case_notifications/notified_by_place_of_detection/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_case_notifications/notified_by_place_of_detection/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_case_notifications/notification_date">
+        <label ref="jr:itext('/investigation/g_case_notifications/notification_date:label')"/>
+      </input>
+      <select1 ref="/investigation/g_case_notifications/notification_structure">
+        <label ref="jr:itext('/investigation/g_case_notifications/notification_structure:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_case_notifications/notification_structure/health_structure:label')"/>
+          <value>health_structure</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_case_notifications/notification_structure/poe:label')"/>
+          <value>poe</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_case_notifications/notification_structure/samu:label')"/>
+          <value>samu</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_case_notifications/notification_structure/other:label')"/>
+          <value>other</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_case_notifications/specify_notification_structure_name">
+        <label ref="jr:itext('/investigation/g_case_notifications/specify_notification_structure_name:label')"/>
+      </input>
+      <input ref="/investigation/g_case_notifications/specify_other_notification_structure">
+        <label ref="jr:itext('/investigation/g_case_notifications/specify_other_notification_structure:label')"/>
+      </input>
+      <select1 ref="/investigation/g_case_notifications/person_who_notified">
+        <label ref="jr:itext('/investigation/g_case_notifications/person_who_notified:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_case_notifications/person_who_notified/health_agent:label')"/>
+          <value>health_agent</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_case_notifications/person_who_notified/community_agent:label')"/>
+          <value>community_agent</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_case_notifications/person_who_notified/followup_agent:label')"/>
+          <value>followup_agent</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_case_notifications/person_who_notified/other_agent:label')"/>
+          <value>other_agent</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_case_notifications/other_person_who_notified">
+        <label ref="jr:itext('/investigation/g_case_notifications/other_person_who_notified:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/investigation/g_cinic_informations">
+      <label ref="jr:itext('/investigation/g_cinic_informations:label')"/>
+      <select ref="/investigation/g_cinic_informations/symptoms_of_the_patient">
+        <label ref="jr:itext('/investigation/g_cinic_informations/symptoms_of_the_patient:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/symptoms_of_the_patient/fever:label')"/>
+          <value>fever</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/symptoms_of_the_patient/difficulty_breathing:label')"/>
+          <value>difficulty_breathing</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/symptoms_of_the_patient/cough:label')"/>
+          <value>cough</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/symptoms_of_the_patient/none:label')"/>
+          <value>none</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/symptoms_of_the_patient/other_symptom:label')"/>
+          <value>other_symptom</value>
+        </item>
+      </select>
+      <input ref="/investigation/g_cinic_informations/other_symptoms_of_the_patient">
+        <label ref="jr:itext('/investigation/g_cinic_informations/other_symptoms_of_the_patient:label')"/>
+      </input>
+      <input ref="/investigation/g_cinic_informations/first_symptoms_onset_date">
+        <label ref="jr:itext('/investigation/g_cinic_informations/first_symptoms_onset_date:label')"/>
+      </input>
+      <select1 ref="/investigation/g_cinic_informations/admission_to_health_center">
+        <label ref="jr:itext('/investigation/g_cinic_informations/admission_to_health_center:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/admission_to_health_center/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/admission_to_health_center/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_cinic_informations/date_of_admission_to_health_center">
+        <label ref="jr:itext('/investigation/g_cinic_informations/date_of_admission_to_health_center:label')"/>
+      </input>
+      <input ref="/investigation/g_cinic_informations/date_of_first_consultation">
+        <label ref="jr:itext('/investigation/g_cinic_informations/date_of_first_consultation:label')"/>
+      </input>
+      <input ref="/investigation/g_cinic_informations/health_facility_frequented">
+        <label ref="jr:itext('/investigation/g_cinic_informations/health_facility_frequented:label')"/>
+      </input>
+      <select ref="/investigation/g_cinic_informations/medical_history">
+        <label ref="jr:itext('/investigation/g_cinic_informations/medical_history:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/medical_history/fever:label')"/>
+          <value>fever</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/medical_history/sore_throat:label')"/>
+          <value>sore_throat</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/medical_history/cough:label')"/>
+          <value>cough</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/medical_history/rhinorrhea:label')"/>
+          <value>rhinorrhea</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/medical_history/dyspnea:label')"/>
+          <value>dyspnea</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/medical_history/none:label')"/>
+          <value>none</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/medical_history/other:label')"/>
+          <value>other</value>
+        </item>
+      </select>
+      <input ref="/investigation/g_cinic_informations/specify_medical_history">
+        <label ref="jr:itext('/investigation/g_cinic_informations/specify_medical_history:label')"/>
+      </input>
+      <select1 ref="/investigation/g_cinic_informations/pre-existing_pathological_history">
+        <label ref="jr:itext('/investigation/g_cinic_informations/pre-existing_pathological_history:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/pre-existing_pathological_history/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/pre-existing_pathological_history/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_cinic_informations/specify_pre-existing_pathological_history">
+        <label ref="jr:itext('/investigation/g_cinic_informations/specify_pre-existing_pathological_history:label')"/>
+      </input>
+      <select1 ref="/investigation/g_cinic_informations/taking_medications">
+        <label ref="jr:itext('/investigation/g_cinic_informations/taking_medications:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/taking_medications/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_cinic_informations/taking_medications/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_cinic_informations/specify_medications_taken">
+        <label ref="jr:itext('/investigation/g_cinic_informations/specify_medications_taken:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/investigation/g_exposure_travel">
+      <label ref="jr:itext('/investigation/g_exposure_travel:label')"/>
+      <select1 ref="/investigation/g_exposure_travel/travel_before_symptoms_onset">
+        <label ref="jr:itext('/investigation/g_exposure_travel/travel_before_symptoms_onset:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_exposure_travel/travel_before_symptoms_onset/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_exposure_travel/travel_before_symptoms_onset/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_exposure_travel/zone_or_country">
+        <label ref="jr:itext('/investigation/g_exposure_travel/zone_or_country:label')"/>
+      </input>
+      <input ref="/investigation/g_exposure_travel/date_of_visit">
+        <label ref="jr:itext('/investigation/g_exposure_travel/date_of_visit:label')"/>
+      </input>
+      <input ref="/investigation/g_exposure_travel/n_symptoms_onset_last_14_days">
+        <label ref="jr:itext('/investigation/g_exposure_travel/n_symptoms_onset_last_14_days:label')"/>
+      </input>
+      <select1 ref="/investigation/g_exposure_travel/visited_a_health_facility">
+        <label ref="jr:itext('/investigation/g_exposure_travel/visited_a_health_facility:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_exposure_travel/visited_a_health_facility/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_exposure_travel/visited_a_health_facility/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_exposure_travel/specify_visited_health_facility">
+        <label ref="jr:itext('/investigation/g_exposure_travel/specify_visited_health_facility:label')"/>
+      </input>
+      <select1 ref="/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection">
+        <label ref="jr:itext('/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_exposure_travel/been_in_contact_with_respiratory_infection/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_exposure_travel/specify_place_infection">
+        <label ref="jr:itext('/investigation/g_exposure_travel/specify_place_infection:label')"/>
+      </input>
+      <input ref="/investigation/g_exposure_travel/infected_person_name">
+        <label ref="jr:itext('/investigation/g_exposure_travel/infected_person_name:label')"/>
+      </input>
+      <input ref="/investigation/g_exposure_travel/infected_person_contact">
+        <label ref="jr:itext('/investigation/g_exposure_travel/infected_person_contact:label')"/>
+      </input>
+      <input ref="/investigation/g_exposure_travel/other_exposed_people">
+        <label ref="jr:itext('/investigation/g_exposure_travel/other_exposed_people:label')"/>
+      </input>
+      <select1 ref="/investigation/g_exposure_travel/contact_with_case">
+        <label ref="jr:itext('/investigation/g_exposure_travel/contact_with_case:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_exposure_travel/contact_with_case/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_exposure_travel/contact_with_case/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_exposure_travel/case_name">
+        <label ref="jr:itext('/investigation/g_exposure_travel/case_name:label')"/>
+      </input>
+      <input ref="/investigation/g_exposure_travel/case_id_number">
+        <label ref="jr:itext('/investigation/g_exposure_travel/case_id_number:label')"/>
+      </input>
+      <input ref="/investigation/g_exposure_travel/place_of_contact">
+        <label ref="jr:itext('/investigation/g_exposure_travel/place_of_contact:label')"/>
+      </input>
+      <select1 ref="/investigation/g_exposure_travel/participated_in_mass_meeting">
+        <label ref="jr:itext('/investigation/g_exposure_travel/participated_in_mass_meeting:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_exposure_travel/participated_in_mass_meeting/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_exposure_travel/participated_in_mass_meeting/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_exposure_travel/date_of_mass_meeting">
+        <label ref="jr:itext('/investigation/g_exposure_travel/date_of_mass_meeting:label')"/>
+      </input>
+      <input ref="/investigation/g_exposure_travel/location_of_mass_meeting">
+        <label ref="jr:itext('/investigation/g_exposure_travel/location_of_mass_meeting:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/investigation/g_lab_informations">
+      <label ref="jr:itext('/investigation/g_lab_informations:label')"/>
+      <select1 ref="/investigation/g_lab_informations/sample_collection_bis">
+        <label ref="jr:itext('/investigation/g_lab_informations/sample_collection_bis:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_lab_informations/sample_collection_bis/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_lab_informations/sample_collection_bis/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <select1 ref="/investigation/g_lab_informations/sample_type">
+        <label ref="jr:itext('/investigation/g_lab_informations/sample_type:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_lab_informations/sample_type/nasopharyngeal:label')"/>
+          <value>nasopharyngeal</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_lab_informations/sample_type/oropharyngeal:label')"/>
+          <value>oropharyngeal</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_lab_informations/sample_collection_date_bis">
+        <label ref="jr:itext('/investigation/g_lab_informations/sample_collection_date_bis:label')"/>
+      </input>
+      <select1 ref="/investigation/g_lab_informations/sample_collection_lab">
+        <label ref="jr:itext('/investigation/g_lab_informations/sample_collection_lab:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_lab_informations/sample_collection_lab/niamey_cermes:label')"/>
+          <value>niamey_cermes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_lab_informations/sample_collection_lab/maradi_chr:label')"/>
+          <value>maradi_chr</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_lab_informations/sample_collection_lab/tahoua_chr:label')"/>
+          <value>tahoua_chr</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_lab_informations/sample_collection_lab/zinder_chr:label')"/>
+          <value>zinder_chr</value>
+        </item>
+      </select1>
+      <select1 ref="/investigation/g_lab_informations/other_collection">
+        <label ref="jr:itext('/investigation/g_lab_informations/other_collection:label')"/>
+        <item>
+          <label ref="jr:itext('/investigation/g_lab_informations/other_collection/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/investigation/g_lab_informations/other_collection/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/investigation/g_lab_informations/specify_other_collection">
+        <label ref="jr:itext('/investigation/g_lab_informations/specify_other_collection:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list summary" ref="/investigation/investigation">
+      <input appearance="h1 yellow" ref="/investigation/investigation/summary">
+        <label ref="jr:itext('/investigation/investigation/summary:label')"/>
+      </input>
+      <input ref="/investigation/investigation/n_details_lastname">
+        <label ref="jr:itext('/investigation/investigation/n_details_lastname:label')"/>
+      </input>
+      <input ref="/investigation/investigation/n_details_firstname">
+        <label ref="jr:itext('/investigation/investigation/n_details_firstname:label')"/>
+      </input>
+      <input ref="/investigation/investigation/n_details_contact">
+        <label ref="jr:itext('/investigation/investigation/n_details_contact:label')"/>
+      </input>
+      <input appearance="h1 blue" ref="/investigation/investigation/n_investigation_details">
+        <label ref="jr:itext('/investigation/investigation/n_investigation_details:label')"/>
+      </input>
+      <input ref="/investigation/investigation/n_validation">
+        <label ref="jr:itext('/investigation/investigation/n_validation:label')"/>
+      </input>
+      <input ref="/investigation/investigation/n_sample_other">
+        <label ref="jr:itext('/investigation/investigation/n_sample_other:label')"/>
+      </input>
+      <input ref="/investigation/investigation/n_sample">
+        <label ref="jr:itext('/investigation/investigation/n_sample:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>

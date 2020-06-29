@@ -6,6 +6,7 @@ const harness = new Harness({
   directory: path.join(__dirname, 'collateral'),
   xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
   verbose: false,
+  headless: false,
   reportFormErrors: false,
 });
 
@@ -63,6 +64,34 @@ describe('forms that have caused bugs', () => {
     const result = await harness.fillForm('subfolder/delivery', ...oneChildHealth);
     expect(result.errors).to.be.empty;
     expect(result.report.form).to.eq('delivery');
+  });
+
+  it('#61 - form with select_one minimal with default value should not "deselect" that value if it is provided twice', async () => {
+    const content = {
+      g_details: {
+        number_of_patient_1: '12345678',
+        number_of_patient_2: '87654321',
+        region: 'agadez',
+        district: 'arlit',
+      }
+    };
+
+    const sampleNotCollected = [
+      ['valid'],
+      ['','agadez', 'arlit', 'commune', 'village','nom', 'prenom', '12', 'years', 'male','teacher','résidence','12345678','87654321','alert'],
+      ['poe','lieu','2000-01-01','suspected_case'],
+      ['no','samu','followup_agent'],
+      [Array(1).fill(true),'2000-01-01','no',Array(1).fill(true),'no'],
+      ['no','no','no','no','no'],
+      ['no']
+    ];
+
+    const investigationResult = await harness.fillForm({ form: 'minimal_event', content }, ...sampleNotCollected);
+    expect(investigationResult.errors).to.be.empty;
+    expect(investigationResult.report.fields.g_alterations).to.include({
+      alt_region: 'agadez',
+      alt_district: 'arlit'
+    });
   });
 
   it('d-tree postpartum form adds element "above" the first question', async () => {
