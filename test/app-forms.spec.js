@@ -6,7 +6,6 @@ const harness = new Harness({
   directory: path.join(__dirname, 'collateral'),
   xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
   verbose: false,
-  headless: false,
   reportFormErrors: false,
 });
 
