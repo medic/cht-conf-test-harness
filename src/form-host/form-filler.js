@@ -175,7 +175,7 @@ const fillQuestion = (question, answer) => {
   case 'button':
     // select_one appearance:minimal
     if (firstInput.className.includes('dropdown-toggle')) {
-      $question.find(`input[value="${answer}"]`).click();
+      $question.find(`input[value="${answer}"]:not([checked="checked"])`).click();
     } 
     
     // repeate section
