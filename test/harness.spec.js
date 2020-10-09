@@ -302,6 +302,15 @@ describe('Harness tests', () => {
       expect(functionStub.args[0]).to.deep.eq([mockContact, [], []]);
     }));
 
+    it('#71 - mocked reports in state are passed to contact-summary', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
+      const mockContact = { _id: 'foo', type: 'person' };
+      const mockReport = { _id: 'bar', patient_id: mockContact._id };
+
+      harness.pushMockedDoc(mockReport);
+      harness.getContactSummary(mockContact);
+      expect(functionStub.args[0]).to.deep.eq([mockContact, [mockReport], []]);
+    }));
+
     it('contact summary for patient_id_data', async () => {
       const contactSummary = harness.getContactSummary('patient_id_data');
       

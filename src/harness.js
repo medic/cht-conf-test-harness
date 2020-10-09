@@ -452,7 +452,7 @@ class Harness {
    * @param {Object[]} [lineage] An array of the contact's hydrated ancestors. If left empty, the contact's ancestors will be used from {@link HarnessState}.
    * @returns {ContactSummary} The result of the contact summary under test.
    */
-  getContactSummary(contact = this.content.contact && this.content.contact._id, reports, lineage) {
+  getContactSummary(contact = this.content.contact, reports, lineage) {
     if (!contact) {
       return {};
     }
@@ -464,7 +464,7 @@ class Harness {
       throw `Harness: Cannot get summary for unknown or invalid contact.`;
     }
 
-    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => getPatientId(report) === contact);
+    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => getPatientId(report) === contact._id);
     
     const resolvedLineage = [];
     if (Array.isArray(lineage)) {
