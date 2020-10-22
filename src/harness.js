@@ -3,7 +3,7 @@ const fs = require('fs');
 const jsonToXml = require('pojo2xml');
 const process = require('process');
 const path = require('path');
-const puppeteer = require('puppeteer');
+const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const { getPatientId } = require('../ext/registration-utils');
 const getNoolsInstances = require('./get-nools-instances');
 const mergeInstanceToTarget = require('./merge-instances-to-target');
@@ -88,7 +88,9 @@ class Harness {
    * before(async () => { return await harness.start(); });
    */
   async start() {
-    this.browser = await puppeteer.launch(this.options);
+    const chromiumResolver = await PuppeteerChromiumResolver();
+    this.options.executablePath = chromiumResolver.executablePath;
+    this.browser = await chromiumResolver.puppeteer.launch(this.options);
     this.page = await this.browser.newPage();
     this.page.on('console', msg => {
       this.log(msg.type(), msg.text());
