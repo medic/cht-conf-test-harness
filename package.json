@@ -1,6 +1,6 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "0.1.34",
+  "version": "0.1.35",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "moment": "^2.24.0",
     "nools": "^0.4.4",
     "pojo2xml": "^1.7.2",
-    "puppeteer": "^1.12.2",
+    "puppeteer-chromium-resolver": "^1.0.12",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
