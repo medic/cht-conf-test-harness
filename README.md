@@ -4,7 +4,7 @@ View the documentation [here](https://htmlpreview.github.io/?https://raw.githubu
 
 ## Contributing
 
-At Medic we are the technical steward of the [Community Health Toolkit](https://communityhealthtoolkit.org) (CHT). We welcome and appreciate contributions, and support new developers to use the CHT whenever possible. If you have an idea or a question we'd love to hear from you! The easiest ways to get in touch are by raising issues in the [medic Github repo](https://github.com/medic/cht-core/issues) or [joining our Slack channel](https://communityhealthtoolkit.org/slack). For more info check out our [contributor guidelines](CONTRIBUTING.md).
+At Medic we are the technical steward of the [Community Health Toolkit](https://communityhealthtoolkit.org) (CHT). We welcome and appreciate contributions, and support new developers to use the tools whenever possible. If you have an idea or a question we'd love to hear from you! The easiest ways to get in touch are by raising issues in the [medic Github repo](https://github.com/medic/cht-core/issues) or [joining our Slack channel](https://communityhealthtoolkit.org/slack). For more info check out our [contributor guidelines](CONTRIBUTING.md).
 
 ## Copyright
 
