@@ -17,7 +17,7 @@
     "moment": "^2.24.0",
     "nools": "^0.4.4",
     "pojo2xml": "^1.7.2",
-    "puppeteer-chromium-resolver": "^1.0.12",
+    "puppeteer-chromium-resolver": "^2.0.2",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
