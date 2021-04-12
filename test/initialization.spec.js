@@ -26,4 +26,23 @@ describe('initializations', () => {
     const tasks = await harness.getTasks();
     expect(tasks).to.be.empty;
   });
+
+  it('mocking datetime before start() + stop halts mocking', async() => {
+    const harness = new Harness({
+      directory: path.join(__dirname, 'collateral'),
+      xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
+    });
+
+    const expectedTime = 1000;
+    await harness.setNow(expectedTime);
+    expect(new Date().getTime()).to.eq(expectedTime);
+
+    await harness.start();
+    const result = await harness.fillForm('pnc_followup', ['no_come_back']);
+    expect(result.errors).to.be.empty;
+    expect(result.report.reported_date).to.eq(expectedTime);
+
+    await harness.stop();
+    expect(new Date().getTime()).to.not.eq(expectedTime);
+  });
 });

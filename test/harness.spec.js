@@ -276,7 +276,8 @@ describe('Harness tests', () => {
       basicReport = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
       expect(basicReport.errors).to.be.empty;
     });
-    beforeEach(() => {
+    beforeEach(async () => {
+      await harness.clear();
       basicReport.patient_id = harness.content.contact._id;
       harness.pushMockedDoc(basicReport);
       functionStub = sinon.stub();
@@ -289,6 +290,13 @@ describe('Harness tests', () => {
       harness.getContactSummary(contact, reports, lineage);
       expect(functionStub.args[0]).to.deep.eq([contact, reports, lineage]);
     }));
+
+
+    it('mocks datetime - setNow after start', async () => {  
+      const expectedTime = 1000;
+      await harness.setNow(expectedTime);
+      expect(new Date().getTime()).to.eq(expectedTime);
+    });
 
     it('state used when no args given', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
       harness.getContactSummary();
@@ -337,6 +345,15 @@ describe('Harness tests', () => {
 
       expect(harness.content.contact.date_of_birth).to.eq(originalDoB);
       expect(harness.content.foo).to.be.undefined;
+    });
+
+    it('clears mocked datetime', async () => {  
+      const expectedTime = 1000;
+      await harness.setNow(expectedTime);
+      expect(new Date().getTime()).to.eq(expectedTime);
+
+      await harness.clear();
+      expect(new Date().getTime()).to.not.eq(expectedTime);
     });
 
     it('contact summary is cleared', () => {
