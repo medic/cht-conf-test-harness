@@ -1,6 +1,6 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
