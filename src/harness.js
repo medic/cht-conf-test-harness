@@ -8,6 +8,7 @@ const { getPatientId } = require('../ext/registration-utils');
 const getNoolsInstances = require('./get-nools-instances');
 const mergeInstanceToTarget = require('./merge-instances-to-target');
 const toDate = require('./toDate');
+const sinon = require('sinon');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
 if (!fs.existsSync(pathToHost)) {
@@ -103,6 +104,10 @@ class Harness {
     await this.page.goto(`file://${pathToHost}`);
     await this.page.waitForSelector('#task-report');
 
+    if (this._now) {
+      await this.setNow(this._now);
+    }
+
     return this.browser;
   }
 
@@ -114,6 +119,7 @@ class Harness {
    */
   async stop() {
     this.log('Closing harness');
+    sinon.restore();
     return this.browser && this.browser.close();
   }
 
@@ -141,6 +147,7 @@ class Harness {
     this.onConsole = () => {};
     this._now = undefined;
 
+    sinon.restore();
     return this.page && await this.page.evaluate(() => delete window.now);
   }
 
@@ -187,13 +194,20 @@ class Harness {
   }
 
   /**
-   * Set the current mock-time of the harness
+   * Set the current mock-time of the harness. Mocks global time {@link https://sinonjs.org/releases/v1.17.6/fake-timers/|uses sinon}
    * @param {Date|number|string} now A Date object or a value which can be parsed into a Date
+   * 
    */
   setNow(now) {
+    if (!now) {
+      throw Error('undefined date passed to setNow');
+    }
+
     const parseableNow = typeof now === 'object' ? now.getTime() : now;
-    this._now = toDate(parseableNow).getTime();
-    return this.page.evaluate(innerNow => window.now = new Date(innerNow), this._now);
+    const asTimestamp = toDate(parseableNow).getTime();
+    this._now = asTimestamp;
+    sinon.useFakeTimers(asTimestamp);
+    return this.page && this.page.evaluate(innerNow => window.now = new Date(innerNow), this._now);
   }
 
   /**
