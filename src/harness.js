@@ -89,7 +89,7 @@ class Harness {
    * before(async () => { return await harness.start(); });
    */
   async start() {
-    const chromiumResolver = await PuppeteerChromiumResolver();
+    const chromiumResolver = await PuppeteerChromiumResolver({ silent: !this.options.verbose });
     this.options.executablePath = chromiumResolver.executablePath;
     this.browser = await chromiumResolver.puppeteer.launch(this.options);
     this.page = await this.browser.newPage();
