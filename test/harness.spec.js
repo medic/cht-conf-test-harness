@@ -23,6 +23,24 @@ describe('Harness tests', () => {
     expect(harness.state.pageContent).to.include('id="pnc_followup"');
   });
 
+  describe('default contact', () => {
+    it('#92 - default contact information is linked', () => {
+      const defaultContact = harness.state.contacts.find(c => c.type === 'person');
+      expect(defaultContact.abc).to.be.undefined;
+      harness.content.contact.abc = '123';
+      expect(defaultContact.abc).to.eq('123');
+      defaultContact.abc = '456';
+      expect(harness.content.contact.abc).to.eq('456');
+    });
+
+    it('default contact information link may be broken', () => {
+      const defaultContact = harness.state.contacts.find(c => c.type === 'person');
+      expect(defaultContact.abc).to.be.undefined;
+      harness.content.contact = { abc: '123' };
+      expect(defaultContact.abc).to.be.undefined;
+    });
+  });
+
   describe('time management', () => {
     it('set and retrieve now', async () => {
       const expected = '1990-02-01';

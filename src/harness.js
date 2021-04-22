@@ -135,8 +135,13 @@ class Harness {
       contacts.push(_.cloneDeep(this.options.inputs.user.parent));
     }
 
+
     if (this.options.inputs.content && this.options.inputs.content.contact) {
-      contacts.push(_.cloneDeep(this.options.inputs.content.contact));
+      const defaultContact = _.cloneDeep(this.options.inputs.content.contact);
+
+      // 92 - Link the default contact information by default
+      this.options.inputs.content.contact = defaultContact;
+      contacts.push(defaultContact);
     }
 
     this._state = {
