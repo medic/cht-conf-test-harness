@@ -13,7 +13,7 @@ trap exit_on_error EXIT
 npm i
 rm -Rf dist
 rm -Rf node_modules/enketo-core/node_modules/
-patch -f node_modules/enketo-core/src/js/Form.js < node_modules/medic/webapp/patches/enketo-inputs-always-relevant.patch
+patch -f node_modules/enketo-core/src/js/Form.js < node_modules/cht-core-3-6/webapp/patches/enketo-inputs-always-relevant.patch
 webpack
 cp ext/inbox.css dist
 

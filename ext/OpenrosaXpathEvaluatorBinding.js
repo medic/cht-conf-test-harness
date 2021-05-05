@@ -1,8 +1,8 @@
 var _ = require('underscore'),
     ExtendedXpathEvaluator = require('extended-xpath'),
     openrosaExtensions = require('openrosa-xpath-extensions'),
-    medicExtensions = require('medic/webapp/src/js/enketo/medic-xpath-extensions'),
-    translator = require('medic/webapp/src/js/enketo/translator');
+    medicExtensions = require('cht-core-3-6/webapp/src/js/enketo/medic-xpath-extensions'),
+    translator = require('cht-core-3-6/webapp/src/js/enketo/translator');
 
 module.exports = function() {
     // re-implement XPathJS ourselves!
