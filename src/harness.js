@@ -332,6 +332,7 @@ class Harness {
     options = _.defaults(options, {
       now: () => new Date(this.getNow()),
       type: undefined,
+      user: this.user,
     });
     
     const targets = await this.rulesEngineAdapter.fetchTargets(options.user, this._state.contacts, this._state.reports);

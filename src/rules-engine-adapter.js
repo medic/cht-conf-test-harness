@@ -1,6 +1,7 @@
 const md5 = require('md5');
 const ddocs = require('../dist/core-ddocs.json');
 const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
+const CalendarInterval = require('cht-core-3-11/shared-libs/calendar-interval');
 const RulesEngineCore = require('cht-core-3-11/shared-libs/rules-engine');
 const PouchDB = require('pouchdb');
 
@@ -23,7 +24,10 @@ class RulesEngineAdapter {
 
   async fetchTargets(user, contacts, reports) {
     await prep(this.appSettings, this.pouchdb, this.rulesEngine, this.committedDocHashes, user, contacts, reports);
-    return this.rulesEngine.fetchTargets();
+
+    const uhcMonthStartDate = getMonthStartDate(this.appSettings);
+    const relevantInterval = CalendarInterval.getCurrent(uhcMonthStartDate);
+    return this.rulesEngine.fetchTargets(relevantInterval);
   }
 
   async fetchTasksFor(user, contacts, reports) {
