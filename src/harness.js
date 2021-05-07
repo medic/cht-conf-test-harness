@@ -1,14 +1,19 @@
 const _ = require('lodash');
 const fs = require('fs');
-const jsonToXml = require('pojo2xml');
-const process = require('process');
 const path = require('path');
+const jsonToXml = require('pojo2xml');
+const PouchDB = require('pouchdb');
+const process = require('process');
 const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
-const { getPatientId } = require('../ext/registration-utils');
-const getNoolsInstances = require('./get-nools-instances');
-const mergeInstanceToTarget = require('./merge-instances-to-target');
-const toDate = require('./toDate');
 const sinon = require('sinon');
+
+
+const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
+const ddocs = require('../dist/core-ddocs.json');
+const RulesEngineCore = require('cht-core-3-11/shared-libs/rules-engine');
+const toDate = require('./toDate');
+
+PouchDB.plugin(require('pouchdb-adapter-memory'));
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
 if (!fs.existsSync(pathToHost)) {
@@ -78,7 +83,8 @@ class Harness {
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
     }
-    this.clear();  
+    
+    this.clear(); // TODO: how can we await here?
   }
 
   /**
@@ -128,32 +134,72 @@ class Harness {
    * @returns {Promise} Resolves when the state of the harness when cleared
    */
   async clear() {
-    const contacts = [];
-
     this.options.inputs = _.cloneDeep(this.defaultInputs);
-    if (this.options.inputs.user && this.options.inputs.user.parent) {
-      contacts.push(_.cloneDeep(this.options.inputs.user.parent));
-    }
+    this._state = {
+      console: [],
+    };
 
+    // cht-core/src/ts/services/uhc-settings.service.ts
+    const getMonthStartDate = settings => {
+      return settings &&
+        settings.uhc &&
+        (
+          settings.uhc.month_start_date ||
+          settings.uhc.visit_count &&
+          settings.uhc.visit_count.month_start_date
+        );
+    };
+
+    const getRulesSettings = (settingsDoc, userContactDoc, userSettingsDoc, enableTasks, enableTargets) => {
+      const settingsTasks = settingsDoc && settingsDoc.tasks || {};
+      // const filterTargetByContext = (target) => target.context ?
+      //   !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
+      const targets = settingsTasks.targets && settingsTasks.targets.items || [];
+    
+      return {
+        rules: settingsTasks.rules,
+        taskSchedules: settingsTasks.schedules,
+        targets: targets,
+        enableTasks,
+        enableTargets,
+        contact: userContactDoc,
+        user: userSettingsDoc,
+        monthStartDate: getMonthStartDate(settingsDoc),
+      };
+    };
+
+    this.onConsole = () => {};
+    this._now = undefined;
+    this.page && await this.page.evaluate(() => delete window.now);
+
+    sinon.restore();
+
+    // if (this.pouchdb) {
+    //   this.pouchdb.destroy();
+    // }
+    this.pouchdb = new PouchDB(`medic-conf-test-harness-${Date.now()}`, { adapter: 'memory' });
+    for (const doc of ddocs) {
+      await this.pouchdb.put(doc);
+    }
+    if (this.options.inputs.user && this.options.inputs.user.parent) {
+      await this.pushMockedDoc(_.cloneDeep(this.options.inputs.user.parent));
+    }
 
     if (this.options.inputs.content && this.options.inputs.content.contact) {
       const defaultContact = _.cloneDeep(this.options.inputs.content.contact);
 
       // 92 - Link the default contact information by default
       this.options.inputs.content.contact = defaultContact;
-      contacts.push(defaultContact);
+      await this.pushMockedDoc(defaultContact);
     }
 
-    this._state = {
-      console: [],
-      contacts,
-      reports: [],
-    };
-    this.onConsole = () => {};
-    this._now = undefined;
-
-    sinon.restore();
-    return this.page && await this.page.evaluate(() => delete window.now);
+    this.rulesEngine = RulesEngineCore(this.pouchdb);
+    if (!this.rulesEngine.isEnabled()) {
+      const userContactDoc = this.options.inputs.user;
+      const userSettingsDoc = this.options.inputs.user; // TODO which?
+      const rulesSettings = getRulesSettings(this.appSettings, userContactDoc, userSettingsDoc, true, true);
+      await this.rulesEngine.initialize(rulesSettings);
+    }
   }
 
   /**
@@ -168,9 +214,8 @@ class Harness {
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
     
     inputs = _.defaults(inputs, this.options.inputs);
-    const serializedContactSummary = serializeContactSummary(inputs.contactSummary || this.contactSummary);
+    const serializedContactSummary = serializeContactSummary(await this.getContactSummary());
     await doLoadForm(this, this.page, xformFilePath, inputs.content, inputs.user, serializedContactSummary);
-    this._state.pageContent = await this.page.content();
     return this._state;
   }
 
@@ -183,7 +228,6 @@ class Harness {
   async fillContactForm(contactType, ...answers) {
     const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
     await doLoadForm(this, this.page, xformFilePath, {}, this.options.user);
-    this._state.pageContent = await this.page.content();
     
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
     const fillResult = await this.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
@@ -194,7 +238,7 @@ class Harness {
       console.error(`Error encountered while filling form:`, JSON.stringify(fillResult.errors, null, 2));
     }
 
-    this.pushMockedDoc(...fillResult.contacts);
+    await this.pushMockedDoc(...fillResult.contacts);
     return fillResult;
   }
 
@@ -284,7 +328,7 @@ class Harness {
     }
 
     if (fillResult.report) {
-      this.pushMockedDoc(fillResult.report, ...fillResult.additionalDocs);
+      await this.pushMockedDoc(fillResult.report, ...fillResult.additionalDocs);
     }
 
     return fillResult;
@@ -305,11 +349,13 @@ class Harness {
       now: () => new Date(this.getNow()),
       resolved: false,
       title: undefined,
-      user: this.user,
+      user: this.user, // HOW?
     });
     
-    const { tasks } = await getNoolsInstances(this.appSettings, options.user, this._state.contacts, this._state.reports, options.now);
+    // TODO: now
+    const tasks = await this.rulesEngine.fetchTasksFor();
     return tasks
+      .map(task => task.emission)
       .filter(task => !!options.resolved || !task.resolved)
       .filter(task => !options.title || task.title === options.title);
   }
@@ -318,12 +364,12 @@ class Harness {
     options = _.defaults(options, {
       now: () => new Date(this.getNow()),
       type: undefined,
-      user: this.user,
+      user: this.user, // HOW?
     });
-    
-    const { targets } = await getNoolsInstances(this.appSettings, options.user, this._state.contacts, this._state.reports, options.now);
-    const targetsByUniqId = targets.reduce((prev, curr) => Object.assign(prev, { [curr._id]: curr }), {});
-    return Object.values(targetsByUniqId)
+
+    // TODO: now?
+    const targets = await this.rulesEngine.fetchTargets(/* options? */);
+    return targets
       .filter(target =>
         !options.type ||
         (typeof options.type === 'string' && target.type === options.type) ||
@@ -345,12 +391,8 @@ class Harness {
       type: undefined,
     });
     
-    const targetTemplates = this.appSettings.tasks.targets &&
-      this.appSettings.tasks.targets.items &&
-      this.appSettings.tasks.targets.items.map(item => _.clone(item)) || [];
-    const instances = await this.getEmittedTargetInstances(options);
-    instances.forEach(instance => mergeInstanceToTarget(targetTemplates, instance, options.now));
-    return targetTemplates
+    const targets = await this.rulesEngine.fetchTargets(options);
+    return targets
       .filter(target =>
         !options.type ||
         (typeof options.type === 'string' && target.id === options.type) ||
@@ -382,7 +424,9 @@ class Harness {
    * expect(actual).to.be.empty;
    */
   async loadAction(action) {
-    return this.loadForm(action.form, { content: action.content });
+    const contact = this.content.contact;
+    const content = Object.assign({}, action.content, { contact });
+    return this.loadForm(action.form, { content });
   }
 
   /**
@@ -407,54 +451,57 @@ class Harness {
   get content() { return this.options.inputs.content; }
 
   /**
-   * `contactSummary` can be set explicitly through the {@link HarnessInputs} via the constructor or the harness.defaults.json file. 
-   * If no contactSummary is explicitly defined, returns the calculation from getContactSummary().
-   */
-  get contactSummary() {
-    return this.options.inputs.contactSummary || this.getContactSummary();
-  }
-  set contactSummary(value) {
-    this.options.inputs.contactSummary = value;
-  }
-
-  /**
    * @typedef HarnessState
    * @property {Object[]} console Each element represents an event within Chrome console.
    * @property {Object[]} contacts All contacts known to nools.
    * @property {Object[]} reports All reports known to nools.
-   * @property {string} pageContent The HTML of the current form loaded by the harness.
    */
 
   /**
    * Details the current {@link HarnessState} of the Harness
    * @returns {HarnessState} The current state of the harness
    */
-  get state() { return this._state; }
+  async getState() {
+    return {
+      console: this._state.console,
+      contacts: (await this.pouchdb.query('medic-client/contacts_by_type')).rows,
+      reports: (await this.pouchdb.query('medic-client/reports_by_subject')).rows,
+    };
+  }
 
   /**
    * Push a mocked document directly into the state
    * @param {Object} docs The document to push
    */
-  pushMockedDoc(...docs) {
-    const ContactTypes = ['contact', 'district_hospital', 'health_center', 'clinic', 'person'];
-
+  async pushMockedDoc(...docs) {
     for (const doc of docs) {
       if (Array.isArray(doc)) {
-        this.pushMockedDoc(...doc);
+        await this.pushMockedDoc(...doc);
         continue;
       }
 
-      const isContact = doc && ContactTypes.includes(doc.type);
-      if (isContact) {
-        this._state.contacts.push(doc);
-      } else {
-        const report = _.defaults(doc, {
-          reported_date: 1,
-          fields: {},
-        });
+      // TODO: upsert
+      delete doc._rev;
+      
+      const HARDCODED_TYPES = ['district_hospital', 'health_center', 'clinic', 'person'];
+      const contactTypesServiceIncludes = doc => {
+        const type = doc && doc.type;
+        if (!type) {
+          return false;
+        }
+        return type === 'contact' ||   // configurable hierarchy
+          HARDCODED_TYPES.includes(type);  // hardcoded
+      };
+      const isReport = doc => doc.type === 'data_record' && !!doc.form;
 
-        this._state.reports.push(report);
+      if (this.rulesEngine) {
+        if (doc && (contactTypesServiceIncludes(doc) || isReport(doc))) {
+          const subjectIds = isReport(doc) ? RegistrationUtils.getSubjectId(doc) : doc._id;
+          await this.rulesEngine.updateEmissionsFor(subjectIds);
+        }
       }
+
+      await this.pouchdb.put(doc);
     }
   }
 
@@ -473,26 +520,26 @@ class Harness {
    * @param {Object[]} [lineage] An array of the contact's hydrated ancestors. If left empty, the contact's ancestors will be used from {@link HarnessState}.
    * @returns {ContactSummary} The result of the contact summary under test.
    */
-  getContactSummary(contact = this.content.contact, reports, lineage) {
+  async getContactSummary(contact = this.content.contact, reports, lineage) {
     if (!contact) {
       return {};
     }
 
     const self = this;
-    const getContactById = id => self._state.contacts.find(contact => contact._id === id);
-    const resolvedContact = typeof contact === 'string' ? getContactById(contact) : contact;
+    const resolvedContact = typeof contact === 'string' ? await getContactById(self.pouchdb, contact) : contact;
     if (typeof resolvedContact !== 'object') {
       throw `Harness: Cannot get summary for unknown or invalid contact.`;
     }
 
-    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => getPatientId(report) === contact._id);
+    const resolvedReports = Array.isArray(reports) ? [...reports] 
+      : (await this.pouchdb.query('medic-client/reports_by_subject', { key: contact._id })).rows;
     
     const resolvedLineage = [];
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
     } else {
       for (let current = resolvedContact.parent; current; current = current.parent) {
-        const parent = current._id ? getContactById(current._id) || current : current;
+        const parent = current._id ? await getContactById(self.pouchdb, current._id) || current : current;
         resolvedLineage.push(parent);
       }
     }
@@ -516,17 +563,19 @@ const readFileSync = (...args) => {
   return fs.readFileSync(filePath).toString();
 };
 
-const doLoadForm = async (self, page, xformFilePath, content, user, contactSummary) => {
+const getContactById = (pouchdb, id) => pouchdb.get(id).catch(() => {});
+
+const doLoadForm = async (self, page, xformFilePath, content, user, contactSummaryXml) => {
   self.log(`Loading form ${path.basename(xformFilePath)}...`);
   const xform = readFileSync(xformFilePath);
   if (!xform) {
     throw Error(`XForm not available at path: ${xformFilePath}`);
   }
-  self.onConsole = msg => self.state.console.push(msg);
+  self.onConsole = msg => self._state.console.push(msg);
 
   const formNameWithoutDirectory = path.basename(xformFilePath, '.xml');
   const loadXformWrapper = (innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary);
-  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, xform, content, user, contactSummary);
+  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, xform, content, user, contactSummaryXml);
 };
 
 const serializeContactSummary = (contactSummary = {}) => {
