@@ -311,7 +311,7 @@ class Harness {
       user: this.user,
     });
     
-    await this.setNow(options.now()); // ? Why is now a function? Is it always?
+    await this.setNow(typeof options.now === 'function' ? options.now() : options.now);
     const tasks = await this.rulesEngineAdapter.fetchTasksFor(options.user, this._state.contacts, this._state.reports);
     // TODO: restore now?
     return tasks
@@ -335,7 +335,9 @@ class Harness {
       user: this.user,
     });
     
+    await this.setNow(typeof options.now === 'function' ? options.now() : options.now);
     const targets = await this.rulesEngineAdapter.fetchTargets(options.user, this._state.contacts, this._state.reports);
+    // TODO: restore now?
     return targets
       .filter(target =>
         !options.type ||
