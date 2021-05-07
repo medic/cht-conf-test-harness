@@ -1,16 +1,18 @@
 const md5 = require('md5');
+const PouchDB = require('pouchdb');
+const uuid = require('uuid/v4');
+
 const ddocs = require('../dist/core-ddocs.json');
 const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
 const CalendarInterval = require('cht-core-3-11/shared-libs/calendar-interval');
 const RulesEngineCore = require('cht-core-3-11/shared-libs/rules-engine');
-const PouchDB = require('pouchdb');
 
 PouchDB.plugin(require('pouchdb-adapter-memory'));
 
 class RulesEngineAdapter {
   constructor(appSettings) {
     this.appSettings = appSettings;
-    this.pouchdb = new PouchDB(`medic-conf-test-harness-${Date.now()}`, { adapter: 'memory' });
+    this.pouchdb = new PouchDB(`medic-conf-test-harness-${uuid()}`, { adapter: 'memory' });
     this.rulesEngine = RulesEngineCore(this.pouchdb);
     
     // TODO: Explain this?
@@ -37,15 +39,12 @@ class RulesEngineAdapter {
 }
 
 const prep = async (appSettings, pouchdb, rulesEngine, docHashes, user, contacts, reports) => {
-  const userContactDoc = user;
-  const userSettingsDoc = user; // TODO which?
-  const rulesSettings = getRulesSettings(appSettings, userContactDoc, userSettingsDoc, true, true);
-
+  const rulesSettings = getRulesSettings(appSettings, user);
   if (!rulesEngine.isEnabled()) {
     await rulesEngine.initialize(rulesSettings);
   } else {
-    // This is largely to handle scenarios where the "user" object has changed
-    // TODO: Wish that rulesConfigChange returned true/false
+    // This is largely to handle scenarios where the "user" object has changed 
+    // TODO: Wish that rulesConfigChange returned true/false 
     await rulesEngine.rulesConfigChange(rulesSettings);
   }
 
@@ -105,7 +104,7 @@ const getMonthStartDate = settings => {
     );
 };
 
-const getRulesSettings = (settingsDoc, userContactDoc, userSettingsDoc, enableTasks, enableTargets) => {
+const getRulesSettings = (settingsDoc, userContactDoc) => {
   const settingsTasks = settingsDoc && settingsDoc.tasks || {};
   // const filterTargetByContext = (target) => target.context ?
   //   !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
@@ -115,10 +114,10 @@ const getRulesSettings = (settingsDoc, userContactDoc, userSettingsDoc, enableTa
     rules: settingsTasks.rules,
     taskSchedules: settingsTasks.schedules,
     targets: targets,
-    enableTasks,
-    enableTargets,
+    enableTasks: true,
+    enableTargets: true,
     contact: userContactDoc,
-    user: userSettingsDoc,
+    user: userContactDoc, // TODO which is actually user?
     monthStartDate: getMonthStartDate(settingsDoc),
   };
 };
