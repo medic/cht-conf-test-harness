@@ -54,7 +54,7 @@ const prep = async (appSettings, pouchdb, rulesEngine, docHashes, user, contacts
   So this is a terribly vicious hack to reset that internal component and restart the nools session
   I hate nools
   */
-  if (RulesEmitter.isEnabled) {
+  if (RulesEmitter.isEnabled()) {
     RulesEmitter.shutdown();
     RulesEmitter.initialize({
       rules: appSettings.tasks.rules,

@@ -5,6 +5,7 @@ const jsonToXml = require('pojo2xml');
 const process = require('process');
 const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
+const uuid = require('uuid/v4');
 
 const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
 const rulesEngineAdapter = require('./rules-engine-adapter');
@@ -30,7 +31,7 @@ if (!fs.existsSync(pathToHost)) {
  * const result = await instance.fillForm(['first page, first answer', 'first page, second answer'], ['second page, first answer']);
  * expect(result.errors).to.be.empty;
  * expect(result.report).to.deep.include({
- *  fields: {
+ *  fields: {   
  *    patient_name: 'Patient Name',
  *    next_pnc: {
  *      s_next_pnc: 'no',
@@ -316,7 +317,7 @@ class Harness {
     // TODO: restore now?
     return tasks
       .map(task => task.emission)
-      .filter(task => !!options.resolved || !task.resolved)
+      .filter(task => !!options.resolved || !task.resolved) // TODO: This is broken
       .filter(task => !options.title || task.title === options.title);
   }
 
@@ -442,6 +443,7 @@ class Harness {
         this._state.contacts.push(doc);
       } else {
         const report = _.defaults(doc, {
+          _id: uuid(),
           reported_date: 1,
           fields: {},
         });
