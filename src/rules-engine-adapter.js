@@ -5,6 +5,7 @@ const uuid = require('uuid/v4');
 const ddocs = require('../dist/core-ddocs.json');
 const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
 const CalendarInterval = require('cht-core-3-11/shared-libs/calendar-interval');
+const RulesEmitter = require('cht-core-3-11/shared-libs/rules-engine/src/rules-emitter.js');
 const RulesEngineCore = require('cht-core-3-11/shared-libs/rules-engine');
 
 PouchDB.plugin(require('pouchdb-adapter-memory'));
@@ -46,6 +47,19 @@ const prep = async (appSettings, pouchdb, rulesEngine, docHashes, user, contacts
     // This is largely to handle scenarios where the "user" object has changed 
     // TODO: Wish that rulesConfigChange returned true/false 
     await rulesEngine.rulesConfigChange(rulesSettings);
+  }
+
+  /*
+  The Date object inside Nools doesn't work with sinon useFakeTimers (closure?)
+  So this is a terribly vicious hack to reset that internal component and restart the nools session
+  I hate nools
+  */
+  if (RulesEmitter.isEnabled) {
+    RulesEmitter.shutdown();
+    RulesEmitter.initialize({
+      rules: appSettings.tasks.rules,
+      contact: user,
+    });
   }
 
   // TODO: Only if ?
