@@ -444,6 +444,7 @@ class Harness {
       } else {
         const report = _.defaults(doc, {
           _id: uuid(),
+          type: 'data_record',
           reported_date: 1,
           fields: {},
         });
