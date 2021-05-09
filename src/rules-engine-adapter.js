@@ -17,7 +17,7 @@ class RulesEngineAdapter {
     this.rulesEngine = RulesEngineCore(this.pouchdb);
     
     // TODO: Explain this?
-    this.committedDocHashes = {};
+    this.previousDocSummary = {};
   }
 
   destroy() {
@@ -26,7 +26,10 @@ class RulesEngineAdapter {
   }
 
   async fetchTargets(user, contacts, reports) {
-    await prep(this.appSettings, this.pouchdb, this.rulesEngine, this.committedDocHashes, user, contacts, reports);
+    await prepareRulesEngine(this.rulesEngine, this.appSettings, user);
+    const { updatedSubjectIds, docSummary } = await syncPouchWithState(this.pouchdb, this.previousDocSummary, contacts, reports);
+    this.previousDocSummary = docSummary;
+    await this.rulesEngine.updateEmissionsFor(updatedSubjectIds);
 
     const uhcMonthStartDate = getMonthStartDate(this.appSettings);
     const relevantInterval = CalendarInterval.getCurrent(uhcMonthStartDate);
@@ -34,12 +37,16 @@ class RulesEngineAdapter {
   }
 
   async fetchTasksFor(user, contacts, reports) {
-    await prep(this.appSettings, this.pouchdb, this.rulesEngine, this.committedDocHashes, user, contacts, reports);
+    await prepareRulesEngine(this.rulesEngine, this.appSettings, user);
+    const { updatedSubjectIds, docSummary } = await syncPouchWithState(this.pouchdb, this.previousDocSummary, contacts, reports);
+    this.previousDocSummary = docSummary;
+    await this.rulesEngine.updateEmissionsFor(updatedSubjectIds);
+
     return this.rulesEngine.fetchTasksFor();
   }
 }
 
-const prep = async (appSettings, pouchdb, rulesEngine, docHashes, user, contacts, reports) => {
+const prepareRulesEngine = async (rulesEngine, appSettings, user) => {
   const rulesSettings = getRulesSettings(appSettings, user);
   if (!rulesEngine.isEnabled()) {
     await rulesEngine.initialize(rulesSettings);
@@ -61,29 +68,57 @@ const prep = async (appSettings, pouchdb, rulesEngine, docHashes, user, contacts
       contact: user,
     });
   }
+};
 
+const syncPouchWithState = async (pouchdb, previousDocSummary, contacts, reports) => {
   // TODO: Only if ?
   await pouchdb.bulkDocs(ddocs);
 
   const docs = [...contacts, ...reports];
+  
+  // build the doc summary
+  const docSummary = {};
   for (const doc of docs) {
-    delete doc._rev; // ignore _rev entirely and permanently
-    const docHash = md5(JSON.stringify(doc));
     const docId = doc._id;
     if (!docId) {
       throw Error(`Doc has attribute _id ${docId}`); // TODO: Is this the right behaviour?
     }
+    delete doc._rev; // ignore _rev entirely and permanently
 
-    if (docHashes[docId] !== docHash) {
+    docSummary[docId] = {
+      subjectId: getSubjectId(doc),
+      docHash: md5(JSON.stringify(doc)),
+    };
+  }
+
+  // sync added/changed docs to pouchdb
+  const updatedSubjects = new Set();
+  for (const doc of docs) {
+    const docId = doc._id;
+    const { docHash, subjectId } = docSummary[docId];
+    // new or changed
+    if (!previousDocSummary[docId] || previousDocSummary[docId].docHash !== docHash) {
       await upsert(pouchdb, doc);
-
-      const subjectId = getSubjectId(doc);
       if (subjectId) {
-        await rulesEngine.updateEmissionsFor(subjectId);
+        updatedSubjects.add(subjectId);
       }
     }
-    docHashes[docId] = docHash;
   }
+
+  // sync removed docs to pouchdb
+  const removedDocIds = Object.keys(previousDocSummary).filter(docId => !docSummary[docId]);
+  if (removedDocIds.length) {
+    const impactedSubjects = removedDocIds.map(docId => previousDocSummary[docId].subjectId);
+    updatedSubjects.add(...impactedSubjects);
+
+    const deleteDoc = docId => upsert(pouchdb, { _id: docId, _deleted: true });
+    await Promise.all(removedDocIds.map(deleteDoc));
+  }
+  
+  return {
+    updatedSubjectIds: Array.from(updatedSubjects),
+    docSummary,
+  };
 };
 
 const upsert = async (pouchdb, doc) => {
