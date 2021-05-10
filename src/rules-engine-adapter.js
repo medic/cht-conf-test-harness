@@ -85,6 +85,10 @@ const syncPouchWithState = async (pouchdb, previousDocSummary, contacts, reports
     }
     delete doc._rev; // ignore _rev entirely and permanently
 
+    if (docSummary[docId]) {
+      throw Error(`Harness state contains docs with duplicate id ${docId}.`);
+    }
+
     docSummary[docId] = {
       subjectId: getSubjectId(doc),
       docHash: md5(JSON.stringify(doc)),
