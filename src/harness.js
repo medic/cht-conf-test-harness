@@ -170,6 +170,10 @@ class Harness {
    * @deprecated Use fillForm interface (#40)
    */
   async loadForm(formName, inputs) {
+    if (!this.page) {
+      throw Error(`loadForm(): Cannot invoke medic-conf-test-harness.loadForm() before calling start()`);
+    }
+
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
     
     inputs = _.defaults(inputs, this.options.inputs);
@@ -188,6 +192,7 @@ class Harness {
   async fillContactForm(contactType, ...answers) {
     const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
     await doLoadForm(this, this.page, xformFilePath, {}, this.options.user);
+    this._state.pageContent = await this.page.content();
     
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
     const fillResult = await this.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
