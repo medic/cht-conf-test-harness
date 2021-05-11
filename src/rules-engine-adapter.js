@@ -26,7 +26,7 @@ class RulesEngineAdapter {
   }
 
   async fetchTargets(user, contacts, reports) {
-    await prepareRulesEngine(this.rulesEngine, this.appSettings, user);
+    await prepareRulesEngine(this.rulesEngine, this.appSettings, user, this.pouchdb.name);
     const { updatedSubjectIds, docSummary } = await syncPouchWithState(this.pouchdb, this.previousDocSummary, contacts, reports);
     this.previousDocSummary = docSummary;
     await this.rulesEngine.updateEmissionsFor(updatedSubjectIds);
@@ -37,7 +37,7 @@ class RulesEngineAdapter {
   }
 
   async fetchTasksFor(user, contacts, reports) {
-    await prepareRulesEngine(this.rulesEngine, this.appSettings, user);
+    await prepareRulesEngine(this.rulesEngine, this.appSettings, user, this.pouchdb.name);
     const { updatedSubjectIds, docSummary } = await syncPouchWithState(this.pouchdb, this.previousDocSummary, contacts, reports);
     this.previousDocSummary = docSummary;
     await this.rulesEngine.updateEmissionsFor(updatedSubjectIds);
@@ -46,12 +46,12 @@ class RulesEngineAdapter {
   }
 }
 
-const prepareRulesEngine = async (rulesEngine, appSettings, user) => {
-  const rulesSettings = getRulesSettings(appSettings, user);
+const prepareRulesEngine = async (rulesEngine, appSettings, user, sessionId) => {
+  const rulesSettings = getRulesSettings(appSettings, user, sessionId);
   if (!rulesEngine.isEnabled()) {
     await rulesEngine.initialize(rulesSettings);
   } else {
-    // This is largely to handle scenarios where the "user" object has changed 
+    // Handle scenarios where the "user" object has changed 
     // TODO: Wish that rulesConfigChange returned true/false 
     await rulesEngine.rulesConfigChange(rulesSettings);
   }
@@ -157,7 +157,7 @@ const getMonthStartDate = settings => {
     );
 };
 
-const getRulesSettings = (settingsDoc, userContactDoc) => {
+const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
   const settingsTasks = settingsDoc && settingsDoc.tasks || {};
   // const filterTargetByContext = (target) => target.context ?
   //   !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
@@ -172,6 +172,7 @@ const getRulesSettings = (settingsDoc, userContactDoc) => {
     contact: userContactDoc,
     user: userContactDoc, // TODO which is actually user?
     monthStartDate: getMonthStartDate(settingsDoc),
+    sessionId,
   };
 };
 

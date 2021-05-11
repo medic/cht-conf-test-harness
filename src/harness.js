@@ -455,7 +455,7 @@ class Harness {
           // When subject id is undefined, we match the first of anything https://github.com/medic/medic-conf-test-harness/compare/16-core-harmony?expand=1#diff-5cce2dfd984ec98084e5174d8d9cdb0712d447c21f02a8964e84eb402be12af9L54
           // Make the hard change now? Or does this make sense?
           const defaultSubjectId = this._state.contacts[0]._id;
-          console.warn(`Adding mock report for id without matching contact. Setting default to "${defaultSubjectId}".`);
+          console.warn(`pushMockedDoc: report without subject id (patient_id, patient_uuid, place_id, etc). Setting default to "${defaultSubjectId}".`);
           report.patient_id = defaultSubjectId; // can't use patient_uuid
         }
 
