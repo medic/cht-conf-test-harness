@@ -328,8 +328,31 @@ class Harness {
     // TODO: restore now?
     return tasks
       .map(task => task.emission)
-      .filter(task => !!options.resolved || !task.resolved) // TODO: This is broken
       .filter(task => !options.title || task.title === options.title);
+  }
+
+  async getTaskSummary(options) {
+    options = _.defaults(options, {
+      useStale: true,
+    });
+
+    if (options.useStale) {
+      await this.getTasks(options);
+    }
+
+    const allTaskDocs = await this.rulesEngineAdapter.fetchTaskDocs();
+    const summary = {
+      Draft: 0,
+      Ready: 0,
+      Cancelled: 0,
+      Completed: 0,
+      Failed: 0,
+    };
+
+    for (const task of allTaskDocs) {
+      summary[task.state]++;
+    }
+    return summary;
   }
 
   /**

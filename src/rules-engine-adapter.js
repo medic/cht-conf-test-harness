@@ -44,6 +44,12 @@ class RulesEngineAdapter {
 
     return this.rulesEngine.fetchTasksFor();
   }
+
+  async fetchTaskDocs() {
+    const options = { startkey: `task~`, endkey: `task~\ufff0`, include_docs: true };
+    const result = await this.pouchdb.allDocs(options);
+    return result.rows.map(row => row.doc);
+  }
 }
 
 const prepareRulesEngine = async (rulesEngine, appSettings, user, sessionId) => {
