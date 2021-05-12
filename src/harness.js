@@ -319,6 +319,12 @@ class Harness {
     
     await this.setNow(typeof options.now === 'function' ? options.now() : options.now);
     const tasks = await this.rulesEngineAdapter.fetchTasksFor(options.user, this._state.contacts, this._state.reports);
+
+    // TODO: This is a pattern break
+    tasks.forEach(task => task.emission.actions.forEach(action => {
+      action.forId = task.emission.forId;
+    }));
+
     // TODO: restore now?
     return tasks
       .map(task => task.emission)
@@ -377,10 +383,11 @@ class Harness {
    */
   async loadAction(action) {
     // When an action is clicked after Rules-v2 the "emissions.content.contact" object is hydrated
+    const subject = this.state.contacts.find(contact => action.forId && contact._id === action.forId);
     const content = Object.assign(
       {},
       action.content,
-      { contact: this.content.contact }
+      { contact: subject || this.content.contact },
     );
     return this.loadForm(action.form, { content });
   }
