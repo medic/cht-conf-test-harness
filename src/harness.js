@@ -381,7 +381,7 @@ class Harness {
    * const actual = await harness.getTasks();
    * expect(actual).to.be.empty;
    */
-  async loadAction(action) {
+  async loadAction(action, ...answers) {
     // When an action is clicked after Rules-v2 the "emissions.content.contact" object is hydrated
     const subject = this.state.contacts.find(contact => action.forId && contact._id === action.forId);
     const content = Object.assign(
@@ -389,7 +389,11 @@ class Harness {
       action.content,
       { contact: subject || this.content.contact },
     );
-    return this.loadForm(action.form, { content });
+    let result = await this.loadForm(action.form, { content });
+    if (answers.length) {
+      result = await this.fillForm(...answers);
+    }
+    return result;
   }
 
   /**
