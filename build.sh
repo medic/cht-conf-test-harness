@@ -10,11 +10,13 @@ exit_on_error() {
 set -e
 trap exit_on_error EXIT
 
-npm i
-rm -Rf dist
+npm ci
+rm -Rf dist build
 rm -Rf node_modules/enketo-core/node_modules/
-patch -f node_modules/enketo-core/src/js/Form.js < node_modules/cht-core-3-6/webapp/patches/enketo-inputs-always-relevant.patch
-webpack
+patch -f node_modules/enketo-core/src/js/Form.js < node_modules/cht-core-3-11/webapp/patches/enketo-inputs-always-relevant.patch
+node ./compile-ddocs.js
+
+npx webpack
 cp ext/inbox.css dist
 
 printf "\033[0;32m== BUILD SUCCESSFUL ==\n"

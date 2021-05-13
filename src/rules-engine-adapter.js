@@ -6,11 +6,7 @@ const md5 = require('md5');
 const PouchDB = require('pouchdb');
 const uuid = require('uuid/v4');
 
-const ddocs = require('../dist/core-ddocs.json');
-const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
-const CalendarInterval = require('cht-core-3-11/shared-libs/calendar-interval');
-const RulesEmitter = require('cht-core-3-11/shared-libs/rules-engine/src/rules-emitter.js');
-const RulesEngineCore = require('cht-core-3-11/shared-libs/rules-engine');
+const chtCoreFactory = require('./cht-core-factory');
 
 PouchDB.plugin(require('pouchdb-adapter-memory'));
 
@@ -18,7 +14,7 @@ class RulesEngineAdapter {
   constructor(appSettings) {
     this.appSettings = appSettings;
     this.pouchdb = new PouchDB(`medic-conf-test-harness-${uuid()}`, { adapter: 'memory' });
-    this.rulesEngine = RulesEngineCore(this.pouchdb);
+    this.rulesEngine = chtCoreFactory(appSettings).RulesEngineCore(this.pouchdb);
     this.pouchdbStateHash = {};
   }
 
@@ -29,15 +25,17 @@ class RulesEngineAdapter {
   }
 
   async fetchTargets(user, state) {
-    this.pouchdbStateHash = await prepare(this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
+    const chtCore = chtCoreFactory(this.appSettings);
+    this.pouchdbStateHash = await prepare(chtCore, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
 
     const uhcMonthStartDate = getMonthStartDate(this.appSettings);
-    const relevantInterval = CalendarInterval.getCurrent(uhcMonthStartDate);
+    const relevantInterval = chtCore.CalendarInterval.getCurrent(uhcMonthStartDate);
     return this.rulesEngine.fetchTargets(relevantInterval);
   }
 
   async fetchTasksFor(user, state) {
-    this.pouchdbStateHash = await prepare(this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
+    const chtCore = chtCoreFactory(this.appSettings);
+    this.pouchdbStateHash = await prepare(chtCore, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
     return this.rulesEngine.fetchTasksFor();
   }
 
@@ -48,14 +46,14 @@ class RulesEngineAdapter {
   }
 }
 
-const prepare = async (rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, state) => {
-  await prepareRulesEngine(rulesEngine, appSettings, user, pouchdb.name);
-  const { updatedSubjectIds, newPouchdbState } = await syncPouchWithState(pouchdb, pouchdbStateHash, state);
+const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, state) => {
+  await prepareRulesEngine(chtCore, rulesEngine, appSettings, user, pouchdb.name);
+  const { updatedSubjectIds, newPouchdbState } = await syncPouchWithState(chtCore, pouchdb, pouchdbStateHash, state);
   await rulesEngine.updateEmissionsFor(updatedSubjectIds);
   return newPouchdbState;
 };
 
-const prepareRulesEngine = async (rulesEngine, appSettings, user, sessionId) => {
+const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, sessionId) => {
   const rulesSettings = getRulesSettings(appSettings, user, sessionId);
   if (!rulesEngine.isEnabled()) {
     await rulesEngine.initialize(rulesSettings);
@@ -68,17 +66,17 @@ const prepareRulesEngine = async (rulesEngine, appSettings, user, sessionId) => 
   The Date object inside Nools doesn't work with sinon useFakeTimers (closure?)
   So this is a terribly vicious hack to reset that internal component and restart the nools session
   */
-  if (RulesEmitter.isEnabled()) {
-    RulesEmitter.shutdown();
-    RulesEmitter.initialize({
+  if (chtCore.RulesEmitter.isEnabled()) {
+    chtCore.RulesEmitter.shutdown();
+    chtCore.RulesEmitter.initialize({
       rules: appSettings.tasks.rules,
       contact: user,
     });
   }
 };
 
-const syncPouchWithState = async (pouchdb, pouchdbStateHash, state) => {
-  await pouchdb.bulkDocs(ddocs);
+const syncPouchWithState = async (chtCore, pouchdb, pouchdbStateHash, state) => {
+  await pouchdb.bulkDocs(chtCore.ddocs);
 
   // build a summary of documents in pouchdb
   const newPouchdbState = {};
@@ -95,7 +93,7 @@ const syncPouchWithState = async (pouchdb, pouchdbStateHash, state) => {
     }
 
     newPouchdbState[docId] = {
-      subjectId: getSubjectId(doc),
+      subjectId: getSubjectId(chtCore.RegistrationUtils.getSubjectId, doc),
       docHash: md5(JSON.stringify(doc)),
     };
   }
@@ -142,13 +140,13 @@ const upsert = async (pouchdb, doc) => {
   await pouchdb.put(docWithRev);
 };
 
-const getSubjectId = doc => {
+const getSubjectId = (getReportSubjectId, doc) => {
   if (!doc) {
     return;
   }
 
   const isReport = doc => doc.type === 'data_record';
-  return isReport(doc) ? RegistrationUtils.getSubjectId(doc) : doc._id;
+  return isReport(doc) ? getReportSubjectId(doc) : doc._id;
 };
 
 // cht-core/src/ts/services/uhc-settings.service.ts

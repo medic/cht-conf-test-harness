@@ -7,7 +7,7 @@ const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
 const uuid = require('uuid/v4');
 
-const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
+const chtCoreFactory = require('./cht-core-factory');
 const rulesEngineAdapter = require('./rules-engine-adapter');
 const toDate = require('./toDate');
 
@@ -497,7 +497,7 @@ class Harness {
           fields: {},
         });
 
-        const subjectId = RegistrationUtils.getSubjectId(report);
+        const subjectId = chtCoreFactory(this.appSettings).RegistrationUtils.getSubjectId(report);
         if (!subjectId) {
           // Legacy behaviour from harness@1.x
           const defaultSubjectId = this._state.contacts[0]._id;
@@ -537,7 +537,8 @@ class Harness {
       throw `Harness: Cannot get summary for unknown or invalid contact.`;
     }
 
-    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => RegistrationUtils.getSubjectId(report) === contact._id);
+    const getReportSubjectId = chtCoreFactory(this.appSettings).RegistrationUtils.getSubjectId;
+    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => getReportSubjectId(report) === contact._id);
     
     const resolvedLineage = [];
     if (Array.isArray(lineage)) {
