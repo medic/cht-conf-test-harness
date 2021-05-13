@@ -326,6 +326,7 @@ class Harness {
     }));
 
     // TODO: restore now?
+    // TODO: throw deprecation if resolved is true
     return tasks
       .map(task => task.emission)
       .filter(task => !options.title || task.title === options.title);
