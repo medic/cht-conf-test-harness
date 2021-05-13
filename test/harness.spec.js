@@ -233,8 +233,9 @@ describe('Harness tests', () => {
     it('followup task present one day before schedule', async () => {
       const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
       expect(formResult.errors).to.be.empty;
-  
-      const tasks = await harness.getTasks({ now: '2000-01-07' });
+
+      await harness.setNow('2000-01-07');
+      const tasks = await harness.getTasks();
       expect(tasks).to.have.property('length', 1);
       expect(tasks[0]).to.nested.include({
         'contact.name': 'Patient Name',
@@ -247,8 +248,9 @@ describe('Harness tests', () => {
     it('followup task present three days after schedule', async () => {
       const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
       expect(formResult.errors).to.be.empty;
-  
-      const tasks = await harness.getTasks({ now: '2000-01-10' });
+
+      await harness.setNow('2000-01-10');
+      const tasks = await harness.getTasks();
       expect(tasks).to.have.property('length', 1);
       expect(tasks[0]).to.nested.include({ resolved: false });
     });  

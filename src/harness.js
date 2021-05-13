@@ -302,8 +302,6 @@ class Harness {
   /**
    * Check which tasks are emitted
    * @param {Object=} options Some options when checking for tasks
-   * @param {Date} [options.now=getNow()] The mocked time to look for tasks
-   * @param {boolean} [options.resolved=false] When true, tasks which are resolved will be included in the returned tasks.
    * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
    * 
@@ -311,39 +309,75 @@ class Harness {
    */
   async getTasks(options) {
     options = _.defaults(options, {
-      now: () => new Date(this.getNow()),
-      resolved: false,
       title: undefined,
       user: this.user,
     });
+
+    if (options.resolved) {
+      throw Error('getTasks({ resolved: true }) is not supported. See getTaskSummary() to understand the resolution of tasks.');
+    }
+
+    if (options.now) {
+      throw Error('getTasks({ now }) is not supported. See setNow() for mocking time.');
+    }
     
-    await this.setNow(typeof options.now === 'function' ? options.now() : options.now);
-    const tasks = await this.rulesEngineAdapter.fetchTasksFor(options.user, this._state.contacts, this._state.reports);
-    // TODO: restore now?
+    const tasks = await this.rulesEngineAdapter.fetchTasksFor(options.user, this._state);
+
+    tasks.forEach(task => {
+      task.emission.taskDoc = task;
+      task.emission.actions.forEach(action => {
+        action.forId = task.forId; // required to hydrate in loadAction
+      });
+    });
+
     return tasks
       .map(task => task.emission)
-      .filter(task => !!options.resolved || !task.resolved) // TODO: This is broken
       .filter(task => !options.title || task.title === options.title);
+  }
+
+  async getTaskSummary(options) {
+    options = _.defaults(options, {
+      useStale: true,
+    });
+
+    if (options.useStale) {
+      await this.getTasks(options);
+    }
+
+    const allTaskDocs = await this.rulesEngineAdapter.fetchTaskDocs();
+    const summary = {
+      Draft: 0,
+      Ready: 0,
+      Cancelled: 0,
+      Completed: 0,
+      Failed: 0,
+    };
+
+    for (const task of allTaskDocs) {
+      summary[task.state]++;
+    }
+    return summary;
   }
 
   /**
    * Check which targets are emitted
    * @param {Object=} options Some options for looking for checking for targets
-   * @param {Date} [options.now=getNow()] The mocked time to look for targets
    * @param {string|string[]} [options.type=undefined] Filter the returns targets to those with an `id` which matches type (when string) or is included in type (when Array).
    * 
    * @returns {Target[]} An array of targets which would be visible to the user
    */
   async getTargets(options) {
     options = _.defaults(options, {
-      now: () => new Date(this.getNow()),
       type: undefined,
       user: this.user,
     });
     
-    await this.setNow(typeof options.now === 'function' ? options.now() : options.now);
-    const targets = await this.rulesEngineAdapter.fetchTargets(options.user, this._state.contacts, this._state.reports);
-    // TODO: restore now?
+    if (options.now) {
+      throw Error('getTargets({ now }) is not supported. See setNow() for mocking time.');
+    }
+    
+    const targets = await this.rulesEngineAdapter.fetchTargets(options.user, this._state);
+    
     return targets
       .filter(target =>
         !options.type ||
@@ -375,14 +409,23 @@ class Harness {
    * const actual = await harness.getTasks();
    * expect(actual).to.be.empty;
    */
-  async loadAction(action) {
+  async loadAction(action, ...answers) {
+    if (!action) {
+      throw Error('invalid argument: "action"');
+    }
+
     // When an action is clicked after Rules-v2 the "emissions.content.contact" object is hydrated
+    const subject = this.state.contacts.find(contact => action.forId && contact._id === action.forId);
     const content = Object.assign(
       {},
       action.content,
-      { contact: this.content.contact }
+      { contact: subject || this.content.contact },
     );
-    return this.loadForm(action.form, { content });
+    let result = await this.loadForm(action.form, { content });
+    if (answers.length) {
+      result = await this.fillForm(...answers);
+    }
+    return result;
   }
 
   /**
@@ -456,12 +499,10 @@ class Harness {
 
         const subjectId = RegistrationUtils.getSubjectId(report);
         if (!subjectId) {
-          // TODO: This was DEFINITELY a bug in the old framework....
-          // When subject id is undefined, we match the first of anything https://github.com/medic/medic-conf-test-harness/compare/16-core-harmony?expand=1#diff-5cce2dfd984ec98084e5174d8d9cdb0712d447c21f02a8964e84eb402be12af9L54
-          // Make the hard change now? Or does this make sense?
+          // Legacy behaviour from harness@1.x
           const defaultSubjectId = this._state.contacts[0]._id;
           console.warn(`pushMockedDoc: report without subject id (patient_id, patient_uuid, place_id, etc). Setting default to "${defaultSubjectId}".`);
-          report.patient_id = defaultSubjectId; // can't use patient_uuid
+          report.patient_id = defaultSubjectId; // patient_uuid is not available at root level
         }
 
         this._state.reports.push(report);

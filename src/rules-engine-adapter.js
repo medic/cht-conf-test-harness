@@ -1,3 +1,7 @@
+/**
+ * @module rules-engine-adapter
+*/
+
 const md5 = require('md5');
 const PouchDB = require('pouchdb');
 const uuid = require('uuid/v4');
@@ -15,51 +19,54 @@ class RulesEngineAdapter {
     this.appSettings = appSettings;
     this.pouchdb = new PouchDB(`medic-conf-test-harness-${uuid()}`, { adapter: 'memory' });
     this.rulesEngine = RulesEngineCore(this.pouchdb);
-    
-    // TODO: Explain this?
-    this.previousDocSummary = {};
+    this.pouchdbStateHash = {};
   }
 
   destroy() {
-    // TODO: destroy causes all kinds of problems with async behaviour of rules engine (setTimeout?)
-    // this.pouchdb.destroy();
+    // destroying pouchdb synchronously causes many errors from asynchronous behaviour in RulesEngine
+    const self = this;
+    setTimeout(() => self.pouchdb.destroy(), 100);
   }
 
-  async fetchTargets(user, contacts, reports) {
-    await prepareRulesEngine(this.rulesEngine, this.appSettings, user, this.pouchdb.name);
-    const { updatedSubjectIds, docSummary } = await syncPouchWithState(this.pouchdb, this.previousDocSummary, contacts, reports);
-    this.previousDocSummary = docSummary;
-    await this.rulesEngine.updateEmissionsFor(updatedSubjectIds);
+  async fetchTargets(user, state) {
+    this.pouchdbStateHash = await prepare(this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
 
     const uhcMonthStartDate = getMonthStartDate(this.appSettings);
     const relevantInterval = CalendarInterval.getCurrent(uhcMonthStartDate);
     return this.rulesEngine.fetchTargets(relevantInterval);
   }
 
-  async fetchTasksFor(user, contacts, reports) {
-    await prepareRulesEngine(this.rulesEngine, this.appSettings, user, this.pouchdb.name);
-    const { updatedSubjectIds, docSummary } = await syncPouchWithState(this.pouchdb, this.previousDocSummary, contacts, reports);
-    this.previousDocSummary = docSummary;
-    await this.rulesEngine.updateEmissionsFor(updatedSubjectIds);
-
+  async fetchTasksFor(user, state) {
+    this.pouchdbStateHash = await prepare(this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
     return this.rulesEngine.fetchTasksFor();
   }
+
+  async fetchTaskDocs() {
+    const options = { startkey: `task~`, endkey: `task~\ufff0`, include_docs: true };
+    const result = await this.pouchdb.allDocs(options);
+    return result.rows.map(row => row.doc);
+  }
 }
+
+const prepare = async (rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, state) => {
+  await prepareRulesEngine(rulesEngine, appSettings, user, pouchdb.name);
+  const { updatedSubjectIds, newPouchdbState } = await syncPouchWithState(pouchdb, pouchdbStateHash, state);
+  await rulesEngine.updateEmissionsFor(updatedSubjectIds);
+  return newPouchdbState;
+};
 
 const prepareRulesEngine = async (rulesEngine, appSettings, user, sessionId) => {
   const rulesSettings = getRulesSettings(appSettings, user, sessionId);
   if (!rulesEngine.isEnabled()) {
     await rulesEngine.initialize(rulesSettings);
   } else {
-    // Handle scenarios where the "user" object has changed 
-    // TODO: Wish that rulesConfigChange returned true/false 
+    // Handle scenarios where the "user" object has changed
     await rulesEngine.rulesConfigChange(rulesSettings);
   }
 
   /*
   The Date object inside Nools doesn't work with sinon useFakeTimers (closure?)
   So this is a terribly vicious hack to reset that internal component and restart the nools session
-  I hate nools
   */
   if (RulesEmitter.isEnabled()) {
     RulesEmitter.shutdown();
@@ -70,26 +77,24 @@ const prepareRulesEngine = async (rulesEngine, appSettings, user, sessionId) => 
   }
 };
 
-const syncPouchWithState = async (pouchdb, previousDocSummary, contacts, reports) => {
-  // TODO: Only if ?
+const syncPouchWithState = async (pouchdb, pouchdbStateHash, state) => {
   await pouchdb.bulkDocs(ddocs);
 
-  const docs = [...contacts, ...reports];
-  
-  // build the doc summary
-  const docSummary = {};
+  // build a summary of documents in pouchdb
+  const newPouchdbState = {};
+  const docs = [...state.contacts, ...state.reports];
   for (const doc of docs) {
     const docId = doc._id;
     if (!docId) {
-      throw Error(`Doc has attribute _id ${docId}`); // TODO: Is this the right behaviour?
+      throw Error(`Doc is missing attribute _id`);
     }
     delete doc._rev; // ignore _rev entirely and permanently
 
-    if (docSummary[docId]) {
+    if (newPouchdbState[docId]) {
       throw Error(`Harness state contains docs with duplicate id ${docId}.`);
     }
 
-    docSummary[docId] = {
+    newPouchdbState[docId] = {
       subjectId: getSubjectId(doc),
       docHash: md5(JSON.stringify(doc)),
     };
@@ -99,9 +104,9 @@ const syncPouchWithState = async (pouchdb, previousDocSummary, contacts, reports
   const updatedSubjects = new Set();
   for (const doc of docs) {
     const docId = doc._id;
-    const { docHash, subjectId } = docSummary[docId];
+    const { docHash, subjectId } = newPouchdbState[docId];
     // new or changed
-    if (!previousDocSummary[docId] || previousDocSummary[docId].docHash !== docHash) {
+    if (!pouchdbStateHash[docId] || pouchdbStateHash[docId].docHash !== docHash) {
       await upsert(pouchdb, doc);
       if (subjectId) {
         updatedSubjects.add(subjectId);
@@ -110,9 +115,9 @@ const syncPouchWithState = async (pouchdb, previousDocSummary, contacts, reports
   }
 
   // sync removed docs to pouchdb
-  const removedDocIds = Object.keys(previousDocSummary).filter(docId => !docSummary[docId]);
+  const removedDocIds = Object.keys(pouchdbStateHash).filter(docId => !newPouchdbState[docId]);
   if (removedDocIds.length) {
-    const impactedSubjects = removedDocIds.map(docId => previousDocSummary[docId].subjectId);
+    const impactedSubjects = removedDocIds.map(docId => pouchdbStateHash[docId].subjectId);
     updatedSubjects.add(...impactedSubjects);
 
     const deleteDoc = docId => upsert(pouchdb, { _id: docId, _deleted: true });
@@ -121,7 +126,7 @@ const syncPouchWithState = async (pouchdb, previousDocSummary, contacts, reports
   
   return {
     updatedSubjectIds: Array.from(updatedSubjects),
-    docSummary,
+    newPouchdbState,
   };
 };
 
@@ -177,8 +182,3 @@ const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
 };
 
 module.exports = RulesEngineAdapter;
-
-// TODO: Remove ?
-process.on('unhandledRejection', err => {
-  console.log('unhandledRejection', err);
-});
