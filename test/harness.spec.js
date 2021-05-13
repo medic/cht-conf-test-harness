@@ -253,7 +253,7 @@ describe('Harness tests', () => {
       const tasks = await harness.getTasks();
       expect(tasks).to.have.property('length', 1);
       expect(tasks[0]).to.nested.include({ resolved: false });
-    });  
+    });
   
     it('followup task not present at time of scheduling', async () => {
       const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
@@ -274,6 +274,7 @@ describe('Harness tests', () => {
       expect(tasks).to.have.property('length', 1);
       
       await harness.loadAction(tasks[0].actions[0]);
+      expect(tasks[0].actions[0]).to.include({ forId: 'patient_id_data' });
       const followupResult = await harness.fillForm(['no_come_back']);
       expect(followupResult.errors).to.be.empty;
 

@@ -326,7 +326,7 @@ class Harness {
     tasks.forEach(task => {
       task.emission.taskDoc = task;
       task.emission.actions.forEach(action => {
-        action.forId = task.forId; // required to hydrate in loadAction
+        action.forId = task.emission.forId; // required to hydrate in loadAction
       });
     });
 
