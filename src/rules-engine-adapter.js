@@ -2,11 +2,13 @@ const md5 = require('md5');
 const PouchDB = require('pouchdb');
 const uuid = require('uuid/v4');
 
-const ddocs = require('../dist/core-ddocs.json');
 const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
 const CalendarInterval = require('cht-core-3-11/shared-libs/calendar-interval');
-const RulesEmitter = require('cht-core-3-11/shared-libs/rules-engine/src/rules-emitter.js');
+const RulesEmitter = require('/home/kenn/harness/src/dev-rules-emitter');
 const RulesEngineCore = require('cht-core-3-11/shared-libs/rules-engine');
+
+const ddocs = require('../dist/core-ddocs.json');
+const StubbedNoolsLib = require('./stubbed-medic-conf-nools-lib');
 
 PouchDB.plugin(require('pouchdb-adapter-memory'));
 
@@ -67,6 +69,8 @@ const prepareRulesEngine = async (rulesEngine, appSettings, user, sessionId) => 
   So this is a terribly vicious hack to reset that internal component and restart the nools session
   I hate nools
   */
+  // TODO: Pipe this in from above
+  StubbedNoolsLib.pathToProject = '/home/kenn/config-muso';
   if (RulesEmitter.isEnabled()) {
     RulesEmitter.shutdown();
     RulesEmitter.initialize({
@@ -183,8 +187,3 @@ const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
 };
 
 module.exports = RulesEngineAdapter;
-
-// TODO: Remove ?
-process.on('unhandledRejection', err => {
-  console.log('unhandledRejection', err);
-});
