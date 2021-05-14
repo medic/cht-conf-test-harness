@@ -6,15 +6,14 @@ const md5 = require('md5');
 const PouchDB = require('pouchdb');
 const uuid = require('uuid/v4');
 
-const chtCoreFactory = require('./cht-core-factory');
-
 PouchDB.plugin(require('pouchdb-adapter-memory'));
 
 class RulesEngineAdapter {
-  constructor(appSettings) {
+  constructor(core, appSettings) {
     this.appSettings = appSettings;
     this.pouchdb = new PouchDB(`medic-conf-test-harness-${uuid()}`, { adapter: 'memory' });
-    this.rulesEngine = chtCoreFactory(appSettings).RulesEngineCore(this.pouchdb);
+    this.core = core;
+    this.rulesEngine = core.RulesEngineCore(this.pouchdb);
     this.pouchdbStateHash = {};
   }
 
@@ -25,17 +24,15 @@ class RulesEngineAdapter {
   }
 
   async fetchTargets(user, state) {
-    const chtCore = chtCoreFactory(this.appSettings);
-    this.pouchdbStateHash = await prepare(chtCore, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
+    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
 
     const uhcMonthStartDate = getMonthStartDate(this.appSettings);
-    const relevantInterval = chtCore.CalendarInterval.getCurrent(uhcMonthStartDate);
+    const relevantInterval = this.core.CalendarInterval.getCurrent(uhcMonthStartDate);
     return this.rulesEngine.fetchTargets(relevantInterval);
   }
 
   async fetchTasksFor(user, state) {
-    const chtCore = chtCoreFactory(this.appSettings);
-    this.pouchdbStateHash = await prepare(chtCore, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
+    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
     return this.rulesEngine.fetchTasksFor();
   }
 

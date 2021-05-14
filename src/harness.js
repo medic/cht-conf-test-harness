@@ -51,7 +51,8 @@ class Harness {
    * @param {string} [options.appXFormFolderPath=path.join(options.xformFolderPath, 'app')] Path used by the loadForm interface
    * @param {string} [options.contactXFormFolderPath=path.join(options.xformFolderPath, 'contact')] Path used by the fillContactForm interface
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
-   * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
+   * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to haness configuration file
+   * @param {string} [options.coreVersion=core_version in app_settings] The version of cht-core to emulate @example "3.8"
    * @param {HarnessInputs} [options.inputs=loaded from harnessDataPath] The default {@link HarnessInputs} for loading and completing a form
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
@@ -79,7 +80,11 @@ class Harness {
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
     }
-    this.clear();  
+
+    this.options.coreVersion = this.options.coreVersion || chtCoreFactory.getVersion(this.appSettings);
+    this.core = chtCoreFactory.getCore(this.options.coreVersion);
+
+    clearSync(this);
   }
 
   /**
@@ -129,35 +134,7 @@ class Harness {
    * @returns {Promise} Resolves when the state of the harness when cleared
    */
   async clear() {
-    const contacts = [];
-
-    this.options.inputs = _.cloneDeep(this.defaultInputs);
-    if (this.rulesEngineAdapter) {
-      this.rulesEngineAdapter.destroy();
-    }
-    this.rulesEngineAdapter = new rulesEngineAdapter(this.appSettings);
-    
-    if (this.options.inputs.user && this.options.inputs.user.parent) {
-      contacts.push(_.cloneDeep(this.options.inputs.user.parent));
-    }
-
-    if (this.options.inputs.content && this.options.inputs.content.contact) {
-      const defaultContact = _.cloneDeep(this.options.inputs.content.contact);
-
-      // 92 - Link the default contact information by default
-      this.options.inputs.content.contact = defaultContact;
-      contacts.push(defaultContact);
-    }
-
-    this._state = {
-      console: [],
-      contacts,
-      reports: [],
-    };
-    this.onConsole = () => {};
-    this._now = undefined;
-
-    sinon.restore();
+    clearSync(this);
     return this.page && await this.page.evaluate(() => delete window.now);
   }
 
@@ -210,7 +187,6 @@ class Harness {
   /**
    * Set the current mock-time of the harness. Mocks global time {@link https://sinonjs.org/releases/v1.17.6/fake-timers/|uses sinon}
    * @param {Date|number|string} now A Date object or a value which can be parsed into a Date
-   * 
    */
   setNow(now) {
     if (!now) {
@@ -445,6 +421,11 @@ class Harness {
   get user() { return this.options.inputs.user; }
 
   /**
+   * `coreVersion` is the version of the cht-core that is being emulated in testing (eg. 3.9.0)
+   */
+  get coreVersion() { return this.options.coreVersion; }
+
+  /**
    * `content` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
    */
   get content() { return this.options.inputs.content; }
@@ -497,7 +478,7 @@ class Harness {
           fields: {},
         });
 
-        const subjectId = chtCoreFactory(this.appSettings).RegistrationUtils.getSubjectId(report);
+        const subjectId = this.core.RegistrationUtils.getSubjectId(report);
         if (!subjectId) {
           // Legacy behaviour from harness@1.x
           const defaultSubjectId = this._state.contacts[0]._id;
@@ -537,8 +518,7 @@ class Harness {
       throw `Harness: Cannot get summary for unknown or invalid contact.`;
     }
 
-    const getReportSubjectId = chtCoreFactory(this.appSettings).RegistrationUtils.getSubjectId;
-    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => getReportSubjectId(report) === contact._id);
+    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => self.core.RegistrationUtils.getSubjectId(report) === contact._id);
     
     const resolvedLineage = [];
     if (Array.isArray(lineage)) {
@@ -597,6 +577,38 @@ const serializeContactSummary = (contactSummary = {}) => {
   }
 
   return serialize({ context: contactSummary });
+};
+
+const clearSync = (self) => {
+  const contacts = [];
+
+  self.options.inputs = _.cloneDeep(self.defaultInputs);
+  if (self.rulesEngineAdapter) {
+    self.rulesEngineAdapter.destroy();
+  }
+  self.rulesEngineAdapter = new rulesEngineAdapter(self.core, self.appSettings);
+  
+  if (self.options.inputs.user && self.options.inputs.user.parent) {
+    contacts.push(_.cloneDeep(self.options.inputs.user.parent));
+  }
+
+  if (self.options.inputs.content && self.options.inputs.content.contact) {
+    const defaultContact = _.cloneDeep(self.options.inputs.content.contact);
+
+    // 92 - Link the default contact information by default
+    self.options.inputs.content.contact = defaultContact;
+    contacts.push(defaultContact);
+  }
+
+  self._state = {
+    console: [],
+    contacts,
+    reports: [],
+  };
+  self.onConsole = () => {};
+  self._now = undefined;
+
+  sinon.restore();
 };
 
 module.exports = Harness;
