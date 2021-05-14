@@ -18,7 +18,7 @@ node ./compile-ddocs.js
 
 dirs=($(find node_modules/cht-* -maxdepth 0 -type d))
 for dir in "${dirs[@]}"; do
-  $(cd "$dir"/shared-libs/rules-engine && npm ci --production)
+  (cd "$dir"/shared-libs/rules-engine && npm ci --production)
 done
 
 npx webpack
