@@ -1,49 +1,32 @@
+/**
+ * @module rules-engine-adapter
+*/
+
 const md5 = require('md5');
 const PouchDB = require('pouchdb');
 const uuid = require('uuid/v4');
 
-const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
-const CalendarInterval = require('cht-core-3-11/shared-libs/calendar-interval');
-const RulesEmitter = require('/home/kenn/harness/src/dev-rules-emitter');
-const RulesEngineCore = require('cht-core-3-11/shared-libs/rules-engine');
-
-const ddocs = require('../dist/core-ddocs.json');
-const StubbedNoolsLib = require('./stubbed-medic-conf-nools-lib');
-
 PouchDB.plugin(require('pouchdb-adapter-memory'));
 
 class RulesEngineAdapter {
-  constructor(appSettings) {
+  constructor(core, appSettings) {
     this.appSettings = appSettings;
     this.pouchdb = new PouchDB(`medic-conf-test-harness-${uuid()}`, { adapter: 'memory' });
-    this.rulesEngine = RulesEngineCore(this.pouchdb);
-    
-    // TODO: Explain this?
-    this.previousDocSummary = {};
+    this.core = core;
+    this.rulesEngine = core.RulesEngineCore(this.pouchdb);
+    this.pouchdbStateHash = {};
   }
 
-  destroy() {
-    // TODO: destroy causes all kinds of problems with async behaviour of rules engine (setTimeout?)
-    // this.pouchdb.destroy();
-  }
-
-  async fetchTargets(user, contacts, reports) {
-    await prepareRulesEngine(this.rulesEngine, this.appSettings, user, this.pouchdb.name);
-    const { updatedSubjectIds, docSummary } = await syncPouchWithState(this.pouchdb, this.previousDocSummary, contacts, reports);
-    this.previousDocSummary = docSummary;
-    await this.rulesEngine.updateEmissionsFor(updatedSubjectIds);
+  async fetchTargets(user, state) {
+    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
 
     const uhcMonthStartDate = getMonthStartDate(this.appSettings);
-    const relevantInterval = CalendarInterval.getCurrent(uhcMonthStartDate);
+    const relevantInterval = this.core.CalendarInterval.getCurrent(uhcMonthStartDate);
     return this.rulesEngine.fetchTargets(relevantInterval);
   }
 
-  async fetchTasksFor(user, contacts, reports) {
-    await prepareRulesEngine(this.rulesEngine, this.appSettings, user, this.pouchdb.name);
-    const { updatedSubjectIds, docSummary } = await syncPouchWithState(this.pouchdb, this.previousDocSummary, contacts, reports);
-    this.previousDocSummary = docSummary;
-    await this.rulesEngine.updateEmissionsFor(updatedSubjectIds);
-
+  async fetchTasksFor(user, state) {
+    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
     return this.rulesEngine.fetchTasksFor();
   }
 
@@ -54,53 +37,58 @@ class RulesEngineAdapter {
   }
 }
 
-const prepareRulesEngine = async (rulesEngine, appSettings, user, sessionId) => {
+const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, state) => {
+  await prepareRulesEngine(chtCore, rulesEngine, appSettings, user, pouchdb.name);
+  const { updatedSubjectIds, newPouchdbState } = await syncPouchWithState(chtCore, pouchdb, pouchdbStateHash, state);
+  await rulesEngine.updateEmissionsFor(updatedSubjectIds);
+  return newPouchdbState;
+};
+
+const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, sessionId) => {
   const rulesSettings = getRulesSettings(appSettings, user, sessionId);
   if (!rulesEngine.isEnabled()) {
     await rulesEngine.initialize(rulesSettings);
   } else {
-    // Handle scenarios where the "user" object has changed 
-    // TODO: Wish that rulesConfigChange returned true/false 
+    // Handle scenarios where the "user" object has changed
     await rulesEngine.rulesConfigChange(rulesSettings);
   }
 
   /*
   The Date object inside Nools doesn't work with sinon useFakeTimers (closure?)
   So this is a terribly vicious hack to reset that internal component and restart the nools session
-  I hate nools
   */
+  
   // TODO: Pipe this in from above
   StubbedNoolsLib.pathToProject = '/home/kenn/config-muso';
-  if (RulesEmitter.isEnabled()) {
-    RulesEmitter.shutdown();
-    RulesEmitter.initialize({
+  
+  if (chtCore.RulesEmitter.isEnabled()) {
+    chtCore.RulesEmitter.shutdown();
+    chtCore.RulesEmitter.initialize({
       rules: appSettings.tasks.rules,
       contact: user,
     });
   }
 };
 
-const syncPouchWithState = async (pouchdb, previousDocSummary, contacts, reports) => {
-  // TODO: Only if ?
-  await pouchdb.bulkDocs(ddocs);
+const syncPouchWithState = async (chtCore, pouchdb, pouchdbStateHash, state) => {
+  await pouchdb.bulkDocs(chtCore.ddocs);
 
-  const docs = [...contacts, ...reports];
-  
-  // build the doc summary
-  const docSummary = {};
+  // build a summary of documents in pouchdb
+  const newPouchdbState = {};
+  const docs = [...state.contacts, ...state.reports];
   for (const doc of docs) {
     const docId = doc._id;
     if (!docId) {
-      throw Error(`Doc has attribute _id ${docId}`); // TODO: Is this the right behaviour?
+      throw Error(`Doc is missing attribute _id`);
     }
     delete doc._rev; // ignore _rev entirely and permanently
 
-    if (docSummary[docId]) {
+    if (newPouchdbState[docId]) {
       throw Error(`Harness state contains docs with duplicate id ${docId}.`);
     }
 
-    docSummary[docId] = {
-      subjectId: getSubjectId(doc),
+    newPouchdbState[docId] = {
+      subjectId: getSubjectId(chtCore.RegistrationUtils.getSubjectId, doc),
       docHash: md5(JSON.stringify(doc)),
     };
   }
@@ -109,9 +97,9 @@ const syncPouchWithState = async (pouchdb, previousDocSummary, contacts, reports
   const updatedSubjects = new Set();
   for (const doc of docs) {
     const docId = doc._id;
-    const { docHash, subjectId } = docSummary[docId];
+    const { docHash, subjectId } = newPouchdbState[docId];
     // new or changed
-    if (!previousDocSummary[docId] || previousDocSummary[docId].docHash !== docHash) {
+    if (!pouchdbStateHash[docId] || pouchdbStateHash[docId].docHash !== docHash) {
       await upsert(pouchdb, doc);
       if (subjectId) {
         updatedSubjects.add(subjectId);
@@ -120,9 +108,9 @@ const syncPouchWithState = async (pouchdb, previousDocSummary, contacts, reports
   }
 
   // sync removed docs to pouchdb
-  const removedDocIds = Object.keys(previousDocSummary).filter(docId => !docSummary[docId]);
+  const removedDocIds = Object.keys(pouchdbStateHash).filter(docId => !newPouchdbState[docId]);
   if (removedDocIds.length) {
-    const impactedSubjects = removedDocIds.map(docId => previousDocSummary[docId].subjectId);
+    const impactedSubjects = removedDocIds.map(docId => pouchdbStateHash[docId].subjectId);
     updatedSubjects.add(...impactedSubjects);
 
     const deleteDoc = docId => upsert(pouchdb, { _id: docId, _deleted: true });
@@ -131,7 +119,7 @@ const syncPouchWithState = async (pouchdb, previousDocSummary, contacts, reports
   
   return {
     updatedSubjectIds: Array.from(updatedSubjects),
-    docSummary,
+    newPouchdbState,
   };
 };
 
@@ -147,13 +135,13 @@ const upsert = async (pouchdb, doc) => {
   await pouchdb.put(docWithRev);
 };
 
-const getSubjectId = doc => {
+const getSubjectId = (getReportSubjectId, doc) => {
   if (!doc) {
     return;
   }
 
   const isReport = doc => doc.type === 'data_record';
-  return isReport(doc) ? RegistrationUtils.getSubjectId(doc) : doc._id;
+  return isReport(doc) ? getReportSubjectId(doc) : doc._id;
 };
 
 // cht-core/src/ts/services/uhc-settings.service.ts
@@ -179,8 +167,8 @@ const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
     targets: targets,
     enableTasks: true,
     enableTargets: true,
-    contact: userContactDoc,
-    user: userContactDoc, // TODO which is actually user?
+    contact: userContactDoc, // <- this goes to rules emitter
+    user: { _id: `org.couchdb.user:${userContactDoc ? userContactDoc._id : 'default'}` },
     monthStartDate: getMonthStartDate(settingsDoc),
     sessionId,
   };

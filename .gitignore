@@ -1,4 +1,4 @@
 node_modules
-dist/core-*
+build
 dist/project-*
 dist/harness.defaults.json
