@@ -1,16 +1,17 @@
 /**
- * An emitted task. The structure of emitted tasks may vary by the version of medic-conf and the version of the medic webapp. In general, tasks have this structure.
+ * [CHT Task Documents]{@link https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks}. 
  * @typedef Task 
  * @property {uuid} _id
- * @property {boolean} deleted
- * @property {Object} doc
- * @property {Object} contact
- * @property {string} icon
- * @property {string} date
- * @property {boolean} resolved
- * @property {string} priority
- * @property {string} priorityLabel
- * @property {Object[]} actions
+ * @property {string} user The user settings id of the user who calculated and created the document. Used for controlling replication. (eg. org.couchdb.user:agatha)
+ * @property {uuid} requester The guid of the contact whose data brought about the creation of the document. Used for controlling cancellation.
+ * @property {uuid} owner string The guid of the contact whose profile this task will appear on in the contact’s tab.
+ * @property {Object} emission	Minified data emitted from the partner code.
+ * @property {uuid} emission.forId	If completing a task’s action opens a form. Completing the form creates a report. forId is the guid of the contact information that will be passed into the form. For most forms, the resulting report will be associated with this contact.
+ * @property {string} emission.title The "name" attribute of the [task configuration]{@link https://docs.communityhealthtoolkit.org/apps/reference/tasks/#tasksjs}
+ * @property {string} emission.contact.name The name that will appear beside the task on the tasks tab. The "contactLabel" attribute of the [task configuration]{@link https://docs.communityhealthtoolkit.org/apps/reference/tasks/#tasksjs}
+ * @property {date} emission.startDate The date at which time the task will be displayed to the user. Before this date, the task document will be in state "Draft".
+ * @property {date} emission.endDate The date at which time the task will no longer be displayed to the user. After this date, the task will move to state "Failed".
+ * @property {Array[Object]} stateHistory Each time the state attribute changes, the time of the change is recorded in the state history.
  */
 
 /**
@@ -21,12 +22,6 @@
  * @property {number} value.total
  * @property {number} value.percent
  * 
- * @property {Object[]} instances The raw emitted target from Nools.
- * @property {string} instances[x]._id
- * @property {boolean} instances[x].deleted
- * @property {type} instances[x].type
- * @property {boolean} instances[x].pass 
- * @property {string} instances[x].date
  */
 
 /**
@@ -40,5 +35,5 @@
  * @property {Object} content This is an object that is passed into the XForm when it is loaded.
  * Tasks have the ability to set this data through the [modifyContent]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema} interface.
  * @property {Object} contactSummary Contact Summaries have the ability to set a [context]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context}. This
- * interface allows for the mocking of the output of the contact summary. If left empty, the context return by {@link getContactSummary} will be used.
+ * interface allows for the mocking of the output of the contact summary. If left empty, the context returned by {@link getContactSummary} will be used.
  */

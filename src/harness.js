@@ -415,7 +415,7 @@ class Harness {
         }
 
         if (actions.length > 1) {
-          throw Error(`loadAction: invalid argument "taskDoc" - has more than one action and disambiguation is required. Please directly pass the action to load loadAction(taskDoc.emission.actions[1])`);
+          throw Error('loadAction: invalid argument "taskDoc" - has multiple actions, so disambiguation is required. Directly pass the action to load: `loadAction(taskDoc.emission.actions[1]);`');
         }
 
         return actions[0];
