@@ -74,7 +74,12 @@ class Harness {
     this.log = (...args) => this.options.verbose && console.log('Harness', ...args);
 
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
-    this.defaultInputs = _.defaults(this.options.inputs, fileBasedDefaults);
+    this.defaultInputs = _.defaults(
+      this.options.inputs,
+      fileBasedDefaults,
+      { useDevMode: process.argv.includes('--dev') },
+    );
+
     this.options.coreVersion = this.options.coreVersion ||
       (fileBasedDefaults && ChtCoreLibs.getVersion(fileBasedDefaults)) ||
       ChtCoreLibs.availableCoreVersions[ChtCoreLibs.availableCoreVersions.length-1];
@@ -83,6 +88,10 @@ class Harness {
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
+    }
+
+    if (this.options.useDevMode) {
+      rulesEngineAdapter.useDevMode(this.core, this.options.appSettingsPath);
     }
 
     clearSync(this);

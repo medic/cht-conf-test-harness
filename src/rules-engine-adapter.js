@@ -2,6 +2,7 @@
  * @module rules-engine-adapter
 */
 
+const path = require('path');
 const md5 = require('md5');
 const PouchDB = require('pouchdb');
 const uuid = require('uuid/v4');
@@ -35,6 +36,13 @@ class RulesEngineAdapter {
     const result = await this.pouchdb.allDocs(options);
     return result.rows.map(row => row.doc);
   }
+
+  static useDevMode(core, pathToFileInProjectRoot) {
+    const devRulesEmitter = require('./dev-rules-emitter');
+    const stubbedNoolsLib = require('./stubbed-medic-conf-nools-lib');
+    stubbedNoolsLib.pathToProject = path.dirname(pathToFileInProjectRoot);
+    Object.assign(core.RulesEmitter, devRulesEmitter);
+  }
 }
 
 const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, state) => {
@@ -57,10 +65,6 @@ const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, sessi
   The Date object inside Nools doesn't work with sinon useFakeTimers (closure?)
   So this is a terribly vicious hack to reset that internal component and restart the nools session
   */
-  
-  // TODO: Pipe this in from above
-  StubbedNoolsLib.pathToProject = '/home/kenn/config-muso';
-  
   if (chtCore.RulesEmitter.isEnabled()) {
     chtCore.RulesEmitter.shutdown();
     chtCore.RulesEmitter.initialize({
