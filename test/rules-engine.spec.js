@@ -34,10 +34,12 @@ for (const coreVersion of availableCoreVersions) {
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
         expect(tasks[0]).to.nested.include({
-          'contact.name': 'Patient Name',
-          resolved: false,
-          icon: 'newborn',
-          'actions[0].form': 'pnc_followup',
+          owner: 'patient_id_data',
+          requester: 'patient_id_data',
+          state: 'Ready',
+          'emission.dueDate': '2000-01-07',
+          'emission.icon': 'newborn',
+          'emission.actions[0].form': 'pnc_followup',
         });
       });
     
@@ -48,7 +50,7 @@ for (const coreVersion of availableCoreVersions) {
         await harness.setNow('2000-01-10');
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
-        expect(tasks[0]).to.nested.include({ resolved: false });
+        expect(tasks[0]).to.nested.include({ state: 'Ready' });
       });
     
       it('followup task not present at time of scheduling', async () => {
@@ -71,8 +73,8 @@ for (const coreVersion of availableCoreVersions) {
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
         
-        expect(tasks[0].actions[0]).to.include({ forId: 'patient_id_data' });
-        await harness.loadAction(tasks[0].actions[0]);
+        expect(tasks[0].emission.actions[0]).to.include({ forId: 'patient_id_data' });
+        await harness.loadAction(tasks[0].emission.actions[0]);
         const followupResult = await harness.fillForm(['no_come_back']);
         expect(followupResult.errors).to.be.empty;
 

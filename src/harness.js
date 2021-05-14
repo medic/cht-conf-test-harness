@@ -269,6 +269,7 @@ class Harness {
     }
 
     if (fillResult.report) {
+      fillResult.additionalDocs.forEach(doc => { doc._id = uuid(); });
       this.pushMockedDoc(fillResult.report, ...fillResult.additionalDocs);
     }
 
@@ -276,12 +277,12 @@ class Harness {
   }
 
   /**
-   * Check which tasks are emitted
+   * Check which tasks are visible
    * @param {Object=} options Some options when checking for tasks
    * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
    * 
-   * @returns {Task[]} An array of tasks which would be visible to the user given the current {@link HarnessState}
+   * @returns {TaskDoc[]} An array of task documents which would be visible to the user given the current {@link HarnessState}
    */
   async getTasks(options) {
     options = _.defaults(options, {
@@ -299,21 +300,24 @@ class Harness {
     
     const tasks = await this.rulesEngineAdapter.fetchTasksFor(options.user, this._state);
 
-    tasks.forEach(task => {
-      task.emission.taskDoc = task;
-      task.emission.actions.forEach(action => {
-        action.forId = task.emission.forId; // required to hydrate in loadAction
-      });
-    });
+    tasks.forEach(task => task.emission.actions.forEach(action => {
+      action.forId = task.emission.forId; // required to hydrate in loadAction
+    }));
 
     return tasks
-      .map(task => task.emission)
-      .filter(task => !options.title || task.title === options.title);
+      .filter(task => !options.title || task.emission.title === options.title);
   }
 
+  /**
+   * Returns a summary of task documents counted by their state
+   * @param {Object=} options Some options when checking for tasks
+   * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
+   * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
+   */
   async getTaskSummary(options) {
     options = _.defaults(options, {
       useStale: true,
+      title: undefined,
     });
 
     if (options.useStale) {
@@ -321,6 +325,7 @@ class Harness {
     }
 
     const allTaskDocs = await this.rulesEngineAdapter.fetchTaskDocs();
+    const relevantTaskDocs = allTaskDocs.filter(taskDoc => !this.options.title || this.options.title === taskDoc.emission.title);
     const summary = {
       Draft: 0,
       Ready: 0,
@@ -329,7 +334,7 @@ class Harness {
       Failed: 0,
     };
 
-    for (const task of allTaskDocs) {
+    for (const task of relevantTaskDocs) {
       summary[task.state]++;
     }
     return summary;
@@ -377,7 +382,7 @@ class Harness {
    * expect(tasks).to.have.property('length', 1);
    * 
    * // Complete the task's action
-   * await harness.loadAction(tasks[0].actions[0]);
+   * await harness.loadAction(tasks[0].emission.actions[0]);
    * const followupResult = await harness.fillForm(['no_come_back']);
    * expect(followupResult.errors).to.be.empty;
    * 
@@ -583,9 +588,6 @@ const clearSync = (self) => {
   const contacts = [];
 
   self.options.inputs = _.cloneDeep(self.defaultInputs);
-  if (self.rulesEngineAdapter) {
-    self.rulesEngineAdapter.destroy();
-  }
   self.rulesEngineAdapter = new rulesEngineAdapter(self.core, self.appSettings);
   
   if (self.options.inputs.user && self.options.inputs.user.parent) {

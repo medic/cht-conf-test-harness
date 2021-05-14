@@ -17,12 +17,6 @@ class RulesEngineAdapter {
     this.pouchdbStateHash = {};
   }
 
-  destroy() {
-    // destroying pouchdb synchronously causes many errors from asynchronous behaviour in RulesEngine
-    const self = this;
-    setTimeout(() => self.pouchdb.destroy(), 100);
-  }
-
   async fetchTargets(user, state) {
     this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
 
