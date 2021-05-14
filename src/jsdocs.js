@@ -11,7 +11,7 @@
  * @property {string} emission.contact.name The name that will appear beside the task on the tasks tab. The "contactLabel" attribute of the [task configuration]{@link https://docs.communityhealthtoolkit.org/apps/reference/tasks/#tasksjs}
  * @property {date} emission.startDate The date at which time the task will be displayed to the user. Before this date, the task document will be in state "Draft".
  * @property {date} emission.endDate The date at which time the task will no longer be displayed to the user. After this date, the task will move to state "Failed".
- * @property {Array[Object]} stateHistory Each time the state attribute changes, the time of the change is recorded in the state history.
+ * @property {Array} stateHistory Each time the state attribute changes, the time of the change is recorded in the state history.
  */
 
 /**
