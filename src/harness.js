@@ -291,7 +291,7 @@ class Harness {
     });
 
     if (options.resolved) {
-      throw Error('getTasks({ resolved: true }) is not supported. See getTaskSummary() to understand the resolution of tasks.');
+      throw Error('getTasks({ resolved: true }) is not supported. See getTaskDocStates() to understand the state of tasks.');
     }
 
     if (options.now) {
@@ -309,12 +309,30 @@ class Harness {
   }
 
   /**
-   * Returns a summary of task documents counted by their state
-   * @param {Object=} options Some options when checking for tasks
-   * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
-   * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
+   * Refreshes the task documents and returns a count of task documents grouped by their state. [Explanation of task documents and their states]{@link https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks}
+   * @param {Object=} options Some options when summarizing the tasks
+   * @param {string} [options.title=undefined] Filter the returns summary to task documents with `title` that equals this parameter. Filter is skipped if undefined.
+   * @param {Object} [options.useStale=true] Skips the refreshing of task documents and returns the current state of task documents
+   * 
+   * @returns Map with keys equal to task document state and values equal to the number of task documents in that state.
+   * @example
+   * const summary = await getTaskDocStates({ title: 'my-task-title' });
+   * expect(summary).to.nested.include({
+   *   Complete: 1, // 1 task events were marked as resolved
+   *   Failed: 2,   // 2 task events were not marked as resolved prior to expiring
+   *   Draft: 3,    // 3 task events are in the future
+   * });
+   * 
+   * Example of summary would be: {
+   *  Draft: 0,
+   *  Ready: 1,
+   *  Cancelled: 0,
+   *  Completed: 1,
+   *  Failed: 2,
+   * };
+   * 
    */
-  async getTaskSummary(options) {
+  async getTaskDocStates(options) {
     options = _.defaults(options, {
       useStale: true,
       title: undefined,
@@ -341,7 +359,7 @@ class Harness {
   }
 
   /**
-   * Check which targets are emitted
+   * Check the state of targets 
    * @param {Object=} options Some options for looking for checking for targets
    * @param {string|string[]} [options.type=undefined] Filter the returns targets to those with an `id` which matches type (when string) or is included in type (when Array).
    * 

@@ -33,7 +33,7 @@ for (const coreVersion of availableCoreVersions) {
         await harness.setNow('2000-01-07');
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
-        expect(tasks[0]._id.startsWith('task~org.couchdb.user:user_contact_id~')).to.be.true;
+        expect(tasks[0]._id).to.include('~org.couchdb.user:user_contact_id~');
         expect(tasks[0]).to.nested.include({
           owner: 'patient_id_data',
           requester: 'patient_id_data',
