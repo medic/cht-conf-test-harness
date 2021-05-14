@@ -39,6 +39,7 @@ module.exports = [
       },
     },
     target: 'node',
-    mode: 'development'
+    mode: 'development',
+    devtool: 'source-map'
   }
 ];
