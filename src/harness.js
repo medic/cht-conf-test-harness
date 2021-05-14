@@ -52,7 +52,7 @@ class Harness {
    * @param {string} [options.contactXFormFolderPath=path.join(options.xformFolderPath, 'contact')] Path used by the fillContactForm interface
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
-   * @param {string} [options.coreVersion=core_version in app_settings] The version of cht-core to emulate @example "3.8"
+   * @param {string} [options.coreVersion=core_version harness configuration file] The version of cht-core to emulate @example "3.8"
    * @param {HarnessInputs} [options.inputs=loaded from harnessDataPath] The default {@link HarnessInputs} for loading and completing a form
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
@@ -75,14 +75,15 @@ class Harness {
 
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
     this.defaultInputs = _.defaults(this.options.inputs, fileBasedDefaults);
+    this.options.coreVersion = this.options.coreVersion ||
+      (fileBasedDefaults && ChtCoreLibs.getVersion(fileBasedDefaults)) ||
+      ChtCoreLibs.availableCoreVersions[ChtCoreLibs.availableCoreVersions.length-1];
+    this.core = ChtCoreLibs.getCore(this.options.coreVersion);
 
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
     }
-
-    this.options.coreVersion = this.options.coreVersion || ChtCoreLibs.getVersion(this.appSettings);
-    this.core = ChtCoreLibs.getCore(this.options.coreVersion);
 
     clearSync(this);
   }
