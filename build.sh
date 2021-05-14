@@ -16,10 +16,11 @@ rm -Rf node_modules/enketo-core/node_modules/
 patch -f node_modules/enketo-core/src/js/Form.js < node_modules/cht-core-3-11/webapp/patches/enketo-inputs-always-relevant.patch
 node ./compile-ddocs.js
 
-pushd . && cd node_modules/cht-core-3-8/shared-libs/rules-engine && npm ci && popd
-pushd . && cd node_modules/cht-core-3-9/shared-libs/rules-engine && npm ci && popd
-pushd . && cd node_modules/cht-core-3-10/shared-libs/rules-engine && npm ci && popd
-pushd . && cd node_modules/cht-core-3-11/shared-libs/rules-engine && npm ci && popd
+dirs=($(find $(pwd -P)/node_modules/cht-* -maxdepth 0 -type d))
+for dir in "${dirs[@]}"; do
+  cd "$dir"/shared-libs/rules-engine
+  npm ci --production
+done
 
 npx webpack
 cp ext/inbox.css dist
