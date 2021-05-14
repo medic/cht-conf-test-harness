@@ -65,7 +65,7 @@ for (const coreVersion of availableCoreVersions) {
       
       beforeEach(async () => await harness.setNow('2000-01-01'));
 
-      it('tasks action resolves task', async () => {
+      it('receives action directly + multi-stage fill', async () => {
         const scheduledDate = '2000-01-07';
         const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', scheduledDate]);
         expect(initialResult.errors).to.be.empty;
@@ -77,6 +77,29 @@ for (const coreVersion of availableCoreVersions) {
         expect(tasks[0].emission.actions[0]).to.include({ forId: 'patient_id_data' });
         await harness.loadAction(tasks[0].emission.actions[0]);
         const followupResult = await harness.fillForm(['no_come_back']);
+        expect(followupResult.errors).to.be.empty;
+
+        // This data is the result of a build-time shim forced into enketo
+        expect(followupResult.report).to.nested.include({
+          'fields.inputs.source': 'task',
+          'fields.inputs.source_id': initialResult.report._id,
+        });
+    
+        const actual = await harness.getTasks();
+        expect(actual).to.be.empty;
+      });
+
+      it('receives task document + single-stage fill', async () => {
+        const scheduledDate = '2000-01-07';
+        const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', scheduledDate]);
+        expect(initialResult.errors).to.be.empty;
+    
+        await harness.setNow(scheduledDate);
+        const tasks = await harness.getTasks();
+        expect(tasks).to.have.property('length', 1);
+        
+        expect(tasks[0].emission).to.include({ forId: 'patient_id_data' });
+        const followupResult = await harness.loadAction(tasks[0], ['no_come_back']);
         expect(followupResult.errors).to.be.empty;
 
         // This data is the result of a build-time shim forced into enketo

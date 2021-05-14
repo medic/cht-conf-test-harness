@@ -51,7 +51,7 @@ class Harness {
    * @param {string} [options.appXFormFolderPath=path.join(options.xformFolderPath, 'app')] Path used by the loadForm interface
    * @param {string} [options.contactXFormFolderPath=path.join(options.xformFolderPath, 'contact')] Path used by the fillContactForm interface
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
-   * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to haness configuration file
+   * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
    * @param {string} [options.coreVersion=core_version in app_settings] The version of cht-core to emulate @example "3.8"
    * @param {HarnessInputs} [options.inputs=loaded from harnessDataPath] The default {@link HarnessInputs} for loading and completing a form
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
@@ -282,7 +282,7 @@ class Harness {
    * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
    * 
-   * @returns {TaskDoc[]} An array of task documents which would be visible to the user given the current {@link HarnessState}
+   * @returns {Task[]} An array of task documents which would be visible to the user given the current {@link HarnessState}
    */
   async getTasks(options) {
     options = _.defaults(options, {
@@ -309,36 +309,29 @@ class Harness {
   }
 
   /**
-   * Refreshes the task documents and returns a count of task documents grouped by their state. [Explanation of task documents and their states]{@link https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks}
+   * Counts the number of task documents grouped by state. [Explanation of task documents and states]{@link https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks}
+   * 
    * @param {Object=} options Some options when summarizing the tasks
-   * @param {string} [options.title=undefined] Filter the returns summary to task documents with `title` that equals this parameter. Filter is skipped if undefined.
-   * @param {Object} [options.useStale=true] Skips the refreshing of task documents and returns the current state of task documents
+   * @param {string} [options.title=undefined] Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.
+   * @param {Object} [options.freshTaskDocs=true] When freshTaskDocs is truthy, the task documents will be refreshed prior to counting their states.
    * 
    * @returns Map with keys equal to task document state and values equal to the number of task documents in that state.
    * @example
-   * const summary = await getTaskDocStates({ title: 'my-task-title' });
+   * const summary = await countTaskDocsByState({ title: 'my-task-title' });
    * expect(summary).to.nested.include({
    *   Complete: 1, // 1 task events were marked as resolved
    *   Failed: 2,   // 2 task events were not marked as resolved prior to expiring
    *   Draft: 3,    // 3 task events are in the future
    * });
    * 
-   * Example of summary would be: {
-   *  Draft: 0,
-   *  Ready: 1,
-   *  Cancelled: 0,
-   *  Completed: 1,
-   *  Failed: 2,
-   * };
-   * 
    */
-  async getTaskDocStates(options) {
+  async countTaskDocsByState(options) {
     options = _.defaults(options, {
-      useStale: true,
+      freshTaskDocs: true,
       title: undefined,
     });
 
-    if (options.useStale) {
+    if (options.freshTaskDocs) {
       await this.getTasks(options);
     }
 
@@ -387,7 +380,7 @@ class Harness {
 
   /**
    * Simulates the user clicking on an action
-   * @param {Object} action A {@link Task}'s action 
+   * @param {Object} taskDoc A {@link Task} or, if that task has multiple actions then one of the direct actions
    * @example 
    * // Complete a form on January 1
    * await harness.setNow('2000-01-01')
@@ -400,7 +393,7 @@ class Harness {
    * expect(tasks).to.have.property('length', 1);
    * 
    * // Complete the task's action
-   * await harness.loadAction(tasks[0].emission.actions[0]);
+   * await harness.loadAction(tasks[0]);
    * const followupResult = await harness.fillForm(['no_come_back']);
    * expect(followupResult.errors).to.be.empty;
    * 
@@ -408,10 +401,29 @@ class Harness {
    * const actual = await harness.getTasks();
    * expect(actual).to.be.empty;
    */
-  async loadAction(action, ...answers) {
-    if (!action) {
-      throw Error('invalid argument: "action"');
+  async loadAction(taskDoc, ...answers) {
+    if (typeof taskDoc !== 'object') {
+      throw Error('invalid argument: "taskDoc"');
     }
+
+    const disambiguateAction = () => {
+      const isTaskDoc = !!taskDoc.emission;
+      if (isTaskDoc) {
+        const { actions } = taskDoc.emission;
+        if (!Array.isArray(actions) || actions.length === 0) {
+          throw Error(`loadAction: invalid argument "taskDoc" - has no actions to load`);
+        }
+
+        if (actions.length > 1) {
+          throw Error(`loadAction: invalid argument "taskDoc" - has more than one action and disambiguation is required. Please directly pass the action to load loadAction(taskDoc.emission.actions[1])`);
+        }
+
+        return actions[0];
+      }
+
+      return taskDoc; // assume it is an action
+    };
+    const action = disambiguateAction();
 
     // When an action is clicked after Rules-v2 the "emissions.content.contact" object is hydrated
     const subject = this.state.contacts.find(contact => action.forId && contact._id === action.forId);
@@ -420,6 +432,7 @@ class Harness {
       action.content,
       { contact: subject || this.content.contact },
     );
+    
     let result = await this.loadForm(action.form, { content });
     if (answers.length) {
       result = await this.fillForm(...answers);
