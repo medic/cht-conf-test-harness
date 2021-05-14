@@ -3,7 +3,6 @@ const { expect } = require('chai');
 const Harness = require('../src/harness');
 
 const { availableCoreVersions } = require('../src/cht-core-libs');
-// const availableCoreVersions = ['3.11'];
 
 for (const coreVersion of availableCoreVersions) {
   describe(`tests targeting rules engine v${coreVersion}`, () => {

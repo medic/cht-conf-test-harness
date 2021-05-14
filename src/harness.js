@@ -406,7 +406,7 @@ class Harness {
       throw Error('invalid argument: "taskDoc"');
     }
 
-    const disambiguateAction = () => {
+    const getActionFromParam = () => {
       const isTaskDoc = !!taskDoc.emission;
       if (isTaskDoc) {
         const { actions } = taskDoc.emission;
@@ -423,7 +423,7 @@ class Harness {
 
       return taskDoc; // assume it is an action
     };
-    const action = disambiguateAction();
+    const action = getActionFromParam();
 
     // When an action is clicked after Rules-v2 the "emissions.content.contact" object is hydrated
     const subject = this.state.contacts.find(contact => action.forId && contact._id === action.forId);
