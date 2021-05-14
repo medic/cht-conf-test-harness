@@ -1,8 +1,8 @@
 const semver = require('semver');
 
-const ChtCore = require('../dist/all-chts-bundle.dev');
+const ChtCoreBundles = require('../dist/all-chts-bundle.dev');
 
-const availableCoreVersions = Object.keys(ChtCore);
+const availableCoreVersions = Object.keys(ChtCoreBundles);
 
 const getVersion = (appSettings) => {
   const version = appSettings.core_version;
@@ -15,7 +15,7 @@ const getVersion = (appSettings) => {
   }
 
   const versionKey = `${semver.major(version)}.${semver.minor(version)}`;
-  if (!ChtCore[versionKey]) {
+  if (!ChtCoreBundles[versionKey]) {
     throw Error(`cht-core version ${versionKey} is not supported by medic-conf-test-harness. Supported versions are: ${availableCoreVersions}`);
   }
 
@@ -23,7 +23,7 @@ const getVersion = (appSettings) => {
 };
 
 const getCore = version => {
-  const result = ChtCore[version];
+  const result = ChtCoreBundles[version];
   if (!result) {
     throw Error(`cht-core version ${version} is not supported by medic-conf-test-harness. Supported versions are: ${availableCoreVersions}`);
   }

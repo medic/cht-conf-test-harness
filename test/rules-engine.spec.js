@@ -2,7 +2,7 @@ const path = require('path');
 const { expect } = require('chai');
 const Harness = require('../src/harness');
 
-const { availableCoreVersions } = require('../src/cht-core-factory');
+const { availableCoreVersions } = require('../src/cht-core-libs');
 
 for (const coreVersion of availableCoreVersions) {
   describe(`tests targeting rules engine v${coreVersion}`, () => {

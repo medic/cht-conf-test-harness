@@ -7,7 +7,7 @@ const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
 const uuid = require('uuid/v4');
 
-const chtCoreFactory = require('./cht-core-factory');
+const ChtCoreLibs = require('./cht-core-libs');
 const rulesEngineAdapter = require('./rules-engine-adapter');
 const toDate = require('./toDate');
 
@@ -81,8 +81,8 @@ class Harness {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
     }
 
-    this.options.coreVersion = this.options.coreVersion || chtCoreFactory.getVersion(this.appSettings);
-    this.core = chtCoreFactory.getCore(this.options.coreVersion);
+    this.options.coreVersion = this.options.coreVersion || ChtCoreLibs.getVersion(this.appSettings);
+    this.core = ChtCoreLibs.getCore(this.options.coreVersion);
 
     clearSync(this);
   }
