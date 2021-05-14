@@ -18,6 +18,7 @@ node ./compile-ddocs.js
 
 pushd . && cd node_modules/cht-core-3-8/shared-libs/rules-engine && npm ci && popd
 pushd . && cd node_modules/cht-core-3-9/shared-libs/rules-engine && npm ci && popd
+pushd . && cd node_modules/cht-core-3-10/shared-libs/rules-engine && npm ci && popd
 pushd . && cd node_modules/cht-core-3-11/shared-libs/rules-engine && npm ci && popd
 
 npx webpack
