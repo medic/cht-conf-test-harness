@@ -6,6 +6,7 @@
   "parserOptions": {
     "ecmaVersion": 8
   },
+  "ignorePatterns": ["docs/"],
   "rules": {
     "max-len": ["error", 200, { "ignoreStrings": true, "ignoreComments": true }],
     "no-console": "off",

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha test/*.spec.js --timeout 25000 --slow 500",
     "build": "npm run docs && ./build.sh",
-    "docs": "node ./node_modules/jsdoc/jsdoc src/*.js src/**/*.js ./JSDOC.md",
+    "docs": "node ./node_modules/jsdoc/jsdoc src/*.js src/**/*.js ./JSDOC.md -d docs",
     "explore": "node ./project-explorer/build-assets.js --path=./test/collateral && cd project-explorer && webpack && google-chrome ./project-explorer.html",
     "eslint": "node ./node_modules/eslint/bin/eslint.js .",
     "travis": "npm run build && npm run eslint && npm test"
