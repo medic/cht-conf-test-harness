@@ -163,8 +163,8 @@ const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
     targets: targets,
     enableTasks: true,
     enableTargets: true,
-    contact: userContactDoc,
-    user: userContactDoc, // TODO which is actually user?
+    contact: userContactDoc, // <- this goes to rules emitter
+    user: { _id: `org.couchdb.user:${userContactDoc ? userContactDoc._id : 'default'}` },
     monthStartDate: getMonthStartDate(settingsDoc),
     sessionId,
   };
