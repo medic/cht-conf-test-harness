@@ -1,10 +1,16 @@
 /**
- * @module dev-rules-emitter
+ * @module mock.rules-engine.rules-emitter
+ * This is a mocked version of cht-core's rules-engine's rules-emitter module
+ * https://github.com/medic/cht-core/blob/master/shared-libs/rules-engine/src/rules-emitter.js
+ * 
+ * This mock provides (nearly?) identical functionally to the production emitter but avoids the bundled result code from medic-conf and avoids nools. The behaviour 
+ * of the system may not be identical for all cases, but provides some useful experiences for test authors.
+ * https://github.com/medic/medic-conf-test-harness/pull/103
  */
 const nootils = require('medic-nootils');
 const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
 
-const StubbedNoolsLib = require('./mock.medic-conf.nools-lib');
+const mockNoolsLib = require('./mock.medic-conf.nools-lib');
 
 let enabled = false;
 let Utils;
@@ -64,7 +70,7 @@ module.exports = {
       throw Error('invalid argument: taskDocs is expected to be an array');
     }
 
-    const facts = marshalDocsIntoNoolsFacts(contactDocs, reportDocs, taskDocs);
+    const containers = marshalDocsIntoContainers(contactDocs, reportDocs, taskDocs);
     const Task = class { constructor(x) { Object.assign(this, x); }};
     const Target = class { constructor(x) { Object.assign(this, x); }};
     const results = { tasks: [], targets: [] };
@@ -76,17 +82,15 @@ module.exports = {
       }
     };
        
-    for (const fact of facts) {
-      global.Utils = Utils;
-      global.user = user;
-      StubbedNoolsLib(fact, Utils, Task, Target, emitCallback);
+    for (const container of containers) {
+      mockNoolsLib(container, user, Utils, Task, Target, emitCallback);
     }
 
     return Promise.resolve(results);
   },
 };
 
-const marshalDocsIntoNoolsFacts = (contactDocs, reportDocs, taskDocs) => {
+const marshalDocsIntoContainers = (contactDocs, reportDocs, taskDocs) => {
   const factByContactId = contactDocs.reduce((agg, contact) => {
     agg[contact._id] = { contact, reports: [], tasks: [] };
     return agg;
