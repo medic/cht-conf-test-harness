@@ -2,7 +2,6 @@
  * @module rules-engine-adapter
 */
 
-const path = require('path');
 const md5 = require('md5');
 const PouchDB = require('pouchdb');
 const uuid = require('uuid/v4');
@@ -35,13 +34,6 @@ class RulesEngineAdapter {
     const options = { startkey: `task~`, endkey: `task~\ufff0`, include_docs: true };
     const result = await this.pouchdb.allDocs(options);
     return result.rows.map(row => row.doc);
-  }
-
-  static useDevMode(core, pathToFileInProjectRoot) {
-    const devRulesEmitter = require('./dev-rules-emitter');
-    const stubbedNoolsLib = require('./stubbed-medic-conf-nools-lib');
-    stubbedNoolsLib.pathToProject = path.dirname(pathToFileInProjectRoot);
-    Object.assign(core.RulesEmitter, devRulesEmitter);
   }
 }
 

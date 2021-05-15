@@ -7,6 +7,7 @@ const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
 const uuid = require('uuid/v4');
 
+const devMode = require('./devMode');
 const ChtCoreLibs = require('./cht-core-libs');
 const rulesEngineAdapter = require('./rules-engine-adapter');
 const toDate = require('./toDate');
@@ -52,7 +53,7 @@ class Harness {
    * @param {string} [options.contactXFormFolderPath=path.join(options.xformFolderPath, 'contact')] Path used by the fillContactForm interface
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
-   * @param {string} [options.coreVersion=core_version harness configuration file] The version of cht-core to emulate @example "3.8"
+   * @param {string} [options.coreVersion=harness configuration file] The version of cht-core to emulate @example "3.8"
    * @param {HarnessInputs} [options.inputs=loaded from harnessDataPath] The default {@link HarnessInputs} for loading and completing a form
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
@@ -74,16 +75,18 @@ class Harness {
     this.log = (...args) => this.options.verbose && console.log('Harness', ...args);
 
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
-    this.defaultInputs = _.defaults(
-      this.options.inputs,
-      fileBasedDefaults,
-      { useDevMode: process.argv.includes('--dev') },
+    this.defaultInputs = _.defaults(this.options.inputs, fileBasedDefaults);
+    this.options = _.defaults(
+      this.options,
+      _.pick(fileBasedDefaults, 'useDevMode', 'coreVersion'),
+      {
+        useDevMode: process.argv.includes('--dev'),
+        coreVersion: ChtCoreLibs.availableCoreVersions[ChtCoreLibs.availableCoreVersions.length-1],
+      },
     );
 
-    this.options.coreVersion = this.options.coreVersion ||
-      (fileBasedDefaults && ChtCoreLibs.getVersion(fileBasedDefaults)) ||
-      ChtCoreLibs.availableCoreVersions[ChtCoreLibs.availableCoreVersions.length-1];
-    this.core = ChtCoreLibs.getCore(this.options.coreVersion);
+    const minorCoreVersion = ChtCoreLibs.getFormattedVersion(this.options.coreVersion);
+    this.core = ChtCoreLibs.getCore(minorCoreVersion);
 
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
@@ -91,7 +94,7 @@ class Harness {
     }
 
     if (this.options.useDevMode) {
-      rulesEngineAdapter.useDevMode(this.core, this.options.appSettingsPath);
+      devMode.mockRulesEngine(this.core, this.options.appSettingsPath);
     }
 
     clearSync(this);
@@ -361,30 +364,6 @@ class Harness {
     return summary;
   }
 
-  async getTaskSummary(options) {
-    options = _.defaults(options, {
-      useStale: true,
-    });
-
-    if (options.useStale) {
-      await this.getTasks(options);
-    }
-
-    const allTaskDocs = await this.rulesEngineAdapter.fetchTaskDocs();
-    const summary = {
-      Draft: 0,
-      Ready: 0,
-      Cancelled: 0,
-      Completed: 0,
-      Failed: 0,
-    };
-
-    for (const task of allTaskDocs) {
-      summary[task.state]++;
-    }
-    return summary;
-  }
-
   /**
    * Check the state of targets 
    * @param {Object=} options Some options for looking for checking for targets
@@ -600,8 +579,12 @@ class Harness {
       }
     }
     
-    const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
-    return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
+    if (this.options.useDevMode) {
+      return devMode.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage);
+    } else {
+      const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
+      return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
+    }
   }
 }
 

@@ -4,13 +4,15 @@
 const nootils = require('medic-nootils');
 const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
 
-const StubbedNoolsLib = require('./stubbed-medic-conf-nools-lib');
+const StubbedNoolsLib = require('./mock.medic-conf.nools-lib');
 
 let enabled = false;
 let Utils;
 let user;
 
 module.exports = {
+  isMock: true,
+  
   /**
   * Initializes the rules emitter
   *
