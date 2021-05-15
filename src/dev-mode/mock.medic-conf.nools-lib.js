@@ -7,7 +7,7 @@
  */
 module.exports.pathToProject = undefined;
 module.exports = function(c, user, Utils, Task, Target, emit) {
-  const existingCache = Object.keys(require.cache);
+  const cacheBefore = Object.keys(require.cache);
   try {
     global.Utils = Utils;
     global.user = user;
@@ -26,7 +26,7 @@ module.exports = function(c, user, Utils, Task, Target, emit) {
     delete global.Utils;
     delete global.user;
 
-    const newCache = Object.keys(require.cache).filter(key => !existingCache.includes(key));
-    newCache.forEach(key => { delete require.cache[key]; });
+    const cacheAfter = Object.keys(require.cache).filter(key => !cacheBefore.includes(key));
+    cacheAfter.forEach(key => { delete require.cache[key]; });
   }
 };

@@ -7,7 +7,7 @@ const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
 const uuid = require('uuid/v4');
 
-const devMode = require('./devMode');
+const devMode = require('./dev-mode');
 const ChtCoreLibs = require('./cht-core-libs');
 const rulesEngineAdapter = require('./rules-engine-adapter');
 const toDate = require('./toDate');
@@ -78,11 +78,9 @@ class Harness {
     this.defaultInputs = _.defaults(this.options.inputs, fileBasedDefaults);
     this.options = _.defaults(
       this.options,
-      {
-        useDevMode: process.argv.includes('--dev'),
-        coreVersion: ChtCoreLibs.availableCoreVersions[ChtCoreLibs.availableCoreVersions.length-1],
-      },
+      { useDevMode: process.argv.includes('--dev') },
       _.pick(fileBasedDefaults, 'useDevMode', 'coreVersion'),
+      { coreVersion: ChtCoreLibs.availableCoreVersions[ChtCoreLibs.availableCoreVersions.length-1] },
     );
 
     const minorCoreVersion = ChtCoreLibs.getFormattedVersion(this.options.coreVersion);

@@ -7,17 +7,7 @@ const devRulesEmitter = require('./mock.rules-engine.rules-emitter');
 module.exports = {
   runContactSummary: (appSettingsPath, contact, reports, lineage) => {
     const pathToProject = path.dirname(appSettingsPath);
-
-    const existingCache = Object.keys(require.cache);
-    try {
-      return mockContactSummary(pathToProject, contact, reports, lineage);
-    } finally {
-      const newCache = Object.keys(require.cache).filter(key => !existingCache.includes(key));
-      newCache.forEach(key => { 
-        console.log(`Bust cache cs: ${key}`);
-        delete require.cache[key];
-      });
-    }
+    return mockContactSummary(pathToProject, contact, reports, lineage);
   },
 
   mockRulesEngine: (core, appSettingsPath) => {
