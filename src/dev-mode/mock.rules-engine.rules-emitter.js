@@ -7,7 +7,7 @@
  * https://github.com/medic/medic-conf-test-harness/pull/103
  * @module mock.rules-engine.rules-emitter
  */
-const nootils = require('medic-nootils');
+const nootils = require('cht-core-3-11/shared-libs/rules-engine/node_modules/medic-nootils');
 const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
 
 const mockNoolsLib = require('./mock.medic-conf.nools-lib');
