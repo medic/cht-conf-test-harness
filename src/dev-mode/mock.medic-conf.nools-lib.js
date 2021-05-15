@@ -1,9 +1,9 @@
 /**
- * @module mock.medic-conf.nools-lib
  * This is a mocked version of medic-conf's nools lib.js which is an entry-point for medic-conf's compile-app-settings bundle.
  * https://github.com/medic/medic-conf/blob/master/src/nools/lib.js
  * 
  * It behaves the same as the production version but can be run inside node require() instead of relying on the resolution aliasing provided by webpack.
+ * @module mock.medic-conf.nools-lib
  */
 module.exports.pathToProject = undefined;
 module.exports = function(c, user, Utils, Task, Target, emit) {

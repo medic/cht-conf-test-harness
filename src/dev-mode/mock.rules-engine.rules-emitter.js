@@ -1,11 +1,11 @@
 /**
- * @module mock.rules-engine.rules-emitter
  * This is a mocked version of cht-core's rules-engine's rules-emitter module
  * https://github.com/medic/cht-core/blob/master/shared-libs/rules-engine/src/rules-emitter.js
  * 
  * This mock provides (nearly?) identical functionally to the production emitter but avoids the bundled result code from medic-conf and avoids nools. The behaviour 
  * of the system may not be identical for all cases, but provides some useful experiences for test authors.
  * https://github.com/medic/medic-conf-test-harness/pull/103
+ * @module mock.rules-engine.rules-emitter
  */
 const nootils = require('medic-nootils');
 const RegistrationUtils = require('cht-core-3-11/shared-libs/registration-utils');
