@@ -10,8 +10,9 @@ const getFormattedVersion = (version) => {
     return false;
   }
 
+  version = semver.coerce(version);
   if (!semver.valid(version)) {
-    throw Error('Harness configuration file (eg. harness.defaults.json) attribute coreVersion must be a valid semver eg: { coreVersion: "3.11.2" }');
+    throw Error(`Harness configuration file (eg. harness.defaults.json) attribute coreVersion:"${version}" must be a valid semver eg: { coreVersion: "3.11.2" }`);
   }
 
   const versionKey = `${semver.major(version)}.${semver.minor(version)}`;

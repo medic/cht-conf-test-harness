@@ -1,6 +1,5 @@
 {
-  "coreVersion": "3.10",
-  "useDevMode": false,
+  "coreVersion": "3.10.3",
   "user": {
     "_id": "user_contact_id",
     "name": "CHW",
