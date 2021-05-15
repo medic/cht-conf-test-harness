@@ -18,7 +18,7 @@ module.exports = {
       console.warn('******************************************');
       console.warn('**** medic-conf-test-harness dev mode ****');
       console.warn('******************************************');
-      Object.assign(core.RulesEmitter, devRulesEmitter);
+      Object.assign(core.RulesEmitter, devRulesEmitter(core));
     }
   },
 };

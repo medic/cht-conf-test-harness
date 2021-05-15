@@ -78,10 +78,13 @@ class Harness {
     this.defaultInputs = _.defaults(this.options.inputs, fileBasedDefaults);
     this.options = _.defaults(
       this.options,
-      { useDevMode: process.argv.includes('--dev') },
       _.pick(fileBasedDefaults, 'useDevMode', 'coreVersion'),
       { coreVersion: ChtCoreLibs.availableCoreVersions[ChtCoreLibs.availableCoreVersions.length-1] },
     );
+
+    if (process.argv.includes('--dev')) {
+      this.options.useDevMode = true;
+    }
 
     const formattedCoreVersion = ChtCoreLibs.getFormattedVersion(this.options.coreVersion);
     this.core = ChtCoreLibs.getCore(formattedCoreVersion);
