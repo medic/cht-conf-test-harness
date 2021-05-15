@@ -52,7 +52,7 @@ class Harness {
    * @param {string} [options.contactXFormFolderPath=path.join(options.xformFolderPath, 'contact')] Path used by the fillContactForm interface
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
-   * @param {string} [options.coreVersion=core_version harness configuration file] The version of cht-core to emulate @example "3.8"
+   * @param {string} [options.coreVersion=harness configuration file] The version of cht-core to emulate @example "3.8.0"
    * @param {HarnessInputs} [options.inputs=loaded from harnessDataPath] The default {@link HarnessInputs} for loading and completing a form
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
@@ -75,10 +75,15 @@ class Harness {
 
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
     this.defaultInputs = _.defaults(this.options.inputs, fileBasedDefaults);
-    this.options.coreVersion = this.options.coreVersion ||
-      (fileBasedDefaults && ChtCoreLibs.getVersion(fileBasedDefaults)) ||
-      ChtCoreLibs.availableCoreVersions[ChtCoreLibs.availableCoreVersions.length-1];
-    this.core = ChtCoreLibs.getCore(this.options.coreVersion);
+    this.options = _.defaults(
+      this.options,
+      { useDevMode: process.argv.includes('--dev') },
+      _.pick(fileBasedDefaults, 'useDevMode', 'coreVersion'),
+      { coreVersion: ChtCoreLibs.availableCoreVersions[ChtCoreLibs.availableCoreVersions.length-1] },
+    );
+
+    const formattedCoreVersion = ChtCoreLibs.getFormattedVersion(this.options.coreVersion);
+    this.core = ChtCoreLibs.getCore(formattedCoreVersion);
 
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
