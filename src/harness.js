@@ -7,6 +7,7 @@ const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
 const uuid = require('uuid/v4');
 
+const devMode = require('./dev-mode');
 const ChtCoreLibs = require('./cht-core-libs');
 const rulesEngineAdapter = require('./rules-engine-adapter');
 const toDate = require('./toDate');
@@ -91,6 +92,10 @@ class Harness {
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
+    }
+
+    if (this.options.useDevMode) {
+      devMode.mockRulesEngine(this.core, this.options.appSettingsPath);
     }
 
     clearSync(this);
@@ -575,8 +580,12 @@ class Harness {
       }
     }
     
-    const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
-    return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
+    if (this.options.useDevMode) {
+      return devMode.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage);
+    } else {
+      const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
+      return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
+    }
   }
 }
 
