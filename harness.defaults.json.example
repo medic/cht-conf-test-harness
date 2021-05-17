@@ -24,7 +24,7 @@
    * This simulates the documents on the user's device when the test beings. At a minimum, it should contain the contact documents referenced by `userContactId` and `subjectId` and
    * probably the documents required to hydrate them
    */
-  "mockedDocuments": [
+  "docs": [
     {
       "_id": "patient_id",
       "type": "person",

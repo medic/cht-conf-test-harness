@@ -25,7 +25,7 @@
 
   "subjectId": "patient_id",
 
-  "mockedDocuments": [
+  "docs": [
     {
       "_id": "patient_id",
       "type": "person",

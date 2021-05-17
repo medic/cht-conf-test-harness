@@ -675,13 +675,13 @@ const clearSync = (self) => {
 
   sinon.restore();
 
-  const { user, mockedDocuments = [] } = self.options.inputs;
+  const { user, docs = [] } = self.options.inputs;
 
   // TODO: Should pushMockedDoc just minify first?
-  mockedDocuments.forEach(doc => self.rulesEngineAdapter.minify(doc));
+  docs.forEach(doc => self.rulesEngineAdapter.minify(doc));
   const minifiedUser = user ? _.cloneDeep(user) : { _id: 'default_user', type: 'contact' };
   self.rulesEngineAdapter.minify(minifiedUser);
-  self.pushMockedDoc(minifiedUser, ...mockedDocuments);
+  self.pushMockedDoc(minifiedUser, ...docs);
   if (!self.subject) {
     self.pushMockedDoc({ _id: self.options.inputs.subjectId || 'default_subject', type: 'contact' });
   }
