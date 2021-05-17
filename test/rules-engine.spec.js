@@ -33,10 +33,10 @@ for (const coreVersion of availableCoreVersions) {
         await harness.setNow('2000-01-07');
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
-        expect(tasks[0]._id).to.include('~org.couchdb.user:user_contact_id~');
+        expect(tasks[0]._id).to.include(`~org.couchdb.user:${harness.user._id}~`);
         expect(tasks[0]).to.nested.include({
-          owner: 'patient_id_data',
-          requester: 'patient_id_data',
+          owner: 'patient_id',
+          requester: 'patient_id',
           state: 'Ready',
           'emission.dueDate': '2000-01-07',
           'emission.icon': 'newborn',
@@ -80,14 +80,14 @@ for (const coreVersion of availableCoreVersions) {
       });
     });
 
-    describe('getTaret', () => {
+    describe('getTarget', () => {
       it('basic trigger', async () => {
         const supervisorContact = {
           _id: 'super_id',
           type: 'health_center',
           reported_date: 1,
         };
-        harness.state.contacts = [supervisorContact];
+        harness.state.contacts = [harness.user, supervisorContact];
     
         harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'super_id', reported_date: Date.now() });
         harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'super_id', reported_date: Date.now() });
@@ -99,9 +99,9 @@ for (const coreVersion of availableCoreVersions) {
       });
     
       it('reports outside of current month are not considered', async () => {
-        harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'parent_id_data', reported_date: 1000000000000 });
-        harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'parent_id_data' });
-        harness.pushMockedDoc({ form: 'individual_feedback_confirmation', patient_id: 'parent_id_data' });
+        harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'chw_area_contact_id', reported_date: 1000000000000 });
+        harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'chw_area_contact_id' });
+        harness.pushMockedDoc({ form: 'individual_feedback_confirmation', patient_id: 'chw_area_contact_id' });
         
         const targets = await harness.getTargets({ type: 'chv-receive-supervision-visit' });
         expect(targets).to.have.property('length', 1);
@@ -121,7 +121,7 @@ for (const coreVersion of availableCoreVersions) {
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
         
-        expect(tasks[0].emission.actions[0]).to.include({ forId: 'patient_id_data' });
+        expect(tasks[0].emission.actions[0]).to.include({ forId: 'patient_id' });
         await harness.loadAction(tasks[0].emission.actions[0]);
         const followupResult = await harness.fillForm(['no_come_back']);
         expect(followupResult.errors).to.be.empty;
@@ -147,7 +147,7 @@ for (const coreVersion of availableCoreVersions) {
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
         
-        expect(tasks[0].emission).to.include({ forId: 'patient_id_data' });
+        expect(tasks[0].emission).to.include({ forId: 'patient_id' });
         const followupResult = await harness.loadAction(tasks[0], ['no_come_back']);
         expect(followupResult.errors).to.be.empty;
 

@@ -21,24 +21,6 @@ describe('Harness tests', () => {
     expect(harness.state.pageContent).to.include('id="pnc_followup"');
   });
 
-  describe('default contact', () => {
-    it('#92 - default contact information is linked', () => {
-      const defaultContact = harness.state.contacts.find(c => c.type === 'person');
-      expect(defaultContact.abc).to.be.undefined;
-      harness.content.contact.abc = '123';
-      expect(defaultContact.abc).to.eq('123');
-      defaultContact.abc = '456';
-      expect(harness.content.contact.abc).to.eq('456');
-    });
-
-    it('default contact information link may be broken', () => {
-      const defaultContact = harness.state.contacts.find(c => c.type === 'person');
-      expect(defaultContact.abc).to.be.undefined;
-      harness.content.contact = { abc: '123' };
-      expect(defaultContact.abc).to.be.undefined;
-    });
-  });
-
   describe('time management', () => {
     it('set and retrieve now', async () => {
       const expected = '1990-02-01';
@@ -149,7 +131,7 @@ describe('Harness tests', () => {
       expect(result.report.fields).to.deep.include({
         patient_name: 'Patient Name',
         patient_sex: 'female',
-        patient_id: 'patient_id_data',
+        patient_id: 'patient_id',
         s_pnc_visits: {
           s_pnc_visit: 'no',
           s_pnc_planned_date_show: '',
@@ -226,15 +208,15 @@ describe('Harness tests', () => {
   
   describe('clear', () => {
     it('content attribute is reset', () => {
-      const originalDoB = harness.content.contact.date_of_birth;
+      const originalDoB = harness.subject.date_of_birth;
       harness.content.foo = 'bar';
       expect(originalDoB).to.be.not.undefined;
       expect(harness.content.foo).to.eq('bar');
       
-      harness.content.contact.date_of_birth = 'not_original';
+      harness.subject.date_of_birth = 'not_original';
       harness.clear();
 
-      expect(harness.content.contact.date_of_birth).to.eq(originalDoB);
+      expect(harness.subject.date_of_birth).to.eq(originalDoB);
       expect(harness.content.foo).to.be.undefined;
     });
 
@@ -247,30 +229,12 @@ describe('Harness tests', () => {
       expect(new Date().getTime()).to.not.eq(expectedTime);
     });
 
-    it('contact summary is cleared', () => {
-      // defaults to calculated value
-      expect(harness.contactSummary.fields.length).to.be.gt(1);
-      harness.contactSummary = { fields: [], cards: [] };
-      expect(harness.contactSummary.fields.length).to.eq(0);
-      
-      harness.clear();
-      expect(harness.contactSummary.fields.length).to.be.gt(1);
-    });
-
-    it('contact summary can be unassigned', () => {
-      harness.contactSummary = { fields: [], cards: [] };
-      expect(harness.contactSummary.fields.length).to.eq(0);
-
-      harness.contactSummary = undefined;
-      expect(harness.contactSummary.fields.length).to.be.gt(1);
-    });
-
     it('user is reset', () => {
       harness.user.foo = 'bar';
       expect(harness.user.name).to.eq('CHW');
       expect(harness.user.foo).to.eq('bar');
       
-      harness.content.contact.date_of_birth = 'not_original';
+      harness.subject.date_of_birth = 'not_original';
       harness.clear();
 
       expect(harness.user.name).to.eq('CHW');

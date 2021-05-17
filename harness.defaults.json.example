@@ -1,57 +1,69 @@
 {
-  "coreVersion": "3.11",
-  "user": {
-    "name": "CHW",
-    "date_of_birth": "1971-03-10",
-    "phone": "+17782473214",
-    "reported_date": 1550559625153,
-    "type": "person",
-    "parent": {
-      "_id": "chw_area_id",
-      "name": "CHW Area",
-      "parent": {
-        "_id": "7149fcd2-b3ff-4f5d-ab7d-185aa54c85ed"
-      },
-      "contact": {
-        "name": "CHW Area Contact",
-        "date_of_birth": "1971-03-10",
-        "phone": "+17782475555",
-        "reported_date": 1550559625153,
-        "type": "person",
-        "parent": {
-          "_id": "chw_area_id",
-          "parent": {
-            "_id": "district_id"
-          }
-        },
-        "_id": "chw_area_contact_id",
-        "_rev": "2-a"
-      },
-      "type": "health_center",
-      "reported_date": 1550559625153,      
-      "_rev": "1-a"
-    }
-  },
-  "content": {
-    "source": "action",
-    "contact": {
+  "coreVersion": "3.11.0",
+
+  /**
+  * userContactId represents the default user that is logged into the system. Change this data to test system behaviour that depends on the user experiencing it.
+  *
+  * In harness.fillForm(), this is the data bound to `inputs/user` (hydrated)
+  * In harness.getTarget(), this is the global `user` object available in targets.js. (minimized)
+  * In harness.getTasks(), this is the global `user` object available in tasks.js. (minimized)
+  * In contact-summary code, this is the global `user` object in contact-summary.templated.js. (hydrated)
+  */
+  "userContactId": "user_id",
+
+  /**
+   * subjectId represents the default contact that is being acted on
+   *
+   * In harness.fillForm(), this is the contact's information pasesed into the form - the data bound to `inputs/contact` or available in `instance('contact-summary')/context` (hydrated)
+   */
+  "subjectId": "patient_id",
+
+  /**
+   * knownContactDocuments is an array of minimified contact knownContactDocuments.
+   *
+   * This simulates the documents on the user's device when the test beings. At a minimum, it should contain the contact documents referenced by `userContactId` and `subjectId` and
+   * probably the documents required to hydrate them
+   */
+  "mockedDocuments": [
+    {
+      "_id": "patient_id",
       "type": "person",
-      "parent": {
-        "_id": "patient_parent_id",
-        "parent": {
-          "_id": "chw_area_id",
-          "parent": {
-            "_id": "district_id"
-          }
-        }
-      },
       "name": "Patient Name",
       "role": "patient",
       "date_of_birth": "1970-07-09",
       "sex": "female",
       "reported_date": 1550762498368,
-      "_id": "patient_id",
-      "_rev": "1-b"
+      "parent": {
+        "_id": "family_id",
+        "parent": {
+          "_id": "chw_area_id",
+          "parent": {
+            "_id": "supervisor_area_id"
+          }
+        }
+      }
+    },
+
+    {
+      "_id": "user_contact_id",
+      "name": "CHW",
+      "type": "person",
+      "reported_date": 1550761498368,
+      "parent": {
+        "_id": "chw_area_id",
+        "parent": {
+          "_id": "supervisor_area_id"
+        },
+        "contact": {
+          "_id": "chw_area_contact_id",
+          "parent": {
+            "_id": "chw_area_id",
+            "parent": {
+              "_id": "district_id"
+            }
+          }
+        }
+      }
     }
-  }
+  ]
 }

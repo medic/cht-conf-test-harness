@@ -11,7 +11,10 @@ describe('initializations', () => {
 
     expect(harness.state).to.deep.eq({
       console: [],
-      contacts: [],
+      contacts: [
+        { _id: 'default_user', type: 'contact' },
+        { _id: 'default_subject', type: 'contact' },
+      ],
       reports: [],
     });
 

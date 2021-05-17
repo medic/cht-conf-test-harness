@@ -35,6 +35,40 @@ class RulesEngineAdapter {
     const result = await this.pouchdb.allDocs(options);
     return result.rows.map(row => row.doc);
   }
+
+  async fetchHydratedDoc(id, state) {
+    const { updatedSubjectIds, newPouchdbState } = await syncPouchWithState(this.core, this.pouchdb, this.pouchdbStateHash, state);
+    if (this.rulesEngine.isEnabled()) {
+      await this.rulesEngine.updateEmissionsFor(updatedSubjectIds);
+    }
+    this.pouchdbStateHash = newPouchdbState;
+
+    try {
+      return await this.core.Lineage(Promise, this.pouchdb).fetchHydratedDoc(id);
+      
+    } catch (err) {
+      throw Error(`fetchHydratedDoc failed for id:${id} error: ${err}`);
+    }
+  }
+
+  async buildLineage(id, state) {
+    const { updatedSubjectIds, newPouchdbState } = await syncPouchWithState(this.core, this.pouchdb, this.pouchdbStateHash, state);
+    if (this.rulesEngine.isEnabled()) {
+      await this.rulesEngine.updateEmissionsFor(updatedSubjectIds);
+    }
+    this.pouchdbStateHash = newPouchdbState;
+
+    const lineageLib = this.core.Lineage(Promise, this.pouchdb);
+    const lineage = await lineageLib.fetchLineageById(id);
+    const contactDocs = await lineageLib.fetchContacts(lineage);
+    await lineageLib.fillContactsInDocs(lineage, contactDocs);
+    lineage.shift();
+    return lineage;
+  }
+
+  minify(doc) {
+    return this.core.Lineage(Promise, this.pouchdb).minify(doc);
+  }
 }
 
 const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, state) => {

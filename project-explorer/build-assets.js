@@ -38,7 +38,7 @@ const fileContent = JSON.stringify({
   content: harness.content,
   contactSummary: {
     id: 'contact-summary',
-    xmlStr: jsonToXml({ context: harness.getContactSummary().context }),
+    xmlStr: jsonToXml({ context: await harness.getContactSummary().context }),
   },
 }, null, 2);
 fs.writeFileSync(harnessDefaultDestinationPath, fileContent);
