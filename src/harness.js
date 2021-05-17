@@ -624,7 +624,9 @@ class Harness {
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
     } else {
-      resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, this.state);
+      const user = await this.resolveMock(this.options.inputs.user);
+      const subject = await this.resolveMock(this.options.inputs.subject);
+      resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, stateEnsuringPresenceOfMocks(this.state, user, subject));
     }
     
     if (this.options.useDevMode) {
