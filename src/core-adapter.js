@@ -15,6 +15,7 @@ class CoreAdapter {
     this.core = core;
     this.rulesEngine = core.RulesEngineCore(this.pouchdb);
     this.pouchdbStateHash = {};
+    this.lineageLib = core.Lineage(Promise, this.pouchdb);
   }
 
   async fetchTargets(user, state) {
@@ -44,7 +45,7 @@ class CoreAdapter {
     this.pouchdbStateHash = newPouchdbState;
 
     try {
-      return await this.core.Lineage(Promise, this.pouchdb).fetchHydratedDoc(id);
+      return await this.lineageLib.fetchHydratedDoc(id);
     } catch (err) {
       throw Error(`fetchHydratedDoc failed for id:${id} error: ${err}`);
     }
@@ -57,16 +58,15 @@ class CoreAdapter {
     }
     this.pouchdbStateHash = newPouchdbState;
 
-    const lineageLib = this.core.Lineage(Promise, this.pouchdb);
-    const lineage = await lineageLib.fetchLineageById(id);
-    const contactDocs = await lineageLib.fetchContacts(lineage);
-    await lineageLib.fillContactsInDocs(lineage, contactDocs);
+    const lineage = await this.lineageLib.fetchLineageById(id);
+    const contactDocs = await this.lineageLib.fetchContacts(lineage);
+    await this.lineageLib.fillContactsInDocs(lineage, contactDocs);
     lineage.shift();
     return lineage;
   }
 
   minify(doc) {
-    return this.core.Lineage(Promise, this.pouchdb).minify(doc);
+    return this.lineageLib.minify(doc);
   }
 }
 
