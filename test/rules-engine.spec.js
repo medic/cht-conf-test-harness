@@ -82,16 +82,9 @@ for (const coreVersion of availableCoreVersions) {
 
     describe('getTarget', () => {
       it('basic trigger', async () => {
-        const supervisorContact = {
-          _id: 'super_id',
-          type: 'health_center',
-          reported_date: 1,
-        };
-        harness.state.contacts = [await harness.resolveMock(harness.user), supervisorContact];
-    
-        harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'super_id', reported_date: Date.now() });
-        harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'super_id', reported_date: Date.now() });
-        harness.pushMockedDoc({ form: 'individual_feedback_confirmation', patient_id: 'super_id', reported_date: Date.now() });
+        harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'chw_area_id', reported_date: Date.now() });
+        harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'chw_area_id', reported_date: Date.now() });
+        harness.pushMockedDoc({ form: 'individual_feedback_confirmation', patient_id: 'chw_area_id', reported_date: Date.now() });
         
         const targets = await harness.getTargets({ type: 'chv-receive-supervision-visit' });
         expect(targets).to.have.property('length', 1);
@@ -99,9 +92,9 @@ for (const coreVersion of availableCoreVersions) {
       });
     
       it('reports outside of current month are not considered', async () => {
-        harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'chw_area_contact_id', reported_date: 1000000000000 });
-        harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'chw_area_contact_id' });
-        harness.pushMockedDoc({ form: 'individual_feedback_confirmation', patient_id: 'chw_area_contact_id' });
+        harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'chw_area_id', reported_date: 1000000000000 });
+        harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'chw_area_id' });
+        harness.pushMockedDoc({ form: 'individual_feedback_confirmation', patient_id: 'chw_area_id' });
         
         const targets = await harness.getTargets({ type: 'chv-receive-supervision-visit' });
         expect(targets).to.have.property('length', 1);

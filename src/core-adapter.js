@@ -45,7 +45,6 @@ class CoreAdapter {
 
     try {
       return await this.core.Lineage(Promise, this.pouchdb).fetchHydratedDoc(id);
-      
     } catch (err) {
       throw Error(`fetchHydratedDoc failed for id:${id} error: ${err}`);
     }

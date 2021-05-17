@@ -316,7 +316,7 @@ class Harness {
    */
   async getTasks(options) {
     options = _.defaults(options, {
-      subject: await this.resolveMock(this.options.inputs.subject),
+      subject: this.options.inputs.subject,
     });
 
     if (options.resolved) {
@@ -328,14 +328,15 @@ class Harness {
     }
 
     const user = await this.resolveMock(options.user || this.options.inputs.user);
-    const tasks = await this.coreAdapter.fetchTasksFor(user, this._state);
+    const subject = await this.resolveMock(options.subject, { hydrate: false });
+    const tasks = await this.coreAdapter.fetchTasksFor(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
 
     tasks.forEach(task => task.emission.actions.forEach(action => {
       action.forId = task.emission.forId; // required to hydrate in loadAction
     }));
 
     return tasks
-      .filter(task => !options.subject || task.owner === options.subject._id) // TODO: ????
+      .filter(task => !options.subject || task.owner === subject._id) // TODO: ????
       .filter(task => !options.title || task.emission.title === options.title);
   }
 
@@ -359,7 +360,7 @@ class Harness {
   async countTaskDocsByState(options) {
     options = _.defaults(options, {
       freshTaskDocs: true,
-      subject: await this.resolveMock(this.options.inputs.subject),
+      subject: this.options.inputs.subject,
       title: undefined,
     });
 
@@ -367,9 +368,18 @@ class Harness {
       await this.getTasks(options);
     }
 
+    const buildFilterBySubject = async () => {
+      if (!options.subject) {
+        return () => true;
+      }
+
+      const subject = await this.resolveMock(options.subject);
+      return taskDoc => subject._id === taskDoc.owner;
+    };
+    const filterBySubject = await buildFilterBySubject();
     const allTaskDocs = await this.coreAdapter.fetchTaskDocs();
     const relevantTaskDocs = allTaskDocs
-      .filter(taskDoc => !options.subject || options.subject._id === taskDoc.owner)
+      .filter(filterBySubject)
       .filter(taskDoc => !options.title || options.title === taskDoc.emission.title);
     const summary = {
       Draft: 0,
@@ -395,6 +405,7 @@ class Harness {
   async getTargets(options) {
     options = _.defaults(options, {
       type: undefined,
+      subject: this.options.inputs.subject,
       user: undefined,
     });
     
@@ -403,7 +414,8 @@ class Harness {
     }
     
     const user = await this.resolveMock(options.user || this.options.inputs.user);
-    const targets = await this.coreAdapter.fetchTargets(user, this._state);
+    const subject = await this.resolveMock(options.subject, { hydrate: false });
+    const targets = await this.coreAdapter.fetchTargets(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
     
     return targets
       .filter(target =>
@@ -518,9 +530,14 @@ class Harness {
   }
   set subject(value) { this.options.inputs.subject = value; }
 
-  async resolveMock(mock) {
+  async resolveMock(mock, options = {}) {
+    options = _.defaults(options, { hydrate: true });
     if (typeof mock === 'string') {
-      return this.coreAdapter.fetchHydratedDoc(mock, this.state);
+      if (options.hydrate) {
+        return this.coreAdapter.fetchHydratedDoc(mock, this.state);
+      }
+
+      return this.state.contacts.find(contact => contact._id === mock);
     }
   
     return mock;
@@ -566,12 +583,11 @@ class Harness {
           fields: {},
         });
 
-        const subjectId = this.core.RegistrationUtils.getSubjectId(report);
-        if (!subjectId) {
+        const reportSubjectId = this.core.RegistrationUtils.getSubjectId(report);
+        if (!reportSubjectId) {
           // Legacy behaviour from harness@1.x
-          const defaultSubjectId = this.options.inputs.subjectId;
-          console.warn(`pushMockedDoc: report without subject id (patient_id, patient_uuid, place_id, etc). Setting default to "${defaultSubjectId}".`);
-          report.patient_id = defaultSubjectId; // patient_uuid is not available at root level
+          console.warn(`pushMockedDoc: report without subject id (patient_id, patient_uuid, place_id, etc). Setting default to "${this.subject._id}".`);
+          report.patient_id = this.subject._id; // patient_uuid is not available at root level
         }
 
         this._state.reports.push(report);
@@ -680,6 +696,15 @@ const clearSync = (self) => {
 
   sinon.restore();
   self.pushMockedDoc(...self.options.inputs.docs);
+};
+
+const stateEnsuringPresenceOfMocks = (state, ...mocks) => {
+  const stragglers = _.uniqBy(mocks.filter(mock => !state.contacts.some(contact => contact._id === mock._id), '_id'));
+  return {
+    contacts: [...state.contacts, ...stragglers],
+    reports: state.reports,
+  };
+
 };
 
 module.exports = Harness;
