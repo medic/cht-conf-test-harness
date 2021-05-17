@@ -9,7 +9,7 @@ const uuid = require('uuid/v4');
 
 const devMode = require('./dev-mode');
 const ChtCoreLibs = require('./cht-core-libs');
-const rulesEngineAdapter = require('./rules-engine-adapter');
+const coreAdapter = require('./core-adapter');
 const toDate = require('./toDate');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
@@ -79,7 +79,13 @@ class Harness {
       this.options.inputs,
       fileBasedDefaults,
       {
+        subject: 'default_subject',
+        user: 'default_user',
         content: { source: 'test' },
+        docs: [
+          { _id: 'default_user', type: 'contact' },
+          { _id: 'default_subject', type: 'contact' },
+        ],
       }
     );
     this.options = _.defaults(
@@ -92,14 +98,13 @@ class Harness {
       this.options.useDevMode = true;
     }
 
-    const formattedCoreVersion = ChtCoreLibs.getFormattedVersion(this.options.coreVersion);
-    this.core = ChtCoreLibs.getCore(formattedCoreVersion);
-
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
     }
 
+    const formattedCoreVersion = ChtCoreLibs.getFormattedVersion(this.options.coreVersion);
+    this.core = ChtCoreLibs.getCore(formattedCoreVersion);
     if (this.options.useDevMode) {
       devMode.mockRulesEngine(this.core, this.options.appSettingsPath);
     }
@@ -173,9 +178,9 @@ class Harness {
 
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
     
-    const content = Object.assign({}, inputs.content || this.content, { contact:  await this.rulesEngineAdapter.fetchHydratedDoc(inputs.subjectId || this.subject._id, this.state) });
-    const user = inputs.user || await this.rulesEngineAdapter.fetchHydratedDoc(this.user._id, this.state);
-    const contactSummary = inputs.contactSummary || await this.getContactSummary();
+    const content = await this.resolveContent(inputs.content, inputs.subject);
+    const user = await this.resolveMock(inputs.user || this.options.inputs.user);
+    const contactSummary = inputs.contactSummary || await this.getContactSummary(content.contact);
     
     const serializedContactSummary = serializeContactSummary(contactSummary);
     await doLoadForm(this, this.page, xformFilePath, content, user, serializedContactSummary);
@@ -191,7 +196,9 @@ class Harness {
    */
   async fillContactForm(contactType, ...answers) {
     const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
-    await doLoadForm(this, this.page, xformFilePath, {}, this.options.user);
+
+    const user = await this.resolveMock(this.options.inputs.user);
+    await doLoadForm(this, this.page, xformFilePath, {}, user);
     this._state.pageContent = await this.page.content();
     
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
@@ -309,9 +316,7 @@ class Harness {
    */
   async getTasks(options) {
     options = _.defaults(options, {
-      title: undefined,
-      subject: this.subject._id,
-      user: undefined,
+      subject: await this.resolveMock(this.options.inputs.subject),
     });
 
     if (options.resolved) {
@@ -321,16 +326,16 @@ class Harness {
     if (options.now) {
       throw Error('getTasks({ now }) is not supported. See setNow() for mocking time.');
     }
-    
-    const user = options.user || await this.rulesEngineAdapter.fetchHydratedDoc(this.user._id, this._state);
-    const tasks = await this.rulesEngineAdapter.fetchTasksFor(user, this._state);
+
+    const user = await this.resolveMock(options.user || this.options.inputs.user);
+    const tasks = await this.coreAdapter.fetchTasksFor(user, this._state);
 
     tasks.forEach(task => task.emission.actions.forEach(action => {
       action.forId = task.emission.forId; // required to hydrate in loadAction
     }));
 
     return tasks
-      .filter(task => !options.subject || task.owner === options.subject) // TODO: ????
+      .filter(task => !options.subject || task.owner === options.subject._id) // TODO: ????
       .filter(task => !options.title || task.emission.title === options.title);
   }
 
@@ -354,6 +359,7 @@ class Harness {
   async countTaskDocsByState(options) {
     options = _.defaults(options, {
       freshTaskDocs: true,
+      subject: await this.resolveMock(this.options.inputs.subject),
       title: undefined,
     });
 
@@ -361,8 +367,10 @@ class Harness {
       await this.getTasks(options);
     }
 
-    const allTaskDocs = await this.rulesEngineAdapter.fetchTaskDocs();
-    const relevantTaskDocs = allTaskDocs.filter(taskDoc => !this.options.title || this.options.title === taskDoc.emission.title);
+    const allTaskDocs = await this.coreAdapter.fetchTaskDocs();
+    const relevantTaskDocs = allTaskDocs
+      .filter(taskDoc => !options.subject || options.subject._id === taskDoc.owner)
+      .filter(taskDoc => !options.title || options.title === taskDoc.emission.title);
     const summary = {
       Draft: 0,
       Ready: 0,
@@ -394,8 +402,8 @@ class Harness {
       throw Error('getTargets({ now }) is not supported. See setNow() for mocking time.');
     }
     
-    const user = options.user || await this.rulesEngineAdapter.fetchHydratedDoc(this.user._id, this._state);
-    const targets = await this.rulesEngineAdapter.fetchTargets(user, this._state);
+    const user = await this.resolveMock(options.user || this.options.inputs.user);
+    const targets = await this.coreAdapter.fetchTargets(user, this._state);
     
     return targets
       .filter(target =>
@@ -450,17 +458,9 @@ class Harness {
 
       return taskDoc; // assume it is an action
     };
-    const action = getActionFromParam();
 
-    // When an action is clicked after Rules-v2 the "emissions.content.contact" object is hydrated
-    const subject = this.state.contacts.find(contact => action.forId && contact._id === action.forId);
-    const content = Object.assign(
-      {},
-      action.content,
-      { contact: subject || this.content.contact },
-    );
-    
-    let result = await this.loadForm(action.form, { content });
+    const action = getActionFromParam();
+    let result = await this.loadForm(action.form, { content: action.content });
     if (answers.length) {
       result = await this.fillForm(...answers);
     }
@@ -479,42 +479,51 @@ class Harness {
   }
 
   /**
-   * `user` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
-   */
-  get user() { return this.options.inputs.user; }
-  set user(value) {
-    const userId = value._id;
-    const existing = this.state.contacts.findIndex(contact => contact._id === userId );
-    this.rulesEngineAdapter.minify(value);
-    if (existing >= 0) {
-      this.state.contacts[existing] = value;
-    } else {
-      this.pushMockedDoc(value);
-    }
-    this.options.inputs.user = value;
-  }
-
-  /**
    * `coreVersion` is the version of the cht-core that is being emulated in testing (eg. 3.9.0)
    */
   get coreVersion() { return this.options.coreVersion; }
 
   /**
+   * `user` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
+   */
+  get user() {
+    const { user } = this.options.inputs;
+    if (typeof user === 'string') {
+      return this.state.contacts.find(contact => contact._id === user);
+    }
+    return user;
+  }
+  set user(value) { this.options.inputs.user = value; }
+
+  /**
    * `content` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
    */
   get content() { return this.options.inputs.content; }
-
-  get subject() { return this.state.contacts.find(contact => contact._id === this.options.inputs.subjectId ); }
-  set subject(value) {
-    const subjectId = value._id;
-    const existing = this.state.contacts.findIndex(contact => contact._id === subjectId );
-    this.rulesEngineAdapter.minify(value);
-    if (existing >= 0) {
-      this.state.contacts[existing] = value;
-    } else {
-      this.pushMockedDoc(value);
+  set content(value) { this.options.inputs.content = value; }
+  async resolveContent(content = this.content, contact = this.options.inputs.subject) {    
+    if (content && !content.contact) {
+      const resolvedContact = await this.resolveMock(contact);
+      return Object.assign({}, content, { contact: resolvedContact });
     }
-    this.options.inputs.subjectId = value._id;
+
+    return content;
+  }
+
+  get subject() {
+    const { subject } = this.options.inputs;
+    if (typeof subject === 'string') {
+      return this.state.contacts.find(contact => contact._id === subject);
+    }
+    return subject;
+  }
+  set subject(value) { this.options.inputs.subject = value; }
+
+  async resolveMock(mock) {
+    if (typeof mock === 'string') {
+      return this.coreAdapter.fetchHydratedDoc(mock, this.state);
+    }
+  
+    return mock;
   }
 
   /**
@@ -542,6 +551,9 @@ class Harness {
         this.pushMockedDoc(...doc);
         continue;
       }
+
+      // Cht only stores minified contacts and reports - so harness defaults to do the same
+      this.coreAdapter.minify(doc);
 
       const isContact = doc && ContactTypes.includes(doc.type);
       if (isContact) {
@@ -584,26 +596,19 @@ class Harness {
    */
   async getContactSummary(contact, reports, lineage) {
     const self = this;
-    const resolveContact = async () => {
-      if (contact) {
-        return typeof contact === 'string' ? self.rulesEngineAdapter.fetchHydratedDoc(contact, self.state) : contact;
-      }
-
-      return await self.rulesEngineAdapter.fetchHydratedDoc(self.subject._id, self.state);
-    };
-    
-    const resolvedContact = await resolveContact();
+    const resolvedContact = await this.resolveMock(contact || this.options.inputs.subject);
     if (typeof resolvedContact !== 'object') {
       throw `Harness: Cannot get summary for unknown or invalid contact.`;
     }
 
-    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => self.core.RegistrationUtils.getSubjectId(report) === resolvedContact._id);
+    const reportHasMatchingSubject = report => self.core.RegistrationUtils.getSubjectId(report) === resolvedContact._id;
+    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(reportHasMatchingSubject);
     
     let resolvedLineage = [];
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
     } else {
-      resolvedLineage = await this.rulesEngineAdapter.buildLineage(resolvedContact._id, this.state);
+      resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, this.state);
     }
     
     if (this.options.useDevMode) {
@@ -663,7 +668,7 @@ const clearSync = (self) => {
   const contacts = [];
 
   self.options.inputs = _.cloneDeep(self.defaultInputs);
-  self.rulesEngineAdapter = new rulesEngineAdapter(self.core, self.appSettings);
+  self.coreAdapter = new coreAdapter(self.core, self.appSettings);
   
   self._state = {
     console: [],
@@ -674,17 +679,7 @@ const clearSync = (self) => {
   self._now = undefined;
 
   sinon.restore();
-
-  const { user, docs = [] } = self.options.inputs;
-
-  // TODO: Should pushMockedDoc just minify first?
-  docs.forEach(doc => self.rulesEngineAdapter.minify(doc));
-  const minifiedUser = user ? _.cloneDeep(user) : { _id: 'default_user', type: 'contact' };
-  self.rulesEngineAdapter.minify(minifiedUser);
-  self.pushMockedDoc(minifiedUser, ...docs);
-  if (!self.subject) {
-    self.pushMockedDoc({ _id: self.options.inputs.subjectId || 'default_subject', type: 'contact' });
-  }
+  self.pushMockedDoc(...self.options.inputs.docs);
 };
 
 module.exports = Harness;

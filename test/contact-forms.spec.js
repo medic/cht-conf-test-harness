@@ -61,7 +61,6 @@ describe('contact forms', () => {
         notes: '',
         parent: {
           _id: result.contacts[0]._id,
-          parent: {}
         },
         phone: '+1-555-227-7744',
         phone_alternate: '',
@@ -93,7 +92,6 @@ describe('contact forms', () => {
       type: 'contact',
       parent: {
         _id: result.contacts[0]._id,
-        parent: {},
       },
       contact_type: 'person',
     });

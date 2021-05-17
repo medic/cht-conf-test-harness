@@ -36,7 +36,7 @@ describe('getContactSummary', () => {
     const contact = {};
     const reports = [];
     const lineage = [];
-    await await harness.getContactSummary(contact, reports, lineage);
+    await harness.getContactSummary(contact, reports, lineage);
     expect(functionStub.args[0]).to.deep.eq([contact, reports, lineage]);
   }));
 
@@ -47,7 +47,7 @@ describe('getContactSummary', () => {
   });
 
   it('state used when no args given', async () => Harness.__with__({ Function: function() { return functionStub; } })(async () => {
-    await await harness.getContactSummary();
+    await harness.getContactSummary();
 
     const args = functionStub.args[0];
     expect(args.length).to.eq(3);
@@ -71,7 +71,7 @@ describe('getContactSummary', () => {
 
   it('state used for reports and lineage but not contact', async () => Harness.__with__({ Function: function() { return functionStub; } })(async () => {
     const mockContact = { _id: 'foo' };
-    await await harness.getContactSummary(mockContact);
+    await harness.getContactSummary(mockContact);
     expect(functionStub.args[0]).to.deep.eq([mockContact, [], []]);
   }));
 
@@ -80,12 +80,12 @@ describe('getContactSummary', () => {
     const mockReport = { _id: 'bar', patient_id: mockContact._id };
 
     harness.pushMockedDoc(mockReport);
-    await await harness.getContactSummary(mockContact);
+    await harness.getContactSummary(mockContact);
     expect(functionStub.args[0]).to.deep.eq([mockContact, [mockReport], []]);
   }));
 
   it('contact summary for patient_id', async () => {
-    const contactSummary = await await harness.getContactSummary('patient_id');
+    const contactSummary = await harness.getContactSummary('patient_id');
     
     expect(contactSummary.cards).to.deep.eq([]);
     expect(contactSummary.context).to.deep.eq({ muted: false, hh_contact: 'CHP Area 001 Contact' });
@@ -95,7 +95,7 @@ describe('getContactSummary', () => {
 
   it('throws on invalid id', async () => {
     try {
-      await await harness.getContactSummary('dne');
+      await harness.getContactSummary('dne');
       assert.fail('expect throw');
     }
     catch (err) {

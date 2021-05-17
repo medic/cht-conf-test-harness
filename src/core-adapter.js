@@ -1,5 +1,5 @@
 /**
- * @module rules-engine-adapter
+ * @module core-adapter
 */
 
 const md5 = require('md5');
@@ -8,7 +8,7 @@ const uuid = require('uuid/v4');
 
 PouchDB.plugin(require('pouchdb-adapter-memory'));
 
-class RulesEngineAdapter {
+class CoreAdapter {
   constructor(core, appSettings) {
     this.appSettings = appSettings;
     this.pouchdb = new PouchDB(`medic-conf-test-harness-${uuid()}`, { adapter: 'memory' });
@@ -204,4 +204,4 @@ const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
   };
 };
 
-module.exports = RulesEngineAdapter;
+module.exports = CoreAdapter;

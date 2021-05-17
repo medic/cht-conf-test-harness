@@ -1,31 +1,32 @@
 {
   "coreVersion": "3.10.3",
   "useDevMode": false,
-  "user": {
-    "_id": "chw_area_contact_id",
-    "name": "CHW",
-    "type": "person",
-    "reported_date": 1550559625153,
-    "parent": {
-      "_id": "chw_area_id",
+  "user": "chw_area_contact_id",
+  "subject": "patient_id",
+
+  "docs": [
+    {
+      "_id": "chw_area_contact_id",
+      "name": "CHW",
+      "type": "person",
+      "reported_date": 1550559625153,
       "parent": {
-        "_id": "supervisor_area_id"
-      },
-      "contact": {
-        "_id": "chw_area_contact_id",
+        "_id": "chw_area_id",
         "parent": {
-          "_id": "chw_area_id",
+          "_id": "supervisor_area_id"
+        },
+        "contact": {
+          "_id": "chw_area_contact_id",
           "parent": {
-            "_id": "district_id"
+            "_id": "chw_area_id",
+            "parent": {
+              "_id": "district_id"
+            }
           }
         }
       }
-    }
-  },
+    },
 
-  "subjectId": "patient_id",
-
-  "docs": [
     {
       "_id": "patient_id",
       "type": "person",

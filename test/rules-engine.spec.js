@@ -87,7 +87,7 @@ for (const coreVersion of availableCoreVersions) {
           type: 'health_center',
           reported_date: 1,
         };
-        harness.state.contacts = [harness.user, supervisorContact];
+        harness.state.contacts = [await harness.resolveMock(harness.user), supervisorContact];
     
         harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'super_id', reported_date: Date.now() });
         harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'super_id', reported_date: Date.now() });
