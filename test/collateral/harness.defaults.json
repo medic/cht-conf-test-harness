@@ -4,7 +4,7 @@
   "user": "chw_area_contact_id",
   "subject": "patient_id",
 
-  "subjectFilter": true,
+  "ownedBySubject": true,
 
   "docs": [
     {
