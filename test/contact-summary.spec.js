@@ -40,7 +40,7 @@ describe('getContactSummary', () => {
     expect(functionStub.args[0]).to.deep.eq([contact, reports, lineage]);
   }));
 
-  it('mocks datetime - setNow after start', async () => {  
+  it('mocks datetime - setNow after start', async () => {
     const expectedTime = 1000;
     await harness.setNow(expectedTime);
     expect(new Date().getTime()).to.eq(expectedTime);

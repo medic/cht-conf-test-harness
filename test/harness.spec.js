@@ -205,7 +205,7 @@ describe('Harness tests', () => {
       });
     });
   });
-  
+
   describe('clear', () => {
     it('content attribute is reset', () => {
       const originalDoB = harness.subject.date_of_birth;
@@ -220,13 +220,31 @@ describe('Harness tests', () => {
       expect(harness.content.foo).to.be.undefined;
     });
 
-    it('clears mocked datetime', async () => {  
+    it('clears mocked datetime', async () => {
       const expectedTime = 1000;
       await harness.setNow(expectedTime);
       expect(new Date().getTime()).to.eq(expectedTime);
 
       await harness.clear();
       expect(new Date().getTime()).to.not.eq(expectedTime);
+    });
+
+    it('contact summary is cleared', () => {
+      // defaults to calculated value
+      expect(harness.contactSummary.fields.length).to.be.gt(1);
+      harness.contactSummary = { fields: [], cards: [] };
+      expect(harness.contactSummary.fields.length).to.eq(0);
+
+      harness.clear();
+      expect(harness.contactSummary.fields.length).to.be.gt(1);
+    });
+
+    it('contact summary can be unassigned', () => {
+      harness.contactSummary = { fields: [], cards: [] };
+      expect(harness.contactSummary.fields.length).to.eq(0);
+
+      harness.contactSummary = undefined;
+      expect(harness.contactSummary.fields.length).to.be.gt(1);
     });
 
     it('user is reset', () => {
@@ -267,5 +285,5 @@ describe('Harness tests', () => {
       expect(harness.state.contacts).to.deep.include(mockContact);
     });
   });
-  
+
 });

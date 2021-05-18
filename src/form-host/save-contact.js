@@ -110,8 +110,8 @@ const prepareAndAttachSiblingDocs = function(doc, original, siblings) {
                 original[fieldName]._id === value) {
       doc[fieldName] = original[fieldName];
     } else {
-      // TODO: 
-      // 
+      // TODO:
+      //
       // promiseChain = promiseChain.then(function() {
       //   return DB().get(value).then(function(dbFieldValue) {
       //     // In a correctly configured form one of these will be the

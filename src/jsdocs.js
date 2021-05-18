@@ -1,6 +1,6 @@
 /**
- * [CHT Task Documents]{@link https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks}. 
- * @typedef Task 
+ * [CHT Task Documents]{@link https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks}.
+ * @typedef Task
  * @property {uuid} _id
  * @property {string} user The user settings id of the user who calculated and created the document. Used for controlling replication. (eg. org.couchdb.user:agatha)
  * @property {uuid} requester The guid of the contact whose data brought about the creation of the document. Used for controlling cancellation.
@@ -21,7 +21,7 @@
  * @property {boolean} value.pass
  * @property {number} value.total
  * @property {number} value.percent
- * 
+ *
  */
 
 /**

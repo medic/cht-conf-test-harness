@@ -4,7 +4,7 @@ const ChtCoreBundles = require('../dist/all-chts-bundle.dev');
 
 const availableCoreVersions = Object.keys(ChtCoreBundles);
 
-const getFormattedVersion = (version) => {
+const get = version => {
   if (!version) {
     console.error('Harness configuration file (eg. harness.defaults.json) missing attribute eg: { coreVersion: "3.11.2" }');
     return false;
@@ -20,13 +20,9 @@ const getFormattedVersion = (version) => {
     throw Error(`cht-core version ${versionKey} is not supported by medic-conf-test-harness. Supported versions are: ${availableCoreVersions}`);
   }
 
-  return versionKey;
-};
-
-const getCore = version => {
-  const result = ChtCoreBundles[version];
+  const result = ChtCoreBundles[versionKey];
   if (!result) {
-    throw Error(`cht-core version ${version} is not supported by medic-conf-test-harness. Supported versions are: ${availableCoreVersions}`);
+    throw Error(`cht-core version ${versionKey} is not supported by medic-conf-test-harness. Supported versions are: ${availableCoreVersions}`);
   }
 
   return result;
@@ -34,6 +30,5 @@ const getCore = version => {
 
 module.exports = {
   availableCoreVersions,
-  getCore,
-  getFormattedVersion,
+  get,
 };

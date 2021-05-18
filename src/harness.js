@@ -8,8 +8,8 @@ const sinon = require('sinon');
 const uuid = require('uuid/v4');
 
 const devMode = require('./dev-mode');
-const ChtCoreLibs = require('./cht-core-libs');
 const coreAdapter = require('./core-adapter');
+const ChtCoreFactory = require('./cht-core-factory');
 const toDate = require('./toDate');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
@@ -19,7 +19,7 @@ if (!fs.existsSync(pathToHost)) {
 
 /**
  * A harness for testing MedicMobile WebApp configurations
- * 
+ *
  * @example
  * const Harness = require('medic-conf-test-harness');
  * const instance = new Harness({
@@ -32,7 +32,7 @@ if (!fs.existsSync(pathToHost)) {
  * const result = await instance.fillForm(['first page, first answer', 'first page, second answer'], ['second page, first answer']);
  * expect(result.errors).to.be.empty;
  * expect(result.report).to.deep.include({
- *  fields: {   
+ *  fields: {
  *    patient_name: 'Patient Name',
  *    next_pnc: {
  *      s_next_pnc: 'no',
@@ -43,7 +43,7 @@ if (!fs.existsSync(pathToHost)) {
  */
 class Harness {
   /**
-   * 
+   *
    * @param {Object=} options Specify the behavior of the Harness
    * @param {boolean} [options.verbose=false] Detailed console logging when true
    * @param {boolean} [options.logFormErrors=false] Errors displayed by forms will be logged via console when true
@@ -90,10 +90,12 @@ class Harness {
         actionFormFilter: undefined,
       }
     );
+
+    const { availableCoreVersions } = ChtCoreFactory;
     this.options = _.defaults(
       this.options,
       _.pick(fileBasedDefaults, 'useDevMode', 'coreVersion'),
-      { coreVersion: ChtCoreLibs.availableCoreVersions[ChtCoreLibs.availableCoreVersions.length-1] },
+      { coreVersion: availableCoreVersions[availableCoreVersions.length-1] },
     );
 
     if (process.argv.includes('--dev')) {
@@ -105,8 +107,7 @@ class Harness {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
     }
 
-    const formattedCoreVersion = ChtCoreLibs.getFormattedVersion(this.options.coreVersion);
-    this.core = ChtCoreLibs.getCore(formattedCoreVersion);
+    this.core = ChtCoreFactory.get(this.options.coreVersion);
     if (this.options.useDevMode) {
       devMode.mockRulesEngine(this.core, this.options.appSettingsPath);
     }
@@ -117,7 +118,7 @@ class Harness {
   /**
    * Starts a virtual browser. Typically put this in your test's before [hook]{@link https://mochajs.org/#hooks} or alike.
    * @returns {Promise.Browser} Resolves a [Puppeteer Browser]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#class-browser} when the harness is ready.
-   * 
+   *
    * @example
    * before(async () => { return await harness.start(); });
    */
@@ -167,7 +168,7 @@ class Harness {
 
   /**
    * Load a form from the app folder into the harness for testing
-   * 
+   *
    * @param {string} formName Filename of an Xml file describing an XForm to load for testing
    * @param {HarnessInputs} [inputs=Default values specified via constructor] You can override some or all of the {@link HarnessInputs} attributes.
    * @returns {HarnessState} The current state of the form
@@ -191,8 +192,8 @@ class Harness {
   }
 
   /**
-   * Loads and fills a contact form, 
-   * 
+   * Loads and fills a contact form,
+   *
    * @param {string} contactType Type of contact that should be created
    * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
    */
@@ -202,7 +203,7 @@ class Harness {
     const user = await this.resolveMock(this.options.inputs.user);
     await doLoadForm(this, this.page, xformFilePath, {}, user);
     this._state.pageContent = await this.page.content();
-    
+
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
     const fillResult = await this.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
@@ -274,7 +275,7 @@ class Harness {
    * // Load a form and then fill it in
    * await harness.loadForm('my_form');
    * const result = await harness.fillForm(['first page first answer', 'first page second answer'], ['second page first answer']);
-   * 
+   *
    * // Load and fill a form in one statement
    * const result = await harness.fillForm('my_form', ['1', '2'], ['3']});
    */
@@ -290,7 +291,7 @@ class Harness {
 
       answers.shift();
     }
-  
+
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
     const fillResult = await this.page.evaluate(async innerAnswer => await window.formFiller.fillAppForm(innerAnswer), answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
@@ -350,7 +351,7 @@ class Harness {
 
   /**
    * Counts the number of task documents grouped by state. [Explanation of task documents and states]{@link https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks}
-   * 
+   *
    * @param {Object=} options Some options when summarizing the tasks
    * @param {string} [options.title=undefined] Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.
    * @param {Object} [options.freshTaskDocs=true] When freshTaskDocs is truthy, the task documents will be refreshed prior to counting their states.
@@ -365,7 +366,7 @@ class Harness {
    *   Failed: 2,   // 2 task events were not marked as resolved prior to expiring
    *   Draft: 3,    // 3 task events are in the future
    * });
-   * 
+   *
    */
   async countTaskDocsByState(options) {
     options = _.defaults(options, {
@@ -411,10 +412,10 @@ class Harness {
   }
 
   /**
-   * Check the state of targets 
+   * Check the state of targets
    * @param {Object=} options Some options for looking for checking for targets
    * @param {string|string[]} [options.type=undefined] Filter the returns targets to those with an `id` which matches type (when string) or is included in type (when Array).
-   * 
+   *
    * @returns {Target[]} An array of targets which would be visible to the user
    */
   async getTargets(options) {
@@ -423,7 +424,7 @@ class Harness {
       subject: this.options.inputs.subject,
       user: undefined,
     });
-    
+
     if (options.now) {
       throw Error('getTargets({ now }) is not supported. See setNow() for mocking time.');
     }
@@ -443,22 +444,22 @@ class Harness {
   /**
    * Simulates the user clicking on an action
    * @param {Object} taskDoc A {@link Task} or, if that task has multiple actions then one of the direct actions
-   * @example 
+   * @example
    * // Complete a form on January 1
    * await harness.setNow('2000-01-01')
    * const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
    * expect(initialResult.errors).to.be.empty;
-   * 
+   *
    * // Verify a task appears on January 7
    * await harness.setNow('2000-01-07');
    * const tasks = await harness.getTasks();
    * expect(tasks).to.have.property('length', 1);
-   * 
+   *
    * // Complete the task's action
    * await harness.loadAction(tasks[0]);
    * const followupResult = await harness.fillForm(['no_come_back']);
    * expect(followupResult.errors).to.be.empty;
-   * 
+   *
    * // Verify the task got resolved
    * const actual = await harness.getTasks();
    * expect(actual).to.be.empty;
@@ -487,7 +488,15 @@ class Harness {
     };
 
     const action = getActionFromParam();
-    let result = await this.loadForm(action.form, { subject: action.forId, content: action.content });
+    // When an action is clicked after Rules-v2 the "emissions.content.contact" object is hydrated
+    const subject = this.state.contacts.find(contact => action.forId && contact._id === action.forId);
+    const content = Object.assign(
+      {},
+      action.content,
+      { contact: subject || this.content.contact },
+    );
+
+    let result = await this.loadForm(action.form, { content });
     if (answers.length) {
       result = await this.fillForm(...answers);
     }

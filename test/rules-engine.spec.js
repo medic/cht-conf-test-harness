@@ -2,7 +2,7 @@ const path = require('path');
 const { expect } = require('chai');
 const Harness = require('../src/harness');
 
-const { availableCoreVersions } = require('../src/cht-core-libs');
+const { availableCoreVersions } = require('../src/cht-core-factory');
 
 for (const coreVersion of availableCoreVersions) {
   describe(`tests targeting rules engine v${coreVersion}`, () => {
@@ -52,7 +52,7 @@ for (const coreVersion of availableCoreVersions) {
           Ready: 1,
         });
       });
-    
+
       it('followup task present three days after schedule', async () => {
         const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
         expect(formResult.errors).to.be.empty;
@@ -72,7 +72,7 @@ for (const coreVersion of availableCoreVersions) {
           Ready: 0,
         });
       });
-    
+
       it('followup task not present at time of scheduling', async () => {
         const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
         expect(formResult.errors).to.be.empty;
@@ -90,7 +90,7 @@ for (const coreVersion of availableCoreVersions) {
         expect(targets).to.have.property('length', 1);
         expect(targets[0]).to.nested.include({ 'value.total': 1, 'value.pass': 1 });
       });
-    
+
       it('reports outside of current month are not considered', async () => {
         harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'chw_area_id', reported_date: 1000000000000 });
         harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'chw_area_id' });
@@ -109,7 +109,7 @@ for (const coreVersion of availableCoreVersions) {
         const scheduledDate = '2000-01-07';
         const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', scheduledDate]);
         expect(initialResult.errors).to.be.empty;
-    
+
         await harness.setNow(scheduledDate);
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
@@ -124,7 +124,7 @@ for (const coreVersion of availableCoreVersions) {
           'fields.inputs.source': 'task',
           'fields.inputs.source_id': initialResult.report._id,
         });
-    
+
         const actual = await harness.getTasks();
         expect(actual).to.be.empty;
       });
@@ -135,7 +135,7 @@ for (const coreVersion of availableCoreVersions) {
         const scheduledDate = '2000-01-07';
         const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', scheduledDate]);
         expect(initialResult.errors).to.be.empty;
-    
+
         await harness.setNow(scheduledDate);
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
@@ -149,7 +149,7 @@ for (const coreVersion of availableCoreVersions) {
           'fields.inputs.source': 'task',
           'fields.inputs.source_id': initialResult.report._id,
         });
-    
+
         const actual = await harness.getTasks();
         expect(actual).to.be.empty;
       });

@@ -18,7 +18,7 @@ const getRecordForForm = (form, formXml, formName, now) => {
     // contact: ExtractLineage(contact),
     // from: contact && contact.phone,
   };
-  
+
   return xmlToDocs(doc, formXml, record, now);
 };
 

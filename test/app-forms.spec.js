@@ -37,14 +37,14 @@ describe('forms that have caused bugs', () => {
 
   it('repeating prompt all nos', async () => {
     await harness.setNow('1999-10-10');
-    const result = await harness.fillForm('pregnancy', ...pregnancyFormAnswers); 
+    const result = await harness.fillForm('pregnancy', ...pregnancyFormAnswers);
     expect(result.errors).to.be.empty;
   });
 
   it('repeating prompt with answers', async () => {
     await harness.setNow('1999-10-10');
     const withAnswers = Object.assign(pregnancyFormAnswers, { 4: ['yes', '2020-09-01', 'no', 'no', 'no'] });
-    const result = await harness.fillForm('pregnancy', ...withAnswers); 
+    const result = await harness.fillForm('pregnancy', ...withAnswers);
     expect(result.errors[0].msg).to.include('Date must be within this pregnancy and cannot be in the future.');
   });
 
