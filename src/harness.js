@@ -86,6 +86,8 @@ class Harness {
           { _id: 'default_user', type: 'contact' },
           { _id: 'default_subject', type: 'contact' },
         ],
+        subjectFilter: false,
+        actionFormFilter: undefined,
       }
     );
     this.options = _.defaults(
@@ -311,12 +313,17 @@ class Harness {
    * @param {Object=} options Some options when checking for tasks
    * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
+   * @param {string} [options.actionFormFilter] Filter task documents to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
+   * @param {boolean} [options.subjectFilter] Filter task documents to only those owned by the subject. Filter is skipped if false.
    * 
    * @returns {Task[]} An array of task documents which would be visible to the user given the current {@link HarnessState}
    */
   async getTasks(options) {
     options = _.defaults(options, {
       subject: this.options.inputs.subject,
+      actionFormFilter: this.options.inputs.actionFormFilter,
+      subjectFilter: this.options.inputs.subjectFilter,
+      title: undefined,
     });
 
     if (options.resolved) {
@@ -336,7 +343,8 @@ class Harness {
     }));
 
     return tasks
-      .filter(task => !options.subject || task.owner === subject._id) // TODO: ????
+      .filter(task => !options.subjectFilter || task.owner === subject._id) // TODO: ????
+      .filter(task => !options.actionFormFilter || task.emission.actions[0].form === options.actionFormFilter)
       .filter(task => !options.title || task.emission.title === options.title);
   }
 
@@ -346,6 +354,8 @@ class Harness {
    * @param {Object=} options Some options when summarizing the tasks
    * @param {string} [options.title=undefined] Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.
    * @param {Object} [options.freshTaskDocs=true] When freshTaskDocs is truthy, the task documents will be refreshed prior to counting their states.
+   * @param {string} [options.actionFormFilter] Filter task documents counted to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
+   * @param {boolean} [options.subjectFilter] Filter task documents counted to only those owned by the subject. Filter is skipped if false.
    * 
    * @returns Map with keys equal to task document state and values equal to the number of task documents in that state.
    * @example
@@ -361,6 +371,8 @@ class Harness {
     options = _.defaults(options, {
       freshTaskDocs: true,
       subject: this.options.inputs.subject,
+      actionFormFilter: this.options.inputs.actionFormFilter,
+      subjectFilter: this.options.inputs.subjectFilter,
       title: undefined,
     });
 
@@ -369,7 +381,7 @@ class Harness {
     }
 
     const buildFilterBySubject = async () => {
-      if (!options.subject) {
+      if (!options.subjectFilter) {
         return () => true;
       }
 
@@ -380,6 +392,7 @@ class Harness {
     const allTaskDocs = await this.coreAdapter.fetchTaskDocs();
     const relevantTaskDocs = allTaskDocs
       .filter(filterBySubject)
+      .filter(taskDoc => !options.actionFormFilter || taskDoc.emission.actions[0].form === options.actionFormFilter)
       .filter(taskDoc => !options.title || options.title === taskDoc.emission.title);
     const summary = {
       Draft: 0,
@@ -387,10 +400,12 @@ class Harness {
       Cancelled: 0,
       Completed: 0,
       Failed: 0,
+      Total: 0,
     };
 
     for (const task of relevantTaskDocs) {
       summary[task.state]++;
+      summary.Total++;
     }
     return summary;
   }
@@ -472,7 +487,7 @@ class Harness {
     };
 
     const action = getActionFromParam();
-    let result = await this.loadForm(action.form, { content: action.content });
+    let result = await this.loadForm(action.form, { subject: action.forId, content: action.content });
     if (answers.length) {
       result = await this.fillForm(...answers);
     }
