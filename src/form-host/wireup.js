@@ -12,11 +12,11 @@ class FormWireup {
     if (!formXml || typeof formXml !== 'string') {
       throw new Error('Invalid argument: xformData');
     }
-    
+
     if (!content || typeof content !== 'object') {
       throw new Error('Invalid argument: content');
     }
-  
+
     const xform = $.parseXML(formXml);
     setLanguageOnForm(xform, 'en');
 
@@ -56,7 +56,7 @@ const initTransformer = transform => {
   return xform => {
     const transformedDoc = processor.transformToDocument(xform);
     const rootElement = transformedDoc.documentElement.firstElementChild;
-    return xmlSerializer.serializeToString(rootElement); 
+    return xmlSerializer.serializeToString(rootElement);
   };
 };
 
@@ -71,7 +71,7 @@ const setLanguageOnForm = function(xform, language) {
 const bindDataToModel = (model, data, user) => {
   const xmlModel = $($.parseXML(model));
   const bindRoot = xmlModel.find('model instance').children().first();
-  
+
   const userRoot = bindRoot.find('>inputs>user');
   if (data) {
     bindJsonToXml(bindRoot, data, function(name) {

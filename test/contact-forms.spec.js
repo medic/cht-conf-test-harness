@@ -115,7 +115,7 @@ describe('contact forms', () => {
   it('#59 - msf-goma-2 create person', async () => {
     const result = await harness.fillContactForm('goma-person-2', [
       '123', 'Full Name', '1990-10-08', 'male',
-      'yes', 'second', 'no', 
+      'yes', 'second', 'no',
       'unknown',
       ['diabetes']
     ]);

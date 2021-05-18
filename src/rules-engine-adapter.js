@@ -112,7 +112,7 @@ const syncPouchWithState = async (chtCore, pouchdb, pouchdbStateHash, state) => 
     const deleteDoc = docId => upsert(pouchdb, { _id: docId, _deleted: true });
     await Promise.all(removedDocIds.map(deleteDoc));
   }
-  
+
   return {
     updatedSubjectIds: Array.from(updatedSubjects),
     newPouchdbState,
