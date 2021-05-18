@@ -4,6 +4,8 @@
   "user": "chw_area_contact_id",
   "subject": "patient_id",
 
+  "subjectFilter": true,
+
   "docs": [
     {
       "_id": "chw_area_contact_id",

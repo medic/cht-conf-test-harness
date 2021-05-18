@@ -50,6 +50,7 @@ for (const coreVersion of availableCoreVersions) {
           Draft: 0,
           Failed: 0,
           Ready: 1,
+          Total: 1,
         });
       });
 
@@ -70,6 +71,7 @@ for (const coreVersion of availableCoreVersions) {
           Draft: 0,
           Failed: 1,
           Ready: 0,
+          Total: 1,
         });
       });
 
