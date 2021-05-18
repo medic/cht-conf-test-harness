@@ -170,22 +170,28 @@ class Harness {
    * Load a form from the app folder into the harness for testing
    *
    * @param {string} formName Filename of an Xml file describing an XForm to load for testing
-   * @param {HarnessInputs} [inputs=Default values specified via constructor] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {HarnessInputs} [options=Default values specified via constructor] You can override some or all of the {@link HarnessInputs} attributes.
    * @returns {HarnessState} The current state of the form
    * @deprecated Use fillForm interface (#40)
    */
-  async loadForm(formName, inputs = {}) {
+  async loadForm(formName, options = {}) {
     if (!this.page) {
       throw Error(`loadForm(): Cannot invoke medic-conf-test-harness.loadForm() before calling start()`);
     }
 
+    options = _.defaults(options, {
+      subject: this.options.inputs.subject,
+      content: this.options.inputs.content,
+      user: this.options.inputs.user,
+    });
+
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
+    const content = await resolveContent(this.coreAdapter, this.state, options.content, options.subject);
+    const user = await resolveMock(this.coreAdapter, this.state, options.user);
     
-    const content = await this.resolveContent(inputs.content, inputs.subject);
-    const user = await this.resolveMock(inputs.user || this.options.inputs.user);
-    const contactSummary = inputs.contactSummary || await this.getContactSummary(content.contact);
-    
+    const contactSummary = options.contactSummary || await this.getContactSummary(content.contact);
     const serializedContactSummary = serializeContactSummary(contactSummary);
+
     await doLoadForm(this, this.page, xformFilePath, content, user, serializedContactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
@@ -200,7 +206,7 @@ class Harness {
   async fillContactForm(contactType, ...answers) {
     const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
 
-    const user = await this.resolveMock(this.options.inputs.user);
+    const user = await resolveMock(this.coreAdapter, this.state, this.options.inputs.user);
     await doLoadForm(this, this.page, xformFilePath, {}, user);
     this._state.pageContent = await this.page.content();
 
@@ -322,6 +328,7 @@ class Harness {
   async getTasks(options) {
     options = _.defaults(options, {
       subject: this.options.inputs.subject,
+      user: this.options.inputs.user,
       actionFormFilter: this.options.inputs.actionFormFilter,
       subjectFilter: this.options.inputs.subjectFilter,
       title: undefined,
@@ -335,16 +342,16 @@ class Harness {
       throw Error('getTasks({ now }) is not supported. See setNow() for mocking time.');
     }
 
-    const user = await this.resolveMock(options.user || this.options.inputs.user);
-    const subject = await this.resolveMock(options.subject, { hydrate: false });
+    const user = await resolveMock(this.coreAdapter, this.state, options.user);
+    const subject = await resolveMock(this.coreAdapter, this.state, options.subject, { hydrate: false });
     const tasks = await this.coreAdapter.fetchTasksFor(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
 
     tasks.forEach(task => task.emission.actions.forEach(action => {
-      action.forId = task.emission.forId; // required to hydrate in loadAction
+      action.forId = task.emission.forId; // required to hydrate contact in loadAction()
     }));
 
     return tasks
-      .filter(task => !options.subjectFilter || task.owner === subject._id) // TODO: ????
+      .filter(task => !options.subjectFilter || task.owner === subject._id)
       .filter(task => !options.actionFormFilter || task.emission.actions[0].form === options.actionFormFilter)
       .filter(task => !options.title || task.emission.title === options.title);
   }
@@ -381,12 +388,13 @@ class Harness {
       await this.getTasks(options);
     }
 
+    const self = this;
     const buildFilterBySubject = async () => {
       if (!options.subjectFilter) {
         return () => true;
       }
 
-      const subject = await this.resolveMock(options.subject);
+      const subject = await resolveMock(self.coreAdapter, self.state, options.subject);
       return taskDoc => subject._id === taskDoc.owner;
     };
     const filterBySubject = await buildFilterBySubject();
@@ -429,8 +437,8 @@ class Harness {
       throw Error('getTargets({ now }) is not supported. See setNow() for mocking time.');
     }
     
-    const user = await this.resolveMock(options.user || this.options.inputs.user);
-    const subject = await this.resolveMock(options.subject, { hydrate: false });
+    const user = await resolveMock(this.coreAdapter, this.state, options.user || this.options.inputs.user);
+    const subject = await resolveMock(this.coreAdapter, this.state, options.subject, { hydrate: false });
     const targets = await this.coreAdapter.fetchTargets(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
     
     return targets
@@ -536,14 +544,6 @@ class Harness {
    */
   get content() { return this.options.inputs.content; }
   set content(value) { this.options.inputs.content = value; }
-  async resolveContent(content = this.content, contact = this.options.inputs.subject) {    
-    if (content && !content.contact) {
-      const resolvedContact = await this.resolveMock(contact);
-      return Object.assign({}, content, { contact: resolvedContact });
-    }
-
-    return content;
-  }
 
   get subject() {
     const { subject } = this.options.inputs;
@@ -553,19 +553,6 @@ class Harness {
     return subject;
   }
   set subject(value) { this.options.inputs.subject = value; }
-
-  async resolveMock(mock, options = {}) {
-    options = _.defaults(options, { hydrate: true });
-    if (typeof mock === 'string') {
-      if (options.hydrate) {
-        return this.coreAdapter.fetchHydratedDoc(mock, this.state);
-      }
-
-      return this.state.contacts.find(contact => contact._id === mock);
-    }
-  
-    return mock;
-  }
 
   /**
    * @typedef HarnessState
@@ -636,7 +623,7 @@ class Harness {
    */
   async getContactSummary(contact, reports, lineage) {
     const self = this;
-    const resolvedContact = await this.resolveMock(contact || this.options.inputs.subject);
+    const resolvedContact = await resolveMock(this.coreAdapter, this.state, contact || this.options.inputs.subject);
     if (typeof resolvedContact !== 'object') {
       throw `Harness: Cannot get summary for unknown or invalid contact.`;
     }
@@ -648,8 +635,8 @@ class Harness {
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
     } else {
-      const user = await this.resolveMock(this.options.inputs.user);
-      const subject = await this.resolveMock(this.options.inputs.subject);
+      const user = await resolveMock(this.coreAdapter, this.state, this.options.inputs.user);
+      const subject = await resolveMock(this.coreAdapter, this.state, this.options.inputs.subject);
       resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, stateEnsuringPresenceOfMocks(this.state, user, subject));
     }
     
@@ -722,6 +709,28 @@ const clearSync = (self) => {
 
   sinon.restore();
   self.pushMockedDoc(...self.options.inputs.docs);
+};
+
+const resolveContent = async (coreAdapter, state, content, contact) => {
+  if (content && !content.contact) {
+    const resolvedContact = await resolveMock(coreAdapter, state, contact);
+    return Object.assign({}, content, { contact: resolvedContact });
+  }
+
+  return content;
+};
+
+const resolveMock = async (coreAdapter, state, mock, options = {}) => {
+  options = _.defaults(options, { hydrate: true });
+  if (typeof mock === 'string') {
+    if (options.hydrate) {
+      return coreAdapter.fetchHydratedDoc(mock, state);
+    }
+
+    return state.contacts.find(contact => contact._id === mock);
+  }
+
+  return mock;
 };
 
 const stateEnsuringPresenceOfMocks = (state, ...mocks) => {
