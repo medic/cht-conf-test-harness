@@ -31,9 +31,11 @@
  * To help reduce the verbosity of harness setup, you can provide default values for these inputs through a file called `harness.defaults.json` in your configuration project's folder ([example](https://github.com/medic/medic-conf-test-harness/blob/master/harness.defaults.json.example)).
  * 
  * @typedef HarnessInputs
- * @property {string|Object} user This represents the current user that is logged into the system. 
- * In your XForm, this data mocks the `inputs/user` data. And in the task and target code, this data mocks the global `user` object.
- * Use this for testing whenever your forms, tasks, or targets behave differently for whenever different users are expected to capture user data.
+ * @property {string|Object} user This represents the current user that is logged into the system. Use this for testing whenever your system behaves differently for different users.
+ * In harness.fillForm(), this is the data bound to `inputs/user` (hydrated). 
+ * In harness.getTarget(), this is the global `user` object available in targets.js. (minimized)
+ * In harness.getTasks(), this is the global `user` object available in tasks.js. (minimized)
+ * In contact-summary code, this is the global `user` object in contact-summary.templated.js. (hydrated)
  * 
  * @property {string|Object} subject This represents the contact that is being "acted on" or the "subject of the test". The fillForm() function simulates "completing an action" on the subject's profile page. The 
  * getTasks() function returns the tasks listed on the subject's profile page. The getContactSummary() function defaults to returns the contact summary information displayed for the subject.
@@ -97,8 +99,10 @@
  * @property {Object} content This is the data that will be passed into an XForm via loadForm(). Tasks have the ability to set this data via the 
  * [modifyContent]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema} interface. 
  * Recommendeded to leave this undefined in `harness.defaults.json`.
+ * 
  * @property {Object} contactSummary Set this value to mock the data passed into app forms via `instance('contact-summary')/context`. This is mocking the 
  * [context]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context} information that is 
  * returned by the contact-summary.  If left empty, the `context` returned by {@link getContactSummary} will be used.
- * @property {Object[]} docs 
+ * 
+ * @property {Object[]} docs This simulates the documents on the user's device when the test begins.
  */

@@ -1,13 +1,14 @@
 # Medic Test Harness for Projects
 
-A test harness which facilitates tests which complete forms, inspect and interact with tasks and targets, or mock the passage of time.
+A test harness which facilitates automated integration tests for [CHT Applications](https://docs.communityhealthtoolkit.org/apps/).
 
-To view the detailed documentation, use the navigation bar on the side. The main interface is `Harness`. >>> 
+API:
+* [Harness](https://docs.communityhealthtoolkit.org/medic-conf-test-harness/Harness.html)
+* [Globals](https://docs.communityhealthtoolkit.org/medic-conf-test-harness/global.html)
 
 ## Getting Started
 
 1. Install the harness `npm install --save medic-conf-test-harness chai`.
-1. Copy `harness.defaults.json.example` into the folder containing your configuration. Rename it to `harness.defaults.json`.
 1. Create the below sample test file updating the `formName` variable.
 1. Run your tests via Mocha.
 
@@ -33,7 +34,7 @@ describe('Getting started tests', () => {
 
 ## Example Tests
 
-A unit test for a form:
+A unit test for a hypothetical "pnc_followup" application form:
 ```JavaScript
 it('unit test confirming no pnc followup', async () => {
   // Load the pnc_followup form and fill in 'no' on the first page and 'no' on the second page

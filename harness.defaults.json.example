@@ -1,29 +1,7 @@
 {
   "coreVersion": "3.11.0",
-
-  /**
-  * userContactId represents the default user that is logged into the system. Change this data to test system behaviour that depends on the user experiencing it.
-  *
-  * In harness.fillForm(), this is the data bound to `inputs/user` (hydrated)
-  * In harness.getTarget(), this is the global `user` object available in targets.js. (minimized)
-  * In harness.getTasks(), this is the global `user` object available in tasks.js. (minimized)
-  * In contact-summary code, this is the global `user` object in contact-summary.templated.js. (hydrated)
-  */
-  "userContactId": "user_id",
-
-  /**
-   * subjectId represents the default contact that is being acted on
-   *
-   * In harness.fillForm(), this is the contact's information pasesed into the form - the data bound to `inputs/contact` or available in `instance('contact-summary')/context` (hydrated)
-   */
-  "subjectId": "patient_id",
-
-  /**
-   * knownContactDocuments is an array of minimified contact knownContactDocuments.
-   *
-   * This simulates the documents on the user's device when the test beings. At a minimum, it should contain the contact documents referenced by `userContactId` and `subjectId` and
-   * probably the documents required to hydrate them
-   */
+  "user": "user_id",
+  "subject": "patient_id",
   "docs": [
     {
       "_id": "patient_id",
