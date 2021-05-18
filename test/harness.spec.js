@@ -229,24 +229,6 @@ describe('Harness tests', () => {
       expect(new Date().getTime()).to.not.eq(expectedTime);
     });
 
-    it('contact summary is cleared', () => {
-      // defaults to calculated value
-      expect(harness.contactSummary.fields.length).to.be.gt(1);
-      harness.contactSummary = { fields: [], cards: [] };
-      expect(harness.contactSummary.fields.length).to.eq(0);
-
-      harness.clear();
-      expect(harness.contactSummary.fields.length).to.be.gt(1);
-    });
-
-    it('contact summary can be unassigned', () => {
-      harness.contactSummary = { fields: [], cards: [] };
-      expect(harness.contactSummary.fields.length).to.eq(0);
-
-      harness.contactSummary = undefined;
-      expect(harness.contactSummary.fields.length).to.be.gt(1);
-    });
-
     it('user is reset', () => {
       harness.user.foo = 'bar';
       expect(harness.user.name).to.eq('CHW');
