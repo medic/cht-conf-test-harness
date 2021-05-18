@@ -86,8 +86,8 @@ class Harness {
           { _id: 'default_user', type: 'contact' },
           { _id: 'default_subject', type: 'contact' },
         ],
-        subjectFilter: false,
-        actionFormFilter: undefined,
+        ownedBySubject: false,
+        actionForm: undefined,
       }
     );
 
@@ -320,8 +320,8 @@ class Harness {
    * @param {Object=} options Some options when checking for tasks
    * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
-   * @param {string} [options.actionFormFilter] Filter task documents to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
-   * @param {boolean} [options.subjectFilter] Filter task documents to only those owned by the subject. Filter is skipped if false.
+   * @param {string} [options.actionForm] Filter task documents to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
+   * @param {boolean} [options.ownedBySubject] Filter task documents to only those owned by the subject. Filter is skipped if false.
    * 
    * @returns {Task[]} An array of task documents which would be visible to the user given the current {@link HarnessState}
    */
@@ -329,8 +329,8 @@ class Harness {
     options = _.defaults(options, {
       subject: this.options.inputs.subject,
       user: this.options.inputs.user,
-      actionFormFilter: this.options.inputs.actionFormFilter,
-      subjectFilter: this.options.inputs.subjectFilter,
+      actionForm: this.options.inputs.actionForm,
+      ownedBySubject: this.options.inputs.ownedBySubject,
       title: undefined,
     });
 
@@ -351,8 +351,8 @@ class Harness {
     }));
 
     return tasks
-      .filter(task => !options.subjectFilter || task.owner === subject._id)
-      .filter(task => !options.actionFormFilter || task.emission.actions[0].form === options.actionFormFilter)
+      .filter(task => !options.ownedBySubject || task.owner === subject._id)
+      .filter(task => !options.actionForm || task.emission.actions[0].form === options.actionForm)
       .filter(task => !options.title || task.emission.title === options.title);
   }
 
@@ -362,8 +362,8 @@ class Harness {
    * @param {Object=} options Some options when summarizing the tasks
    * @param {string} [options.title=undefined] Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.
    * @param {Object} [options.freshTaskDocs=true] When freshTaskDocs is truthy, the task documents will be refreshed prior to counting their states.
-   * @param {string} [options.actionFormFilter] Filter task documents counted to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
-   * @param {boolean} [options.subjectFilter] Filter task documents counted to only those owned by the subject. Filter is skipped if false.
+   * @param {string} [options.actionForm] Filter task documents counted to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
+   * @param {boolean} [options.ownedBySubject] Filter task documents counted to only those owned by the subject. Filter is skipped if false.
    * 
    * @returns Map with keys equal to task document state and values equal to the number of task documents in that state.
    * @example
@@ -379,8 +379,8 @@ class Harness {
     options = _.defaults(options, {
       freshTaskDocs: true,
       subject: this.options.inputs.subject,
-      actionFormFilter: this.options.inputs.actionFormFilter,
-      subjectFilter: this.options.inputs.subjectFilter,
+      actionForm: this.options.inputs.actionForm,
+      ownedBySubject: this.options.inputs.ownedBySubject,
       title: undefined,
     });
 
@@ -390,7 +390,7 @@ class Harness {
 
     const self = this;
     const buildFilterBySubject = async () => {
-      if (!options.subjectFilter) {
+      if (!options.ownedBySubject) {
         return () => true;
       }
 
@@ -401,7 +401,7 @@ class Harness {
     const allTaskDocs = await this.coreAdapter.fetchTaskDocs();
     const relevantTaskDocs = allTaskDocs
       .filter(filterBySubject)
-      .filter(taskDoc => !options.actionFormFilter || taskDoc.emission.actions[0].form === options.actionFormFilter)
+      .filter(taskDoc => !options.actionForm || taskDoc.emission.actions[0].form === options.actionForm)
       .filter(taskDoc => !options.title || options.title === taskDoc.emission.title);
     const summary = {
       Draft: 0,
