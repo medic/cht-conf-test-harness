@@ -52,7 +52,7 @@ for (const coreVersion of availableCoreVersions) {
           Ready: 1,
         });
       });
-    
+
       it('followup task present three days after schedule', async () => {
         const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
         expect(formResult.errors).to.be.empty;
@@ -72,7 +72,7 @@ for (const coreVersion of availableCoreVersions) {
           Ready: 0,
         });
       });
-    
+
       it('followup task not present at time of scheduling', async () => {
         const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
         expect(formResult.errors).to.be.empty;
@@ -88,21 +88,21 @@ for (const coreVersion of availableCoreVersions) {
           reported_date: 1,
         };
         harness.state.contacts = [supervisorContact];
-    
+
         harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'super_id', reported_date: Date.now() });
         harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'super_id', reported_date: Date.now() });
         harness.pushMockedDoc({ form: 'individual_feedback_confirmation', patient_id: 'super_id', reported_date: Date.now() });
-        
+
         const targets = await harness.getTargets({ type: 'chv-receive-supervision-visit' });
         expect(targets).to.have.property('length', 1);
         expect(targets[0]).to.nested.include({ 'value.total': 1, 'value.pass': 1 });
       });
-    
+
       it('reports outside of current month are not considered', async () => {
         harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'parent_id_data', reported_date: 1000000000000 });
         harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'parent_id_data' });
         harness.pushMockedDoc({ form: 'individual_feedback_confirmation', patient_id: 'parent_id_data' });
-        
+
         const targets = await harness.getTargets({ type: 'chv-receive-supervision-visit' });
         expect(targets).to.have.property('length', 1);
         expect(targets[0]).to.nested.include({ 'value.total': 1, 'value.pass': 0 });
@@ -116,11 +116,11 @@ for (const coreVersion of availableCoreVersions) {
         const scheduledDate = '2000-01-07';
         const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', scheduledDate]);
         expect(initialResult.errors).to.be.empty;
-    
+
         await harness.setNow(scheduledDate);
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
-        
+
         expect(tasks[0].emission.actions[0]).to.include({ forId: 'patient_id_data' });
         await harness.loadAction(tasks[0].emission.actions[0]);
         const followupResult = await harness.fillForm(['no_come_back']);
@@ -131,7 +131,7 @@ for (const coreVersion of availableCoreVersions) {
           'fields.inputs.source': 'task',
           'fields.inputs.source_id': initialResult.report._id,
         });
-    
+
         const actual = await harness.getTasks();
         expect(actual).to.be.empty;
       });
@@ -142,11 +142,11 @@ for (const coreVersion of availableCoreVersions) {
         const scheduledDate = '2000-01-07';
         const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', scheduledDate]);
         expect(initialResult.errors).to.be.empty;
-    
+
         await harness.setNow(scheduledDate);
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
-        
+
         expect(tasks[0].emission).to.include({ forId: 'patient_id_data' });
         const followupResult = await harness.loadAction(tasks[0], ['no_come_back']);
         expect(followupResult.errors).to.be.empty;
@@ -156,7 +156,7 @@ for (const coreVersion of availableCoreVersions) {
           'fields.inputs.source': 'task',
           'fields.inputs.source_id': initialResult.report._id,
         });
-    
+
         const actual = await harness.getTasks();
         expect(actual).to.be.empty;
       });

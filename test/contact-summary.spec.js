@@ -41,7 +41,7 @@ describe('getContactSummary', () => {
     expect(functionStub.args[0]).to.deep.eq([contact, reports, lineage]);
   }));
 
-  it('mocks datetime - setNow after start', async () => {  
+  it('mocks datetime - setNow after start', async () => {
     const expectedTime = 1000;
     await harness.setNow(expectedTime);
     expect(new Date().getTime()).to.eq(expectedTime);
@@ -70,7 +70,7 @@ describe('getContactSummary', () => {
 
   it('contact summary for patient_id_data', async () => {
     const contactSummary = harness.getContactSummary('patient_id_data');
-    
+
     expect(contactSummary.cards).to.deep.eq([]);
     expect(contactSummary.context).to.deep.eq({ muted: false, hh_contact: 'CHP Area 001 Contact' });
     expect(contactSummary.fields).to.deep.include({ label: 'contact.age', value: '1970-07-09', filter: 'age', width: 3 });

@@ -223,14 +223,14 @@ describe('Harness tests', () => {
       });
     });
   });
-  
+
   describe('clear', () => {
     it('content attribute is reset', () => {
       const originalDoB = harness.content.contact.date_of_birth;
       harness.content.foo = 'bar';
       expect(originalDoB).to.be.not.undefined;
       expect(harness.content.foo).to.eq('bar');
-      
+
       harness.content.contact.date_of_birth = 'not_original';
       harness.clear();
 
@@ -238,7 +238,7 @@ describe('Harness tests', () => {
       expect(harness.content.foo).to.be.undefined;
     });
 
-    it('clears mocked datetime', async () => {  
+    it('clears mocked datetime', async () => {
       const expectedTime = 1000;
       await harness.setNow(expectedTime);
       expect(new Date().getTime()).to.eq(expectedTime);
@@ -252,7 +252,7 @@ describe('Harness tests', () => {
       expect(harness.contactSummary.fields.length).to.be.gt(1);
       harness.contactSummary = { fields: [], cards: [] };
       expect(harness.contactSummary.fields.length).to.eq(0);
-      
+
       harness.clear();
       expect(harness.contactSummary.fields.length).to.be.gt(1);
     });
@@ -269,7 +269,7 @@ describe('Harness tests', () => {
       harness.user.foo = 'bar';
       expect(harness.user.name).to.eq('CHW');
       expect(harness.user.foo).to.eq('bar');
-      
+
       harness.content.contact.date_of_birth = 'not_original';
       harness.clear();
 
@@ -303,5 +303,5 @@ describe('Harness tests', () => {
       expect(harness.state.contacts).to.deep.include(mockContact);
     });
   });
-  
+
 });

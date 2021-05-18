@@ -18,7 +18,7 @@ if (!fs.existsSync(pathToHost)) {
 
 /**
  * A harness for testing MedicMobile WebApp configurations
- * 
+ *
  * @example
  * const Harness = require('medic-conf-test-harness');
  * const instance = new Harness({
@@ -31,7 +31,7 @@ if (!fs.existsSync(pathToHost)) {
  * const result = await instance.fillForm(['first page, first answer', 'first page, second answer'], ['second page, first answer']);
  * expect(result.errors).to.be.empty;
  * expect(result.report).to.deep.include({
- *  fields: {   
+ *  fields: {
  *    patient_name: 'Patient Name',
  *    next_pnc: {
  *      s_next_pnc: 'no',
@@ -42,7 +42,7 @@ if (!fs.existsSync(pathToHost)) {
  */
 class Harness {
   /**
-   * 
+   *
    * @param {Object=} options Specify the behavior of the Harness
    * @param {boolean} [options.verbose=false] Detailed console logging when true
    * @param {boolean} [options.logFormErrors=false] Errors displayed by forms will be logged via console when true
@@ -97,7 +97,7 @@ class Harness {
   /**
    * Starts a virtual browser. Typically put this in your test's before [hook]{@link https://mochajs.org/#hooks} or alike.
    * @returns {Promise.Browser} Resolves a [Puppeteer Browser]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#class-browser} when the harness is ready.
-   * 
+   *
    * @example
    * before(async () => { return await harness.start(); });
    */
@@ -147,7 +147,7 @@ class Harness {
 
   /**
    * Load a form from the app folder into the harness for testing
-   * 
+   *
    * @param {string} formName Filename of an Xml file describing an XForm to load for testing
    * @param {HarnessInputs} [inputs=Default values specified via constructor] You can override some or all of the {@link HarnessInputs} attributes.
    * @returns {HarnessState} The current state of the form
@@ -159,7 +159,7 @@ class Harness {
     }
 
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
-    
+
     inputs = _.defaults(inputs, this.options.inputs);
     const serializedContactSummary = serializeContactSummary(inputs.contactSummary || this.contactSummary);
     await doLoadForm(this, this.page, xformFilePath, inputs.content, inputs.user, serializedContactSummary);
@@ -168,8 +168,8 @@ class Harness {
   }
 
   /**
-   * Loads and fills a contact form, 
-   * 
+   * Loads and fills a contact form,
+   *
    * @param {string} contactType Type of contact that should be created
    * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
    */
@@ -177,7 +177,7 @@ class Harness {
     const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
     await doLoadForm(this, this.page, xformFilePath, {}, this.options.user);
     this._state.pageContent = await this.page.content();
-    
+
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
     const fillResult = await this.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
@@ -249,7 +249,7 @@ class Harness {
    * // Load a form and then fill it in
    * await harness.loadForm('my_form');
    * const result = await harness.fillForm(['first page first answer', 'first page second answer'], ['second page first answer']);
-   * 
+   *
    * // Load and fill a form in one statement
    * const result = await harness.fillForm('my_form', ['1', '2'], ['3']});
    */
@@ -265,7 +265,7 @@ class Harness {
 
       answers.shift();
     }
-  
+
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
     const fillResult = await this.page.evaluate(async innerAnswer => await window.formFiller.fillAppForm(innerAnswer), answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
@@ -288,7 +288,7 @@ class Harness {
    * @param {Object=} options Some options when checking for tasks
    * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
-   * 
+   *
    * @returns {Task[]} An array of task documents which would be visible to the user given the current {@link HarnessState}
    */
   async getTasks(options) {
@@ -304,7 +304,7 @@ class Harness {
     if (options.now) {
       throw Error('getTasks({ now }) is not supported. See setNow() for mocking time.');
     }
-    
+
     const tasks = await this.rulesEngineAdapter.fetchTasksFor(options.user, this._state);
 
     tasks.forEach(task => task.emission.actions.forEach(action => {
@@ -317,11 +317,11 @@ class Harness {
 
   /**
    * Counts the number of task documents grouped by state. [Explanation of task documents and states]{@link https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks}
-   * 
+   *
    * @param {Object=} options Some options when summarizing the tasks
    * @param {string} [options.title=undefined] Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.
    * @param {Object} [options.freshTaskDocs=true] When freshTaskDocs is truthy, the task documents will be refreshed prior to counting their states.
-   * 
+   *
    * @returns Map with keys equal to task document state and values equal to the number of task documents in that state.
    * @example
    * const summary = await countTaskDocsByState({ title: 'my-task-title' });
@@ -330,7 +330,7 @@ class Harness {
    *   Failed: 2,   // 2 task events were not marked as resolved prior to expiring
    *   Draft: 3,    // 3 task events are in the future
    * });
-   * 
+   *
    */
   async countTaskDocsByState(options) {
     options = _.defaults(options, {
@@ -359,10 +359,10 @@ class Harness {
   }
 
   /**
-   * Check the state of targets 
+   * Check the state of targets
    * @param {Object=} options Some options for looking for checking for targets
    * @param {string|string[]} [options.type=undefined] Filter the returns targets to those with an `id` which matches type (when string) or is included in type (when Array).
-   * 
+   *
    * @returns {Target[]} An array of targets which would be visible to the user
    */
   async getTargets(options) {
@@ -370,13 +370,13 @@ class Harness {
       type: undefined,
       user: this.user,
     });
-    
+
     if (options.now) {
       throw Error('getTargets({ now }) is not supported. See setNow() for mocking time.');
     }
-    
+
     const targets = await this.rulesEngineAdapter.fetchTargets(options.user, this._state);
-    
+
     return targets
       .filter(target =>
         !options.type ||
@@ -388,22 +388,22 @@ class Harness {
   /**
    * Simulates the user clicking on an action
    * @param {Object} taskDoc A {@link Task} or, if that task has multiple actions then one of the direct actions
-   * @example 
+   * @example
    * // Complete a form on January 1
    * await harness.setNow('2000-01-01')
    * const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
    * expect(initialResult.errors).to.be.empty;
-   * 
+   *
    * // Verify a task appears on January 7
    * await harness.setNow('2000-01-07');
    * const tasks = await harness.getTasks();
    * expect(tasks).to.have.property('length', 1);
-   * 
+   *
    * // Complete the task's action
    * await harness.loadAction(tasks[0]);
    * const followupResult = await harness.fillForm(['no_come_back']);
    * expect(followupResult.errors).to.be.empty;
-   * 
+   *
    * // Verify the task got resolved
    * const actual = await harness.getTasks();
    * expect(actual).to.be.empty;
@@ -439,7 +439,7 @@ class Harness {
       action.content,
       { contact: subject || this.content.contact },
     );
-    
+
     let result = await this.loadForm(action.form, { content });
     if (answers.length) {
       result = await this.fillForm(...answers);
@@ -474,7 +474,7 @@ class Harness {
   get content() { return this.options.inputs.content; }
 
   /**
-   * `contactSummary` can be set explicitly through the {@link HarnessInputs} via the constructor or the harness.defaults.json file. 
+   * `contactSummary` can be set explicitly through the {@link HarnessInputs} via the constructor or the harness.defaults.json file.
    * If no contactSummary is explicitly defined, returns the calculation from getContactSummary().
    */
   get contactSummary() {
@@ -562,7 +562,7 @@ class Harness {
     }
 
     const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => self.core.RegistrationUtils.getSubjectId(report) === contact._id);
-    
+
     const resolvedLineage = [];
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
@@ -572,7 +572,7 @@ class Harness {
         resolvedLineage.push(parent);
       }
     }
-    
+
     const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
     return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
   }
@@ -627,7 +627,7 @@ const clearSync = (self) => {
 
   self.options.inputs = _.cloneDeep(self.defaultInputs);
   self.rulesEngineAdapter = new rulesEngineAdapter(self.core, self.appSettings);
-  
+
   if (self.options.inputs.user && self.options.inputs.user.parent) {
     contacts.push(_.cloneDeep(self.options.inputs.user.parent));
   }
