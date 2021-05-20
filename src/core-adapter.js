@@ -116,8 +116,9 @@ const syncPouchWithState = async (chtCore, pouchdb, pouchdbStateHash, state) => 
       throw Error(`Harness state contains docs with duplicate id ${docId}.`);
     }
 
+    const subjectIds = chtCore.RegistrationUtils.getSubjectIds(doc);
     newPouchdbState[docId] = {
-      subjectId: getSubjectId(chtCore.RegistrationUtils.getSubjectId, doc),
+      subjectId: subjectIds && subjectIds[0],
       docHash: md5(JSON.stringify(doc)),
     };
   }
@@ -136,7 +137,7 @@ const syncPouchWithState = async (chtCore, pouchdb, pouchdbStateHash, state) => 
     }
   }
 
-  // sync removed docs to pouchdb
+  // sync documents that were deleted into pouchdb
   const removedDocIds = Object.keys(pouchdbStateHash).filter(docId => !newPouchdbState[docId]);
   if (removedDocIds.length) {
     const impactedSubjects = removedDocIds.map(docId => pouchdbStateHash[docId].subjectId);
@@ -164,15 +165,6 @@ const upsert = async (pouchdb, doc) => {
   await pouchdb.put(docWithRev);
 };
 
-const getSubjectId = (getReportSubjectId, doc) => {
-  if (!doc) {
-    return;
-  }
-
-  const isReport = doc => doc.type === 'data_record';
-  return isReport(doc) ? getReportSubjectId(doc) : doc._id;
-};
-
 // cht-core/src/ts/services/uhc-settings.service.ts
 const getMonthStartDate = settings => {
   return settings &&
@@ -186,8 +178,8 @@ const getMonthStartDate = settings => {
 
 const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
   const settingsTasks = settingsDoc && settingsDoc.tasks || {};
-  // const filterTargetByContext = (target) => target.context ?
-  //   !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
+  // https://github.com/medic/medic-conf-test-harness/issues/106
+  // const filterTargetByContext = (target) => target.context ? !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
   const targets = settingsTasks.targets && settingsTasks.targets.items || [];
 
   return {
