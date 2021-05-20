@@ -38,7 +38,7 @@
  * In contact-summary code, this is the global `user` object in contact-summary.templated.js. (hydrated)
  * 
  * @property {string|Object} subject This represents the contact that is being "acted on" or the "subject of the test". The fillForm() function simulates "completing an action" on the subject's profile page. The 
- * getTasks() function returns the tasks listed on the subject's profile page. The getContactSummary() function defaults to returns the contact summary information displayed for the subject.
+ * getTasks() function returns the tasks listed on the subject's profile page. The getContactSummary() function defaults to return the contact summary information displayed for the subject.
  * 
  * `subject` can be an `object` or a `string`. Assigning `subject` a `string` should be preferred as it will result in behavior closest to the CHT. The `subject` should be set to the `_id` of the contact document present 
  * in `HarnessInputs.docs`. The harness will pull in the appropriate contact and hydrate it automatically.  Assigning `subject` an `object` will skip any integration with `docs` and skips hydration - the exact value set
