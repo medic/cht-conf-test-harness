@@ -40,7 +40,15 @@ describe('contact forms', () => {
         is_name_generated: 'true',
         name: "'s Health Facility", // actual bug in form
         notes: '',
-        parent: {},
+        parent: {
+          _id: 'family_id',
+          parent: {
+            _id: 'chw_area_id',
+            parent: {
+              _id: 'supervisor_area_id',
+            },
+          },
+        },
         reported_date: now.valueOf(),
         type: 'district_hospital',
       },
@@ -81,6 +89,15 @@ describe('contact forms', () => {
     expect(result.contacts[0]).to.deep.include({
       contact: {
         _id: result.contacts[1]._id,
+      },
+      parent: {
+        _id: 'family_id',
+        parent: {
+          _id: 'chw_area_id',
+          parent: {
+            _id: 'supervisor_area_id',
+          },
+        },
       },
       name: 'Mr. Investigator',
       type: 'contact',

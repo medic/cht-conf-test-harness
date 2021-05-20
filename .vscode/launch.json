@@ -32,7 +32,6 @@
         "999999",
         "--colors",
         "${workspaceFolder}/test/*.spec.js",
-        "--grep", "defaults",
         "--timeout",
         "60000"
       ],

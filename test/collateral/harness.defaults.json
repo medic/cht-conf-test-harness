@@ -1,11 +1,9 @@
 {
   "coreVersion": "3.10.3",
-  "useDevMode": false,
   "user": "chw_area_contact_id",
   "subject": "patient_id",
-
+  "useDevMode": false,
   "ownedBySubject": true,
-
   "docs": [
     {
       "_id": "chw_area_contact_id",

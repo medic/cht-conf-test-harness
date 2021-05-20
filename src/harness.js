@@ -81,7 +81,7 @@ class Harness {
       {
         subject: 'default_subject',
         user: 'default_user',
-        content: { source: 'test' },
+        content: { source: 'action' },
         docs: [
           { _id: 'default_user', type: 'contact' },
           { _id: 'default_subject', type: 'contact' },
@@ -213,6 +213,15 @@ class Harness {
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
     const fillResult = await this.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
+
+    // https://github.com/medic/medic-conf-test-harness/issues/105
+    if (this.subject && this.subject.parent) {
+      fillResult.contacts.forEach(contact => { 
+        if (!contact.parent || !contact.parent._id) {
+          contact.parent = this.subject.parent;
+        }
+      });
+    }
 
     if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
       /* this.log respects verbose option, use logFormErrors here */
@@ -595,7 +604,7 @@ class Harness {
         });
 
         const reportSubjectId = this.core.RegistrationUtils.getSubjectId(report);
-        if (!reportSubjectId) {
+        if (!reportSubjectId && this.subject) {
           // Legacy behaviour from harness@1.x
           console.warn(`pushMockedDoc: report without subject id (patient_id, patient_uuid, place_id, etc). Setting default to "${this.subject._id}".`);
           report.patient_id = this.subject._id; // patient_uuid is not available at root level
@@ -714,7 +723,7 @@ const clearSync = (self) => {
 const resolveContent = async (coreAdapter, state, content, contact) => {
   if (content && !content.contact) {
     const resolvedContact = await resolveMock(coreAdapter, state, contact);
-    return Object.assign({}, content, { contact: resolvedContact });
+    return { ...content, contact: resolvedContact };
   }
 
   return content;
