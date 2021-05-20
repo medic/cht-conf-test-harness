@@ -83,8 +83,9 @@ const syncPouchWithState = async (chtCore, pouchdb, pouchdbStateHash, state) => 
       throw Error(`Harness state contains docs with duplicate id ${docId}.`);
     }
 
+    const subjectIds = chtCore.RegistrationUtils.getSubjectIds(doc);
     newPouchdbState[docId] = {
-      subjectId: getSubjectId(chtCore.RegistrationUtils.getSubjectId, doc),
+      subjectId: subjectIds && subjectIds[0],
       docHash: md5(JSON.stringify(doc)),
     };
   }
@@ -103,7 +104,7 @@ const syncPouchWithState = async (chtCore, pouchdb, pouchdbStateHash, state) => 
     }
   }
 
-  // sync removed docs to pouchdb
+  // sync documents that were deleted into pouchdb
   const removedDocIds = Object.keys(pouchdbStateHash).filter(docId => !newPouchdbState[docId]);
   if (removedDocIds.length) {
     const impactedSubjects = removedDocIds.map(docId => pouchdbStateHash[docId].subjectId);
@@ -129,15 +130,6 @@ const upsert = async (pouchdb, doc) => {
 
   const docWithRev = Object.assign({}, doc, { _rev: existing && existing._rev });
   await pouchdb.put(docWithRev);
-};
-
-const getSubjectId = (getReportSubjectId, doc) => {
-  if (!doc) {
-    return;
-  }
-
-  const isReport = doc => doc.type === 'data_record';
-  return isReport(doc) ? getReportSubjectId(doc) : doc._id;
 };
 
 // cht-core/src/ts/services/uhc-settings.service.ts
