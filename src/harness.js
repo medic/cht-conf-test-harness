@@ -359,10 +359,7 @@ class Harness {
       action.forId = task.emission.forId; // required to hydrate contact in loadAction()
     }));
 
-    return tasks
-      .filter(task => !options.ownedBySubject || task.owner === subject._id)
-      .filter(task => !options.actionForm || task.emission.actions[0].form === options.actionForm)
-      .filter(task => !options.title || task.emission.title === options.title);
+    return filterTaskDocs(tasks, subject._id, options);
   }
 
   /**
@@ -370,7 +367,6 @@ class Harness {
    *
    * @param {Object=} options Some options when summarizing the tasks
    * @param {string} [options.title=undefined] Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.
-   * @param {Object} [options.freshTaskDocs=true] When freshTaskDocs is truthy, the task documents will be refreshed prior to counting their states.
    * @param {string} [options.actionForm] Filter task documents counted to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
    * @param {boolean} [options.ownedBySubject] Filter task documents counted to only those owned by the subject. Filter is skipped if false.
    * 
@@ -386,32 +382,17 @@ class Harness {
    */
   async countTaskDocsByState(options) {
     options = _.defaults(options, {
-      freshTaskDocs: true,
       subject: this.options.inputs.subject,
       actionForm: this.options.inputs.actionForm,
       ownedBySubject: this.options.inputs.ownedBySubject,
       title: undefined,
     });
 
-    if (options.freshTaskDocs) {
-      await this.getTasks(options);
-    }
-
-    const self = this;
-    const buildFilterBySubject = async () => {
-      if (!options.ownedBySubject) {
-        return () => true;
-      }
-
-      const subject = await resolveMock(self.coreAdapter, self.state, options.subject);
-      return taskDoc => subject._id === taskDoc.owner;
-    };
-    const filterBySubject = await buildFilterBySubject();
+    await this.getTasks(options);
+    
     const allTaskDocs = await this.coreAdapter.fetchTaskDocs();
-    const relevantTaskDocs = allTaskDocs
-      .filter(filterBySubject)
-      .filter(taskDoc => !options.actionForm || taskDoc.emission.actions[0].form === options.actionForm)
-      .filter(taskDoc => !options.title || options.title === taskDoc.emission.title);
+    const subjectId = typeof this.subject === 'object' ? this.subject._id : this.subject;
+    const relevantTaskDocs = filterTaskDocs(allTaskDocs, subjectId, options);
     const summary = {
       Draft: 0,
       Ready: 0,
@@ -741,6 +722,11 @@ const resolveMock = async (coreAdapter, state, mock, options = {}) => {
 
   return mock;
 };
+
+const filterTaskDocs = (taskDocs, subjectId, { ownedBySubject, actionForm, title }) => taskDocs
+  .filter(task => !ownedBySubject || task.owner === subjectId)
+  .filter(task => !actionForm || task.emission.actions[0].form === actionForm)
+  .filter(task => !title || task.emission.title === title);
 
 const stateEnsuringPresenceOfMocks = (state, ...mocks) => {
   const stragglers = _.uniqBy(mocks.filter(mock => !state.contacts.some(contact => contact._id === mock._id), '_id'));
