@@ -145,8 +145,8 @@ const getMonthStartDate = settings => {
 
 const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
   const settingsTasks = settingsDoc && settingsDoc.tasks || {};
-  // const filterTargetByContext = (target) => target.context ?
-  //   !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
+  // https://github.com/medic/medic-conf-test-harness/issues/106
+  // const filterTargetByContext = (target) => target.context ? !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
   const targets = settingsTasks.targets && settingsTasks.targets.items || [];
 
   return {
