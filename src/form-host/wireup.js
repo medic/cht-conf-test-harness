@@ -108,15 +108,10 @@ const bindJsonToXml = function(elem, data={}, childMatcher) {
 
 const findCurrentElement = function(elem, name, childMatcher) {
   if (childMatcher) {
-    const found = elem.find(childMatcher(name));
-    if (found.length > 1) {
-      console.warn('Using the matcher "' + childMatcher(name) + '" we found ' + found.length + ' elements, ' +
-        'we should only ever bind one.', elem);
-    }
-    return found;
-  } else {
-    return elem.children(name);
-  }
+    return elem.find(childMatcher(name));
+  } 
+  
+  return elem.children(name);
 };
 
 module.exports = FormWireup;
