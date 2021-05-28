@@ -1,57 +1,48 @@
 {
-  "coreVersion": "3.11",
-  "user": {
-    "name": "CHW",
-    "date_of_birth": "1971-03-10",
-    "phone": "+17782473214",
-    "reported_date": 1550559625153,
-    "type": "person",
-    "parent": {
-      "_id": "chw_area_id",
-      "name": "CHW Area",
-      "parent": {
-        "_id": "7149fcd2-b3ff-4f5d-ab7d-185aa54c85ed"
-      },
-      "contact": {
-        "name": "CHW Area Contact",
-        "date_of_birth": "1971-03-10",
-        "phone": "+17782475555",
-        "reported_date": 1550559625153,
-        "type": "person",
-        "parent": {
-          "_id": "chw_area_id",
-          "parent": {
-            "_id": "district_id"
-          }
-        },
-        "_id": "chw_area_contact_id",
-        "_rev": "2-a"
-      },
-      "type": "health_center",
-      "reported_date": 1550559625153,      
-      "_rev": "1-a"
-    }
-  },
-  "content": {
-    "source": "action",
-    "contact": {
+  "coreVersion": "3.11.0",
+  "user": "user_contact_id",
+  "subject": "patient_id",
+  
+  "docs": [
+    {
+      "_id": "patient_id",
       "type": "person",
-      "parent": {
-        "_id": "patient_parent_id",
-        "parent": {
-          "_id": "chw_area_id",
-          "parent": {
-            "_id": "district_id"
-          }
-        }
-      },
       "name": "Patient Name",
       "role": "patient",
       "date_of_birth": "1970-07-09",
       "sex": "female",
       "reported_date": 1550762498368,
-      "_id": "patient_id",
-      "_rev": "1-b"
+      "parent": {
+        "_id": "family_id",
+        "parent": {
+          "_id": "chw_area_id",
+          "parent": {
+            "_id": "supervisor_area_id"
+          }
+        }
+      }
+    },
+
+    {
+      "_id": "user_contact_id",
+      "name": "CHW",
+      "type": "person",
+      "reported_date": 1550761498368,
+      "parent": {
+        "_id": "chw_area_id",
+        "parent": {
+          "_id": "supervisor_area_id"
+        },
+        "contact": {
+          "_id": "chw_area_contact_id",
+          "parent": {
+            "_id": "chw_area_id",
+            "parent": {
+              "_id": "district_id"
+            }
+          }
+        }
+      }
     }
-  }
+  ]
 }

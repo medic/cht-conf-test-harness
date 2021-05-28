@@ -27,17 +27,16 @@ describe('getContactSummary', () => {
 
   beforeEach(async () => {
     await harness.clear();
-    basicReport.patient_id = harness.content.contact._id;
-    harness.pushMockedDoc(basicReport);
+    harness.pushMockedDoc(basicReport.report);
     functionStub = sinon.stub();
   });
   afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
 
-  it('passthrough if all args given', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
+  it('passthrough if all args given', async () => Harness.__with__({ Function: function() { return functionStub; } })(async () => {
     const contact = {};
     const reports = [];
     const lineage = [];
-    harness.getContactSummary(contact, reports, lineage);
+    await harness.getContactSummary(contact, reports, lineage);
     expect(functionStub.args[0]).to.deep.eq([contact, reports, lineage]);
   }));
 
@@ -47,37 +46,60 @@ describe('getContactSummary', () => {
     expect(new Date().getTime()).to.eq(expectedTime);
   });
 
-  it('state used when no args given', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
-    harness.getContactSummary();
-    const [parentOfDefault] = harness.state.contacts;
-    expect(functionStub.args[0]).to.deep.eq([harness.content.contact, harness.state.reports, [parentOfDefault]]);
+  it('state used when no args given', async () => Harness.__with__({ Function: function() { return functionStub; } })(async () => {
+    await harness.getContactSummary();
+
+    const args = functionStub.args[0];
+    expect(args.length).to.eq(3);
+    expect(args[0]).to.nested.include({
+      _id: 'patient_id',
+      name: 'Patient Name',
+      'parent._id': 'family_id',
+      'parent.foo': 'bar', // hydrated
+      'parent.parent._id': 'chw_area_id',
+    });
+    expect(args[1]).to.deep.eq(harness.state.reports);
+    expect(args[2][0]).to.deep.contain({
+      _id: 'family_id',
+      foo: 'bar',
+    });
+    expect(args[2][1]).to.deep.contain({
+      _id: 'chw_area_id',
+    });
+    expect(args[2][2]).to.be.undefined;
   }));
 
-  it('state used for reports and lineage but not contact', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
+  it('state used for reports and lineage but not contact', async () => Harness.__with__({ Function: function() { return functionStub; } })(async () => {
     const mockContact = { _id: 'foo' };
-    harness.getContactSummary(mockContact);
+    await harness.getContactSummary(mockContact);
     expect(functionStub.args[0]).to.deep.eq([mockContact, [], []]);
   }));
 
-  it('#71 - mocked reports in state are passed to contact-summary', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
+  it('#71 - mocked reports in state are passed to contact-summary', async () => Harness.__with__({ Function: function() { return functionStub; } })(async () => {
     const mockContact = { _id: 'foo', type: 'person' };
     const mockReport = { _id: 'bar', patient_id: mockContact._id };
 
     harness.pushMockedDoc(mockReport);
-    harness.getContactSummary(mockContact);
+    await harness.getContactSummary(mockContact);
     expect(functionStub.args[0]).to.deep.eq([mockContact, [mockReport], []]);
   }));
 
-  it('contact summary for patient_id_data', async () => {
-    const contactSummary = harness.getContactSummary('patient_id_data');
-
+  it('contact summary for patient_id', async () => {
+    const contactSummary = await harness.getContactSummary('patient_id');
+    
     expect(contactSummary.cards).to.deep.eq([]);
     expect(contactSummary.context).to.deep.eq({ muted: false, hh_contact: 'CHP Area 001 Contact' });
     expect(contactSummary.fields).to.deep.include({ label: 'contact.age', value: '1970-07-09', filter: 'age', width: 3 });
-    expect(contactSummary.fields).to.deep.include({ label: 'Phone Number', value: '', filter: 'phone', width: 3 });
     expect(contactSummary.fields).to.deep.include({ label: 'contact.sex', value: 'female', translate: true, width: 3 });
-    expect(contactSummary.fields).to.deep.include({ label: 'contact.external_id', value: '', width: 3 });
   });
 
-  it('throws on invalid id', () => expect(() => harness.getContactSummary('dne')).to.throw('Cannot get summary'));
+  it('throws on invalid id', async () => {
+    try {
+      await harness.getContactSummary('dne');
+      assert.fail('expect throw');
+    }
+    catch (err) {
+      expect(err.message).to.include('failed for id');
+    }
+  });
 });

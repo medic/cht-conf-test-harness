@@ -40,7 +40,15 @@ describe('contact forms', () => {
         is_name_generated: 'true',
         name: "'s Health Facility", // actual bug in form
         notes: '',
-        parent: {},
+        parent: {
+          _id: 'family_id',
+          parent: {
+            _id: 'chw_area_id',
+            parent: {
+              _id: 'supervisor_area_id',
+            },
+          },
+        },
         reported_date: now.valueOf(),
         type: 'district_hospital',
       },
@@ -61,7 +69,6 @@ describe('contact forms', () => {
         notes: '',
         parent: {
           _id: result.contacts[0]._id,
-          parent: {}
         },
         phone: '+1-555-227-7744',
         phone_alternate: '',
@@ -83,6 +90,15 @@ describe('contact forms', () => {
       contact: {
         _id: result.contacts[1]._id,
       },
+      parent: {
+        _id: 'family_id',
+        parent: {
+          _id: 'chw_area_id',
+          parent: {
+            _id: 'supervisor_area_id',
+          },
+        },
+      },
       name: 'Mr. Investigator',
       type: 'contact',
       contact_type: 'investigator',
@@ -93,7 +109,6 @@ describe('contact forms', () => {
       type: 'contact',
       parent: {
         _id: result.contacts[0]._id,
-        parent: {},
       },
       contact_type: 'person',
     });

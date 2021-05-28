@@ -36,6 +36,7 @@ module.exports = [
       alias: {
         '@medic/calendar-interval': path.join(__dirname, 'node_modules/cht-core-3-11/shared-libs/calendar-interval'),
         '@medic/registration-utils': path.join(__dirname, 'node_modules/cht-core-3-11/shared-libs/registration-utils'),
+        '@medic/contact-types-utils': path.join(__dirname, 'node_modules/cht-core-3-11/shared-libs/contact-types-utils'),
       },
     },
     target: 'node',

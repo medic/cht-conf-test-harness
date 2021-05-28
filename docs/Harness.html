@@ -455,6 +455,45 @@
 
         <tr>
             
+                <td class="name"><code>coreVersion</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    harness configuration file
+                
+                </td>
+            
+
+            <td class="description last">The version of cht-core to emulate @example "3.8.0"</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>inputs</code></td>
             
 
@@ -613,7 +652,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line58">line 58</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line43">line 43</a>
     </li></ul></dd>
     
 
@@ -730,7 +769,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line393">line 393</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line500">line 500</a>
     </li></ul></dd>
     
 
@@ -748,69 +787,6 @@ expect(result.report).to.deep.include({
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>expect(harness.consoleErrors).to.be.empty;</code></pre>
-
-
-
-        
-            
-<h4 class="name" id="contactSummary"><span class="type-signature"></span>contactSummary<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    `contactSummary` can be set explicitly through the <a href="global.html#HarnessInputs">HarnessInputs</a> via the constructor or the harness.defaults.json file. 
-If no contactSummary is explicitly defined, returns the calculation from getContactSummary().
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line413">line 413</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
 
 
 
@@ -860,7 +836,69 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line407">line 407</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line526">line 526</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="coreVersion"><span class="type-signature"></span>coreVersion<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    `coreVersion` is the version of the cht-core that is being emulated in testing (eg. 3.9.0)
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line521">line 521</a>
     </li></ul></dd>
     
 
@@ -922,7 +960,7 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line432">line 432</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line549">line 549</a>
     </li></ul></dd>
     
 
@@ -984,7 +1022,7 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line402">line 402</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line509">line 509</a>
     </li></ul></dd>
     
 
@@ -1064,7 +1102,7 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line130">line 130</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line155">line 155</a>
     </li></ul></dd>
     
 
@@ -1113,6 +1151,302 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
 
 
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="countTaskDocsByState"><span class="type-signature">(async) </span>countTaskDocsByState<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Counts the number of task documents grouped by state. <a href="https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks">Explanation of task documents and states</a>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Some options when summarizing the tasks
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>actionForm</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Filter task documents counted to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ownedBySubject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Filter task documents counted to only those owned by the subject. Filter is skipped if false.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line374">line 374</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Map with keys equal to task document state and values equal to the number of task documents in that state.
+</div>
+
+
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const summary = await countTaskDocsByState({ title: 'my-task-title' });
+expect(summary).to.nested.include({
+  Complete: 1, // 1 task events were marked as resolved
+  Failed: 2,   // 2 task events were not marked as resolved prior to expiring
+  Draft: 3,    // 3 task events are in the future
+});</code></pre>
 
 
 
@@ -1266,7 +1600,7 @@ If no contactSummary is explicitly defined, returns the calculation from getCont
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line183">line 183</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -1450,7 +1784,7 @@ If an Object is provided, it can have attributes { form, user, content, contactS
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line264">line 264</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line288">line 288</a>
     </li></ul></dd>
     
 
@@ -1622,7 +1956,7 @@ const result = await harness.fillForm('my_form', ['1', '2'], ['3']});</code></pr
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line233">line 233</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line257">line 257</a>
     </li></ul></dd>
     
 
@@ -1664,7 +1998,7 @@ await flush(1); // move one day forward in time</code></pre>
     
 
     
-    <h4 class="name" id="getContactSummary"><span class="type-signature"></span>getContactSummary<span class="signature">(contact<span class="signature-attributes">opt</span>, reports<span class="signature-attributes">opt</span>, lineage<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#ContactSummary">ContactSummary</a>}</span></h4>
+    <h4 class="name" id="getContactSummary"><span class="type-signature">(async) </span>getContactSummary<span class="signature">(contact<span class="signature-attributes">opt</span>, reports<span class="signature-attributes">opt</span>, lineage<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#ContactSummary">ContactSummary</a>}</span></h4>
     
 
     
@@ -1736,7 +2070,7 @@ await flush(1); // move one day forward in time</code></pre>
 
             
 
-            <td class="description last">The contact doc that will be passed into the contactSummary script. Given a {string}, a contact will be loaded from <a href="global.html#HarnessState">HarnessState</a>. If left empty, the content's contact will be used if one exists.</td>
+            <td class="description last">The contact doc that will be passed into the contactSummary script. Given a {string}, a contact will be loaded and hydrated from <a href="global.html#HarnessState">HarnessState</a>. If left empty, the subject will be used.</td>
         </tr>
 
     
@@ -1843,7 +2177,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line476">line 476</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line605">line 605</a>
     </li></ul></dd>
     
 
@@ -1953,7 +2287,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line222">line 222</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line246">line 246</a>
     </li></ul></dd>
     
 
@@ -2019,7 +2353,7 @@ await flush(1); // move one day forward in time</code></pre>
 
 
 <div class="description">
-    Check which targets are emitted
+    Check the state of targets
 </div>
 
 
@@ -2101,53 +2435,12 @@ await flush(1); // move one day forward in time</code></pre>
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>now</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Date</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    getNow()
-                
-                </td>
-            
-
-            <td class="description last">The mocked time to look for targets</td>
-        </tr>
-
     
 
         <tr>
@@ -2179,10 +2472,6 @@ await flush(1); // move one day forward in time</code></pre>
                 </td>
             
 
-            
-                <td class="default">
-                
-                </td>
             
 
             <td class="description last">Filter the returns targets to those with an `id` which matches type (when string) or is included in type (when Array).</td>
@@ -2233,7 +2522,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line342">line 342</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line410">line 410</a>
     </li></ul></dd>
     
 
@@ -2299,7 +2588,7 @@ await flush(1); // move one day forward in time</code></pre>
 
 
 <div class="description">
-    Check which tasks are emitted
+    Check which tasks are visible
 </div>
 
 
@@ -2393,84 +2682,6 @@ await flush(1); // move one day forward in time</code></pre>
 
         <tr>
             
-                <td class="name"><code>now</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Date</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    getNow()
-                
-                </td>
-            
-
-            <td class="description last">The mocked time to look for tasks</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>resolved</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last">When true, tasks which are resolved will be included in the returned tasks.</td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>title</code></td>
             
 
@@ -2544,6 +2755,80 @@ await flush(1); // move one day forward in time</code></pre>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>actionForm</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Filter task documents to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ownedBySubject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Filter task documents to only those owned by the subject. Filter is skipped if false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -2588,7 +2873,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line303">line 303</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line328">line 328</a>
     </li></ul></dd>
     
 
@@ -2617,7 +2902,7 @@ await flush(1); // move one day forward in time</code></pre>
 
         
 <div class="param-desc">
-    An array of tasks which would be visible to the user given the current <a href="global.html#HarnessState">HarnessState</a>
+    An array of task documents which would be visible to the user given the current <a href="global.html#HarnessState">HarnessState</a>
 </div>
 
 
@@ -2646,7 +2931,7 @@ await flush(1); // move one day forward in time</code></pre>
     
 
     
-    <h4 class="name" id="loadAction"><span class="type-signature">(async) </span>loadAction<span class="signature">(action)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="loadAction"><span class="type-signature">(async) </span>loadAction<span class="signature">(taskDoc)</span><span class="type-signature"></span></h4>
     
 
     
@@ -2690,7 +2975,7 @@ await flush(1); // move one day forward in time</code></pre>
 
         <tr>
             
-                <td class="name"><code>action</code></td>
+                <td class="name"><code>taskDoc</code></td>
             
 
             <td class="type">
@@ -2706,7 +2991,7 @@ await flush(1); // move one day forward in time</code></pre>
 
             
 
-            <td class="description last">A <a href="global.html#Task">Task</a>'s action</td>
+            <td class="description last">A <a href="global.html#Task">Task</a> or, if that task has multiple actions then one of the direct actions</td>
         </tr>
 
     
@@ -2747,7 +3032,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line384">line 384</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line456">line 456</a>
     </li></ul></dd>
     
 
@@ -2789,7 +3074,7 @@ const tasks = await harness.getTasks();
 expect(tasks).to.have.property('length', 1);
 
 // Complete the task's action
-await harness.loadAction(tasks[0].actions[0]);
+await harness.loadAction(tasks[0]);
 const followupResult = await harness.fillForm(['no_come_back']);
 expect(followupResult.errors).to.be.empty;
 
@@ -2805,7 +3090,7 @@ expect(actual).to.be.empty;</code></pre>
     
 
     
-    <h4 class="name" id="loadForm"><span class="type-signature">(async) </span>loadForm<span class="signature">(formName, inputs<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#HarnessState">HarnessState</a>}</span></h4>
+    <h4 class="name" id="loadForm"><span class="type-signature">(async) </span>loadForm<span class="signature">(formName, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#HarnessState">HarnessState</a>}</span></h4>
     
 
     
@@ -2888,7 +3173,7 @@ expect(actual).to.be.empty;</code></pre>
 
         <tr>
             
-                <td class="name"><code>inputs</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
@@ -2963,7 +3248,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line167">line 167</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line168">line 168</a>
     </li></ul></dd>
     
 
@@ -3134,7 +3419,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line438">line 438</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line555">line 555</a>
     </li></ul></dd>
     
 
@@ -3277,7 +3562,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line206">line 206</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line230">line 230</a>
     </li></ul></dd>
     
 
@@ -3365,7 +3650,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line91">line 91</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -3480,7 +3765,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line120">line 120</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line145">line 145</a>
     </li></ul></dd>
     
 
@@ -3553,13 +3838,13 @@ expect(actual).to.be.empty;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Harness.html">Harness</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-core-adapter.html">core-adapter</a></li><li><a href="module-rules-engine-adapter.html">rules-engine-adapter</a></li></ul><h3>Classes</h3><ul><li><a href="Harness.html">Harness</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Apr 16 2021 12:42:23 GMT-0600 (Mountain Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 28 2021 10:35:15 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

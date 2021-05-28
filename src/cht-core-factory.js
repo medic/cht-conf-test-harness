@@ -16,10 +16,6 @@ const get = version => {
   }
 
   const versionKey = `${semver.major(version)}.${semver.minor(version)}`;
-  if (!ChtCoreBundles[versionKey]) {
-    throw Error(`cht-core version ${versionKey} is not supported by medic-conf-test-harness. Supported versions are: ${availableCoreVersions}`);
-  }
-
   const result = ChtCoreBundles[versionKey];
   if (!result) {
     throw Error(`cht-core version ${versionKey} is not supported by medic-conf-test-harness. Supported versions are: ${availableCoreVersions}`);
