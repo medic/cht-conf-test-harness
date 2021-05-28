@@ -97,12 +97,12 @@ class Harness {
       { coreVersion: availableCoreVersions[availableCoreVersions.length-1] },
     );
 
+    this.core = ChtCoreFactory.get(this.options.coreVersion);
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
     }
 
-    this.core = ChtCoreFactory.get(this.options.coreVersion);
     clearSync(this);
   }
 
@@ -504,11 +504,6 @@ class Harness {
   }
 
   /**
-   * `coreVersion` is the version of the cht-core that is being emulated in testing (eg. 3.9.0)
-   */
-  get coreVersion() { return this.options.coreVersion; }
-
-  /**
    * `user` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
    */
   get user() {
@@ -519,6 +514,11 @@ class Harness {
     return user;
   }
   set user(value) { this.options.inputs.user = value; }
+
+  /**
+   * `coreVersion` is the version of the cht-core that is being emulated in testing (eg. 3.9.0)
+   */
+  get coreVersion() { return this.options.coreVersion; }
 
   /**
    * `content` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
