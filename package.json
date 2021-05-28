@@ -1,6 +1,6 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "2.0.0-beta.1",
+  "version": "2.1.0",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "pojo2xml": "^1.7.2",
     "pouchdb": "^7.2.2",
     "pouchdb-adapter-memory": "^7.2.2",
-    "puppeteer-chromium-resolver": "^2.0.2",
+    "puppeteer-chromium-resolver": "^9.0.0",
     "sinon": "^7.5.0",
     "uuid": "^3.4.0"
   },

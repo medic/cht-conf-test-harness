@@ -6,7 +6,6 @@ module.exports = {
     CalendarInterval: require('cht-core-3-9/shared-libs/calendar-interval'),
     RulesEngineCore: require('cht-core-3-9/shared-libs/rules-engine'),
     RulesEmitter: require('cht-core-3-9/shared-libs/rules-engine/src/rules-emitter'),
-    nootils: require('cht-core-3-9/shared-libs/rules-engine/node_modules/medic-nootils'),
     Lineage: require('cht-core-3-9/shared-libs/lineage'),
   },
   '3.10': {
@@ -15,7 +14,6 @@ module.exports = {
     CalendarInterval: require('cht-core-3-10/shared-libs/calendar-interval'),
     RulesEngineCore: require('cht-core-3-10/shared-libs/rules-engine'),
     RulesEmitter: require('cht-core-3-10/shared-libs/rules-engine/src/rules-emitter'),
-    nootils: require('cht-core-3-10/shared-libs/rules-engine/node_modules/medic-nootils'),
     Lineage: require('cht-core-3-10/shared-libs/lineage'),
   },
   '3.11': {
@@ -24,7 +22,6 @@ module.exports = {
     CalendarInterval: require('cht-core-3-11/shared-libs/calendar-interval'),
     RulesEngineCore: require('cht-core-3-11/shared-libs/rules-engine'),
     RulesEmitter: require('cht-core-3-11/shared-libs/rules-engine/src/rules-emitter'),
-    nootils: require('cht-core-3-11/shared-libs/rules-engine/node_modules/medic-nootils'),
     Lineage: require('cht-core-3-11/shared-libs/lineage'),
   },
 };

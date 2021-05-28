@@ -7,7 +7,6 @@ const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
 const uuid = require('uuid/v4');
 
-const devMode = require('./dev-mode');
 const coreAdapter = require('./core-adapter');
 const ChtCoreFactory = require('./cht-core-factory');
 const toDate = require('./toDate');
@@ -94,13 +93,9 @@ class Harness {
     const { availableCoreVersions } = ChtCoreFactory;
     this.options = _.defaults(
       this.options,
-      _.pick(fileBasedDefaults, 'useDevMode', 'coreVersion'),
+      _.pick(fileBasedDefaults, 'coreVersion'),
       { coreVersion: availableCoreVersions[availableCoreVersions.length-1] },
     );
-
-    if (process.argv.includes('--dev')) {
-      this.options.useDevMode = true;
-    }
 
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
@@ -108,10 +103,6 @@ class Harness {
     }
 
     this.core = ChtCoreFactory.get(this.options.coreVersion);
-    if (this.options.useDevMode) {
-      devMode.mockRulesEngine(this.core, this.options.appSettingsPath);
-    }
-
     clearSync(this);
   }
 
@@ -420,14 +411,14 @@ class Harness {
     options = _.defaults(options, {
       type: undefined,
       subject: this.options.inputs.subject,
-      user: undefined,
+      user: this.options.inputs.user,
     });
 
     if (options.now) {
       throw Error('getTargets({ now }) is not supported. See setNow() for mocking time.');
     }
     
-    const user = await resolveMock(this.coreAdapter, this.state, options.user || this.options.inputs.user);
+    const user = await resolveMock(this.coreAdapter, this.state, options.user);
     const subject = await resolveMock(this.coreAdapter, this.state, options.subject, { hydrate: false });
     const targets = await this.coreAdapter.fetchTargets(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
     
@@ -629,13 +620,9 @@ class Harness {
       const subject = await resolveMock(this.coreAdapter, this.state, this.options.inputs.subject);
       resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, stateEnsuringPresenceOfMocks(this.state, user, subject));
     }
-    
-    if (this.options.useDevMode) {
-      return devMode.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage);
-    } else {
-      const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
-      return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
-    }
+
+    const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
+    return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
   }
 }
 

@@ -1,7 +1,8 @@
 {
   "coreVersion": "3.11.0",
-  "user": "user_id",
+  "user": "user_contact_id",
   "subject": "patient_id",
+  
   "docs": [
     {
       "_id": "patient_id",
