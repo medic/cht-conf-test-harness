@@ -80,7 +80,7 @@ class Harness {
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
     this.defaultInputs = _.defaults(
       this.options,
-      _.pick(fileBasedDefaults, 'useDevMode', 'coreVersion'),
+      fileBasedDefaults,
       {
         subject: 'default_subject',
         user: 'default_user',
