@@ -7,8 +7,8 @@ const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
 const uuid = require('uuid/v4');
 
+const coreAdapter = require('./core-adapter');
 const ChtCoreFactory = require('./cht-core-factory');
-const rulesEngineAdapter = require('./rules-engine-adapter');
 const toDate = require('./toDate');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
@@ -53,7 +53,7 @@ class Harness {
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
    * @param {string} [options.coreVersion=harness configuration file] The version of cht-core to emulate @example "3.8.0"
-   * @param {HarnessInputs} [options.inputs=loaded from harnessDataPath] The default {@link HarnessInputs} for loading and completing a form
+   * @param {HarnessInputs} [options=loaded from harnessDataPath] The default {@link HarnessInputs} controlling the environment in which your application is running
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    */
@@ -74,7 +74,22 @@ class Harness {
     this.log = (...args) => this.options.verbose && console.log('Harness', ...args);
 
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
-    this.defaultInputs = _.defaults(this.options.inputs, fileBasedDefaults);
+    this.defaultInputs = _.defaults(
+      this.options,
+      fileBasedDefaults,
+      {
+        subject: 'default_subject',
+        user: 'default_user',
+        content: { source: 'action' },
+        docs: [
+          { _id: 'default_user', type: 'contact' },
+          { _id: 'default_subject', type: 'contact' },
+        ],
+        ownedBySubject: false,
+        actionForm: undefined,
+      }
+    );
+
     const { availableCoreVersions } = ChtCoreFactory;
     this.options = _.defaults(
       this.options,
@@ -146,20 +161,29 @@ class Harness {
    * Load a form from the app folder into the harness for testing
    *
    * @param {string} formName Filename of an Xml file describing an XForm to load for testing
-   * @param {HarnessInputs} [inputs=Default values specified via constructor] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {HarnessInputs} [options=Default values specified via constructor] You can override some or all of the {@link HarnessInputs} attributes.
    * @returns {HarnessState} The current state of the form
    * @deprecated Use fillForm interface (#40)
    */
-  async loadForm(formName, inputs) {
+  async loadForm(formName, options = {}) {
     if (!this.page) {
       throw Error(`loadForm(): Cannot invoke medic-conf-test-harness.loadForm() before calling start()`);
     }
 
-    const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
+    options = _.defaults(options, {
+      subject: this.options.subject,
+      content: this.options.content,
+      user: this.options.user,
+    });
 
-    inputs = _.defaults(inputs, this.options.inputs);
-    const serializedContactSummary = serializeContactSummary(inputs.contactSummary || this.contactSummary);
-    await doLoadForm(this, this.page, xformFilePath, inputs.content, inputs.user, serializedContactSummary);
+    const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
+    const content = await resolveContent(this.coreAdapter, this.state, options.content, options.subject);
+    const user = await resolveMock(this.coreAdapter, this.state, options.user);
+    
+    const contactSummary = options.contactSummary || await this.getContactSummary(content.contact);
+    const serializedContactSummary = serializeContactSummary(contactSummary);
+
+    await doLoadForm(this, this.page, xformFilePath, content, user, serializedContactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
@@ -172,12 +196,23 @@ class Harness {
    */
   async fillContactForm(contactType, ...answers) {
     const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
-    await doLoadForm(this, this.page, xformFilePath, {}, this.options.user);
+
+    const user = await resolveMock(this.coreAdapter, this.state, this.options.user);
+    await doLoadForm(this, this.page, xformFilePath, {}, user);
     this._state.pageContent = await this.page.content();
 
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
     const fillResult = await this.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
+
+    // https://github.com/medic/medic-conf-test-harness/issues/105
+    if (this.subject && this.subject.parent) {
+      fillResult.contacts.forEach(contact => { 
+        if (!contact.parent || !contact.parent._id) {
+          contact.parent = this.subject.parent;
+        }
+      });
+    }
 
     if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
       /* this.log respects verbose option, use logFormErrors here */
@@ -254,8 +289,8 @@ class Harness {
     const [firstParam] = answers;
     if (!Array.isArray(firstParam)) {
       if (typeof firstParam === 'object') {
-        const inputs = _.defaults(firstParam, this.options.inputs);
-        await this.loadForm(firstParam.form, inputs);
+        const options = _.defaults(firstParam, this.options);
+        await this.loadForm(firstParam.form, options);
       } else {
         await this.loadForm(firstParam);
       }
@@ -285,13 +320,18 @@ class Harness {
    * @param {Object=} options Some options when checking for tasks
    * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
-   *
+   * @param {string} [options.actionForm] Filter task documents to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
+   * @param {boolean} [options.ownedBySubject] Filter task documents to only those owned by the subject. Filter is skipped if false.
+   * 
    * @returns {Task[]} An array of task documents which would be visible to the user given the current {@link HarnessState}
    */
   async getTasks(options) {
     options = _.defaults(options, {
+      subject: this.options.subject,
+      user: this.options.user,
+      actionForm: this.options.actionForm,
+      ownedBySubject: this.options.ownedBySubject,
       title: undefined,
-      user: this.user,
     });
 
     if (options.resolved) {
@@ -302,14 +342,15 @@ class Harness {
       throw Error('getTasks({ now }) is not supported. See setNow() for mocking time.');
     }
 
-    const tasks = await this.rulesEngineAdapter.fetchTasksFor(options.user, this._state);
+    const user = await resolveMock(this.coreAdapter, this.state, options.user);
+    const subject = await resolveMock(this.coreAdapter, this.state, options.subject, { hydrate: false });
+    const tasks = await this.coreAdapter.fetchTasksFor(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
 
     tasks.forEach(task => task.emission.actions.forEach(action => {
-      action.forId = task.emission.forId; // required to hydrate in loadAction
+      action.forId = task.emission.forId; // required to hydrate contact in loadAction()
     }));
 
-    return tasks
-      .filter(task => !options.title || task.emission.title === options.title);
+    return filterTaskDocs(tasks, subject._id, options);
   }
 
   /**
@@ -317,8 +358,9 @@ class Harness {
    *
    * @param {Object=} options Some options when summarizing the tasks
    * @param {string} [options.title=undefined] Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.
-   * @param {Object} [options.freshTaskDocs=true] When freshTaskDocs is truthy, the task documents will be refreshed prior to counting their states.
-   *
+   * @param {string} [options.actionForm] Filter task documents counted to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
+   * @param {boolean} [options.ownedBySubject] Filter task documents counted to only those owned by the subject. Filter is skipped if false.
+   * 
    * @returns Map with keys equal to task document state and values equal to the number of task documents in that state.
    * @example
    * const summary = await countTaskDocsByState({ title: 'my-task-title' });
@@ -331,26 +373,29 @@ class Harness {
    */
   async countTaskDocsByState(options) {
     options = _.defaults(options, {
-      freshTaskDocs: true,
+      subject: this.options.subject,
+      actionForm: this.options.actionForm,
+      ownedBySubject: this.options.ownedBySubject,
       title: undefined,
     });
 
-    if (options.freshTaskDocs) {
-      await this.getTasks(options);
-    }
-
-    const allTaskDocs = await this.rulesEngineAdapter.fetchTaskDocs();
-    const relevantTaskDocs = allTaskDocs.filter(taskDoc => !this.options.title || this.options.title === taskDoc.emission.title);
+    await this.getTasks(options);
+    
+    const allTaskDocs = await this.coreAdapter.fetchTaskDocs();
+    const subjectId = typeof this.subject === 'object' ? this.subject._id : this.subject;
+    const relevantTaskDocs = filterTaskDocs(allTaskDocs, subjectId, options);
     const summary = {
       Draft: 0,
       Ready: 0,
       Cancelled: 0,
       Completed: 0,
       Failed: 0,
+      Total: 0,
     };
 
     for (const task of relevantTaskDocs) {
       summary[task.state]++;
+      summary.Total++;
     }
     return summary;
   }
@@ -365,15 +410,18 @@ class Harness {
   async getTargets(options) {
     options = _.defaults(options, {
       type: undefined,
-      user: this.user,
+      subject: this.options.subject,
+      user: this.options.user,
     });
 
     if (options.now) {
       throw Error('getTargets({ now }) is not supported. See setNow() for mocking time.');
     }
-
-    const targets = await this.rulesEngineAdapter.fetchTargets(options.user, this._state);
-
+    
+    const user = await resolveMock(this.coreAdapter, this.state, options.user);
+    const subject = await resolveMock(this.coreAdapter, this.state, options.subject, { hydrate: false });
+    const targets = await this.coreAdapter.fetchTargets(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
+    
     return targets
       .filter(target =>
         !options.type ||
@@ -427,8 +475,8 @@ class Harness {
 
       return taskDoc; // assume it is an action
     };
-    const action = getActionFromParam();
 
+    const action = getActionFromParam();
     // When an action is clicked after Rules-v2 the "emissions.content.contact" object is hydrated
     const subject = this.state.contacts.find(contact => action.forId && contact._id === action.forId);
     const content = Object.assign(
@@ -456,9 +504,16 @@ class Harness {
   }
 
   /**
-   * `user` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
+   * `user` from the {@link HarnessInputs} set through the constructor (defaulting to values from harness.defaults.json file)
    */
-  get user() { return this.options.inputs.user; }
+  get user() {
+    const { user } = this.options;
+    if (typeof user === 'string') {
+      return this.state.contacts.find(contact => contact._id === user);
+    }
+    return user;
+  }
+  set user(value) { this.options.user = value; }
 
   /**
    * `coreVersion` is the version of the cht-core that is being emulated in testing (eg. 3.9.0)
@@ -466,20 +521,19 @@ class Harness {
   get coreVersion() { return this.options.coreVersion; }
 
   /**
-   * `content` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
+   * `content` from the {@link HarnessInputs} set through the constructor (defaulting to values from harness.defaults.json file)
    */
-  get content() { return this.options.inputs.content; }
+  get content() { return this.options.content; }
+  set content(value) { this.options.content = value; }
 
-  /**
-   * `contactSummary` can be set explicitly through the {@link HarnessInputs} via the constructor or the harness.defaults.json file.
-   * If no contactSummary is explicitly defined, returns the calculation from getContactSummary().
-   */
-  get contactSummary() {
-    return this.options.inputs.contactSummary || this.getContactSummary();
+  get subject() {
+    const { subject } = this.options;
+    if (typeof subject === 'string') {
+      return this.state.contacts.find(contact => contact._id === subject);
+    }
+    return subject;
   }
-  set contactSummary(value) {
-    this.options.inputs.contactSummary = value;
-  }
+  set subject(value) { this.options.subject = value; }
 
   /**
    * @typedef HarnessState
@@ -507,6 +561,9 @@ class Harness {
         continue;
       }
 
+      // Cht only stores minified contacts and reports - so harness defaults to do the same
+      this.coreAdapter.minify(doc);
+
       const isContact = doc && ContactTypes.includes(doc.type);
       if (isContact) {
         this._state.contacts.push(doc);
@@ -518,12 +575,11 @@ class Harness {
           fields: {},
         });
 
-        const subjectId = this.core.RegistrationUtils.getSubjectId(report);
-        if (!subjectId) {
+        const reportSubjectId = this.core.RegistrationUtils.getSubjectId(report);
+        if (!reportSubjectId && this.subject) {
           // Legacy behaviour from harness@1.x
-          const defaultSubjectId = this._state.contacts[0]._id;
-          console.warn(`pushMockedDoc: report without subject id (patient_id, patient_uuid, place_id, etc). Setting default to "${defaultSubjectId}".`);
-          report.patient_id = defaultSubjectId; // patient_uuid is not available at root level
+          console.warn(`pushMockedDoc: report without subject id (patient_id, patient_uuid, place_id, etc). Setting default to "${this.subject._id}".`);
+          report.patient_id = this.subject._id; // patient_uuid is not available at root level
         }
 
         this._state.reports.push(report);
@@ -541,33 +597,28 @@ class Harness {
 
   /**
    * Obtains the result of the running the contact-summary.js or the compiled contact-summary.templated.js scripts from the project folder
-   * @param {string} [contact] The contact doc that will be passed into the contactSummary script. Given a {string}, a contact will be loaded from {@link HarnessState}. If left empty, the content's contact will be used if one exists.
+   * @param {string} [contact] The contact doc that will be passed into the contactSummary script. Given a {string}, a contact will be loaded and hydrated from {@link HarnessState}. If left empty, the subject will be used.
    * @param {Object[]} [reports] An array of reports associated with contact. If left empty, the contact's reports will be loaded from {@link HarnessState}.
    * @param {Object[]} [lineage] An array of the contact's hydrated ancestors. If left empty, the contact's ancestors will be used from {@link HarnessState}.
    * @returns {ContactSummary} The result of the contact summary under test.
    */
-  getContactSummary(contact = this.content.contact, reports, lineage) {
-    if (!contact) {
-      return {};
-    }
-
+  async getContactSummary(contact, reports, lineage) {
     const self = this;
-    const getContactById = id => self._state.contacts.find(contact => contact._id === id);
-    const resolvedContact = typeof contact === 'string' ? getContactById(contact) : contact;
+    const resolvedContact = await resolveMock(this.coreAdapter, this.state, contact || this.options.subject);
     if (typeof resolvedContact !== 'object') {
       throw `Harness: Cannot get summary for unknown or invalid contact.`;
     }
 
-    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(report => self.core.RegistrationUtils.getSubjectId(report) === contact._id);
-
-    const resolvedLineage = [];
+    const reportHasMatchingSubject = report => self.core.RegistrationUtils.getSubjectId(report) === resolvedContact._id;
+    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(reportHasMatchingSubject);
+    
+    let resolvedLineage = [];
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
     } else {
-      for (let current = resolvedContact.parent; current; current = current.parent) {
-        const parent = current._id ? getContactById(current._id) || current : current;
-        resolvedLineage.push(parent);
-      }
+      const user = await resolveMock(this.coreAdapter, this.state, this.options.user);
+      const subject = await resolveMock(this.coreAdapter, this.state, this.options.subject);
+      resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, stateEnsuringPresenceOfMocks(this.state, user, subject));
     }
 
     const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
@@ -622,21 +673,9 @@ const serializeContactSummary = (contactSummary = {}) => {
 const clearSync = (self) => {
   const contacts = [];
 
-  self.options.inputs = _.cloneDeep(self.defaultInputs);
-  self.rulesEngineAdapter = new rulesEngineAdapter(self.core, self.appSettings);
-
-  if (self.options.inputs.user && self.options.inputs.user.parent) {
-    contacts.push(_.cloneDeep(self.options.inputs.user.parent));
-  }
-
-  if (self.options.inputs.content && self.options.inputs.content.contact) {
-    const defaultContact = _.cloneDeep(self.options.inputs.content.contact);
-
-    // 92 - Link the default contact information by default
-    self.options.inputs.content.contact = defaultContact;
-    contacts.push(defaultContact);
-  }
-
+  self.options = _.cloneDeep(self.defaultInputs);
+  self.coreAdapter = new coreAdapter(self.core, self.appSettings);
+  
   self._state = {
     console: [],
     contacts,
@@ -646,6 +685,43 @@ const clearSync = (self) => {
   self._now = undefined;
 
   sinon.restore();
+  self.pushMockedDoc(...self.options.docs);
+};
+
+const resolveContent = async (coreAdapter, state, content, contact) => {
+  if (content && !content.contact) {
+    const resolvedContact = await resolveMock(coreAdapter, state, contact);
+    return { ...content, contact: resolvedContact };
+  }
+
+  return content;
+};
+
+const resolveMock = async (coreAdapter, state, mock, options = {}) => {
+  options = _.defaults(options, { hydrate: true });
+  if (typeof mock === 'string') {
+    if (options.hydrate) {
+      return coreAdapter.fetchHydratedDoc(mock, state);
+    }
+
+    return state.contacts.find(contact => contact._id === mock);
+  }
+
+  return mock;
+};
+
+const filterTaskDocs = (taskDocs, subjectId, { ownedBySubject, actionForm, title }) => taskDocs
+  .filter(task => !ownedBySubject || task.owner === subjectId)
+  .filter(task => !actionForm || task.emission.actions[0].form === actionForm)
+  .filter(task => !title || task.emission.title === title);
+
+const stateEnsuringPresenceOfMocks = (state, ...mocks) => {
+  const stragglers = _.uniqBy(mocks.filter(mock => !state.contacts.some(contact => contact._id === mock._id), '_id'));
+  return {
+    contacts: [...state.contacts, ...stragglers],
+    reports: state.reports,
+  };
+
 };
 
 module.exports = Harness;
