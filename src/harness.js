@@ -78,13 +78,9 @@ class Harness {
     const { availableCoreVersions } = ChtCoreFactory;
     this.options = _.defaults(
       this.options,
-      _.pick(fileBasedDefaults, 'useDevMode', 'coreVersion'),
+      _.pick(fileBasedDefaults, 'coreVersion'),
       { coreVersion: availableCoreVersions[availableCoreVersions.length-1] },
     );
-
-    if (process.argv.includes('--dev')) {
-      this.options.useDevMode = true;
-    }
 
     this.core = ChtCoreFactory.get(this.options.coreVersion);
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
