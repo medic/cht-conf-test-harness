@@ -1,22 +1,24 @@
 {
   "name": "medic-conf-test-harness",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "Test Framework for Medic Projects",
   "main": "./src/harness.js",
   "scripts": {
-    "test": "mocha test/*.spec.js --timeout 25000 --slow 500",
+    "test": "npx mocha test/*.spec.js --timeout 25000 --slow 500",
     "build": "npm run docs && ./build.sh",
-    "docs": "node ./node_modules/jsdoc/jsdoc src/*.js src/**/*.js ./JSDOC.md -d docs",
+    "docs": "npx jsdoc src/*.js src/**/*.js ./JSDOC.md -d docs",
     "explore": "node ./project-explorer/build-assets.js --path=./test/collateral && cd project-explorer && webpack && google-chrome ./project-explorer.html",
-    "eslint": "node ./node_modules/eslint/bin/eslint.js .",
+    "eslint": "npx eslint .",
     "travis": "npm run build && npm run eslint && npm test"
   },
   "dependencies": {
     "lodash": "^4.17.15",
-    "medic-nootils": "^4.0.1",
+    "md5": "^2.3.0",
     "moment": "^2.24.0",
     "nools": "^0.4.4",
     "pojo2xml": "^1.7.2",
+    "pouchdb": "^7.2.2",
+    "pouchdb-adapter-memory": "^7.2.2",
     "puppeteer-chromium-resolver": "^9.0.0",
     "sinon": "^7.5.0",
     "uuid": "^3.4.0"
@@ -25,17 +27,20 @@
     "@medic/eslint-config": "^1.1.0",
     "chai": "^4.2.0",
     "chai-exclude": "^2.0.2",
+    "cht-core-3-10": "git+https://github.com/medic/cht-core.git#3.10.x",
+    "cht-core-3-11": "git+https://github.com/medic/cht-core.git#3.11.x",
+    "cht-core-3-9": "git+https://github.com/medic/cht-core.git#3.9.x",
+    "couchdb-compile": "^1.11.0",
     "enketo-core": "4.41.6",
     "eslint": "^6.8.0",
     "jsdoc": "^3.6.3",
-    "medic": "git+https://github.com/medic/medic.git#3.6.x",
     "medic-enketo-xslt": "^1.5.0",
     "mocha": "^6.1.4",
     "openrosa-xpath-evaluator": "^1.5.1",
     "raw-loader": "^1.0.0",
     "rewire": "^4.0.1",
     "underscore": "^1.10.2",
-    "webpack": "^4.29.6",
+    "webpack": "^5.37.0",
     "webpack-cli": "^3.3.0"
   }
 }

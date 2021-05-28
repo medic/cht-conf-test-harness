@@ -4,7 +4,7 @@ const Harness = require('..');
 const jsonToXml = require('pojo2xml');
 
 const usage = `Usage: build-assets --path=[DIRECTORY]
-  
+
 Builds the content of a project folder for user in project explorer.
   --path         path to the medic project folder
   --output       path where the built assets will be written (optional)

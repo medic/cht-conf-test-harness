@@ -72,7 +72,7 @@ A test which confirms a task gets triggered and then resolved:
     expect(tasks).to.have.property('length', 1);
 
     // Complete the task's action
-    await harness.loadAction(tasks[0].actions[0]);
+    await harness.loadAction(tasks[0]);
     const followupResult = await harness.fillForm(['no_come_back']);
     expect(followupResult.errors).to.be.empty;
 

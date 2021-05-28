@@ -1,8 +1,6 @@
-const rewire = require('rewire');
 const path = require('path');
-const sinon = require('sinon');
 const { expect } = require('chai');
-const Harness = rewire('../src/harness');
+const Harness = require('../src/harness');
 
 const formName = 'pnc_followup';
 const harness = new Harness({
@@ -226,138 +224,13 @@ describe('Harness tests', () => {
     });
   });
 
-  describe('getTasks', () => {
-    beforeEach(async () => await harness.setNow('2000-01-01'));
-
-    it('followup task present one day before schedule', async () => {
-      const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
-      expect(formResult.errors).to.be.empty;
-  
-      const tasks = await harness.getTasks({ now: '2000-01-07' });
-      expect(tasks).to.have.property('length', 1);
-      expect(tasks[0]).to.nested.include({
-        'contact._id': 'patient_id_data',
-        resolved: false,
-        icon: 'newborn',
-        'actions[0].form': 'pnc_followup',
-      });
-    });
-  
-    it('followup task present three days after schedule', async () => {
-      const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
-      expect(formResult.errors).to.be.empty;
-  
-      const tasks = await harness.getTasks({ now: '2000-01-10' });
-      expect(tasks).to.have.property('length', 1);
-      expect(tasks[0]).to.nested.include({ resolved: false });
-    });  
-  
-    it('followup task not present at time of scheduling', async () => {
-      const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
-      expect(formResult.errors).to.be.empty;
-      expect(await harness.getTasks()).to.be.empty;
-    });
-  });
-  
-  describe('loadAction', () => {
-    beforeEach(async () => await harness.setNow('2000-01-01'));
-    it('tasks action resolves task', async () => {
-      const scheduledDate = '2000-01-07';
-      const initialResult = await harness.fillForm('pnc_followup', ['no'], ['yes', scheduledDate]);
-      expect(initialResult.errors).to.be.empty;
-  
-      await harness.setNow(scheduledDate);
-      const tasks = await harness.getTasks();
-      expect(tasks).to.have.property('length', 1);
-      
-      await harness.loadAction(tasks[0].actions[0]);
-      const followupResult = await harness.fillForm(['no_come_back']);
-      expect(followupResult.errors).to.be.empty;
-
-      // This data is the result of a build-time shim forced into enketo
-      expect(followupResult.report).to.nested.include({
-        'fields.inputs.source': 'task',
-        'fields.inputs.source_id': initialResult.report._id,
-      });
-  
-      const actual = await harness.getTasks();
-      expect(actual).to.be.empty;
-    });
-  });
-
-  describe('getContactSummary', () => {
-    let functionStub;
-    let basicReport;
-
-    before(async () => {
-      await harness.setNow('2000-01-01');
-      basicReport = await harness.fillForm('pnc_followup', ['no'], ['yes', '2000-01-07']);
-      expect(basicReport.errors).to.be.empty;
-    });
-    beforeEach(async () => {
-      await harness.clear();
-      basicReport.patient_id = harness.content.contact._id;
-      harness.pushMockedDoc(basicReport);
-      functionStub = sinon.stub();
-    });
-
-    it('passthrough if all args given', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
-      const contact = {};
-      const reports = [];
-      const lineage = [];
-      harness.getContactSummary(contact, reports, lineage);
-      expect(functionStub.args[0]).to.deep.eq([contact, reports, lineage]);
-    }));
-
-
-    it('mocks datetime - setNow after start', async () => {  
-      const expectedTime = 1000;
-      await harness.setNow(expectedTime);
-      expect(new Date().getTime()).to.eq(expectedTime);
-    });
-
-    it('state used when no args given', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
-      harness.getContactSummary();
-      const [parentOfDefault] = harness.state.contacts;
-      expect(functionStub.args[0]).to.deep.eq([harness.content.contact, harness.state.reports, [parentOfDefault]]);
-    }));
-
-    it('state used for reports and lineage but not contact', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
-      const mockContact = { _id: 'foo' };
-      harness.getContactSummary(mockContact);
-      expect(functionStub.args[0]).to.deep.eq([mockContact, [], []]);
-    }));
-
-    it('#71 - mocked reports in state are passed to contact-summary', async () => Harness.__with__({ Function: function() { return functionStub; } })(() => {
-      const mockContact = { _id: 'foo', type: 'person' };
-      const mockReport = { _id: 'bar', patient_id: mockContact._id };
-
-      harness.pushMockedDoc(mockReport);
-      harness.getContactSummary(mockContact);
-      expect(functionStub.args[0]).to.deep.eq([mockContact, [mockReport], []]);
-    }));
-
-    it('contact summary for patient_id_data', async () => {
-      const contactSummary = harness.getContactSummary('patient_id_data');
-      
-      expect(contactSummary.cards).to.deep.eq([]);
-      expect(contactSummary.context).to.deep.eq({ muted: false, hh_contact: 'CHP Area 001 Contact' });
-      expect(contactSummary.fields).to.deep.include({ label: 'contact.age', value: '1970-07-09', filter: 'age', width: 3 });
-      expect(contactSummary.fields).to.deep.include({ label: 'Phone Number', value: '', filter: 'phone', width: 3 });
-      expect(contactSummary.fields).to.deep.include({ label: 'contact.sex', value: 'female', translate: true, width: 3 });
-      expect(contactSummary.fields).to.deep.include({ label: 'contact.external_id', value: '', width: 3 });
-    });
-
-    it('throws on invalid id', () => expect(() => harness.getContactSummary('dne')).to.throw('Cannot get summary'));
-  });
-
   describe('clear', () => {
     it('content attribute is reset', () => {
       const originalDoB = harness.content.contact.date_of_birth;
       harness.content.foo = 'bar';
       expect(originalDoB).to.be.not.undefined;
       expect(harness.content.foo).to.eq('bar');
-      
+
       harness.content.contact.date_of_birth = 'not_original';
       harness.clear();
 
@@ -365,7 +238,7 @@ describe('Harness tests', () => {
       expect(harness.content.foo).to.be.undefined;
     });
 
-    it('clears mocked datetime', async () => {  
+    it('clears mocked datetime', async () => {
       const expectedTime = 1000;
       await harness.setNow(expectedTime);
       expect(new Date().getTime()).to.eq(expectedTime);
@@ -379,7 +252,7 @@ describe('Harness tests', () => {
       expect(harness.contactSummary.fields.length).to.be.gt(1);
       harness.contactSummary = { fields: [], cards: [] };
       expect(harness.contactSummary.fields.length).to.eq(0);
-      
+
       harness.clear();
       expect(harness.contactSummary.fields.length).to.be.gt(1);
     });
@@ -396,7 +269,7 @@ describe('Harness tests', () => {
       harness.user.foo = 'bar';
       expect(harness.user.name).to.eq('CHW');
       expect(harness.user.foo).to.eq('bar');
-      
+
       harness.content.contact.date_of_birth = 'not_original';
       harness.clear();
 
@@ -430,5 +303,5 @@ describe('Harness tests', () => {
       expect(harness.state.contacts).to.deep.include(mockContact);
     });
   });
-  
+
 });

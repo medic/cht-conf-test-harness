@@ -18,7 +18,7 @@ class FormFiller {
   /**
    * An object describing the result of filling a form.
    * @typedef {Object} FillResult
-   * @property {FillError[]} errors A list of errors 
+   * @property {FillError[]} errors A list of errors
    * @property {string} section The page number on which the errors occurred
    * @property {Object} report The report object which resulted from submitting the filled report. Undefined if an error blocks form submission.
    * @property {Object[]} additionalDocs An array of database documents which are created in addition to the report.
@@ -26,9 +26,9 @@ class FormFiller {
 
   /**
    * An object describing an error which has occurred while filling a form.
-   * @typedef {Object} FillError 
+   * @typedef {Object} FillError
    * @property {string} type A classification of the error [ 'validation', 'general', 'page' ]
-   * @property {string} msg Description of the error 
+   * @property {string} msg Description of the error
    */
 
   async fillAppForm(multiPageAnswer) {
@@ -141,14 +141,14 @@ const fillPage = async (self, pageAnswer) => {
     answeredQuestions.add(nextUnansweredQuestion);
     fillQuestion(nextUnansweredQuestion, answer);
   }
-  
+
   const allPagesSuccessful = hasPages(window.form) ? await window.form.pages.next() : true;
   const validationErrors = await self.getVisibleValidationErrors();
   const advanceFailure = allPagesSuccessful || validationErrors.length ? [] : [{
     type: 'general',
     msg: 'Failed to advance to next page',
   }];
-  
+
   return {
     errors: [...advanceFailure, ...validationErrors],
   };
@@ -158,11 +158,11 @@ const fillQuestion = (question, answer) => {
   if (!answer) {
     return;
   }
-  
+
   const $question = $(question);
   const allInputs = $question.find('input:not([type="hidden"]),textarea,button');
   const firstInput = Array.from(allInputs)[0];
-  
+
   if (!firstInput) {
     throw 'No input field found within question';
   }
@@ -176,11 +176,11 @@ const fillQuestion = (question, answer) => {
     // select_one appearance:minimal
     if (firstInput.className.includes('dropdown-toggle')) {
       $question.find(`input[value="${answer}"]:not([checked="checked"])`).click();
-    } 
-    
+    }
+
     // repeate section
     else {
-      
+
       if (!Number.isInteger(answer)) {
         throw `Failed to answer question which is a "+" for repeat section. This question expects an answer which is an integer - representing how many times to click the +. "${answer}"`;
       }
@@ -209,7 +209,7 @@ const fillQuestion = (question, answer) => {
     const answerArray = Array.isArray(answer) ? answer.map(answer => answer.toString()) : answer.split(',');
     const isNonBooleanString = str => !str || !['true', 'false'].includes(str.toLowerCase());
     const answerContainsSpecificValues = answerArray.some(isNonBooleanString);
-    
+
     // [value != ""] is necessary because blank lines in `choices` table of xlsx can cause empty unrendered input
     const options = $question.find('input[value!=""]');
 

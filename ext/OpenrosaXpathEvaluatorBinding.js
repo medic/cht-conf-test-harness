@@ -1,8 +1,10 @@
 var _ = require('underscore'),
     ExtendedXpathEvaluator = require('extended-xpath'),
     openrosaExtensions = require('openrosa-xpath-extensions'),
-    medicExtensions = require('medic/webapp/src/js/enketo/medic-xpath-extensions'),
-    translator = require('medic/webapp/src/js/enketo/translator');
+
+    /* This file changed from v3.6 > v3.7, but not v3.7 > v3.11 */
+    medicExtensions = require('cht-core-3-11/webapp/src/js/enketo/medic-xpath-extensions'),
+    translator = require('cht-core-3-11/webapp/src/js/enketo/translator');
 
 module.exports = function() {
     // re-implement XPathJS ourselves!
@@ -15,7 +17,12 @@ module.exports = function() {
     };
     this.xml.jsEvaluate = function(e, contextPath, namespaceResolver, resultType, result) {
         var extensions = openrosaExtensions(translator.t);
-        extensions._now = function() { return window.now || new Date(); };
+
+        // https://github.com/enketo/openrosa-xpath-evaluator/pull/28
+        const _now = function() { return window.now || new Date(); };
+        extensions._now = _now;
+        medicExtensions.func.now =
+          medicExtensions.func.today = function() { return { t: 'date', v: _now() }; };
         extensions.func = _.extend(extensions.func, medicExtensions.func);
         var wrappedXpathEvaluator = function(v) {
             // Node requests (i.e. result types greater than 3 (BOOLEAN)

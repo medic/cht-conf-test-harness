@@ -17,9 +17,6 @@ describe('initializations', () => {
 
     harness.state.contacts.push({ _id: 'contact' });
     harness.state.reports.push({ _id: 'report', 'patient_id': 'contact' });
-    const targetInstances = await harness.getEmittedTargetInstances();
-    expect(targetInstances).to.be.empty;
-
     const targets = await harness.getTargets();
     expect(targets).to.be.empty;
 
