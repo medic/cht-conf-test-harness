@@ -53,7 +53,7 @@ class Harness {
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
    * @param {string} [options.coreVersion=harness configuration file] The version of cht-core to emulate @example "3.8.0"
-   * @param {HarnessInputs} [options.inputs=loaded from harnessDataPath] The default {@link HarnessInputs} for loading and completing a form
+   * @param {HarnessInputs} [options=loaded from harnessDataPath] The default {@link HarnessInputs} controlling the environment in which your application is running
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    */
@@ -75,7 +75,7 @@ class Harness {
 
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
     this.defaultInputs = _.defaults(
-      this.options.inputs,
+      this.options,
       fileBasedDefaults,
       {
         subject: 'default_subject',
@@ -171,9 +171,9 @@ class Harness {
     }
 
     options = _.defaults(options, {
-      subject: this.options.inputs.subject,
-      content: this.options.inputs.content,
-      user: this.options.inputs.user,
+      subject: this.options.subject,
+      content: this.options.content,
+      user: this.options.user,
     });
 
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
@@ -197,7 +197,7 @@ class Harness {
   async fillContactForm(contactType, ...answers) {
     const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
 
-    const user = await resolveMock(this.coreAdapter, this.state, this.options.inputs.user);
+    const user = await resolveMock(this.coreAdapter, this.state, this.options.user);
     await doLoadForm(this, this.page, xformFilePath, {}, user);
     this._state.pageContent = await this.page.content();
 
@@ -289,8 +289,8 @@ class Harness {
     const [firstParam] = answers;
     if (!Array.isArray(firstParam)) {
       if (typeof firstParam === 'object') {
-        const inputs = _.defaults(firstParam, this.options.inputs);
-        await this.loadForm(firstParam.form, inputs);
+        const options = _.defaults(firstParam, this.options);
+        await this.loadForm(firstParam.form, options);
       } else {
         await this.loadForm(firstParam);
       }
@@ -327,10 +327,10 @@ class Harness {
    */
   async getTasks(options) {
     options = _.defaults(options, {
-      subject: this.options.inputs.subject,
-      user: this.options.inputs.user,
-      actionForm: this.options.inputs.actionForm,
-      ownedBySubject: this.options.inputs.ownedBySubject,
+      subject: this.options.subject,
+      user: this.options.user,
+      actionForm: this.options.actionForm,
+      ownedBySubject: this.options.ownedBySubject,
       title: undefined,
     });
 
@@ -373,9 +373,9 @@ class Harness {
    */
   async countTaskDocsByState(options) {
     options = _.defaults(options, {
-      subject: this.options.inputs.subject,
-      actionForm: this.options.inputs.actionForm,
-      ownedBySubject: this.options.inputs.ownedBySubject,
+      subject: this.options.subject,
+      actionForm: this.options.actionForm,
+      ownedBySubject: this.options.ownedBySubject,
       title: undefined,
     });
 
@@ -410,8 +410,8 @@ class Harness {
   async getTargets(options) {
     options = _.defaults(options, {
       type: undefined,
-      subject: this.options.inputs.subject,
-      user: this.options.inputs.user,
+      subject: this.options.subject,
+      user: this.options.user,
     });
 
     if (options.now) {
@@ -504,16 +504,16 @@ class Harness {
   }
 
   /**
-   * `user` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
+   * `user` from the {@link HarnessInputs} set through the constructor (defaulting to values from harness.defaults.json file)
    */
   get user() {
-    const { user } = this.options.inputs;
+    const { user } = this.options;
     if (typeof user === 'string') {
       return this.state.contacts.find(contact => contact._id === user);
     }
     return user;
   }
-  set user(value) { this.options.inputs.user = value; }
+  set user(value) { this.options.user = value; }
 
   /**
    * `coreVersion` is the version of the cht-core that is being emulated in testing (eg. 3.9.0)
@@ -521,19 +521,19 @@ class Harness {
   get coreVersion() { return this.options.coreVersion; }
 
   /**
-   * `content` from the {@link HarnessInputs} set through the constructor of the harness.defaults.json file
+   * `content` from the {@link HarnessInputs} set through the constructor (defaulting to values from harness.defaults.json file)
    */
-  get content() { return this.options.inputs.content; }
-  set content(value) { this.options.inputs.content = value; }
+  get content() { return this.options.content; }
+  set content(value) { this.options.content = value; }
 
   get subject() {
-    const { subject } = this.options.inputs;
+    const { subject } = this.options;
     if (typeof subject === 'string') {
       return this.state.contacts.find(contact => contact._id === subject);
     }
     return subject;
   }
-  set subject(value) { this.options.inputs.subject = value; }
+  set subject(value) { this.options.subject = value; }
 
   /**
    * @typedef HarnessState
@@ -604,7 +604,7 @@ class Harness {
    */
   async getContactSummary(contact, reports, lineage) {
     const self = this;
-    const resolvedContact = await resolveMock(this.coreAdapter, this.state, contact || this.options.inputs.subject);
+    const resolvedContact = await resolveMock(this.coreAdapter, this.state, contact || this.options.subject);
     if (typeof resolvedContact !== 'object') {
       throw `Harness: Cannot get summary for unknown or invalid contact.`;
     }
@@ -616,8 +616,8 @@ class Harness {
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
     } else {
-      const user = await resolveMock(this.coreAdapter, this.state, this.options.inputs.user);
-      const subject = await resolveMock(this.coreAdapter, this.state, this.options.inputs.subject);
+      const user = await resolveMock(this.coreAdapter, this.state, this.options.user);
+      const subject = await resolveMock(this.coreAdapter, this.state, this.options.subject);
       resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, stateEnsuringPresenceOfMocks(this.state, user, subject));
     }
 
@@ -673,7 +673,7 @@ const serializeContactSummary = (contactSummary = {}) => {
 const clearSync = (self) => {
   const contacts = [];
 
-  self.options.inputs = _.cloneDeep(self.defaultInputs);
+  self.options = _.cloneDeep(self.defaultInputs);
   self.coreAdapter = new coreAdapter(self.core, self.appSettings);
   
   self._state = {
@@ -685,7 +685,7 @@ const clearSync = (self) => {
   self._now = undefined;
 
   sinon.restore();
-  self.pushMockedDoc(...self.options.inputs.docs);
+  self.pushMockedDoc(...self.options.docs);
 };
 
 const resolveContent = async (coreAdapter, state, content, contact) => {
