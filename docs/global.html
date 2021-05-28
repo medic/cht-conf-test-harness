@@ -240,7 +240,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line461">line 461</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line590">line 590</a>
     </li></ul></dd>
     
 
@@ -604,8 +604,9 @@
 
 
 <div class="description">
-    Medic-config-test-harness provides interfaces for mocking all inputs so you can easily test the possible behaviors of your configuration. 
-The data of the HarnessInputs represents all of the inputs controlling how forms, tasks, and targets behave within the WebApp. 
+    medic-config-test-harness provides interfaces for mocking all inputs so you can easily test the possible behaviors of your configuration. 
+The data of the HarnessInputs represents all of the inputs controlling how forms, tasks, targets, and contact-summaries behave within a CHT application.
+
 To help reduce the verbosity of harness setup, you can provide default values for these inputs through a file called `harness.defaults.json` in your configuration project's folder ([example](https://github.com/medic/medic-conf-test-harness/blob/master/harness.defaults.json.example)).
 </div>
 
@@ -647,6 +648,9 @@ To help reduce the verbosity of harness setup, you can provide default values fo
             <td class="type">
             
                 
+<span class="param-type">string</span>
+|
+
 <span class="param-type">Object</span>
 
 
@@ -657,9 +661,42 @@ To help reduce the verbosity of harness setup, you can provide default values fo
 
             
 
-            <td class="description last">This represents the current user that is logged into the system. 
-In your XForm, this data mocks the `inputs/user` data. And in the task and target code, this data mocks the global `user` object.
-Use this for testing whenever your forms, tasks, or targets behave differently for whenever different users are expected to capture user data.</td>
+            <td class="description last">This represents the current user that is logged into the system. Use this for testing whenever your system behaves differently for different users.
+In harness.fillForm(), this is the data bound to `inputs/user` (hydrated). 
+In harness.getTarget(), this is the global `user` object available in targets.js. (minimized)
+In harness.getTasks(), this is the global `user` object available in tasks.js. (minimized)
+In contact-summary code, this is the global `user` object in contact-summary.templated.js. (hydrated)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>subject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">This represents the contact that is being "acted on" or the "subject of the test". The fillForm() function simulates "completing an action" on the subject's profile page. The 
+getTasks() function returns the tasks listed on the subject's profile page. The getContactSummary() function defaults to return the contact summary information displayed for the subject.
+
+`subject` can be an `object` or a `string`. Assigning `subject` a `string` should be preferred as it will result in behavior closest to the CHT. The `subject` should be set to the `_id` of the contact document present 
+in `HarnessInputs.docs`. The harness will pull in the appropriate contact and hydrate it automatically.  Assigning `subject` an `object` will skip any integration with `docs` and skips hydration - the exact value set
+will be used. This is powerful and useful for unit testing, but should be avoided during integration testing.</td>
         </tr>
 
     
@@ -682,8 +719,9 @@ Use this for testing whenever your forms, tasks, or targets behave differently f
 
             
 
-            <td class="description last">This is an object that is passed into the XForm when it is loaded.
-Tasks have the ability to set this data through the <a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema">modifyContent</a> interface.</td>
+            <td class="description last">This is the data that will be passed into an XForm via loadForm(). Tasks have the ability to set this data via the 
+<a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema">modifyContent</a> interface. 
+Recommendeded to leave this undefined in `harness.defaults.json`.</td>
         </tr>
 
     
@@ -706,8 +744,32 @@ Tasks have the ability to set this data through the <a href="https://github.com/
 
             
 
-            <td class="description last">Contact Summaries have the ability to set a <a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context">context</a>. This
-interface allows for the mocking of the output of the contact summary. If left empty, the context return by getContactSummary will be used.</td>
+            <td class="description last">Set this value to mock the data passed into app forms via `instance('contact-summary')/context`. This is mocking the 
+<a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context">context</a> information that is 
+returned by the contact-summary.  If left empty, the `context` returned by getContactSummary will be used.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>docs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">This simulates the documents on the user's device when the test begins.</td>
         </tr>
 
     
@@ -746,7 +808,7 @@ interface allows for the mocking of the output of the contact summary. If left e
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jsdocs.js.html">jsdocs.js</a>, <a href="jsdocs.js.html#line32">line 32</a>
+        <a href="jsdocs.js.html">jsdocs.js</a>, <a href="jsdocs.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -759,6 +821,60 @@ interface allows for the mocking of the output of the contact summary. If left e
 
 
 
+
+
+    <h5>Examples</h5>
+    
+        <p class="code-caption">harness.defaults.json using subject as a string (preferred)</p>
+    
+    <pre class="prettyprint"><code>{
+  "coreVersion": "3.10.3",
+  "subject": "patient_id",
+
+  "docs": [
+    {
+      "_id": "patient_id",
+      "name": "Sick Bob",
+      "type": "person",
+      "reported_date": 1550559625153,
+      "parent": {
+        "_id": "family_id",
+        "parent": {
+          "_id": "chw_area_id"
+        },
+      }
+    },
+
+    {
+      "_id": "family_id",
+      "type": "clinic",
+      "parent": {
+        "_id": "chw_area_id"
+      },
+    },
+  ]
+}</code></pre>
+
+        <p class="code-caption">harness.defaults.json using mock object</p>
+    
+    <pre class="prettyprint"><code>{
+  "coreVersion": "3.10.3",
+  "subject":  {
+    "_id": "patient_id",
+    "name": "Sick Bob",
+    "type": "person",
+    "reported_date": 1550559625153,
+    "parent": {
+      "_id": "family_id",
+      "type": "clinic",
+      "parent": {
+        "_id": "chw_area_id"
+      },
+    }
+  },
+
+  "docs": []
+}</code></pre>
 
 
 
@@ -867,29 +983,6 @@ interface allows for the mocking of the output of the contact summary. If left e
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>pageContent</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The HTML of the current form loaded by the harness.</td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -925,7 +1018,7 @@ interface allows for the mocking of the output of the contact summary. If left e
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line420">line 420</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line538">line 538</a>
     </li></ul></dd>
     
 
@@ -1098,144 +1191,6 @@ interface allows for the mocking of the output of the contact summary. If left e
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>instances</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;Object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The raw emitted target from Nools.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>instances[x]._id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>instances[x].deleted</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>instances[x].type</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">type</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>instances[x].pass</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>instances[x].date</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -1271,7 +1226,7 @@ interface allows for the mocking of the output of the contact summary. If left e
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jsdocs.js.html">jsdocs.js</a>, <a href="jsdocs.js.html#line16">line 16</a>
+        <a href="jsdocs.js.html">jsdocs.js</a>, <a href="jsdocs.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -1295,7 +1250,7 @@ interface allows for the mocking of the output of the contact summary. If left e
 
 
 <div class="description">
-    An emitted task. The structure of emitted tasks may vary by the version of medic-conf and the version of the medic webapp. In general, tasks have this structure.
+    <a href="https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks">CHT Task Documents</a>.
 </div>
 
 
@@ -1353,13 +1308,13 @@ interface allows for the mocking of the output of the contact summary. If left e
 
         <tr>
             
-                <td class="name"><code>deleted</code></td>
+                <td class="name"><code>user</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">string</span>
 
 
             
@@ -1369,14 +1324,60 @@ interface allows for the mocking of the output of the contact summary. If left e
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The user settings id of the user who calculated and created the document. Used for controlling replication. (eg. org.couchdb.user:agatha)</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>doc</code></td>
+                <td class="name"><code>requester</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">uuid</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The guid of the contact whose data brought about the creation of the document. Used for controlling cancellation.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>owner</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">uuid</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">string The guid of the contact whose profile this task will appear on in the contact’s tab.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>emission</code></td>
             
 
             <td class="type">
@@ -1392,20 +1393,38 @@ interface allows for the mocking of the output of the contact summary. If left e
 
             
 
-            <td class="description last"></td>
-        </tr>
+            <td class="description last">Minified data emitted from the partner code.
+                <h6>Properties</h6>
 
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>contact</code></td>
+                <td class="name"><code>forId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">uuid</span>
 
 
             
@@ -1415,37 +1434,14 @@ interface allows for the mocking of the output of the contact summary. If left e
 
             
 
-            <td class="description last"></td>
+            <td class="description last">If completing a task’s action opens a form. Completing the form creates a report. forId is the guid of the contact information that will be passed into the form. For most forms, the resulting report will be associated with this contact.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>icon</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>date</code></td>
+                <td class="name"><code>title</code></td>
             
 
             <td class="type">
@@ -1461,37 +1457,14 @@ interface allows for the mocking of the output of the contact summary. If left e
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The "name" attribute of the <a href="https://docs.communityhealthtoolkit.org/apps/reference/tasks/#tasksjs">task configuration</a></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>resolved</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>priority</code></td>
+                <td class="name"><code>contact.name</code></td>
             
 
             <td class="type">
@@ -1507,20 +1480,20 @@ interface allows for the mocking of the output of the contact summary. If left e
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The name that will appear beside the task on the tasks tab. The "contactLabel" attribute of the <a href="https://docs.communityhealthtoolkit.org/apps/reference/tasks/#tasksjs">task configuration</a></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>priorityLabel</code></td>
+                <td class="name"><code>startDate</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">date</span>
 
 
             
@@ -1530,20 +1503,20 @@ interface allows for the mocking of the output of the contact summary. If left e
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The date at which time the task will be displayed to the user. Before this date, the task document will be in state "Draft".</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>actions</code></td>
+                <td class="name"><code>endDate</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;Object></span>
+<span class="param-type">date</span>
 
 
             
@@ -1553,7 +1526,37 @@ interface allows for the mocking of the output of the contact summary. If left e
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The date at which time the task will no longer be displayed to the user. After this date, the task will move to state "Failed".</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stateHistory</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Each time the state attribute changes, the time of the change is recorded in the state history.</td>
         </tr>
 
     
@@ -1622,13 +1625,13 @@ interface allows for the mocking of the output of the contact summary. If left e
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Harness.html">Harness</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-core-adapter.html">core-adapter</a></li><li><a href="module-rules-engine-adapter.html">rules-engine-adapter</a></li></ul><h3>Classes</h3><ul><li><a href="Harness.html">Harness</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Apr 16 2021 12:42:23 GMT-0600 (Mountain Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 28 2021 10:33:49 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
