@@ -7,6 +7,7 @@ const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
 const uuid = require('uuid/v4');
 
+const devMode = require('./dev-mode');
 const coreAdapter = require('./core-adapter');
 const ChtCoreFactory = require('./cht-core-factory');
 const toDate = require('./toDate');
@@ -53,7 +54,10 @@ class Harness {
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
    * @param {string} [options.coreVersion=harness configuration file] The version of cht-core to emulate @example "3.8.0"
-   * @param {HarnessInputs} [options=loaded from harnessDataPath] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {string} [options.user=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {string} [options.subject=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {Object} [options.content=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {Object} [options.contactSummary=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    */
@@ -90,6 +94,10 @@ class Harness {
       }
     );
 
+    if (process.argv.includes('--dev')) {
+      this.options.useDevMode = true;
+    }
+
     const { availableCoreVersions } = ChtCoreFactory;
     this.options = _.defaults(
       this.options,
@@ -101,6 +109,10 @@ class Harness {
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
+    }
+
+    if (this.options.useDevMode) {
+      devMode.mockRulesEngine(this.core, this.options.appSettingsPath);
     }
 
     clearSync(this);
@@ -161,7 +173,10 @@ class Harness {
    * Load a form from the app folder into the harness for testing
    *
    * @param {string} formName Filename of an Xml file describing an XForm to load for testing
-   * @param {HarnessInputs} [options=Default values specified via constructor] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {string} [options.user] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {string} [options.subject=harness configuration file] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {Object} [options.content=harness configuration file] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {Object} [options.contactSummary=harness configuration file] You can override some or all of the {@link HarnessInputs} attributes.
    * @returns {HarnessState} The current state of the form
    * @deprecated Use fillForm interface (#40)
    */
@@ -642,9 +657,13 @@ class Harness {
       const subject = await resolveMock(this.coreAdapter, this.state, this.options.subject);
       resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, stateEnsuringPresenceOfMocks(this.state, user, subject));
     }
-
-    const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
-    return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
+    
+    if (this.options.useDevMode) {
+      return devMode.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage);
+    } else {
+      const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
+      return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
+    }
   }
 }
 
