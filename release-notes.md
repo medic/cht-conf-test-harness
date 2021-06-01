@@ -1,6 +1,130 @@
 # Medic-conf-test-harness Release Notes
 
-This is an experimental project which remains in alpha testing. There may be breaking changes released as patches until version 1.0 is published.
+## 2.1
+
+### Directly use cht-core libraries
+
+Prior versions of the harness were powered by a system which “behaves like” [cht-core](https://github.com/medic/cht-core) v3.6. `Version 2` updates the harness to use actual cht-core code for the `getTasks` and `getTarget` interfaces. 
+
+Based on the version of cht-core that your application is using in production, the harness can pull in the appropriate versioned components from cht-core to create an integration test experience which mirrors production. 
+
+The cht-core used to power your tests can be set once in `harness.defaults.json`:
+
+```json
+{
+  "coreVersion": "3.10.3",
+  ...
+}
+```
+
+or each time the harness is instantiated:
+
+```javascript
+const Harness = require('medic-conf-test-harness');
+const harness = new Harness({ coreVersion: '3.10.3' });
+```
+
+### harness.subject
+
+`harness.subject` is a new interface which represents the contact that is being "acted on" -- "subject of the test".
+
+* The `fillForm()` function simulates "completing an action" on the subject's profile page.
+* The `getContactSummary()` function returns the contact summary displayed for the subject.
+* The `getTasks()` function returns the tasks listed on the subject's profile page.
+ 
+ `harness.subject` can be assigned an `object` or a `string`. 
+ 
+ Assign `subject` the `_id` of a contact document. The harness will combine and hydrate the appropriate documents. This use of subject is preferred and will result in test behavior closest to the CHT.
+ 
+```json
+{
+  "coreVersion": "3.10.3",
+  "subject": "patient_id",
+ 
+  "docs": [
+    {
+      "_id": "patient_id",
+      "name": "Sick Bob",
+      "type": "person",
+      "parent": {
+        "_id": "family_id",
+        "parent": {
+          "_id": "chw_area_id"
+        },
+      }
+    },
+ 
+    {
+      "_id": "family_id",
+      "type": "clinic",
+      "parent": {
+        "_id": "chw_area_id"
+      },
+    },
+  ]
+}
+```
+
+Assigning `subject` an `object` skips hydration or any manipulation of the subject object - the exact value set will be the data passed into components. This is powerful and fast, useful for unit testing, but should be avoided during integration testing.
+
+```javascript
+const Harness = require('medic-conf-test-harness');
+const harness = new Harness();
+
+harness.subject = {
+  _id: 'patient_id',
+  name: 'Sick Bob',
+  type: 'person',
+  parent: {
+    _id: 'family_id',
+    type: 'clinic',
+    foo: 'bar',
+  }
+};
+
+```
+
+Scenario | Before | After
+-- | -- | --
+Get DoB of the contact I'm testing | `harness.content.contact.date_of_birth` | `harness.subject.date_of_birth`
+Make this test for a family | `harness.state.contacts[0] = { _id: 'family', type: 'clinic' }` | `harness.subject = 'family_id';`
+What tasks are on the CHWs profile | `harness.state.contacts.push(harness.user.parent.contact);` | `harness.subject = harness.user;`
+Only show tasks for contact I'm testing | `harness.state.contacts = [harness.content.contact];` | default behaviour
+
+### Breaking Changes
+1. `harness.defaults.json` 
+   1. New optional string attribute `coreVersion` with cht-core release to be tested (eg. “3.11.0”)
+   2. New optional array attribute `docs` defines all initial documents in the system
+2. Tests are now powered by the RulesEngine v2 which was released in cht-core v3.8 which included numerous [breaking changes](https://github.com/medic/cht-core/blob/master/release-notes/docs/3.8.0.md#breaking-changes)
+    1. Projects running cht-core <3.8 should continue to use medic-conf-test-harness@1.x.
+    2. Typically if a test breaks because of the breaking changes above - that’s a good thing. You probably have found a bug in your production experience.
+3. `getTasks()`
+    1. Passing option `{ resolved: true }` is no longer supported. Use `countTaskDocsByState()` to make assertions about resolved tasks.
+    2. Passing option `{ now }` is no longer supported. Use `setNow()` for all datetime mocking.
+    3. Return value is now a [Task Document](https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks). It previously was a task emission, which is equivalent to `ret.emission` except that:
+        1. Returned emission contains a minified contact object (name attribute only)
+        2. Returned emission contains attribute `content.contact` which is now a minimized contact object (`_id` only)
+4. `getTargets()`
+    1. Passing option `{ now }` no longer supported. Use `setNow()` for all mocking.
+    2. Now returns `{ total: 0 }` instead of `undefined` when a target has counted nothing.
+5. `pushMockedDoc()`
+    1. Mocked documents must have a unique `_id`
+    2. Stores minified documents (that is the same the CHT stores)
+6. Harness now requires node 10 or above (dropping support for legacy node 8 versions)
+7. `getEmittedTargetInstances()` has been removed
+8. `getContactSummary` interface is now `async`
+9.  `loadAction` 
+   1.  Instead of calling `loadAction(task.actions[0])`, the interface now accepts `loadAction(task)` for tasks with a single action. Use `harness.loadAction(task.emission.actions[1])` for tasks with multiple actions.
+10. `content`
+    1. `content.contact` is automated populated with `harness.subject` (hydrated) if undefined
+    2. `content.contact` is undefined by default
+
+## Changes
+1. New interface `countTaskDocsByState()` counts the number of task documents grouped by state. Returns `{ Completed: 1, Failed: 2, Ready: 1, ... }`
+2. Enketo form filling updated to support x-path extensions added in cht-core v3.7
+
+## 1.0.0
+~~This is an experimental project which remains in alpha testing. There may be breaking changes released as patches until version 1.0 is published.~~
 
 ## 0.1.30
 
