@@ -268,4 +268,23 @@ describe('Harness tests', () => {
     });
   });
 
+  describe('userSettingsDoc', () => {
+    it('default value', () => expect(harness.userSettingsDoc).to.deep.eq({
+      _id: 'org.couchdb.user:chw_area_contact_id',
+      contact_id: 'chw_area_contact_id',
+      facility_id: 'chw_area_id',
+      name: 'chw_area_contact_id',
+      type: 'user-settings',
+    }));
+
+    it('can be overwritten, then cleared', async () => {
+      const userSettingsDoc = { foo: 'bar' };
+      harness.userSettingsDoc = userSettingsDoc;
+      expect(harness.userSettingsDoc).to.deep.eq(userSettingsDoc);
+
+      await harness.clear();
+      expect(harness.userSettingsDoc).to.not.include(userSettingsDoc);
+    });
+  });
+
 });

@@ -174,16 +174,16 @@ class Harness {
       subject: this.options.subject,
       content: this.options.content,
       user: this.options.user,
+      userSettingsDoc: this.options.userSettingsDoc,
     });
 
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
     const content = await resolveContent(this.coreAdapter, this.state, options.content, options.subject);
-    const user = await resolveMock(this.coreAdapter, this.state, options.user);
     
     const contactSummary = options.contactSummary || await this.getContactSummary(content.contact);
     const serializedContactSummary = serializeContactSummary(contactSummary);
 
-    await doLoadForm(this, this.page, xformFilePath, content, user, serializedContactSummary);
+    await doLoadForm(this, this.page, xformFilePath, content, options.userSettingsDoc, serializedContactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
@@ -534,6 +534,28 @@ class Harness {
     return subject;
   }
   set subject(value) { this.options.subject = value; }
+
+
+  /**
+   * `userSettingsDoc` from the {@link HarnessInputs} set through the constructor
+   * @default {Object} A constructed object of type `user-settings` https://docs.communityhealthtoolkit.org/core/overview/db-schema/#users based on
+   * known user information
+   */
+  get userSettingsDoc () {
+    if (this.options.userSettingsDoc) {
+      return this.options.userSettingsDoc;
+    }
+  
+    const user = this.user;
+    return {
+      _id: `org.couchdb.user:${user._id || 'unknown'}`,
+      name: user._id,
+      type: 'user-settings',
+      contact_id: user._id,
+      facility_id: user.parent && user.parent._id,
+    };
+  }
+  set userSettingsDoc(value) { this.options.userSettingsDoc = value; }
 
   /**
    * @typedef HarnessState
