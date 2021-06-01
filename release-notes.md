@@ -2,7 +2,15 @@
 
 ## 2.1
 
-### Directly use cht-core libraries
+### `--dev` parameter allows for debugging partner code
+
+For projects using the declarative configuration system, users can run tests using the `--dev` flag. This will make it so tests are powered by your application's JavaScript directly - you don't need to run `medic-conf compile-app-settings` and you can set breakpoints directly in your application code. [Technical](https://github.com/medic/medic-conf-test-harness/pull/103#issue-645043513)
+
+The behaviour of the harness without `--dev` more closely aligns with the behaviour of code in production. For this reason, **the use of --dev is not recommended for official (CI) test runs.**
+
+## 2.0
+
+### BREAKING - Tests are powered by the cht-core
 
 Prior versions of the harness were powered by a system which “behaves like” [cht-core](https://github.com/medic/cht-core) v3.6. `Version 2` updates the harness to use actual cht-core code for the `getTasks` and `getTarget` interfaces. 
 
@@ -24,11 +32,11 @@ const Harness = require('medic-conf-test-harness');
 const harness = new Harness({ coreVersion: '3.10.3' });
 ```
 
-### harness.subject
+### BREAKING - Interface change "harness.subject"
 
-`harness.subject` is a new interface which represents the contact that is being "acted on" -- "subject of the test".
+`harness.subject` is a new interface which represents the contact that is being "acted on" -- "subject of the test". It is intended to replace logic which previously manipulated the awkward `harness.content.contact` or `harness.state.contacts[0]`.
 
-* The `fillForm()` function simulates "completing an action" on the subject's profile page.
+* The `fillForm()` function simulates "completing an app form" on the subject's profile page.
 * The `getContactSummary()` function returns the contact summary displayed for the subject.
 * The `getTasks()` function returns the tasks listed on the subject's profile page.
  
@@ -65,7 +73,7 @@ const harness = new Harness({ coreVersion: '3.10.3' });
 }
 ```
 
-Assigning `subject` an `object` skips hydration or any manipulation of the subject object - the exact value set will be the data passed into components. This is powerful and fast, useful for unit testing, but should be avoided during integration testing.
+Assigning `subject` an `object` skips hydration or any manipulation of the value provided - the exact value set will be the data used. This is powerful and fast, useful for mocking and unit testing - but should likely be avoided for integration testing.
 
 ```javascript
 const Harness = require('medic-conf-test-harness');
