@@ -189,7 +189,7 @@ class Harness {
       subject: this.options.subject,
       content: this.options.content,
       user: this.options.user,
-      userSettingsDoc: this.options.userSettingsDoc,
+      userSettingsDoc: this.userSettingsDoc,
     });
 
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
