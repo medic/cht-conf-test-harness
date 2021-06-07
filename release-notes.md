@@ -1,4 +1,8 @@
-# Medic-conf-test-harness Release Notes
+# cht-conf-test-harness Release Notes
+
+## 2.2.0
+
+The repository and npm package have been renamed to `cht-conf-test-harness`.
 
 ## 2.1
 

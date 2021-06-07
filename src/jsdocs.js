@@ -15,7 +15,7 @@
  */
 
 /**
- * An emitted target. The structure of emitted targets may vary by the version of medic-conf and the version of the medic webapp. In general, target have this structure.
+ * An emitted target. The structure of emitted targets may vary by the version of cht-conf and the version of the medic webapp. In general, target have this structure.
  * @typedef Target
  * @property {Object} value The aggregated calculation based on the instances.
  * @property {boolean} value.pass
@@ -25,33 +25,33 @@
  */
 
 /**
- * medic-config-test-harness provides interfaces for mocking all inputs so you can easily test the possible behaviors of your configuration. 
+ * cht-config-test-harness provides interfaces for mocking all inputs so you can easily test the possible behaviors of your configuration.
  * The data of the HarnessInputs represents the environment/data in which your forms, tasks, targets, and contact-summaries are running within your CHT application.
- * 
- * You can provide default values for these inputs through a file called `harness.defaults.json` in your configuration project's folder ([example](https://github.com/medic/medic-conf-test-harness/blob/master/harness.defaults.json.example)).
- * 
+ *
+ * You can provide default values for these inputs through a file called `harness.defaults.json` in your configuration project's folder ([example](https://github.com/medic/cht-conf-test-harness/blob/master/harness.defaults.json.example)).
+ *
  * @typedef HarnessInputs
  * @property {string|Object} user This represents the current user that is logged into the system. Use this for testing whenever your system behaves differently for different users.
- * In harness.fillForm(), this is the data bound to `inputs/user` (hydrated). 
+ * In harness.fillForm(), this is the data bound to `inputs/user` (hydrated).
  * In harness.getTargets(), this is the global `user` object available in targets.js. (hydrated)
  * In harness.getTasks(), this is the global `user` object available in tasks.js. (hydrated)
  * In contact-summary code, this is the global `user` object in contact-summary.templated.js. (hydrated)
- * 
- * @property {string|Object} subject This represents the contact that is being "acted on" or the "subject of the test". 
- * The harness.fillForm() function simulates "completing an action" on the subject's profile page. 
+ *
+ * @property {string|Object} subject This represents the contact that is being "acted on" or the "subject of the test".
+ * The harness.fillForm() function simulates "completing an action" on the subject's profile page.
  * The harness.getTasks() function returns the tasks listed on the subject's profile page.
  * The harness.getContactSummary() function returns the contact summary information displayed for the subject.
- * 
- * `subject` can be an `object` or a `string`. Assigning `subject` a `string` should be preferred as it will result in behavior closest to the CHT. The `subject` should be set to the `_id` of the contact document present 
+ *
+ * `subject` can be an `object` or a `string`. Assigning `subject` a `string` should be preferred as it will result in behavior closest to the CHT. The `subject` should be set to the `_id` of the contact document present
  * in `HarnessInputs.docs`. The harness will pull in the appropriate contact and hydrate it automatically.  Assigning `subject` an `object` will skip any integration with `docs` and skips hydration - the exact value set
  * will be used. This is powerful and useful for unit testing, but should be avoided during integration testing.
- * 
+ *
  * @example <caption>harness.defaults.json using subject as a string (preferred)</caption>
- * 
+ *
  * {
  *   "coreVersion": "3.10.3",
  *   "subject": "patient_id",
- * 
+ *
  *   "docs": [
  *     {
  *       "_id": "patient_id",
@@ -65,7 +65,7 @@
  *         },
  *       }
  *     },
- * 
+ *
  *     {
  *       "_id": "family_id",
  *       "type": "clinic",
@@ -75,9 +75,9 @@
  *     },
  *   ]
  * }
- * 
+ *
  * @example <caption>harness.defaults.json using mock object</caption>
- * 
+ *
  * {
  *   "coreVersion": "3.10.3",
  *   "subject":  {
@@ -93,18 +93,18 @@
  *       },
  *     }
  *   },
- * 
+ *
  *   "docs": []
  * }
- * 
- * 
- * @property {Object} content This is the data that will be passed into an XForm via loadForm(). Tasks have the ability to set this data via the 
- * [modifyContent]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema} interface. 
+ *
+ *
+ * @property {Object} content This is the data that will be passed into an XForm via loadForm(). Tasks have the ability to set this data via the
+ * [modifyContent]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema} interface.
  * Recommendeded to leave this undefined in `harness.defaults.json`.
- * 
- * @property {Object} contactSummary Set this value to mock the data passed into app forms via `instance('contact-summary')/context`. This is mocking the 
- * [context]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context} information that is 
+ *
+ * @property {Object} contactSummary Set this value to mock the data passed into app forms via `instance('contact-summary')/context`. This is mocking the
+ * [context]{@link https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context} information that is
  * returned by the contact-summary.  If left empty, the `context` returned by {@link getContactSummary} will be used.
- * 
+ *
  * @property {Object[]} docs This simulates the documents on the user's device when the test begins.
  */

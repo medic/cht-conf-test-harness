@@ -1,13 +1,13 @@
 /**
  * This is a mocked version of cht-core's rules-engine's rules-emitter module
  * https://github.com/medic/cht-core/blob/master/shared-libs/rules-engine/src/rules-emitter.js
- * 
- * This mock provides (nearly?) identical functionally to the production emitter but avoids the bundled result code from medic-conf and avoids nools. The behaviour 
+ *
+ * This mock provides (nearly?) identical functionally to the production emitter but avoids the bundled result code from cht-conf and avoids nools. The behaviour
  * of the system may not be identical for all cases, but provides some useful experiences for test authors.
- * https://github.com/medic/medic-conf-test-harness/pull/103
+ * https://github.com/medic/cht-conf-test-harness/pull/103
  * @module mock.rules-engine.rules-emitter
  */
-const mockNoolsLib = require('./mock.medic-conf.nools-lib');
+const mockNoolsLib = require('./mock.cht-conf.nools-lib');
 
 let enabled = false;
 let Utils;
@@ -16,7 +16,7 @@ let user;
 module.exports = chtCore => {
   return {
     isMock: true,
-    
+
     /**
     * Initializes the rules emitter
     *
@@ -79,7 +79,7 @@ module.exports = chtCore => {
           results.targets.push(instance);
         }
       };
-        
+
       for (const container of containers) {
         mockNoolsLib(container, user, Utils, Task, Target, emitCallback);
       }
