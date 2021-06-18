@@ -9,6 +9,8 @@ const toDate = val => {
     return DateTime.fromJSDate(val);
   } else if (typeof val === 'string' && val.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
     return DateTime.fromISO(val);
+  } else if (typeof val === 'string' && val.match(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/)){
+    return DateTime.fromFormat(val, 'dd/MM/yyyy');
   } else if (typeof val === 'object'){
     return DateTime.fromObject(val);
   } else if (typeof val === 'string'){
