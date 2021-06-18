@@ -10,7 +10,7 @@ const uuid = require('uuid/v4');
 const devMode = require('./dev-mode');
 const coreAdapter = require('./core-adapter');
 const ChtCoreFactory = require('./cht-core-factory');
-const toDate = require('./toDate');
+const { toDate, addDate } = require('./dateUtils');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
 if (!fs.existsSync(pathToHost)) {
@@ -246,9 +246,7 @@ class Harness {
     if (!now) {
       throw Error('undefined date passed to setNow');
     }
-
-    const parseableNow = typeof now === 'object' ? now.getTime() : now;
-    const asTimestamp = toDate(parseableNow).getTime();
+    const asTimestamp = toDate(now).toMillis();
     this._now = asTimestamp;
     sinon.useFakeTimers(asTimestamp);
     return this.page && this.page.evaluate(innerNow => window.now = new Date(innerNow), this._now);
@@ -271,18 +269,7 @@ class Harness {
    */
   async flush(amount) {
     let now = this._now || Date.now();
-    if (typeof amount === 'object') {
-      const { years = 0, days = 0, hours = 0, minutes = 0, seconds = 0, ms = 0 } = amount;
-      now = now +
-        years   * 1000 * 60 * 60 * 24 * 365 +
-        days    * 1000 * 60 * 60 * 24 +
-        hours   * 1000 * 60 * 60 +
-        minutes * 1000 * 60 +
-        seconds * 1000 +
-        ms;
-    } else { // shorthand is for days
-      now += amount * 24 * 60 * 60 * 1000;
-    }
+    now = addDate(now, amount);
     return this.setNow(now);
   }
 
