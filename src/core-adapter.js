@@ -95,6 +95,7 @@ const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, sessi
     chtCore.RulesEmitter.initialize({
       rules: appSettings.tasks.rules,
       contact: user,
+      taskSchedules: rulesSettings.taskSchedules
     });
   }
 };
