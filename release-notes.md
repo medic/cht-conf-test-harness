@@ -105,7 +105,7 @@ Only show tasks for contact I'm testing | `harness.state.contacts = [harness.con
 ### Breaking Changes
 1. Tests are now powered by the RulesEngine v2 which was released in cht-core v3.8 which included numerous [breaking changes](https://github.com/medic/cht-core/blob/master/release-notes/docs/3.8.0.md#breaking-changes)
     1. Projects running cht-core <3.8 should continue to use medic-conf-test-harness@1.x.
-    2. Typically, if a test breaks because of this changes - that’s a good thing. You have found a bug in the production behaviour of your application.
+    2. Typically, if a test breaks because of these changes - that’s a good thing. You have found a bug in the production behaviour of your application.
 2. `harness.defaults.json` 
    1. New optional string attribute `coreVersion` captures the cht-core version to power your tests (eg. “3.11.0”)
    2. New optional array attribute `docs` defines initial documents in the system
