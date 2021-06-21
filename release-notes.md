@@ -114,7 +114,7 @@ Only show tasks for contact I'm testing | `harness.state.contacts = [harness.con
 3. `getTasks()`
     1. Passing option `{ resolved: true }` is no longer supported. Use `countTaskDocsByState()` to make assertions about resolved tasks.
     2. Passing option `{ now }` is no longer supported. Use `setNow()` for all datetime mocking.
-    3. Return value is now a [Task Document](https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks). It previously was a task emission, which is equivalent to `ret.emission` except that: 1) emissions contain a minified contact object (name attribute only), 2) emissions contains attribute `content.contact` which is now a minimized contact object (`_id` only)
+    3. Return value is now a [Task Document](https://docs.communityhealthtoolkit.org/core/overview/db-schema/#tasks). It previously was a task emission, which is equivalent to `ret.emission` except that: 1) emissions contain a minified contact object (name attribute only), 2) emissions contain attribute `content.contact` which is now a minimized contact object (`_id` only)
 4. `getTargets()`
     1. Passing option `{ now }` no longer supported. Use `setNow()` for all mocking.
     2. Returns `{ total: 0 }` instead of `undefined` when a target has counted nothing.
