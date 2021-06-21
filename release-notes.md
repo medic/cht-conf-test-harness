@@ -126,7 +126,7 @@ Only show tasks for contact I'm testing | `harness.state.contacts = [harness.con
 8. `getContactSummary` interface is now `async`
 9.  `loadAction` - Now accepts task documents as input. So instead of calling `loadAction(task.actions[0])`, the interface now accepts `loadAction(task)` for tasks with a single action. Use `harness.loadAction(task.emission.actions[1])` for task documents with multiple actions.
 10. `content`
-    1. `content.contact` is automated populated with `harness.subject` (hydrated) if undefined
+    1. `content.contact` is automatically populated with `harness.subject` (hydrated) if undefined
     2. `content.contact` is undefined by default
 
 ## Changes
