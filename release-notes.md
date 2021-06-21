@@ -12,7 +12,7 @@ The behaviour of the harness without `--dev` more closely aligns with the behavi
 
 ### BREAKING - Tests are powered by the cht-core's shared-libs
 
-Prior versions of the harness were powered by a system which “behaves like” [cht-core](https://github.com/medic/cht-core) v3.6. `medic-conf-test-harness Version 2` updates the harness to use actual cht-core code so test behave like your production system. Based on the version of cht-core that your application is using in production, the harness can pull in the appropriate versioned components from cht-core to create an integration test experience which mirrors production. 
+Prior versions of the harness were powered by a system which “behaves like” [cht-core](https://github.com/medic/cht-core) v3.6. `medic-conf-test-harness version 2` updates the harness to use actual cht-core code so tests behave like your production system. Based on the version of cht-core that your application is using in production, the harness can pull in the appropriate versioned components from cht-core to create an integration test experience which mirrors production.
 
 The version of cht-core which is used to power your tests can be set in `harness.defaults.json`:
 
