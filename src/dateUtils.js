@@ -19,7 +19,7 @@ const toDate = val => {
     return DateTime.fromObject(val);
   }
   throw 'Unsupported date value';
-}
+};
 
 const toDuration = val => {
   if (Duration.isDuration(val)){
@@ -31,11 +31,11 @@ const toDuration = val => {
   } else {
     return Duration.fromISO(val);
   }
-}
+};
 
 const addDate = (start, period) => {
   return toDate(start).plus(toDuration(period));
-}
+};
 
 module.exports = {
   addDate,
