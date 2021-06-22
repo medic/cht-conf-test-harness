@@ -556,7 +556,7 @@ class Harness {
    * @default {Object} A constructed object of type `user-settings` https://docs.communityhealthtoolkit.org/core/overview/db-schema/#users based on
    * known user information
    */
-  get userSettingsDoc () {
+  get userSettingsDoc() {
     if (this.options.userSettingsDoc) {
       return this.options.userSettingsDoc;
     }
