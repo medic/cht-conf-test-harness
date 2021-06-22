@@ -36,6 +36,7 @@
     "jsdoc": "^3.6.3",
     "medic-enketo-xslt": "^1.5.0",
     "mocha": "^6.1.4",
+    "moment": "^2.29.1",
     "openrosa-xpath-evaluator": "^1.5.1",
     "raw-loader": "^1.0.0",
     "rewire": "^4.0.1",
