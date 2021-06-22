@@ -1,5 +1,5 @@
 const chai = require('chai');
-const moment = require('moment');
+const { DateTime } = require('luxon');
 const chaiExclude = require('chai-exclude');
 const path = require('path');
 const Harness = require('../src/harness');
@@ -22,8 +22,8 @@ describe('contact forms', () => {
   afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
 
   it('district-hospital with new primary contact', async () => {
-    const now = moment('2000-01-01');
-    await harness.setNow(now.valueOf());
+    const now = DateTime.fromISO('2000-01-01');
+    await harness.setNow(now);
     const result = await harness.fillContactForm(
       'district_hospital',
       ['new_person', 'Full', 'Short', '1990-08-06', undefined, '+1-555-227-7744', undefined, 'female', 'patient'],
@@ -139,8 +139,8 @@ describe('contact forms', () => {
   });
 
   it('form without pages', async () => {
-    const now = moment('2000-01-01');
-    await harness.setNow(now.valueOf());
+    const now = DateTime.fromISO('2000-01-01');
+    await harness.setNow(now);
     const result = await harness.fillContactForm('no_pages', [
       undefined,
       'chw', '123', 'full name', '1990-10-08', undefined, 'male', '555-123-4567', 'no', 'english',

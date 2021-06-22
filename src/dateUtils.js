@@ -5,18 +5,19 @@ const toDate = val => {
     return val;
   } else if (typeof val === 'number'){
     return DateTime.fromMillis(val);
-  } else if (typeof val === 'object' && val.getMonth && typeof val.getMonth === 'function'){
+  } else if (typeof val === 'object' && typeof val.getMonth === 'function'){
     return DateTime.fromJSDate(val);
-  } else if (typeof val === 'string' && val.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
-    return DateTime.fromISO(val);
-  } else if (typeof val === 'string' && val.match(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/)){
-    return DateTime.fromFormat(val, 'dd/MM/yyyy');
+  } else if (typeof val === 'string'){
+    if (val.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
+      return DateTime.fromISO(val);
+    } else if (val.match(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/)){
+      return DateTime.fromFormat(val, 'dd/MM/yyyy');
+    }
+    return DateTime.fromRFC2822(val);
   } else if (typeof val === 'object'){
     return DateTime.fromObject(val);
-  } else if (typeof val === 'string'){
-    return DateTime.fromRFC2822(val);
   }
-  return undefined;
+  throw 'Unsupported date value';
 }
 
 const toDuration = val => {
