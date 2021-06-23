@@ -562,8 +562,12 @@ class Harness {
     }
   
     const user = this.user;
+    if (!user) {
+      return undefined;
+    }
+
     return {
-      _id: `org.couchdb.user:${user._id || 'unknown'}`,
+      _id: `org.couchdb.user:${user._id}`,
       name: user._id,
       type: 'user-settings',
       contact_id: user._id,
