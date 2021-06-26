@@ -10,7 +10,7 @@ const uuid = require('uuid/v4');
 const devMode = require('./dev-mode');
 const coreAdapter = require('./core-adapter');
 const ChtCoreFactory = require('./cht-core-factory');
-const { toDate, addDate } = require('./dateUtils');
+const { toDate, toDuration } = require('./dateUtils');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
 if (!fs.existsSync(pathToHost)) {
@@ -269,7 +269,7 @@ class Harness {
    */
   async flush(amount) {
     let now = this._now || Date.now();
-    now = addDate(now, amount);
+    now = toDate(now).plus(toDuration(amount));
     return this.setNow(now);
   }
 

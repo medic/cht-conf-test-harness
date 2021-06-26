@@ -1,44 +1,51 @@
 const { DateTime, Duration } = require('luxon');
 
 const toDate = val => {
+  let t;
   if (DateTime.isDateTime(val)){
-    return val;
-  } else if (typeof val === 'number'){
-    return DateTime.fromMillis(val);
-  } else if (typeof val === 'string'){
-    if (val.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
-      return DateTime.fromISO(val);
-    } else if (val.match(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/)){
-      return DateTime.fromFormat(val, 'dd/MM/yyyy');
-    }
-    return DateTime.fromRFC2822(val);
+    t = val;
   } else if (typeof val === 'object'){
-    if (typeof val.getMonth === 'function'){
-      return DateTime.fromJSDate(val);
+    if (val instanceof Date && typeof val.getTime() === 'number'){
+      t = DateTime.fromJSDate(val);
+    } else {
+      t = DateTime.fromObject(val);
     }
-    return DateTime.fromObject(val);
+  }
+  if (typeof val === 'number'){
+    t = DateTime.fromMillis(val);
+  }
+  if (typeof val === 'string'){
+    const parsedDate = new Date(val);
+    if (!isNaN(parsedDate.getTime())){
+      t = DateTime.fromJSDate(parsedDate);
+    }
+  }
+  if (t instanceof DateTime && t.isValid){
+    return t.toUTC();
   }
   throw 'Unsupported date value';
 };
 
 const toDuration = val => {
+  let d;
   if (Duration.isDuration(val)){
-    return val;
+    d = val;
   } else if (typeof val === 'object'){
-    return Duration.fromObject(val);
-  } else if (typeof val === 'number'){
-    return Duration.fromObject({days: val});
-  } else {
-    return Duration.fromISO(val);
+    d = Duration.fromObject(val);
   }
-};
-
-const addDate = (start, period) => {
-  return toDate(start).plus(toDuration(period));
+  if (typeof val === 'number'){
+    d = Duration.fromObject({days: val});
+  }
+  if (typeof val === 'string'){
+    d = Duration.fromISO(val);
+  }
+  if (d instanceof Duration && d.isValid){
+    return d;
+  }
+  throw 'Unsupported duration value';
 };
 
 module.exports = {
-  addDate,
   toDate,
   toDuration
 };
