@@ -1,5 +1,6 @@
 const path = require('path');
 const { expect } = require('chai');
+const { DateTime, Duration } = require('luxon');
 const Harness = require('../src/harness');
 
 const formName = 'pnc_followup';
@@ -56,6 +57,29 @@ describe('Harness tests', () => {
       expect(result.report.fields).to.include({
         patient_age_in_years: '19',
       });
+    });
+
+    it('setNow works with DateTime', async () => {
+      const t = DateTime.now();
+      await harness.setNow(t);
+      expect(harness.getNow()).to.equal(t.toMillis());
+    });
+
+    it('flush works with Duration', async () => {
+      await harness.setNow('2000-01-01');
+      const d = Duration.fromISO('P5Y3M'); // 5 years, 3 months
+      await harness.flush(d);
+      const now = await harness.getNow();
+      expect(new Date(now).toUTCString()).to.include('Fri, 01 Apr 2005 00:00:00');
+    });
+
+    it('flush accounts for DST', async () => {
+      const t = DateTime.fromISO('2019-11-03', { zone: 'Canada/Pacific' });
+      await harness.setNow(t);
+      await harness.flush(1);
+      const now = await harness.getNow();
+      const parsed = DateTime.fromMillis(now, { zone: 'Canada/Pacific' });
+      expect(parsed.toISO()).to.include('2019-11-03T23:00:00');
     });
   });
 

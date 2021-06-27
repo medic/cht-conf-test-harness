@@ -240,7 +240,7 @@ class Harness {
 
   /**
    * Set the current mock-time of the harness. Mocks global time {@link https://sinonjs.org/releases/v1.17.6/fake-timers/|uses sinon}
-   * @param {Date|number|string} now A Date object or a value which can be parsed into a Date
+   * @param {Date|DateTime|number|string} now A Date object, {@link https://moment.github.io/luxon/docs/class/src/datetime.js~DateTime.html|DateTime object} or a value which can be parsed into a Date
    */
   setNow(now) {
     if (!now) {
@@ -262,7 +262,7 @@ class Harness {
 
   /**
    * Increment the current time by an amount
-   * @param {Object|number} amount Either an object describing how far to move forward in time. Has attributes { years, days, hours, minutes, seconds, ms }. Or an number describing how many days to move forward in time.
+   * @param {Object|Duration|number} amount An object with attributes { years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds } describing how far to move forward in time, a {@link https://moment.github.io/luxon/docs/class/src/duration.js~Duration.html|Duration object} or a number describing how many days to move forward in time.
    * @example
    * await flush({ years: 1, minutes: 5 }); // move one year and 5 minutes forward in time
    * await flush(1); // move one day forward in time

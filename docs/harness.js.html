@@ -38,7 +38,7 @@ const uuid = require('uuid/v4');
 const devMode = require('./dev-mode');
 const coreAdapter = require('./core-adapter');
 const ChtCoreFactory = require('./cht-core-factory');
-const toDate = require('./toDate');
+const { toDate, toDuration } = require('./dateUtils');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
 if (!fs.existsSync(pathToHost)) {
@@ -82,10 +82,10 @@ class Harness {
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
    * @param {string} [options.coreVersion=harness configuration file] The version of cht-core to emulate @example "3.8.0"
-   * @param {HarnessInputs} [options.user=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
-   * @param {HarnessInputs} [options.subject=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
-   * @param {HarnessInputs} [options.content=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
-   * @param {HarnessInputs} [options.contactSummary=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {string} [options.user=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {string} [options.subject=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {Object} [options.content=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {Object} [options.contactSummary=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    */
@@ -108,7 +108,7 @@ class Harness {
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
     this.defaultInputs = _.defaults(
       this.options,
-      _.pick(fileBasedDefaults, 'useDevMode', 'coreVersion'),
+      fileBasedDefaults,
       {
         subject: 'default_subject',
         user: 'default_user',
@@ -201,7 +201,10 @@ class Harness {
    * Load a form from the app folder into the harness for testing
    *
    * @param {string} formName Filename of an Xml file describing an XForm to load for testing
-   * @param {HarnessInputs} [options=Default values specified via constructor] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {string} [options.user] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {string} [options.subject=harness configuration file] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {Object} [options.content=harness configuration file] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {Object} [options.contactSummary=harness configuration file] You can override some or all of the {@link HarnessInputs} attributes.
    * @returns {HarnessState} The current state of the form
    * @deprecated Use fillForm interface (#40)
    */
@@ -265,15 +268,13 @@ class Harness {
 
   /**
    * Set the current mock-time of the harness. Mocks global time {@link https://sinonjs.org/releases/v1.17.6/fake-timers/|uses sinon}
-   * @param {Date|number|string} now A Date object or a value which can be parsed into a Date
+   * @param {Date|DateTime|number|string} now A Date object, {@link https://moment.github.io/luxon/docs/class/src/datetime.js~DateTime.html|DateTime object} or a value which can be parsed into a Date
    */
   setNow(now) {
     if (!now) {
       throw Error('undefined date passed to setNow');
     }
-
-    const parseableNow = typeof now === 'object' ? now.getTime() : now;
-    const asTimestamp = toDate(parseableNow).getTime();
+    const asTimestamp = toDate(now).toMillis();
     this._now = asTimestamp;
     sinon.useFakeTimers(asTimestamp);
     return this.page &amp;&amp; this.page.evaluate(innerNow => window.now = new Date(innerNow), this._now);
@@ -289,25 +290,14 @@ class Harness {
 
   /**
    * Increment the current time by an amount
-   * @param {Object|number} amount Either an object describing how far to move forward in time. Has attributes { years, days, hours, minutes, seconds, ms }. Or an number describing how many days to move forward in time.
+   * @param {Object|Duration|number} amount An object with attributes { years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds } describing how far to move forward in time, a {@link https://moment.github.io/luxon/docs/class/src/duration.js~Duration.html|Duration object} or a number describing how many days to move forward in time.
    * @example
    * await flush({ years: 1, minutes: 5 }); // move one year and 5 minutes forward in time
    * await flush(1); // move one day forward in time
    */
   async flush(amount) {
     let now = this._now || Date.now();
-    if (typeof amount === 'object') {
-      const { years = 0, days = 0, hours = 0, minutes = 0, seconds = 0, ms = 0 } = amount;
-      now = now +
-        years   * 1000 * 60 * 60 * 24 * 365 +
-        days    * 1000 * 60 * 60 * 24 +
-        hours   * 1000 * 60 * 60 +
-        minutes * 1000 * 60 +
-        seconds * 1000 +
-        ms;
-    } else { // shorthand is for days
-      now += amount * 24 * 60 * 60 * 1000;
-    }
+    now = toDate(now).plus(toDuration(amount));
     return this.setNow(now);
   }
 
@@ -785,7 +775,7 @@ module.exports = Harness;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 28 2021 11:07:52 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Jun 28 2021 00:03:56 GMT+0300 (East Africa Time)
 </footer>
 
 <script> prettyPrint(); </script>

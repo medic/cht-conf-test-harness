@@ -500,7 +500,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#HarnessInputs">HarnessInputs</a></span>
+<span class="param-type">string</span>
 
 
             
@@ -539,7 +539,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#HarnessInputs">HarnessInputs</a></span>
+<span class="param-type">string</span>
 
 
             
@@ -578,7 +578,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#HarnessInputs">HarnessInputs</a></span>
+<span class="param-type">Object</span>
 
 
             
@@ -617,7 +617,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#HarnessInputs">HarnessInputs</a></span>
+<span class="param-type">Object</span>
 
 
             
@@ -886,7 +886,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line512">line 512</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line502">line 502</a>
     </li></ul></dd>
     
 
@@ -953,7 +953,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line538">line 538</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line528">line 528</a>
     </li></ul></dd>
     
 
@@ -1015,7 +1015,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line533">line 533</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line523">line 523</a>
     </li></ul></dd>
     
 
@@ -1077,7 +1077,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line561">line 561</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line551">line 551</a>
     </li></ul></dd>
     
 
@@ -1139,7 +1139,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line521">line 521</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line511">line 511</a>
     </li></ul></dd>
     
 
@@ -1517,7 +1517,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line386">line 386</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line376">line 376</a>
     </li></ul></dd>
     
 
@@ -1717,7 +1717,7 @@ expect(summary).to.nested.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line209">line 209</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -1901,7 +1901,7 @@ If an Object is provided, it can have attributes { form, user, content, contactS
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line300">line 300</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line290">line 290</a>
     </li></ul></dd>
     
 
@@ -2022,6 +2022,9 @@ const result = await harness.fillForm('my_form', ['1', '2'], ['3']});</code></pr
 <span class="param-type">Object</span>
 |
 
+<span class="param-type">Duration</span>
+|
+
 <span class="param-type">number</span>
 
 
@@ -2032,7 +2035,7 @@ const result = await harness.fillForm('my_form', ['1', '2'], ['3']});</code></pr
 
             
 
-            <td class="description last">Either an object describing how far to move forward in time. Has attributes { years, days, hours, minutes, seconds, ms }. Or an number describing how many days to move forward in time.</td>
+            <td class="description last">An object with attributes { years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds } describing how far to move forward in time, a <a href="https://moment.github.io/luxon/docs/class/src/duration.js~Duration.html">Duration object</a> or a number describing how many days to move forward in time.</td>
         </tr>
 
     
@@ -2073,7 +2076,7 @@ const result = await harness.fillForm('my_form', ['1', '2'], ['3']});</code></pr
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line269">line 269</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line270">line 270</a>
     </li></ul></dd>
     
 
@@ -2294,7 +2297,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line617">line 617</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line607">line 607</a>
     </li></ul></dd>
     
 
@@ -2404,7 +2407,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line258">line 258</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line259">line 259</a>
     </li></ul></dd>
     
 
@@ -2639,7 +2642,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line422">line 422</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line412">line 412</a>
     </li></ul></dd>
     
 
@@ -2990,7 +2993,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line340">line 340</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line330">line 330</a>
     </li></ul></dd>
     
 
@@ -3149,7 +3152,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line468">line 468</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line458">line 458</a>
     </li></ul></dd>
     
 
@@ -3207,7 +3210,7 @@ expect(actual).to.be.empty;</code></pre>
     
 
     
-    <h4 class="name" id="loadForm"><span class="type-signature">(async) </span>loadForm<span class="signature">(formName, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#HarnessState">HarnessState</a>}</span></h4>
+    <h4 class="name" id="loadForm"><span class="type-signature">(async) </span>loadForm<span class="signature">(formName)</span><span class="type-signature"> &rarr; {<a href="global.html#HarnessState">HarnessState</a>}</span></h4>
     
 
     
@@ -3290,13 +3293,13 @@ expect(actual).to.be.empty;</code></pre>
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>options.user</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#HarnessInputs">HarnessInputs</a></span>
+<span class="param-type">string</span>
 
 
             
@@ -3317,7 +3320,122 @@ expect(actual).to.be.empty;</code></pre>
             
                 <td class="default">
                 
-                    Default values specified via constructor
+                </td>
+            
+
+            <td class="description last">You can override some or all of the <a href="global.html#HarnessInputs">HarnessInputs</a> attributes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.subject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    harness configuration file
+                
+                </td>
+            
+
+            <td class="description last">You can override some or all of the <a href="global.html#HarnessInputs">HarnessInputs</a> attributes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.content</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    harness configuration file
+                
+                </td>
+            
+
+            <td class="description last">You can override some or all of the <a href="global.html#HarnessInputs">HarnessInputs</a> attributes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.contactSummary</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    harness configuration file
                 
                 </td>
             
@@ -3365,7 +3483,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line180">line 180</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line183">line 183</a>
     </li></ul></dd>
     
 
@@ -3536,7 +3654,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line567">line 567</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line557">line 557</a>
     </li></ul></dd>
     
 
@@ -3625,6 +3743,9 @@ expect(actual).to.be.empty;</code></pre>
 <span class="param-type">Date</span>
 |
 
+<span class="param-type">DateTime</span>
+|
+
 <span class="param-type">number</span>
 |
 
@@ -3638,7 +3759,7 @@ expect(actual).to.be.empty;</code></pre>
 
             
 
-            <td class="description last">A Date object or a value which can be parsed into a Date</td>
+            <td class="description last">A Date object, <a href="https://moment.github.io/luxon/docs/class/src/datetime.js~DateTime.html">DateTime object</a> or a value which can be parsed into a Date</td>
         </tr>
 
     
@@ -3679,7 +3800,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line242">line 242</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line245">line 245</a>
     </li></ul></dd>
     
 
@@ -3961,7 +4082,7 @@ expect(actual).to.be.empty;</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 28 2021 11:07:52 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Jun 28 2021 00:03:56 GMT+0300 (East Africa Time)
 </footer>
 
 <script> prettyPrint(); </script>
