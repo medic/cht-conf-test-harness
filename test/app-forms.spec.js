@@ -15,9 +15,9 @@ describe('forms that have caused bugs', () => {
   beforeEach(async () => { return await harness.clear(); });
   afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
 
-  it('patient_assessment with user-based fields', async () => {
-    const mrdtUser = Object.assign({}, harness.user, { is_in_mrdt: true });
-    const result = await harness.fillForm({ form: 'patient_assessment_over_5', user: mrdtUser },
+  it('patient_assessment with custom fields on user-settings doc', async () => {
+    const mrdtUser = Object.assign({}, harness.userSettingsDoc, { is_in_mrdt: true });
+    const result = await harness.fillForm({ form: 'patient_assessment_over_5', userSettingsDoc: mrdtUser },
       ['home_visit'],
       ['c_assessment_time_2', 'c_when_illness_2'],
       ['yes', ...Array(8).fill('no'), 'unavailable', 'watching'],

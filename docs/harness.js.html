@@ -49,7 +49,7 @@ if (!fs.existsSync(pathToHost)) {
  * A harness for testing MedicMobile WebApp configurations
  *
  * @example
- * const Harness = require('medic-conf-test-harness');
+ * const Harness = require('cht-conf-test-harness');
  * const instance = new Harness({
  *   verbose: true,
  *   directory: '/home/me/config-me/',
@@ -82,10 +82,10 @@ class Harness {
    * @param {string} [options.appSettingsPath=path.join(options.directory, 'app_settings.json')] Path to file containing app_settings.json to test
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
    * @param {string} [options.coreVersion=harness configuration file] The version of cht-core to emulate @example "3.8.0"
-   * @param {HarnessInputs} [options.user=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
-   * @param {HarnessInputs} [options.subject=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
-   * @param {HarnessInputs} [options.content=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
-   * @param {HarnessInputs} [options.contactSummary=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {string} [options.user=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {string} [options.subject=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {Object} [options.content=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {Object} [options.contactSummary=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    */
@@ -108,7 +108,7 @@ class Harness {
     const fileBasedDefaults = loadJsonFromFile(this.options.harnessDataPath);
     this.defaultInputs = _.defaults(
       this.options,
-      _.pick(fileBasedDefaults, 'useDevMode', 'coreVersion'),
+      fileBasedDefaults,
       {
         subject: 'default_subject',
         user: 'default_user',
@@ -201,13 +201,16 @@ class Harness {
    * Load a form from the app folder into the harness for testing
    *
    * @param {string} formName Filename of an Xml file describing an XForm to load for testing
-   * @param {HarnessInputs} [options=Default values specified via constructor] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {string} [options.user] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {string} [options.subject=harness configuration file] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {Object} [options.content=harness configuration file] You can override some or all of the {@link HarnessInputs} attributes.
+   * @param {Object} [options.contactSummary=harness configuration file] You can override some or all of the {@link HarnessInputs} attributes.
    * @returns {HarnessState} The current state of the form
    * @deprecated Use fillForm interface (#40)
    */
   async loadForm(formName, options = {}) {
     if (!this.page) {
-      throw Error(`loadForm(): Cannot invoke medic-conf-test-harness.loadForm() before calling start()`);
+      throw Error(`loadForm(): Cannot invoke cht-conf-test-harness.loadForm() before calling start()`);
     }
 
     options = _.defaults(options, {
@@ -219,7 +222,7 @@ class Harness {
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
     const content = await resolveContent(this.coreAdapter, this.state, options.content, options.subject);
     const user = await resolveMock(this.coreAdapter, this.state, options.user);
-    
+
     const contactSummary = options.contactSummary || await this.getContactSummary(content.contact);
     const serializedContactSummary = serializeContactSummary(contactSummary);
 
@@ -245,9 +248,9 @@ class Harness {
     const fillResult = await this.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
-    // https://github.com/medic/medic-conf-test-harness/issues/105
+    // https://github.com/medic/cht-conf-test-harness/issues/105
     if (this.subject &amp;&amp; this.subject.parent) {
-      fillResult.contacts.forEach(contact => { 
+      fillResult.contacts.forEach(contact => {
         if (!contact.parent || !contact.parent._id) {
           contact.parent = this.subject.parent;
         }
@@ -362,7 +365,7 @@ class Harness {
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
    * @param {string} [options.actionForm] Filter task documents to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
    * @param {boolean} [options.ownedBySubject] Filter task documents to only those owned by the subject. Filter is skipped if false.
-   * 
+   *
    * @returns {Task[]} An array of task documents which would be visible to the user given the current {@link HarnessState}
    */
   async getTasks(options) {
@@ -400,7 +403,7 @@ class Harness {
    * @param {string} [options.title=undefined] Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.
    * @param {string} [options.actionForm] Filter task documents counted to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
    * @param {boolean} [options.ownedBySubject] Filter task documents counted to only those owned by the subject. Filter is skipped if false.
-   * 
+   *
    * @returns Map with keys equal to task document state and values equal to the number of task documents in that state.
    * @example
    * const summary = await countTaskDocsByState({ title: 'my-task-title' });
@@ -420,7 +423,7 @@ class Harness {
     });
 
     await this.getTasks(options);
-    
+
     const allTaskDocs = await this.coreAdapter.fetchTaskDocs();
     const subjectId = typeof this.subject === 'object' ? this.subject._id : this.subject;
     const relevantTaskDocs = filterTaskDocs(allTaskDocs, subjectId, options);
@@ -457,11 +460,11 @@ class Harness {
     if (options.now) {
       throw Error('getTargets({ now }) is not supported. See setNow() for mocking time.');
     }
-    
+
     const user = await resolveMock(this.coreAdapter, this.state, options.user);
     const subject = await resolveMock(this.coreAdapter, this.state, options.subject, { hydrate: false });
     const targets = await this.coreAdapter.fetchTargets(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
-    
+
     return targets
       .filter(target =>
         !options.type ||
@@ -651,7 +654,7 @@ class Harness {
 
     const reportHasMatchingSubject = report => self.core.RegistrationUtils.getSubjectId(report) === resolvedContact._id;
     const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(reportHasMatchingSubject);
-    
+
     let resolvedLineage = [];
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
@@ -660,7 +663,7 @@ class Harness {
       const subject = await resolveMock(this.coreAdapter, this.state, this.options.subject);
       resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, stateEnsuringPresenceOfMocks(this.state, user, subject));
     }
-    
+
     if (this.options.useDevMode) {
       return devMode.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage);
     } else {
@@ -719,7 +722,7 @@ const clearSync = (self) => {
 
   self.options = _.cloneDeep(self.defaultInputs);
   self.coreAdapter = new coreAdapter(self.core, self.appSettings);
-  
+
   self._state = {
     console: [],
     contacts,
@@ -779,13 +782,13 @@ module.exports = Harness;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="mock.medic-conf.module_contact-summary-lib.html">contact-summary-lib</a></li><li><a href="mock.medic-conf.module_nools-lib.html">nools-lib</a></li><li><a href="mock.rules-engine.module_rules-emitter.html">rules-emitter</a></li><li><a href="module-core-adapter.html">core-adapter</a></li></ul><h3>Classes</h3><ul><li><a href="Harness.html">Harness</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="mock.cht-conf.module_contact-summary-lib.html">contact-summary-lib</a></li><li><a href="mock.cht-conf.module_nools-lib.html">nools-lib</a></li><li><a href="mock.rules-engine.module_rules-emitter.html">rules-emitter</a></li><li><a href="module-core-adapter.html">core-adapter</a></li></ul><h3>Classes</h3><ul><li><a href="Harness.html">Harness</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 28 2021 11:07:52 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Jun 07 2021 14:28:18 GMT+0300 (Eastern European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

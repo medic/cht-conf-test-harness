@@ -240,7 +240,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line602">line 602</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line605">line 605</a>
     </li></ul></dd>
     
 
@@ -604,10 +604,10 @@
 
 
 <div class="description">
-    medic-config-test-harness provides interfaces for mocking all inputs so you can easily test the possible behaviors of your configuration. 
+    cht-config-test-harness provides interfaces for mocking all inputs so you can easily test the possible behaviors of your configuration.
 The data of the HarnessInputs represents the environment/data in which your forms, tasks, targets, and contact-summaries are running within your CHT application.
 
-You can provide default values for these inputs through a file called `harness.defaults.json` in your configuration project's folder ([example](https://github.com/medic/medic-conf-test-harness/blob/master/harness.defaults.json.example)).
+You can provide default values for these inputs through a file called `harness.defaults.json` in your configuration project's folder ([example](https://github.com/medic/cht-conf-test-harness/blob/master/harness.defaults.json.example)).
 </div>
 
 
@@ -662,7 +662,7 @@ You can provide default values for these inputs through a file called `harness.d
             
 
             <td class="description last">This represents the current user that is logged into the system. Use this for testing whenever your system behaves differently for different users.
-In harness.fillForm(), this is the data bound to `inputs/user` (hydrated). 
+In harness.fillForm(), this is the data bound to `inputs/user` (hydrated).
 In harness.getTargets(), this is the global `user` object available in targets.js. (hydrated)
 In harness.getTasks(), this is the global `user` object available in tasks.js. (hydrated)
 In contact-summary code, this is the global `user` object in contact-summary.templated.js. (hydrated)</td>
@@ -691,12 +691,12 @@ In contact-summary code, this is the global `user` object in contact-summary.tem
 
             
 
-            <td class="description last">This represents the contact that is being "acted on" or the "subject of the test". 
-The harness.fillForm() function simulates "completing an action" on the subject's profile page. 
+            <td class="description last">This represents the contact that is being "acted on" or the "subject of the test".
+The harness.fillForm() function simulates "completing an action" on the subject's profile page.
 The harness.getTasks() function returns the tasks listed on the subject's profile page.
 The harness.getContactSummary() function returns the contact summary information displayed for the subject.
 
-`subject` can be an `object` or a `string`. Assigning `subject` a `string` should be preferred as it will result in behavior closest to the CHT. The `subject` should be set to the `_id` of the contact document present 
+`subject` can be an `object` or a `string`. Assigning `subject` a `string` should be preferred as it will result in behavior closest to the CHT. The `subject` should be set to the `_id` of the contact document present
 in `HarnessInputs.docs`. The harness will pull in the appropriate contact and hydrate it automatically.  Assigning `subject` an `object` will skip any integration with `docs` and skips hydration - the exact value set
 will be used. This is powerful and useful for unit testing, but should be avoided during integration testing.</td>
         </tr>
@@ -721,8 +721,8 @@ will be used. This is powerful and useful for unit testing, but should be avoide
 
             
 
-            <td class="description last">This is the data that will be passed into an XForm via loadForm(). Tasks have the ability to set this data via the 
-<a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema">modifyContent</a> interface. 
+            <td class="description last">This is the data that will be passed into an XForm via loadForm(). Tasks have the ability to set this data via the
+<a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#task-schema">modifyContent</a> interface.
 Recommendeded to leave this undefined in `harness.defaults.json`.</td>
         </tr>
 
@@ -746,8 +746,8 @@ Recommendeded to leave this undefined in `harness.defaults.json`.</td>
 
             
 
-            <td class="description last">Set this value to mock the data passed into app forms via `instance('contact-summary')/context`. This is mocking the 
-<a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context">context</a> information that is 
+            <td class="description last">Set this value to mock the data passed into app forms via `instance('contact-summary')/context`. This is mocking the
+<a href="https://github.com/medic/medic-docs/blob/master/configuration/developing-community-health-applications.md#context">context</a> information that is
 returned by the contact-summary.  If left empty, the `context` returned by getContactSummary will be used.</td>
         </tr>
 
@@ -1020,7 +1020,7 @@ returned by the contact-summary.  If left empty, the `context` returned by getCo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line550">line 550</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line553">line 553</a>
     </li></ul></dd>
     
 
@@ -1044,7 +1044,7 @@ returned by the contact-summary.  If left empty, the `context` returned by getCo
 
 
 <div class="description">
-    An emitted target. The structure of emitted targets may vary by the version of medic-conf and the version of the medic webapp. In general, target have this structure.
+    An emitted target. The structure of emitted targets may vary by the version of cht-conf and the version of the medic webapp. In general, target have this structure.
 </div>
 
 
@@ -1627,13 +1627,13 @@ returned by the contact-summary.  If left empty, the `context` returned by getCo
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="mock.medic-conf.module_contact-summary-lib.html">contact-summary-lib</a></li><li><a href="mock.medic-conf.module_nools-lib.html">nools-lib</a></li><li><a href="mock.rules-engine.module_rules-emitter.html">rules-emitter</a></li><li><a href="module-core-adapter.html">core-adapter</a></li></ul><h3>Classes</h3><ul><li><a href="Harness.html">Harness</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="mock.cht-conf.module_contact-summary-lib.html">contact-summary-lib</a></li><li><a href="mock.cht-conf.module_nools-lib.html">nools-lib</a></li><li><a href="mock.rules-engine.module_rules-emitter.html">rules-emitter</a></li><li><a href="module-core-adapter.html">core-adapter</a></li></ul><h3>Classes</h3><ul><li><a href="Harness.html">Harness</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 28 2021 11:07:52 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Jun 07 2021 14:28:18 GMT+0300 (Eastern European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

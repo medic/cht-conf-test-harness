@@ -1,6 +1,6 @@
 # Medic Test Harness for Projects
 
-View the documentation [here](http://docs.communityhealthtoolkit.org/medic-conf-test-harness/).
+View the documentation [here](http://docs.communityhealthtoolkit.org/cht-conf-test-harness/).
 
 ## Contributing
 
