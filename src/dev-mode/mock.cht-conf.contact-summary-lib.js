@@ -1,9 +1,9 @@
 /**
- * This is a mocked version of medic-conf's contact-summary lib.js which is an entry-point for medic-conf's compile-app-settings bundle.
- * https://github.com/medic/medic-conf/blob/master/src/contact-summary/lib.js
- * 
+ * This is a mocked version of cht-conf's contact-summary lib.js which is an entry-point for cht-conf's compile-app-settings bundle.
+ * https://github.com/medic/cht-conf/blob/master/src/contact-summary/lib.js
+ *
  * It behaves the same as the production version but can be run inside node require() instead of relying on the resolution aliasing provided by webpack.
- * @module mock.medic-conf.contact-summary-lib
+ * @module mock.cht-conf.contact-summary-lib
  */
 module.exports = (pathToProject, contact, reports, lineage) => {
   const cacheBefore = Object.keys(require.cache);
@@ -11,11 +11,11 @@ module.exports = (pathToProject, contact, reports, lineage) => {
     global.contact = contact;
     global.reports = reports;
     global.lineage = lineage;
-    
-    const contactSummaryEmitter = require(`${pathToProject}/node_modules/medic-conf/src/contact-summary/contact-summary-emitter`);
+
+    const contactSummaryEmitter = require(`${pathToProject}/node_modules/cht-conf/src/contact-summary/contact-summary-emitter`);
     const pathToContactSummary = `${pathToProject}/contact-summary.templated.js`;
     const contactSummary = require(pathToContactSummary);
-    
+
     return contactSummaryEmitter(contactSummary, contact, reports, lineage);
   }
   finally {

@@ -1,7 +1,7 @@
 const path = require('path');
 
-const mockContactSummary = require('./mock.medic-conf.contact-summary-lib');
-const stubbedNoolsLib = require('./mock.medic-conf.nools-lib');
+const mockContactSummary = require('./mock.cht-conf.contact-summary-lib');
+const stubbedNoolsLib = require('./mock.cht-conf.nools-lib');
 const devRulesEmitter = require('./mock.rules-engine.rules-emitter');
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
     stubbedNoolsLib.pathToProject = pathToProject;
     if (!core.RulesEmitter.isMock) {
       console.warn('******************************************');
-      console.warn('**** medic-conf-test-harness dev mode ****');
+      console.warn('**** cht-conf-test-harness dev mode ****');
       console.warn('******************************************');
       Object.assign(core.RulesEmitter, devRulesEmitter(core));
     }

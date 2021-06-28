@@ -1,7 +1,7 @@
 {
-  "name": "medic-conf-test-harness",
-  "version": "2.1.3",
-  "description": "Test Framework for Medic Projects",
+  "name": "cht-conf-test-harness",
+  "version": "2.2.1",
+  "description": "Test Framework for CHT Projects",
   "main": "./src/harness.js",
   "scripts": {
     "test": "npx mocha test/*.spec.js --timeout 25000 --slow 500",
