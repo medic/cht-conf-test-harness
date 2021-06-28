@@ -102,4 +102,15 @@ describe('getContactSummary', () => {
       expect(err.message).to.include('failed for id');
     }
   });
+
+  it('throw for empty user', async () => {
+    harness.user = {};
+    try {
+      await harness.getContactSummary();
+      expect.fail('expect throw');
+    }
+    catch (error) {
+      expect(error.message).to.contain('_id');
+    }
+  });
 });
