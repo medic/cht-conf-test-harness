@@ -59,13 +59,22 @@ describe('Harness tests', () => {
       });
     });
 
-    it('setNow works with DateTime', async () => {
+    it('setNow works with Luxon DateTime', async () => {
       const t = DateTime.now();
       await harness.setNow(t);
       expect(harness.getNow()).to.equal(t.toMillis());
     });
 
-    it('flush works with Duration', async () => {
+    it('setNow throws for invalid date formats', async () => {
+      expect(harness.setNow, 'notadate').to.throw();
+    });
+
+    xit('flush throws for invalid duration', async () => {
+      await harness.setNow('2000-01-01');
+      expect(await harness.flush, 'notaduration').to.throw();
+    });
+
+    it('flush works with Luxon Duration', async () => {
       await harness.setNow('2000-01-01');
       const d = Duration.fromISO('P5Y3M'); // 5 years, 3 months
       await harness.flush(d);
@@ -73,13 +82,36 @@ describe('Harness tests', () => {
       expect(new Date(now).toUTCString()).to.include('Fri, 01 Apr 2005 00:00:00');
     });
 
-    it('flush accounts for DST', async () => {
+    it('#20 - flush accounts for DST', async () => {
       const t = DateTime.fromISO('2019-11-03', { zone: 'Canada/Pacific' });
       await harness.setNow(t);
       await harness.flush(1);
       const now = await harness.getNow();
       const parsed = DateTime.fromMillis(now, { zone: 'Canada/Pacific' });
       expect(parsed.toISO()).to.include('2019-11-03T23:00:00');
+    });
+
+    it('setNow works with a variety of date formats', async () => {
+      let now;
+
+      await harness.setNow('2000-01-01');
+      expect(harness.getNow()).to.equal(946684800000);
+
+      await harness.setNow('December 17, 2005');
+      now = await harness.getNow();
+      expect(new Date(now).toString()).to.include('Sat Dec 17 2005');
+
+      await harness.setNow('2010 Feb 28');
+      now = await harness.getNow();
+      expect(new Date(now).toString()).to.include('Sun Feb 28 2010');
+
+      await harness.setNow('05/20/2010');
+      now = await harness.getNow();
+      expect(new Date(now).toString()).to.include('Thu May 20 2010');
+
+      await harness.setNow({ year: 2010, month: 6, day: 1});
+      now = await harness.getNow();
+      expect(new Date(now).toString()).to.include('Tue Jun 01 2010');
     });
   });
 

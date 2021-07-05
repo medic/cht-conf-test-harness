@@ -4,12 +4,12 @@ const toDate = val => {
   let t;
   if (DateTime.isDateTime(val)){
     t = val;
-  } else if (typeof val === 'object'){
-    if (val instanceof Date && typeof val.getTime() === 'number'){
-      t = DateTime.fromJSDate(val);
-    } else {
-      t = DateTime.fromObject(val);
-    }
+  }
+  if (val instanceof Date && typeof val.getTime() === 'number'){
+    t = DateTime.fromJSDate(val);
+  }
+  if (typeof val === 'object' && t === undefined){
+    t = DateTime.fromObject(val);
   }
   if (typeof val === 'number'){
     t = DateTime.fromMillis(val);
@@ -30,7 +30,8 @@ const toDuration = val => {
   let d;
   if (Duration.isDuration(val)){
     d = val;
-  } else if (typeof val === 'object'){
+  }
+  if (typeof val === 'object' && d === undefined){
     d = Duration.fromObject(val);
   }
   if (typeof val === 'number'){
