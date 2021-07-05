@@ -69,10 +69,11 @@ describe('Harness tests', () => {
       expect(harness.setNow, 'notadate').to.throw();
     });
 
-    xit('flush throws for invalid duration', async () => {
-      await harness.setNow('2000-01-01');
-      expect(await harness.flush, 'notaduration').to.throw();
-    });
+    // it('flush throws for invalid duration', async () => {
+    //   // bind to correct 'this' context
+    //   await harness.setNow('2000-01-01');
+    //   expect(await harness.flush, 'notaduration').to.throw();
+    // });
 
     it('flush works with Luxon Duration', async () => {
       await harness.setNow('2000-01-01');
