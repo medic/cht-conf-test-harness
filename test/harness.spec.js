@@ -137,6 +137,16 @@ describe('Harness tests', () => {
       }
     });
 
+    it('throw for empty user', async () => {
+      try {
+        harness.user = {};
+        await harness.fillForm('dne', ['yes']);
+        expect.fail('Should throw');
+      } catch (err) {
+        expect(err.message).to.include('_id');
+      }
+    });
+
     it('a different list of validation errors', async () => {
       const result = await harness.fillForm(formName, ['yes', '2100-01-01', '2100-01-01']);
       expect(result).to.nested.include({
@@ -320,6 +330,38 @@ describe('Harness tests', () => {
       const mockContact = { type: 'contact', contact_type: 'custom', reported_date: 123, fields: { foo: 'bar' } };
       harness.pushMockedDoc([mockContact, mockContact]);
       expect(harness.state.contacts).to.deep.include(mockContact);
+    });
+  });
+
+  describe('userSettingsDoc', () => {
+    it('default value', () => expect(harness.userSettingsDoc).to.deep.eq({
+      _id: 'org.couchdb.user:chw_area_contact_id',
+      contact_id: 'chw_area_contact_id',
+      facility_id: 'chw_area_id',
+      name: 'chw_area_contact_id',
+      type: 'user-settings',
+    }));
+
+    it('can be overwritten, then cleared', async () => {
+      const userSettingsDoc = { foo: 'bar' };
+      harness.userSettingsDoc = userSettingsDoc;
+      expect(harness.userSettingsDoc).to.deep.eq(userSettingsDoc);
+
+      await harness.clear();
+      expect(harness.userSettingsDoc).to.not.include(userSettingsDoc);
+    });
+
+    it('empty user', async () => {
+      harness.user = {};
+      expect(harness.userSettingsDoc).to.include({
+        _id: `org.couchdb.user:undefined`,
+        type: 'user-settings',
+      });
+    });
+
+    it('undefined user', async () => {
+      harness.user = undefined;
+      expect(harness.userSettingsDoc).to.be.undefined;
     });
   });
 

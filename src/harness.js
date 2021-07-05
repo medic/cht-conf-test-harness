@@ -21,7 +21,7 @@ if (!fs.existsSync(pathToHost)) {
  * A harness for testing MedicMobile WebApp configurations
  *
  * @example
- * const Harness = require('medic-conf-test-harness');
+ * const Harness = require('cht-conf-test-harness');
  * const instance = new Harness({
  *   verbose: true,
  *   directory: '/home/me/config-me/',
@@ -182,23 +182,22 @@ class Harness {
    */
   async loadForm(formName, options = {}) {
     if (!this.page) {
-      throw Error(`loadForm(): Cannot invoke medic-conf-test-harness.loadForm() before calling start()`);
+      throw Error(`loadForm(): Cannot invoke cht-conf-test-harness.loadForm() before calling start()`);
     }
 
     options = _.defaults(options, {
       subject: this.options.subject,
       content: this.options.content,
       user: this.options.user,
+      userSettingsDoc: this.userSettingsDoc,
     });
 
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
     const content = await resolveContent(this.coreAdapter, this.state, options.content, options.subject);
-    const user = await resolveMock(this.coreAdapter, this.state, options.user);
-    
     const contactSummary = options.contactSummary || await this.getContactSummary(content.contact);
     const serializedContactSummary = serializeContactSummary(contactSummary);
 
-    await doLoadForm(this, this.page, xformFilePath, content, user, serializedContactSummary);
+    await doLoadForm(this, this.page, xformFilePath, content, options.userSettingsDoc, serializedContactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
@@ -220,9 +219,9 @@ class Harness {
     const fillResult = await this.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
-    // https://github.com/medic/medic-conf-test-harness/issues/105
+    // https://github.com/medic/cht-conf-test-harness/issues/105
     if (this.subject && this.subject.parent) {
-      fillResult.contacts.forEach(contact => { 
+      fillResult.contacts.forEach(contact => {
         if (!contact.parent || !contact.parent._id) {
           contact.parent = this.subject.parent;
         }
@@ -324,7 +323,7 @@ class Harness {
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
    * @param {string} [options.actionForm] Filter task documents to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
    * @param {boolean} [options.ownedBySubject] Filter task documents to only those owned by the subject. Filter is skipped if false.
-   * 
+   *
    * @returns {Task[]} An array of task documents which would be visible to the user given the current {@link HarnessState}
    */
   async getTasks(options) {
@@ -362,7 +361,7 @@ class Harness {
    * @param {string} [options.title=undefined] Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.
    * @param {string} [options.actionForm] Filter task documents counted to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
    * @param {boolean} [options.ownedBySubject] Filter task documents counted to only those owned by the subject. Filter is skipped if false.
-   * 
+   *
    * @returns Map with keys equal to task document state and values equal to the number of task documents in that state.
    * @example
    * const summary = await countTaskDocsByState({ title: 'my-task-title' });
@@ -382,7 +381,7 @@ class Harness {
     });
 
     await this.getTasks(options);
-    
+
     const allTaskDocs = await this.coreAdapter.fetchTaskDocs();
     const subjectId = typeof this.subject === 'object' ? this.subject._id : this.subject;
     const relevantTaskDocs = filterTaskDocs(allTaskDocs, subjectId, options);
@@ -419,11 +418,11 @@ class Harness {
     if (options.now) {
       throw Error('getTargets({ now }) is not supported. See setNow() for mocking time.');
     }
-    
+
     const user = await resolveMock(this.coreAdapter, this.state, options.user);
     const subject = await resolveMock(this.coreAdapter, this.state, options.subject, { hydrate: false });
     const targets = await this.coreAdapter.fetchTargets(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
-    
+
     return targets
       .filter(target =>
         !options.type ||
@@ -537,6 +536,32 @@ class Harness {
   }
   set subject(value) { this.options.subject = value; }
 
+
+  /**
+   * `userSettingsDoc` from the {@link HarnessInputs} set through the constructor
+   * @default {Object} A constructed object of type `user-settings` https://docs.communityhealthtoolkit.org/core/overview/db-schema/#users based on
+   * known user information
+   */
+  get userSettingsDoc() {
+    if (this.options.userSettingsDoc) {
+      return this.options.userSettingsDoc;
+    }
+  
+    const user = this.user;
+    if (!user) {
+      return undefined;
+    }
+
+    return {
+      _id: `org.couchdb.user:${user._id}`,
+      name: user._id,
+      type: 'user-settings',
+      contact_id: user._id,
+      facility_id: user.parent && user.parent._id,
+    };
+  }
+  set userSettingsDoc(value) { this.options.userSettingsDoc = value; }
+
   /**
    * @typedef HarnessState
    * @property {Object[]} console Each element represents an event within Chrome console.
@@ -613,7 +638,7 @@ class Harness {
 
     const reportHasMatchingSubject = report => self.core.RegistrationUtils.getSubjectId(report) === resolvedContact._id;
     const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(reportHasMatchingSubject);
-    
+
     let resolvedLineage = [];
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
@@ -622,7 +647,7 @@ class Harness {
       const subject = await resolveMock(this.coreAdapter, this.state, this.options.subject);
       resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, stateEnsuringPresenceOfMocks(this.state, user, subject));
     }
-    
+
     if (this.options.useDevMode) {
       return devMode.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage);
     } else {
@@ -681,7 +706,7 @@ const clearSync = (self) => {
 
   self.options = _.cloneDeep(self.defaultInputs);
   self.coreAdapter = new coreAdapter(self.core, self.appSettings);
-  
+
   self._state = {
     console: [],
     contacts,

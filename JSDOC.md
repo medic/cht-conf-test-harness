@@ -3,19 +3,19 @@
 A test harness which facilitates automated integration tests for [CHT Applications](https://docs.communityhealthtoolkit.org/apps/).
 
 API:
-* [Harness](https://docs.communityhealthtoolkit.org/medic-conf-test-harness/Harness.html)
-* [Globals](https://docs.communityhealthtoolkit.org/medic-conf-test-harness/global.html)
+* [Harness](https://docs.communityhealthtoolkit.org/cht-conf-test-harness/Harness.html)
+* [Globals](https://docs.communityhealthtoolkit.org/cht-conf-test-harness/global.html)
 
 ## Getting Started
 
-1. Install the harness `npm install --save medic-conf-test-harness chai`.
+1. Install the harness `npm install --save cht-conf-test-harness chai`.
 1. Create the below sample test file updating the `formName` variable.
 1. Run your tests via Mocha.
 
 ```JavaScript
 const { expect } = require('chai');
 
-const Harness = require('medic-conf-test-harness');
+const Harness = require('cht-conf-test-harness');
 const harness = new Harness({ verbose: true });
 
 describe('Getting started tests', () => {

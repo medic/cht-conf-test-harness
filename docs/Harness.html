@@ -800,7 +800,7 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const Harness = require('medic-conf-test-harness');
+    <pre class="prettyprint"><code>const Harness = require('cht-conf-test-harness');
 const instance = new Harness({
   verbose: true,
   directory: '/home/me/config-me/',
@@ -886,7 +886,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line502">line 502</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line501">line 501</a>
     </li></ul></dd>
     
 
@@ -953,7 +953,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line528">line 528</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line527">line 527</a>
     </li></ul></dd>
     
 
@@ -1015,7 +1015,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line523">line 523</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line522">line 522</a>
     </li></ul></dd>
     
 
@@ -1077,7 +1077,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line551">line 551</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line576">line 576</a>
     </li></ul></dd>
     
 
@@ -1139,7 +1139,75 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line511">line 511</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line510">line 510</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="userSettingsDoc"><span class="type-signature"></span>userSettingsDoc<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    `userSettingsDoc` from the <a href="global.html#HarnessInputs">HarnessInputs</a> set through the constructor
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>{Object} A constructed object of type `user-settings` https://docs.communityhealthtoolkit.org/core/overview/db-schema/#users based on
+known user information</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line545">line 545</a>
     </li></ul></dd>
     
 
@@ -1517,7 +1585,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line376">line 376</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line375">line 375</a>
     </li></ul></dd>
     
 
@@ -1717,7 +1785,7 @@ expect(summary).to.nested.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line212">line 212</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line211">line 211</a>
     </li></ul></dd>
     
 
@@ -1901,7 +1969,7 @@ If an Object is provided, it can have attributes { form, user, content, contactS
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line290">line 290</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line289">line 289</a>
     </li></ul></dd>
     
 
@@ -2076,7 +2144,7 @@ const result = await harness.fillForm('my_form', ['1', '2'], ['3']});</code></pr
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line270">line 270</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line269">line 269</a>
     </li></ul></dd>
     
 
@@ -2297,7 +2365,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line607">line 607</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line632">line 632</a>
     </li></ul></dd>
     
 
@@ -2407,7 +2475,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line259">line 259</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line258">line 258</a>
     </li></ul></dd>
     
 
@@ -2642,7 +2710,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line412">line 412</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line411">line 411</a>
     </li></ul></dd>
     
 
@@ -2993,7 +3061,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line330">line 330</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line329">line 329</a>
     </li></ul></dd>
     
 
@@ -3152,7 +3220,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line458">line 458</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line457">line 457</a>
     </li></ul></dd>
     
 
@@ -3654,7 +3722,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line557">line 557</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line582">line 582</a>
     </li></ul></dd>
     
 
@@ -3800,7 +3868,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line245">line 245</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line244">line 244</a>
     </li></ul></dd>
     
 
@@ -4076,13 +4144,13 @@ expect(actual).to.be.empty;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="mock.medic-conf.module_contact-summary-lib.html">contact-summary-lib</a></li><li><a href="mock.medic-conf.module_nools-lib.html">nools-lib</a></li><li><a href="mock.rules-engine.module_rules-emitter.html">rules-emitter</a></li><li><a href="module-core-adapter.html">core-adapter</a></li></ul><h3>Classes</h3><ul><li><a href="Harness.html">Harness</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="mock.cht-conf.module_contact-summary-lib.html">contact-summary-lib</a></li><li><a href="mock.cht-conf.module_nools-lib.html">nools-lib</a></li><li><a href="mock.rules-engine.module_rules-emitter.html">rules-emitter</a></li><li><a href="module-core-adapter.html">core-adapter</a></li></ul><h3>Classes</h3><ul><li><a href="Harness.html">Harness</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Jun 28 2021 00:03:56 GMT+0300 (East Africa Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Jul 05 2021 17:51:02 GMT+0300 (East Africa Time)
 </footer>
 
 <script> prettyPrint(); </script>
