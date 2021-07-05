@@ -66,14 +66,23 @@ describe('Harness tests', () => {
     });
 
     it('setNow throws for invalid date formats', async () => {
-      expect(harness.setNow, 'notadate').to.throw();
+      try {
+        await harness.setNow();
+        expect.fail('Should throw');
+      } catch (err) {
+        expect(err.message).to.include('undefined date');
+      }
     });
 
-    // it('flush throws for invalid duration', async () => {
-    //   // bind to correct 'this' context
-    //   await harness.setNow('2000-01-01');
-    //   expect(await harness.flush, 'notaduration').to.throw();
-    // });
+    it('flush throws for invalid duration', async () => {
+      await harness.setNow('2000-01-01');
+      try {
+        await harness.flush();
+        expect.fail('Should throw');
+      } catch (err) {
+        expect(err.message).to.include('Unsupported duration value');
+      }
+    });
 
     it('flush works with Luxon Duration', async () => {
       await harness.setNow('2000-01-01');

@@ -23,7 +23,7 @@ const toDate = val => {
   if (t instanceof DateTime && t.isValid){
     return t.toUTC();
   }
-  throw 'Unsupported date value';
+  throw Error('Unsupported date value');
 };
 
 const toDuration = val => {
@@ -31,7 +31,7 @@ const toDuration = val => {
   if (Duration.isDuration(val)){
     d = val;
   }
-  if (typeof val === 'object' && d === undefined){
+  if (typeof val === 'object' && d === undefined) {
     d = Duration.fromObject(val);
   }
   if (typeof val === 'number'){
@@ -40,10 +40,10 @@ const toDuration = val => {
   if (typeof val === 'string'){
     d = Duration.fromISO(val);
   }
-  if (d instanceof Duration && d.isValid){
+  if (d instanceof Duration && d.isValid){  
     return d;
   }
-  throw 'Unsupported duration value';
+  throw Error('Unsupported duration value');
 };
 
 module.exports = {
