@@ -1,5 +1,6 @@
 const path = require('path');
 const { expect } = require('chai');
+const { DateTime, Duration } = require('luxon');
 const Harness = require('../src/harness');
 
 const formName = 'pnc_followup';
@@ -38,15 +39,14 @@ describe('Harness tests', () => {
       await harness.setNow('1985-08-06');
       await harness.flush({ years: 1, days: 1, hours: 2 });
       const now = await harness.getNow();
-      // TODO: This is timezone sensitive...
-      expect(new Date(now).toString()).to.include('Thu Aug 07 1986 02:00:00');
+      expect(new Date(now).toUTCString()).to.include('Thu, 07 Aug 1986 02:00:00');
     });
 
     it('flush shorthands as days', async () => {
       await harness.setNow('1985-08-06');
       await harness.flush(5);
       const now = await harness.getNow();
-      expect(new Date(now).toString()).to.include('Sun Aug 11 1985 00:00:00');
+      expect(new Date(now).toUTCString()).to.include('Sun, 11 Aug 1985 00:00:00');
     });
 
     it('control now', async () => {
@@ -57,6 +57,71 @@ describe('Harness tests', () => {
       expect(result.report.fields).to.include({
         patient_age_in_years: '19',
       });
+    });
+
+    it('setNow works with Luxon DateTime', async () => {
+      const t = DateTime.now();
+      await harness.setNow(t);
+      expect(harness.getNow()).to.equal(t.toMillis());
+    });
+
+    it('setNow throws for invalid date formats', async () => {
+      try {
+        await harness.setNow();
+        expect.fail('Should throw');
+      } catch (err) {
+        expect(err.message).to.include('undefined date');
+      }
+    });
+
+    it('flush throws for invalid duration', async () => {
+      await harness.setNow('2000-01-01');
+      try {
+        await harness.flush();
+        expect.fail('Should throw');
+      } catch (err) {
+        expect(err.message).to.include('Unsupported duration value');
+      }
+    });
+
+    it('flush works with Luxon Duration', async () => {
+      await harness.setNow('2000-01-01');
+      const d = Duration.fromISO('P5Y3M'); // 5 years, 3 months
+      await harness.flush(d);
+      const now = await harness.getNow();
+      expect(new Date(now).toUTCString()).to.include('Fri, 01 Apr 2005 00:00:00');
+    });
+
+    it('#20 - flush accounts for DST', async () => {
+      const t = DateTime.fromISO('2019-11-03', { zone: 'Canada/Pacific' });
+      await harness.setNow(t);
+      await harness.flush(1);
+      const now = await harness.getNow();
+      const parsed = DateTime.fromMillis(now, { zone: 'Canada/Pacific' });
+      expect(parsed.toISO()).to.include('2019-11-03T23:00:00');
+    });
+
+    it('setNow works with a variety of date formats', async () => {
+      let now;
+
+      await harness.setNow('2000-01-01');
+      expect(harness.getNow()).to.equal(946684800000);
+
+      await harness.setNow('December 17, 2005');
+      now = await harness.getNow();
+      expect(new Date(now).toString()).to.include('Sat Dec 17 2005');
+
+      await harness.setNow('2010 Feb 28');
+      now = await harness.getNow();
+      expect(new Date(now).toString()).to.include('Sun Feb 28 2010');
+
+      await harness.setNow('05/20/2010');
+      now = await harness.getNow();
+      expect(new Date(now).toString()).to.include('Thu May 20 2010');
+
+      await harness.setNow({ year: 2010, month: 6, day: 1});
+      now = await harness.getNow();
+      expect(new Date(now).toString()).to.include('Tue Jun 01 2010');
     });
   });
 
