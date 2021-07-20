@@ -155,7 +155,8 @@ const fillPage = async (self, pageAnswer) => {
 };
 
 const fillQuestion = (question, answer) => {
-  if(typeof answer === 'undefined') {
+  // eslint-disable-next-line eqeqeq
+  if(answer == null) {
     return;
   }
 
