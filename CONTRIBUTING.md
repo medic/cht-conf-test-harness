@@ -4,10 +4,6 @@
 
 The Community Health Toolkit is powered by people like you. Your contributions help us create open source technology for a new model of healthcare that reaches everyone.
 
-## Communication
-
-We recommend you raise an issue on Github or start a conversation on our [Community Forum](https://forum.communityhealthtoolkit.org) about the change you want to make before you start on code. Our Community Forum is especially helpful if you are a new contributor or find yourself unsure how to move forward with an issue.
-
 ## Submitting code
 
 > We recommend you raise an issue on Github or start a conversation on our [Community Forum](https://forum.communityhealthtoolkit.org) about the change you want to make before you start on code.
