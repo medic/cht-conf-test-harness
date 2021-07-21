@@ -229,7 +229,7 @@ describe('Harness tests', () => {
       });
     });
 
-    it('set number to 0', async () => {
+    it('#128 - can set falsey value as answer', async () => {
       await harness.setNow('1999-10-10');
       const babiesAlive = 0;
       const answers = [
