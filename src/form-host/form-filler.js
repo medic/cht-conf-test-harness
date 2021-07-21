@@ -155,7 +155,7 @@ const fillPage = async (self, pageAnswer) => {
 };
 
 const fillQuestion = (question, answer) => {
-  if (!answer) {
+  if(answer === null || answer === undefined) {
     return;
   }
 

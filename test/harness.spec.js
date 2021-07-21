@@ -229,6 +229,22 @@ describe('Harness tests', () => {
       });
     });
 
+    it('#128 - can set falsey value as answer', async () => {
+      await harness.setNow('1999-10-10');
+      const babiesAlive = 0;
+      const answers = [
+        ['alive_well'],
+        Array(5).fill('no'),
+        [1, babiesAlive, '1999-09-15', 'health_facility', 'vaginal', 'skilled'],
+        ['1999-09-15', 'health_facility', 'yes'],
+        ['none']
+      ];
+
+      const result = await harness.fillForm('subfolder/delivery', ...answers);
+
+      expect(result.report.fields.delivery_outcome.babies_alive).to.eq(babiesAlive.toString());
+    });
+
     describe('multi-select', () => {
       it('using a list of booleans', async () => {
         const result = await harness.fillForm('select_multiple', ['true', 'false,true,true,false,false']);
