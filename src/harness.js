@@ -508,9 +508,9 @@ class Harness {
    * `user` from the {@link HarnessInputs} set through the constructor (defaulting to values from harness.defaults.json file)
    */
   get user() {
-    const { user } = this.options;
+    const { user, state } = this.options;
     if (typeof user === 'string') {
-      return this.state.contacts.find(contact => contact._id === user);
+      return (async () => await resolveMock(this.coreAdapter, state, user))();
     }
     return user;
   }
