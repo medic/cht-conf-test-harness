@@ -18,6 +18,7 @@ class FormWireup {
     }
 
     const xform = $.parseXML(formXml);
+
     setLanguageOnForm(xform, 'en');
 
     const html = this.htmlTransformer(xform);
@@ -37,7 +38,6 @@ class FormWireup {
     const loadErrors = form.init();
     if (loadErrors && loadErrors.length) {
       console.log('Load Errors', JSON.stringify(loadErrors));
-      return -1;
     }
 
     return form;
