@@ -1,6 +1,6 @@
 {
   "name": "cht-conf-test-harness",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Test Framework for CHT Projects",
   "main": "./src/harness.js",
   "scripts": {
