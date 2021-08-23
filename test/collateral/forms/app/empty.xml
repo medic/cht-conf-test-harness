@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Test Issue 131 A: timer with relevant</h:title>
+    <model>
+      <instance>
+        <issue_131_a delimiter="#" id="issue_131_a" prefix="J1!issue_131_a!" version="2018-03-08 17-42">
+          <group>
+            <timer/>
+          </group>
+          <meta>
+            <instanceID/>
+          </meta>
+        </issue_131_a>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/issue_131_a/group/timer" readonly="true()" relevant="false()" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/issue_131_a/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/issue_131_a/group">
+      <label>Testing Timer</label>
+      <input appearance="countdown-timer" ref="/issue_131_a/group/timer">
+        <label>Text for timer</label>
+      </input>
+    </group>
+  </h:body>
+</h:html> 
