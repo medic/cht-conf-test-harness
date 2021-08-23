@@ -6,11 +6,13 @@ const process = require('process');
 const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
 const uuid = require('uuid/v4');
+const vm = require('vm');
 
 const devMode = require('./dev-mode');
 const coreAdapter = require('./core-adapter');
 const ChtCoreFactory = require('./cht-core-factory');
 const { toDate, toDuration } = require('./dateUtils');
+const xmlFormsContextFunctions = require('./xmlFormsContextFunctions');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
 if (!fs.existsSync(pathToHost)) {
@@ -654,6 +656,27 @@ class Harness {
       const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
       return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
     }
+  }
+
+  /**
+   * @param {string} [form] Form that we want to test visibility
+   * @returns bool
+   */
+
+  async isFormVisible(form) {
+    const properties = loadJsonFromFile(path.resolve(this.appXFormFolderPath, `${form}.properties.json`));
+    const contactSummary = this.getContactSummary();
+    const resolvedContact = await resolveMock(this.coreAdapter, this.state, this.options.subject);
+    const context = {
+      ...xmlFormsContextFunctions,
+      ...{ summary: contactSummary.context },
+      ...{ contact: resolvedContact }
+    };
+
+    const script = new vm.Script(properties.context.expression);
+    const expressionResult = script.runInNewContext(context);
+
+    return (properties.person || properties.place) && expressionResult;
   }
 }
 
