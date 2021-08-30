@@ -32,8 +32,8 @@
         "999999",
         "--colors",
         "${workspaceFolder}/test/*.spec.js",
-        "--timeout",
-        "60000"
+        "--grep",
+        "#weird form"
       ],
       "internalConsoleOptions": "openOnSessionStart"
     }

@@ -5,8 +5,10 @@ const Harness = require('../src/harness');
 const harness = new Harness({
   directory: path.join(__dirname, 'collateral'),
   xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
-  verbose: false,
-  reportFormErrors: false
+  verbose: true,
+  reportFormErrors: true,
+  headless: false,
+  devtools: true
 });
 
 describe('forms that have caused bugs', () => {
@@ -252,5 +254,22 @@ describe('forms that have caused bugs', () => {
 
     const result2 = await harness.fillForm('empty', [1]);
     expect(result2.errors).to.not.be.empty;
+  });
+
+  it('#weird form', async () => {
+    await harness.setNow('2000-04-30');
+    const noPatientEvaluated = submissionDate => [
+      submissionDate ? ['no', submissionDate] : ['yes'],
+      ['yes', 'yes'],
+      ['yes', 'yes'],
+      ['no'],
+      [...Array(16).fill('yes')],
+      ['yes', 'yes'],
+      ['yes'],
+      ['Other comments'],
+      []
+    ];
+    const result1 = await harness.fillForm('supervision_with_chw_iccm', ...noPatientEvaluated());
+    expect(result1.errors).to.be.empty;
   });
 });

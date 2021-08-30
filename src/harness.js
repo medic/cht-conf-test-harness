@@ -300,10 +300,18 @@ class Harness {
     }
 
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-    const fillResult = await this.page.evaluate(async innerAnswer => await window.formFiller.fillAppForm(innerAnswer), answers);
+    const fillResult = await this.page.evaluate(async innerAnswer => {
+      try {
+        return await window.formFiller.fillAppForm(innerAnswer);
+      } catch (err) {
+        console.log(`Fill Result: Uncaught Error`, err.toString());
+      }
+
+    }, answers);
+
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
-    if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
+    if (this.options.logFormErrors && fillResult && fillResult.errors && fillResult.errors.length > 0) {
       /* this.log respects verbose option, use logFormErrors here */
       console.error(`Error encountered while filling form:`, JSON.stringify(fillResult.errors, null, 2));
     }

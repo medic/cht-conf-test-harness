@@ -32,6 +32,7 @@ class FormFiller {
    */
 
   async fillAppForm(multiPageAnswer) {
+    debugger;
     const { isComplete, errors } = await fillForm(this, multiPageAnswer);
     const resultingDocs = isComplete ? getRecordForCompletedForm(this.form, this.formXml, this.formName, window.now) : [];
     const [report, ...additionalDocs] = resultingDocs;
