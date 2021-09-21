@@ -19,7 +19,7 @@
     "pojo2xml": "^1.7.2",
     "pouchdb": "^7.2.2",
     "pouchdb-adapter-memory": "^7.2.2",
-    "puppeteer-chromium-resolver": "^9.0.0",
+    "puppeteer-chromium-resolver": "^10.0.0",
     "sinon": "^7.5.0",
     "uuid": "^3.4.0"
   },
