@@ -659,6 +659,7 @@ class Harness {
   }
 
   /**
+   * Evaluates a form's context expression (in conjuction with the person/place properties)
    * @param {string} [form] Form that we want to test visibility
    * @returns bool
    */
