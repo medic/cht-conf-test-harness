@@ -1,3 +1,4 @@
+// Adapted from https://github.com/medic/cht-core/blob/master/webapp/src/ts/services/xml-forms-context-utils.service.ts
 const { DateTime } = require('luxon');
 
 const { toDate } = require('./dateUtils');
