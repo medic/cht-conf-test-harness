@@ -665,8 +665,10 @@ class Harness {
    */
 
   async isFormVisible(form) {
-    const properties = loadJsonFromFile(path.resolve(this.appXFormFolderPath, `${form}.properties.json`));
-    const contactSummary = this.getContactSummary();
+    const properties = loadJsonFromFile(path.resolve(this.options.appXFormFolderPath, `${form}.properties.json`));
+    const formExists = !!readFileSync(path.resolve(this.options.appXFormFolderPath, `${form}.xml`));
+
+    const contactSummary = await this.getContactSummary();
     const resolvedContact = await resolveMock(this.coreAdapter, this.state, this.options.subject);
     const context = {
       ...xmlFormsContextFunctions,
@@ -674,10 +676,16 @@ class Harness {
       ...{ contact: resolvedContact }
     };
 
-    const script = new vm.Script(properties.context.expression);
-    const expressionResult = script.runInNewContext(context);
+    let expressionEvaluationResult = false;
+    let contextEvaluationResult = false;
+    if (properties) {
+      contextEvaluationResult = properties.context.person || properties.context.place;
+      const script = new vm.Script(properties.context.expression);
+      vm.createContext(context);
+      expressionEvaluationResult = script.runInNewContext(context);
+    }
 
-    return (properties.person || properties.place) && expressionResult;
+    return formExists && contextEvaluationResult && expressionEvaluationResult;
   }
 }
 

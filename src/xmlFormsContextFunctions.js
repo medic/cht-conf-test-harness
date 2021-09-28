@@ -7,7 +7,7 @@ const getDateDifference = (contact, unit) => {
     return;
   }
   const dob = toDate(contact.date_of_birth).startOf('day');
-  return DateTime.now().diff(dob, unit);
+  return DateTime.now().diff(dob, unit).toObject()[unit];
 };
 
 module.exports = {

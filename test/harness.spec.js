@@ -391,4 +391,10 @@ describe('Harness tests', () => {
     });
   });
 
+  describe('form context', () => {
+    it('evaluates form context expression', async () => {
+      expect(await harness.isFormVisible('delivery')).to.eq(true);
+    });
+  });
+
 });
