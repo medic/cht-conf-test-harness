@@ -37,7 +37,7 @@ class FormWireup {
     const form = new EnketoForm(element, enketoOptions);
     const loadErrors = form.init();
     if (loadErrors && loadErrors.length) {
-      console.log('Load Errors', JSON.stringify(loadErrors));
+      throw new Error(`Load Errors: ${JSON.stringify(loadErrors)}`);
     }
 
     return form;
