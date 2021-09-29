@@ -1,0 +1,7 @@
+{
+  "context": {
+    "person": true,
+    "place": false,
+    "expression": "!contact.muted && (!summary.pregnant && !summary.motherIsDeceased && contact.type === 'person' && (!contact.sex || contact.sex === 'female') && (!contact.date_of_birth || (ageInYears(contact) >= 12 && ageInYears(contact) < 52)))"
+  }
+}
