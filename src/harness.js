@@ -220,7 +220,7 @@ class Harness {
       try {
         return await window.formFiller.fillContactForm(innerContactType, innerAnswer);
       } catch (err) {
-        console.log(`Error encountered while filling form: ${err.toString()}`);
+        throw new Error(`Error encountered while filling form: ${err.toString()}`);
       }
     }, contactType, answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
@@ -310,7 +310,7 @@ class Harness {
       try {
         return await window.formFiller.fillAppForm(innerAnswer);
       } catch (err) {
-        console.log(`Error encountered while filling form: ${err.toString()}`);
+        throw new Error(`Error encountered while filling form: ${err.toString()}`);
       }
     }, answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
