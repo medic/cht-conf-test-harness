@@ -14,6 +14,7 @@ npm ci
 rm -Rf dist build
 rm -Rf node_modules/enketo-core/node_modules/
 patch -f node_modules/enketo-core/src/js/Form.js < node_modules/cht-core-3-11/webapp/patches/enketo-inputs-always-relevant.patch
+patch -f node_modules/enketo-core/src/js/page.js < patches/enketo-handle-no-active-pages.patch
 node ./compile-ddocs.js
 
 dirs=($(find node_modules/cht-* -maxdepth 0 -type d))

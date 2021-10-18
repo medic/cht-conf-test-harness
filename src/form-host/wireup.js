@@ -18,6 +18,7 @@ class FormWireup {
     }
 
     const xform = $.parseXML(formXml);
+
     setLanguageOnForm(xform, 'en');
 
     const html = this.htmlTransformer(xform);
@@ -36,8 +37,7 @@ class FormWireup {
     const form = new EnketoForm(element, enketoOptions);
     const loadErrors = form.init();
     if (loadErrors && loadErrors.length) {
-      console.log('Load Errors', JSON.stringify(loadErrors));
-      return -1;
+      throw new Error(`Load Errors: ${JSON.stringify(loadErrors)}`);
     }
 
     return form;
