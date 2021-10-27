@@ -2,6 +2,10 @@ const path = require('path');
 const { expect } = require('chai');
 const { DateTime, Duration } = require('luxon');
 const Harness = require('../src/harness');
+const MockHarness = require('rewire')('../src/harness');
+const sinon = require('sinon');
+const _ = require('lodash');
+
 
 const formName = 'pnc_followup';
 const harness = new Harness({
@@ -119,7 +123,7 @@ describe('Harness tests', () => {
       now = await harness.getNow();
       expect(new Date(now).toString()).to.include('Thu May 20 2010');
 
-      await harness.setNow({ year: 2010, month: 6, day: 1});
+      await harness.setNow({ year: 2010, month: 6, day: 1 });
       now = await harness.getNow();
       expect(new Date(now).toString()).to.include('Tue Jun 01 2010');
     });
@@ -272,7 +276,7 @@ describe('Harness tests', () => {
       });
 
       it('using an array of booleans', async () => {
-        const result = await harness.fillForm('select_multiple', [[true], [false,true,true,false,false]]);
+        const result = await harness.fillForm('select_multiple', [[true], [false, true, true, false, false]]);
         expect(result.errors).to.be.empty;
 
         expect(result.report).to.nested.deep.include({
@@ -303,7 +307,7 @@ describe('Harness tests', () => {
       harness.content.foo = 'bar';
       expect(originalDoB).to.be.not.undefined;
       expect(harness.content.foo).to.eq('bar');
-      
+
       harness.subject.date_of_birth = 'not_original';
       harness.clear();
 
@@ -324,7 +328,7 @@ describe('Harness tests', () => {
       harness.user.foo = 'bar';
       expect(harness.user.name).to.eq('CHW');
       expect(harness.user.foo).to.eq('bar');
-      
+
       harness.subject.date_of_birth = 'not_original';
       harness.clear();
 
@@ -392,9 +396,98 @@ describe('Harness tests', () => {
   });
 
   describe('form context', () => {
-    it('evaluates form context expression', async () => {
+    it('evaluates form context expression from loaded form properties', async () => {
       expect(await harness.isFormVisible('delivery')).to.eq(true);
     });
-  });
 
+    it('evaluates form visibility as false form a non-esistent form', async () => {
+      expect(await harness.isFormVisible('a-misisng-form')).to.eq(false);
+    });
+
+    /*it(`throws when evaluating a non-string context expression`, async () => {
+      const contextEvaluator = MockHarness.__get__('contextEvaluator');
+      [[], {}, 1].forEach(expression => {
+        const formContext = {
+          place: false,
+          person: true,
+          expression: expression
+        };
+
+        expect(() => contextEvaluator(formContext, {})).to.throw();
+      });
+    });*/
+
+    it(`evaluates different context permutations`, async () => {
+      const contextEvaluator = MockHarness.__get__('contextEvaluator');
+      const contextBuilder = MockHarness.__get__('contextBuilder');
+
+
+      const createStub = (stub, returnValue) => {
+        stub.returns(returnValue);
+        return stub;
+      };
+
+      const today = DateTime.local();
+
+      const scenarios = [
+        {
+          executionContext: {
+            contact: {
+              sex: 'female',
+              date_of_birth: today.minus({ years: 18 }).toISODate()
+            },
+            summary: {
+              isPregnant: createStub(sinon.stub(), false)
+            },
+          },
+          formContext: {
+            place: false,
+            person: false
+          },
+
+          result: false
+        },
+        {
+          executionContext: {
+            contact: {
+              sex: 'female',
+              date_of_birth: today.minus({ years: 18 }).toISODate()
+            },
+            summary: {
+              isPregnant: createStub(sinon.stub(), true)
+            },
+          },
+          formContext: {
+            place: false,
+            person: false
+          },
+
+          result: false
+        },
+        {
+          executionContext: {
+            contact: {
+              sex: 'female',
+              date_of_birth: today.minus({ years: 18 }).toISODate()
+            },
+            summary: {
+              isPregnant: createStub(sinon.stub(), true)
+            },
+          },
+          formContext: {
+            place: false,
+            person: true
+          },
+
+          result: false
+        }
+      ];
+
+      for (const scenario of scenarios) {
+        const defaultExecutionContext = await contextBuilder(harness);
+        const executionContext = _.defaults(defaultExecutionContext, scenario.executionContext);
+        expect(contextEvaluator(scenario.formContext, executionContext)).to.eq(scenario.result);
+      }
+    });
+  });
 });

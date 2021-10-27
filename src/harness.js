@@ -13,7 +13,6 @@ const coreAdapter = require('./core-adapter');
 const ChtCoreFactory = require('./cht-core-factory');
 const { toDate, toDuration } = require('./dateUtils');
 const xmlFormsContextFunctions = require('./xmlFormsContextFunctions');
-const assert = require('assert');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
 if (!fs.existsSync(pathToHost)) {
@@ -679,15 +678,8 @@ class Harness {
       return false;
     }
 
-    const context = contextBuilder(this);
-
-    const formContextEvaluationResult = !!properties && properties.context && (properties.context.person || properties.context.place);
-    let formExpressionEvaluationResult = false;
-
-    if (properties.context && properties.context.expression) {
-      formExpressionEvaluationResult = contextEvaluator(properties.context.expression, context);
-    }
-    return formContextEvaluationResult && formExpressionEvaluationResult;
+    const executionContext = await contextBuilder(this);
+    return contextEvaluator(properties.context, executionContext);
   }
 }
 
@@ -701,12 +693,13 @@ const contextBuilder = async (self) => {
   };
 };
 
-const contextEvaluator = (expression, context) => {
-  if (!expression) { return false; }
-  if (typeof expression !== 'string') { throw new Error(`Expected ${expression} to be a string`); }
-  const script = new vm.Script(expression);
-  vm.createContext(context);
-  return script.runInNewContext(context);
+const contextEvaluator = (formContext, executionContext) => {
+  if (!formContext) { return false; }
+  if (!formContext.place && !formContext.person) { return false; }
+  if (!formContext.expression) { return false; }
+  const script = new vm.Script(formContext.expression);
+  vm.createContext(executionContext);
+  return (formContext.place || formContext.person) && script.runInNewContext(executionContext);
 };
 
 const loadJsonFromFile = filePath => {
