@@ -435,11 +435,16 @@ describe('Harness tests', () => {
             summary: {
               pregnant: true
             },
+            user: {
+              parent: {
+                type: 'health_center'
+              }
+            }
           },
           formContext: {
             place: false,
             person: true,
-            expression: "contact.sex === 'female' && ageInYears(contact) > 15 && !summary.pregnant"
+            expression: "contact.sex === 'female' && ageInYears(contact) > 15 && !summary.pregnant && user.parent.type === 'health_center'"
           },
           result: false
         },
@@ -452,13 +457,40 @@ describe('Harness tests', () => {
             summary: {
               pregnant: true
             },
+            user: {
+              parent: {
+                type: 'health_center'
+              }
+            }
           },
           formContext: {
             place: false,
             person: true,
-            expression: "contact.sex === 'female' && ageInYears(contact) > 15 && summary.pregnant"
+            expression: "contact.sex === 'female' && ageInYears(contact) > 15 && summary.pregnant && user.parent.type === 'health_center'"
           },
           result: true
+        },
+        {
+          executionContext: {
+            contact: {
+              sex: 'female',
+              date_of_birth: today.minus({ years: 18 }).toISODate()
+            },
+            summary: {
+              pregnant: true
+            },
+            user: {
+              parent: {
+                type: 'health_center'
+              }
+            }
+          },
+          formContext: {
+            place: false,
+            person: true,
+            expression: "contact.sex === 'female' && ageInYears(contact) > 15 && summary.pregnant && user.parent.type === 'some_place'"
+          },
+          result: false
         },
         {
           executionContext: {

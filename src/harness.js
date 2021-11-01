@@ -686,10 +686,13 @@ class Harness {
 const contextBuilder = async (self) => {
   const contactSummary = await self.getContactSummary();
   const resolvedContact = await resolveMock(self.coreAdapter, self.state, self.options.subject);
+  const user = await resolveMock(self.coreAdapter, self.state, self.options.user);
+
   return {
     ...xmlFormsContextFunctions,
     ...{ summary: contactSummary.context },
-    ...{ contact: resolvedContact }
+    ...{ contact: resolvedContact },
+    ...{ user }
   };
 };
 
