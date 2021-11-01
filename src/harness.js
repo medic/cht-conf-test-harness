@@ -6,11 +6,13 @@ const process = require('process');
 const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
 const uuid = require('uuid/v4');
+const vm = require('vm');
 
 const devMode = require('./dev-mode');
 const coreAdapter = require('./core-adapter');
 const ChtCoreFactory = require('./cht-core-factory');
 const { toDate, toDuration } = require('./dateUtils');
+const xmlFormsContextFunctions = require('./xmlFormsContextFunctions');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
 if (!fs.existsSync(pathToHost)) {
@@ -60,6 +62,7 @@ class Harness {
    * @param {Object} [options.contactSummary=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
    * @param {boolean} [options.headless=true] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
    * @param {boolean} [options.slowMo=false] The options object is also passed into Puppeteer and can be used to control [any of its options]{@link https://github.com/GoogleChrome/puppeteer/blob/v1.18.1/docs/api.md#puppeteerlaunchoptions}
+   * @param {boolean} [options.enforceFormContextOnFormFill=false] Throw if form should not be visible based on context evaluation
    */
   constructor(options = {}) {
     const defaultDirectory = options.directory || process.cwd();
@@ -69,6 +72,7 @@ class Harness {
       xformFolderPath: path.join(defaultDirectory, 'forms'),
       appSettingsPath: path.join(defaultDirectory, './app_settings.json'),
       harnessDataPath: path.join(defaultDirectory, './harness.defaults.json'),
+      enforceFormContextOnFormFill: false
     });
     this.options = _.defaults(options, {
       appXFormFolderPath: path.join(this.options.xformFolderPath, 'app'),
@@ -102,7 +106,7 @@ class Harness {
     this.options = _.defaults(
       this.options,
       _.pick(fileBasedDefaults, 'coreVersion'),
-      { coreVersion: availableCoreVersions[availableCoreVersions.length-1] },
+      { coreVersion: availableCoreVersions[availableCoreVersions.length - 1] },
     );
 
     this.core = ChtCoreFactory.get(this.options.coreVersion);
@@ -183,6 +187,10 @@ class Harness {
   async loadForm(formName, options = {}) {
     if (!this.page) {
       throw Error(`loadForm(): Cannot invoke cht-conf-test-harness.loadForm() before calling start()`);
+    }
+
+    if (this.options.enforceFormContextOnFormFill && !this.isFormVisible(formName)) {
+      throw new Error(`${formName} is not visible since the context evaluation result is false`);
     }
 
     options = _.defaults(options, {
@@ -546,7 +554,7 @@ class Harness {
     if (this.options.userSettingsDoc) {
       return this.options.userSettingsDoc;
     }
-  
+
     const user = this.user;
     if (!user) {
       return undefined;
@@ -655,7 +663,51 @@ class Harness {
       return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
     }
   }
+
+  /**
+   * Evaluates a form's context expression (in conjuction with the person/place properties)
+   * @param {string} [form] Form that we want to test visibility
+   * @returns bool
+   */
+
+  async isFormVisible(form) {
+    const properties = loadJsonFromFile(path.resolve(this.options.appXFormFolderPath, `${form}.properties.json`)) || {};
+    const formExists = !!readFileSync(path.resolve(this.options.appXFormFolderPath, `${form}.xml`));
+
+    if (!formExists) {
+      return false;
+    }
+
+    const executionContext = await contextBuilder(this);
+    return contextEvaluator(properties.context, executionContext);
+  }
 }
+
+const contextBuilder = async (self) => {
+  const contactSummary = await self.getContactSummary();
+  const resolvedContact = await resolveMock(self.coreAdapter, self.state, self.options.subject);
+  const user = await resolveMock(self.coreAdapter, self.state, self.options.user);
+
+  return {
+    ...xmlFormsContextFunctions,
+    ...{ summary: contactSummary.context },
+    ...{ contact: resolvedContact },
+    ...{ user }
+  };
+};
+
+const contextEvaluator = (formContext, executionContext) => {
+  if (!formContext) { return false; }
+  if (!(formContext.place || formContext.person)) { return false; }
+
+  let expressionResult = true;
+  if (formContext.expression) {
+    const script = new vm.Script(formContext.expression);
+    vm.createContext(executionContext);
+    expressionResult = script.runInNewContext(executionContext);
+  }
+  return expressionResult;
+};
 
 const loadJsonFromFile = filePath => {
   const content = readFileSync(filePath);
@@ -712,7 +764,7 @@ const clearSync = (self) => {
     contacts,
     reports: [],
   };
-  self.onConsole = () => {};
+  self.onConsole = () => { };
   self._now = undefined;
 
   sinon.restore();

@@ -83,11 +83,15 @@ for (const coreVersion of availableCoreVersions) {
     });
 
     describe('getTarget', () => {
+      beforeEach(async () => {
+        await harness.setNow('0');
+      });
+
       it('basic trigger', async () => {
         harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'chw_area_id', reported_date: Date.now() });
         harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'chw_area_id', reported_date: Date.now() });
         harness.pushMockedDoc({ form: 'individual_feedback_confirmation', patient_id: 'chw_area_id', reported_date: Date.now() });
-        
+
         const targets = await harness.getTargets({ type: 'chv-receive-supervision-visit' });
         expect(targets).to.have.property('length', 1);
         expect(targets[0]).to.nested.include({ 'value.total': 1, 'value.pass': 1 });
@@ -97,7 +101,7 @@ for (const coreVersion of availableCoreVersions) {
         harness.pushMockedDoc({ form: 'supervision_with_chw_confirmation', patient_id: 'chw_area_id', reported_date: 1000000000000 });
         harness.pushMockedDoc({ form: 'supervision_without_chw_confirmation', patient_id: 'chw_area_id' });
         harness.pushMockedDoc({ form: 'individual_feedback_confirmation', patient_id: 'chw_area_id' });
-        
+
         const targets = await harness.getTargets({ type: 'chv-receive-supervision-visit' });
         expect(targets).to.have.property('length', 1);
         expect(targets[0]).to.nested.include({ 'value.total': 1, 'value.pass': 0 });
@@ -115,7 +119,7 @@ for (const coreVersion of availableCoreVersions) {
         await harness.setNow(scheduledDate);
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
-        
+
         expect(tasks[0].emission.actions[0]).to.include({ forId: 'patient_id' });
         await harness.loadAction(tasks[0].emission.actions[0]);
         const followupResult = await harness.fillForm(['no_come_back']);
@@ -141,7 +145,7 @@ for (const coreVersion of availableCoreVersions) {
         await harness.setNow(scheduledDate);
         const tasks = await harness.getTasks();
         expect(tasks).to.have.property('length', 1);
-        
+
         expect(tasks[0].emission).to.include({ forId: 'patient_id' });
         const followupResult = await harness.loadAction(tasks[0], ['no_come_back']);
         expect(followupResult.errors).to.be.empty;
