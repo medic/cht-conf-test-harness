@@ -3,7 +3,6 @@ const { expect } = require('chai');
 const { DateTime, Duration } = require('luxon');
 const Harness = require('../src/harness');
 const MockHarness = require('rewire')('../src/harness');
-const sinon = require('sinon');
 const _ = require('lodash');
 
 
@@ -404,28 +403,9 @@ describe('Harness tests', () => {
       expect(await harness.isFormVisible('a-misisng-form')).to.eq(false);
     });
 
-    /*it(`throws when evaluating a non-string context expression`, async () => {
-      const contextEvaluator = MockHarness.__get__('contextEvaluator');
-      [[], {}, 1].forEach(expression => {
-        const formContext = {
-          place: false,
-          person: true,
-          expression: expression
-        };
-
-        expect(() => contextEvaluator(formContext, {})).to.throw();
-      });
-    });*/
-
     it(`evaluates different context permutations`, async () => {
       const contextEvaluator = MockHarness.__get__('contextEvaluator');
       const contextBuilder = MockHarness.__get__('contextBuilder');
-
-
-      const createStub = (stub, returnValue) => {
-        stub.returns(returnValue);
-        return stub;
-      };
 
       const today = DateTime.local();
 
@@ -437,12 +417,80 @@ describe('Harness tests', () => {
               date_of_birth: today.minus({ years: 18 }).toISODate()
             },
             summary: {
-              isPregnant: createStub(sinon.stub(), false)
+              isPregnant: false
             },
           },
           formContext: {
             place: false,
             person: false
+          },
+          result: false
+        },
+        {
+          executionContext: {
+            contact: {
+              sex: 'female',
+              date_of_birth: today.minus({ years: 18 }).toISODate()
+            },
+            summary: {
+              pregnant: true
+            },
+          },
+          formContext: {
+            place: false,
+            person: true,
+            expression: "contact.sex === 'female' && ageInYears(contact) > 15 && !summary.pregnant"
+          },
+          result: false
+        },
+        {
+          executionContext: {
+            contact: {
+              sex: 'female',
+              date_of_birth: today.minus({ years: 18 }).toISODate()
+            },
+            summary: {
+              pregnant: true
+            },
+          },
+          formContext: {
+            place: false,
+            person: true,
+            expression: "contact.sex === 'female' && ageInYears(contact) > 15 && summary.pregnant"
+          },
+          result: true
+        },
+        {
+          executionContext: {
+            contact: {
+              sex: 'female',
+              date_of_birth: today.minus({ years: 18 }).toISODate()
+            },
+            summary: {
+              pregnant: true
+            },
+          },
+          formContext: {
+            place: false,
+            person: true,
+            expression: "contact.sex === 'female' && ageInMonths(contact) > (15 * 12) && summary.pregnant"
+          },
+          result: true
+        },
+        {
+          executionContext: {
+            contact: {
+              sex: 'female',
+              date_of_birth: today.minus({ years: 10 }).toISODate()
+            },
+            summary: {
+              pregnant: true
+            },
+          },
+          formContext: {
+            place: false,
+            person: true,
+            expression: "contact.sex === 'female' && ageInYears(contact) > 15 && summary.pregnant"
           },
 
           result: false
@@ -454,24 +502,7 @@ describe('Harness tests', () => {
               date_of_birth: today.minus({ years: 18 }).toISODate()
             },
             summary: {
-              isPregnant: createStub(sinon.stub(), true)
-            },
-          },
-          formContext: {
-            place: false,
-            person: false
-          },
-
-          result: false
-        },
-        {
-          executionContext: {
-            contact: {
-              sex: 'female',
-              date_of_birth: today.minus({ years: 18 }).toISODate()
-            },
-            summary: {
-              isPregnant: createStub(sinon.stub(), true)
+              pregnant: true
             },
           },
           formContext: {
@@ -479,13 +510,13 @@ describe('Harness tests', () => {
             person: true
           },
 
-          result: false
+          result: true
         }
       ];
 
       for (const scenario of scenarios) {
         const defaultExecutionContext = await contextBuilder(harness);
-        const executionContext = _.defaults(defaultExecutionContext, scenario.executionContext);
+        const executionContext = _.defaults(scenario.executionContext, defaultExecutionContext);
         expect(contextEvaluator(scenario.formContext, executionContext)).to.eq(scenario.result);
       }
     });

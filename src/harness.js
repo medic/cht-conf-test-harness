@@ -695,11 +695,15 @@ const contextBuilder = async (self) => {
 
 const contextEvaluator = (formContext, executionContext) => {
   if (!formContext) { return false; }
-  if (!formContext.place && !formContext.person) { return false; }
-  if (!formContext.expression) { return false; }
-  const script = new vm.Script(formContext.expression);
-  vm.createContext(executionContext);
-  return (formContext.place || formContext.person) && script.runInNewContext(executionContext);
+  if (!(formContext.place || formContext.person)) { return false; }
+
+  let expressionResult = true;
+  if (formContext.expression) {
+    const script = new vm.Script(formContext.expression);
+    vm.createContext(executionContext);
+    expressionResult = script.runInNewContext(executionContext);
+  }
+  return expressionResult;
 };
 
 const loadJsonFromFile = filePath => {
