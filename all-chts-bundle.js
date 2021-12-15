@@ -26,5 +26,6 @@ module.exports = {
     RulesEmitter: require('cht-core-3-11/shared-libs/rules-engine/src/rules-emitter'),
     nootils: require('cht-core-3-11/shared-libs/rules-engine/node_modules/medic-nootils'),
     Lineage: require('cht-core-3-11/shared-libs/lineage'),
+    ChtScriptApi: require('cht-core-3-11/shared-libs/cht-script-api')
   },
 };

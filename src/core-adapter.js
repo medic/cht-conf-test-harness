@@ -78,7 +78,8 @@ const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateH
 };
 
 const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, sessionId) => {
-  const rulesSettings = getRulesSettings(appSettings, user, sessionId);
+  const rulesSettings = getRulesSettings(appSettings, user, sessionId, chtCore.ChtScriptApi);
+
   if (!rulesEngine.isEnabled()) {
     await rulesEngine.initialize(rulesSettings);
   } else {
@@ -95,6 +96,7 @@ const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, sessi
     chtCore.RulesEmitter.initialize({
       rules: appSettings.tasks.rules,
       contact: user,
+      chtScriptApi: chtCore.ChtScriptApi
     });
   }
 };
@@ -176,12 +178,11 @@ const getMonthStartDate = settings => {
     );
 };
 
-const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
+const getRulesSettings = (settingsDoc, userContactDoc, sessionId, chtScriptApi) => {
   const settingsTasks = settingsDoc && settingsDoc.tasks || {};
   // https://github.com/medic/medic-conf-test-harness/issues/106
   // const filterTargetByContext = (target) => target.context ? !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
   const targets = settingsTasks.targets && settingsTasks.targets.items || [];
-
   return {
     rules: settingsTasks.rules,
     taskSchedules: settingsTasks.schedules,
@@ -192,6 +193,7 @@ const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
     user: { _id: `org.couchdb.user:${userContactDoc ? userContactDoc._id : 'default'}` },
     monthStartDate: getMonthStartDate(settingsDoc),
     sessionId,
+    chtScriptApi
   };
 };
 
