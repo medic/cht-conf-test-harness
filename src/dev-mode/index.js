@@ -16,7 +16,7 @@ module.exports = {
     stubbedNoolsLib.pathToProject = pathToProject;
     if (!core.RulesEmitter.isMock) {
       console.warn('******************************************');
-      console.warn('**** medic-conf-test-harness dev mode ****');
+      console.warn('***** cht-conf-test-harness dev mode *****');
       console.warn('******************************************');
       Object.assign(core.RulesEmitter, devRulesEmitter(core));
     }
