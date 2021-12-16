@@ -93,12 +93,7 @@ const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, sessi
   */
   if (chtCore.RulesEmitter.isEnabled()) {
     chtCore.RulesEmitter.shutdown();
-    chtCore.RulesEmitter.initialize({
-      rules: appSettings.tasks.rules,
-      contact: user,
-      chtScriptApi: chtCore.ChtScriptApi,
-      taskSchedules: rulesSettings.taskSchedules,
-    });
+    chtCore.RulesEmitter.initialize(rulesSettings);
   }
 };
 
@@ -194,7 +189,7 @@ const getRulesSettings = (settingsDoc, userContactDoc, sessionId, chtScriptApi) 
     user: { _id: `org.couchdb.user:${userContactDoc ? userContactDoc._id : 'default'}` },
     monthStartDate: getMonthStartDate(settingsDoc),
     sessionId,
-    chtScriptApi
+    chtScriptApi,
   };
 };
 

@@ -116,7 +116,6 @@ class Harness {
       devMode.mockRulesEngine(this.core, this.options.appSettingsPath);
     }
 
-    devMode.mockChtScriptApi(this.core, this.options, this.appSettings);
     clearSync(this);
   }
 
