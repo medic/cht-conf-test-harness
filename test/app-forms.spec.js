@@ -6,7 +6,7 @@ const harness = new Harness({
   directory: path.join(__dirname, 'collateral'),
   xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
   verbose: false,
-  reportFormErrors: false,
+  reportFormErrors: false
 });
 
 describe('forms that have caused bugs', () => {
@@ -14,10 +14,9 @@ describe('forms that have caused bugs', () => {
   after(async () => { return await harness.stop(); });
   beforeEach(async () => { return await harness.clear(); });
   afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
-
-  it('patient_assessment with user-based fields', async () => {
-    const mrdtUser = Object.assign({}, harness.user, { is_in_mrdt: true });
-    const result = await harness.fillForm({ form: 'patient_assessment_over_5', user: mrdtUser },
+  it('patient_assessment with custom fields on user-settings doc', async () => {
+    const mrdtUser = Object.assign({}, harness.userSettingsDoc, { is_in_mrdt: true });
+    const result = await harness.fillForm({ form: 'patient_assessment_over_5', userSettingsDoc: mrdtUser },
       ['home_visit'],
       ['c_assessment_time_2', 'c_when_illness_2'],
       ['yes', ...Array(8).fill('no'), 'unavailable', 'watching'],
@@ -244,5 +243,14 @@ describe('forms that have caused bugs', () => {
       'fields.g_details.region': 'agadez',
       'fields.g_details.district_agadez': 'bilma',
     });
+  });
+
+  it('#131-does not error if form has no elements', async () => {
+    await harness.setNow('2000-04-30');
+    const result1 = await harness.fillForm('empty', []);
+    expect(result1.errors).to.be.empty;
+
+    const result2 = await harness.fillForm('empty', [1]);
+    expect(result2.errors).to.not.be.empty;
   });
 });

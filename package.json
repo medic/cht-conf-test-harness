@@ -1,7 +1,7 @@
 {
-  "name": "medic-conf-test-harness",
-  "version": "2.1.1",
-  "description": "Test Framework for Medic Projects",
+  "name": "cht-conf-test-harness",
+  "version": "2.2.5",
+  "description": "Test Framework for CHT Projects",
   "main": "./src/harness.js",
   "scripts": {
     "test": "npx mocha test/*.spec.js --timeout 25000 --slow 500",
@@ -13,13 +13,13 @@
   },
   "dependencies": {
     "lodash": "^4.17.15",
+    "luxon": "^1.27.0",
     "md5": "^2.3.0",
-    "moment": "^2.24.0",
     "nools": "^0.4.4",
     "pojo2xml": "^1.7.2",
     "pouchdb": "^7.2.2",
     "pouchdb-adapter-memory": "^7.2.2",
-    "puppeteer-chromium-resolver": "^9.0.0",
+    "puppeteer-chromium-resolver": "^10.0.0",
     "sinon": "^7.5.0",
     "uuid": "^3.4.0"
   },
@@ -36,6 +36,7 @@
     "jsdoc": "^3.6.3",
     "medic-enketo-xslt": "^1.5.0",
     "mocha": "^6.1.4",
+    "moment": "^2.29.1",
     "openrosa-xpath-evaluator": "^1.5.1",
     "raw-loader": "^1.0.0",
     "rewire": "^4.0.1",

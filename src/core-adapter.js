@@ -11,7 +11,7 @@ PouchDB.plugin(require('pouchdb-adapter-memory'));
 class CoreAdapter {
   constructor(core, appSettings) {
     this.appSettings = appSettings;
-    this.pouchdb = new PouchDB(`medic-conf-test-harness-${uuid()}`, { adapter: 'memory' });
+    this.pouchdb = new PouchDB(`cht-conf-test-harness-${uuid()}`, { adapter: 'memory' });
     this.core = core;
     this.rulesEngine = core.RulesEngineCore(this.pouchdb);
     this.pouchdbStateHash = {};
@@ -96,7 +96,8 @@ const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, sessi
     chtCore.RulesEmitter.initialize({
       rules: appSettings.tasks.rules,
       contact: user,
-      chtScriptApi: chtCore.ChtScriptApi
+      chtScriptApi: chtCore.ChtScriptApi,
+      taskSchedules: rulesSettings.taskSchedules,
     });
   }
 };
@@ -180,7 +181,7 @@ const getMonthStartDate = settings => {
 
 const getRulesSettings = (settingsDoc, userContactDoc, sessionId, chtScriptApi) => {
   const settingsTasks = settingsDoc && settingsDoc.tasks || {};
-  // https://github.com/medic/medic-conf-test-harness/issues/106
+  // https://github.com/medic/cht-conf-test-harness/issues/106
   // const filterTargetByContext = (target) => target.context ? !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
   const targets = settingsTasks.targets && settingsTasks.targets.items || [];
   return {

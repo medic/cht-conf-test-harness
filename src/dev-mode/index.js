@@ -1,7 +1,7 @@
 const path = require('path');
 
-const mockContactSummary = require('./mock.medic-conf.contact-summary-lib');
-const stubbedNoolsLib = require('./mock.medic-conf.nools-lib');
+const mockContactSummary = require('./mock.cht-conf.contact-summary-lib');
+const stubbedNoolsLib = require('./mock.cht-conf.nools-lib');
 const devRulesEmitter = require('./mock.rules-engine.rules-emitter');
 const stubChtScriptApi = require('./mock.cht-script-api');
 

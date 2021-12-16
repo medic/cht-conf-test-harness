@@ -2,3 +2,4 @@ node_modules
 build
 dist/project-*
 dist/harness.defaults.json
+/.idea
