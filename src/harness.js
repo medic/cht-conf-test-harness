@@ -106,7 +106,6 @@ class Harness {
     );
 
     this.core = ChtCoreFactory.get(this.options.coreVersion);
-
     this.appSettings = loadJsonFromFile(this.options.appSettingsPath);
     if (!this.appSettings) {
       throw Error(`Failed to load app settings expected at: ${this.options.appSettingsPath}`);
