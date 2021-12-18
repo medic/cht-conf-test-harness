@@ -2,10 +2,8 @@ const path = require('path');
 const semver = require('semver');
 const { expect } = require('chai');
 const Harness = require('../src/harness');
-const exp = require('constants');
 
-// const { availableCoreVersions } = require('../src/cht-core-factory');
-const availableCoreVersions = ['3.12'];
+const { availableCoreVersions } = require('../src/cht-core-factory');
 
 for (const coreVersion of availableCoreVersions) {
   describe(`tests for RulesEngine v${coreVersion} (compiled project)`, () => {
