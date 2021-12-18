@@ -36,7 +36,11 @@
  * In harness.getTargets(), this is the global `user` object available in targets.js. (hydrated)
  * In harness.getTasks(), this is the global `user` object available in tasks.js. (hydrated)
  * In contact-summary code, this is the global `user` object in contact-summary.templated.js. (hydrated)
+ * @see userRoles For setting the user's role
  *
+ * @property {Array<string>} userRoles This represents the 'roles' assigned to the current user that is logged in. Roles control the user's permissions ([roles documentation](https://docs.communityhealthtoolkit.org/apps/concepts/users/#roles))
+ * @example harness.userRoles = ['chw']
+ * 
  * @property {string|Object} subject This represents the contact that is being "acted on" or the "subject of the test".
  * The harness.fillForm() function simulates "completing an action" on the subject's profile page.
  * The harness.getTasks() function returns the tasks listed on the subject's profile page.
