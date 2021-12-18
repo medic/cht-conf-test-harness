@@ -176,8 +176,11 @@ const getMonthStartDate = settings => {
 
 // cht-core/src/ts/services/cht-script-api.service.ts
 const chtScriptApiWithDefaults = (chtScriptApi, settingsDoc, defaultUserRoles) => {
-  const defaultChtPermissionSettings = settingsDoc.permissions;
+  if (!chtScriptApi) {
+    return;
+  }
 
+  const defaultChtPermissionSettings = settingsDoc.permissions;
   return {
     v1: {
       hasPermissions: (permissions, userRoles = defaultUserRoles, chtPermissionsSettings = defaultChtPermissionSettings) => {
