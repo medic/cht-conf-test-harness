@@ -8,7 +8,7 @@ const { availableCoreVersions } = require('../src/cht-core-factory');
 for (const coreVersion of availableCoreVersions) {
   describe(`tests for RulesEngine v${coreVersion} (compiled project)`, () => {
     const harness = new Harness({
-      directory: path.join(__dirname, 'collateral', 'compiled-project'),
+      directory: path.join(__dirname, 'collateral', 'project-without-source'),
       xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
       harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
       verbose: false,
@@ -162,7 +162,7 @@ for (const coreVersion of availableCoreVersions) {
 
   describe(`tests for RulesEngine v${coreVersion} (uncompiled project)`, () => {
     const harness = new Harness({
-      directory: path.join(__dirname, 'collateral', 'uncompiled-project'),
+      directory: path.join(__dirname, 'collateral', 'project-with-source'),
       xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
       harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
       coreVersion,
