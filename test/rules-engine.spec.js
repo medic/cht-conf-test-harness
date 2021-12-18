@@ -5,7 +5,7 @@ const Harness = require('../src/harness');
 const { availableCoreVersions } = require('../src/cht-core-factory');
 
 for (const coreVersion of availableCoreVersions) {
-  describe(`tests targeting rules engine v${coreVersion}`, () => {
+  describe(`tests for RulesEngine v${coreVersion} (compiled project)`, () => {
     const harness = new Harness({
       directory: path.join(__dirname, 'collateral', 'compiled-project'),
       xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
@@ -156,6 +156,25 @@ for (const coreVersion of availableCoreVersions) {
         const actual = await harness.getTasks();
         expect(actual).to.be.empty;
       });
+    });
+  });
+
+  describe(`tests for RulesEngine v${coreVersion} (uncompiled project)`, () => {
+    const harness = new Harness({
+      directory: path.join(__dirname, 'collateral', 'uncompiled-project'),
+      xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
+      harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
+      coreVersion,
+    });
+
+    before(async () => { return await harness.start(); });
+    after(async () => { return await harness.stop(); });
+    beforeEach(async () => { return await harness.clear(); });
+    afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
+
+    it('cht.v1.hasPermissions', async () => {
+      const tasks = await harness.getTasks();
+      expect(tasks).to.have.property('length', 1);
     });
   });
 }

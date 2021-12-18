@@ -1,0 +1,14 @@
+{
+  "extends": "@medic",
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "no-console": "off"
+  },
+  "globals": {
+    "cht": true,
+    "Utils": true,
+    "user": true
+  }
+}
