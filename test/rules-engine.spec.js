@@ -1,8 +1,11 @@
 const path = require('path');
+const semver = require('semver');
 const { expect } = require('chai');
 const Harness = require('../src/harness');
+const exp = require('constants');
 
-const { availableCoreVersions } = require('../src/cht-core-factory');
+// const { availableCoreVersions } = require('../src/cht-core-factory');
+const availableCoreVersions = ['3.12'];
 
 for (const coreVersion of availableCoreVersions) {
   describe(`tests for RulesEngine v${coreVersion} (compiled project)`, () => {
@@ -173,8 +176,14 @@ for (const coreVersion of availableCoreVersions) {
     afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
 
     it('cht.v1.hasPermissions', async () => {
-      const tasks = await harness.getTasks();
-      expect(tasks).to.have.property('length', 1);
+      const isChtApiSupported = semver.gte(semver.coerce(coreVersion), '3.12.0');
+      const expectedLength = isChtApiSupported ? 1 : 0;
+      const chwTasks = await harness.getTasks();
+      expect(chwTasks.length).to.eq(expectedLength);
+
+      harness.userRoles = ['other'];
+      const otherTasks = await harness.getTasks();
+      expect(otherTasks.length).to.eq(0);
     });
   });
 }
