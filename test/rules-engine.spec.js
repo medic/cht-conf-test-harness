@@ -184,6 +184,8 @@ for (const coreVersion of availableCoreVersions) {
       harness.userRoles = ['other'];
       const otherTasks = await harness.getTasks();
       expect(otherTasks.length).to.eq(0);
+      const otherTargets = await harness.getTargets();
+      expect(otherTargets[0].value.total).to.eq(0);
     });
   });
 }
