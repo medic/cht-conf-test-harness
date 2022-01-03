@@ -55,6 +55,7 @@ class Harness {
    * @param {string} [options.harnessDataPath=path.join(options.directory, 'harness.defaults.json')] Path to harness configuration file
    * @param {string} [options.coreVersion=harness configuration file] The version of cht-core to emulate @example "3.8.0"
    * @param {string} [options.user=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
+   * @param {string} [options.userRoles=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
    * @param {string} [options.subject=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
    * @param {Object} [options.content=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
    * @param {Object} [options.contactSummary=harness configuration file] The default {@link HarnessInputs} controlling the environment in which your application is running
@@ -84,6 +85,7 @@ class Harness {
       {
         subject: 'default_subject',
         user: 'default_user',
+        userRoles: ['default_role'],
         content: { source: 'action' },
         docs: [
           { _id: 'default_user', type: 'contact' },
@@ -321,6 +323,7 @@ class Harness {
    * @param {Object=} options Some options when checking for tasks
    * @param {string} [options.title=undefined] Filter the returns tasks to those with attribute `title` equal to this value. Filter is skipped if undefined.
    * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
+   * @param {Object} [options.userRoles=Default specified via constructor] The roles associated with the current logged-in user which is viewing the tasks.
    * @param {string} [options.actionForm] Filter task documents to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
    * @param {boolean} [options.ownedBySubject] Filter task documents to only those owned by the subject. Filter is skipped if false.
    *
@@ -330,6 +333,7 @@ class Harness {
     options = _.defaults(options, {
       subject: this.options.subject,
       user: this.options.user,
+      userRoles: this.options.userRoles,
       actionForm: this.options.actionForm,
       ownedBySubject: this.options.ownedBySubject,
       title: undefined,
@@ -345,7 +349,7 @@ class Harness {
 
     const user = await resolveMock(this.coreAdapter, this.state, options.user);
     const subject = await resolveMock(this.coreAdapter, this.state, options.subject, { hydrate: false });
-    const tasks = await this.coreAdapter.fetchTasksFor(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
+    const tasks = await this.coreAdapter.fetchTasksFor(user, options.userRoles, stateEnsuringPresenceOfMocks(this.state, user, subject));
 
     tasks.forEach(task => task.emission.actions.forEach(action => {
       action.forId = task.emission.forId; // required to hydrate contact in loadAction()
@@ -359,6 +363,8 @@ class Harness {
    *
    * @param {Object=} options Some options when summarizing the tasks
    * @param {string} [options.title=undefined] Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.
+   * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
+   * @param {Object} [options.userRoles=Default specified via constructor] The roles associated with the current logged-in user which is viewing the tasks.
    * @param {string} [options.actionForm] Filter task documents counted to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.
    * @param {boolean} [options.ownedBySubject] Filter task documents counted to only those owned by the subject. Filter is skipped if false.
    *
@@ -405,6 +411,8 @@ class Harness {
    * Check the state of targets
    * @param {Object=} options Some options for looking for checking for targets
    * @param {string|string[]} [options.type=undefined] Filter the returns targets to those with an `id` which matches type (when string) or is included in type (when Array).
+   * @param {Object} [options.user=Default specified via constructor] The current logged-in user which is viewing the tasks.
+   * @param {Object} [options.userRoles=Default specified via constructor] The roles associated with the current logged-in user which is viewing the tasks.
    *
    * @returns {Target[]} An array of targets which would be visible to the user
    */
@@ -413,6 +421,7 @@ class Harness {
       type: undefined,
       subject: this.options.subject,
       user: this.options.user,
+      userRoles: this.options.userRoles,
     });
 
     if (options.now) {
@@ -421,7 +430,7 @@ class Harness {
 
     const user = await resolveMock(this.coreAdapter, this.state, options.user);
     const subject = await resolveMock(this.coreAdapter, this.state, options.subject, { hydrate: false });
-    const targets = await this.coreAdapter.fetchTargets(user, stateEnsuringPresenceOfMocks(this.state, user, subject));
+    const targets = await this.coreAdapter.fetchTargets(user, options.userRoles, stateEnsuringPresenceOfMocks(this.state, user, subject));
 
     return targets
       .filter(target =>
@@ -515,6 +524,12 @@ class Harness {
     return user;
   }
   set user(value) { this.options.user = value; }
+
+  /**
+   * `userRoles` from the {@link HarnessInputs} set through the constructor (defaulting to values from harness.defaults.json file)
+   */
+  get userRoles() { return this.options.userRoles; }
+  set userRoles(value) { this.options.userRoles = value; }
 
   /**
    * `coreVersion` is the version of the cht-core that is being emulated in testing (eg. 3.9.0)

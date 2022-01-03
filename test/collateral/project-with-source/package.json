@@ -1,0 +1,8 @@
+{
+  "name": "project-with-source",
+  "version": "1.0.0",
+  "description": "",
+  "devDependencies": {
+    "cht-conf": "^3.9.3"
+  }
+}

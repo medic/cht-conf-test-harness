@@ -11,6 +11,7 @@ const mockNoolsLib = require('./mock.cht-conf.nools-lib');
 
 let enabled = false;
 let Utils;
+let chtScriptApi;
 let user;
 
 module.exports = chtCore => {
@@ -36,6 +37,7 @@ module.exports = chtCore => {
       const settingsDoc = { tasks: { schedules: settings.taskSchedules } };
       Utils = chtCore.nootils(settingsDoc);
       user = settings.contact;
+      chtScriptApi = settings.chtScriptApi;
 
       return true;
     },
@@ -81,7 +83,7 @@ module.exports = chtCore => {
       };
 
       for (const container of containers) {
-        mockNoolsLib(container, user, Utils, Task, Target, emitCallback);
+        mockNoolsLib(container, user, Utils, chtScriptApi, Task, Target, emitCallback);
       }
 
       return Promise.resolve(results);

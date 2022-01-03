@@ -18,16 +18,16 @@ class CoreAdapter {
     this.lineageLib = core.Lineage(Promise, this.pouchdb);
   }
 
-  async fetchTargets(user, state) {
-    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
+  async fetchTargets(user, userRoles, state) {
+    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, userRoles, state);
 
     const uhcMonthStartDate = getMonthStartDate(this.appSettings);
     const relevantInterval = this.core.CalendarInterval.getCurrent(uhcMonthStartDate);
     return this.rulesEngine.fetchTargets(relevantInterval);
   }
 
-  async fetchTasksFor(user, state) {
-    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, state);
+  async fetchTasksFor(user, userRoles, state) {
+    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, userRoles, state);
     return this.rulesEngine.fetchTasksFor();
   }
 
@@ -70,15 +70,16 @@ class CoreAdapter {
   }
 }
 
-const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, state) => {
-  await prepareRulesEngine(chtCore, rulesEngine, appSettings, user, pouchdb.name);
+const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, userRoles, state) => {
+  await prepareRulesEngine(chtCore, rulesEngine, appSettings, user, userRoles, pouchdb.name);
   const { updatedSubjectIds, newPouchdbState } = await syncPouchWithState(chtCore, pouchdb, pouchdbStateHash, state);
   await rulesEngine.updateEmissionsFor(updatedSubjectIds);
   return newPouchdbState;
 };
 
-const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, sessionId) => {
-  const rulesSettings = getRulesSettings(appSettings, user, sessionId);
+const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, userRoles, sessionId) => {
+  const rulesSettings = getRulesSettings(appSettings, user, userRoles, sessionId, chtCore.ChtScriptApi);
+
   if (!rulesEngine.isEnabled()) {
     await rulesEngine.initialize(rulesSettings);
   } else {
@@ -92,11 +93,7 @@ const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, sessi
   */
   if (chtCore.RulesEmitter.isEnabled()) {
     chtCore.RulesEmitter.shutdown();
-    chtCore.RulesEmitter.initialize({
-      rules: appSettings.tasks.rules,
-      contact: user,
-      taskSchedules: rulesSettings.taskSchedules
-    });
+    chtCore.RulesEmitter.initialize(rulesSettings);
   }
 };
 
@@ -177,12 +174,30 @@ const getMonthStartDate = settings => {
     );
 };
 
-const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
+// cht-core/src/ts/services/cht-script-api.service.ts
+const chtScriptApiWithDefaults = (chtScriptApi, settingsDoc, defaultUserRoles) => {
+  if (!chtScriptApi) {
+    return;
+  }
+
+  const defaultChtPermissionSettings = settingsDoc.permissions;
+  return {
+    v1: {
+      hasPermissions: (permissions, userRoles = defaultUserRoles, chtPermissionsSettings = defaultChtPermissionSettings) => {
+        return chtScriptApi.v1.hasPermissions(permissions, userRoles, chtPermissionsSettings);
+      },
+      hasAnyPermission: (permissionsGroupList, userRoles = defaultUserRoles, chtPermissionsSettings = defaultChtPermissionSettings) => {
+        return chtScriptApi.v1.hasAnyPermission(permissionsGroupList, userRoles, chtPermissionsSettings);
+      }
+    }
+  };
+};
+
+const getRulesSettings = (settingsDoc, userContactDoc, userRoles, sessionId, chtScriptApi) => {
   const settingsTasks = settingsDoc && settingsDoc.tasks || {};
   // https://github.com/medic/cht-conf-test-harness/issues/106
   // const filterTargetByContext = (target) => target.context ? !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
   const targets = settingsTasks.targets && settingsTasks.targets.items || [];
-
   return {
     rules: settingsTasks.rules,
     taskSchedules: settingsTasks.schedules,
@@ -190,9 +205,13 @@ const getRulesSettings = (settingsDoc, userContactDoc, sessionId) => {
     enableTasks: true,
     enableTargets: true,
     contact: userContactDoc, // <- this goes to rules emitter
-    user: { _id: `org.couchdb.user:${userContactDoc ? userContactDoc._id : 'default'}` },
+    user: {
+      _id: `org.couchdb.user:${userContactDoc ? userContactDoc._id : 'default'}`,
+      roles: userRoles,
+    },
     monthStartDate: getMonthStartDate(settingsDoc),
     sessionId,
+    chtScriptApi: chtScriptApiWithDefaults(chtScriptApi, settingsDoc, userRoles),
   };
 };
 

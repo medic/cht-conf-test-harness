@@ -3,8 +3,9 @@ const path = require('path');
 const Harness = require('../src/harness');
 
 const harness = new Harness({
-  directory: path.join(__dirname, 'collateral'),
+  directory: path.join(__dirname, 'collateral', 'project-without-source'),
   xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
+  harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
   verbose: false,
   reportFormErrors: false
 });

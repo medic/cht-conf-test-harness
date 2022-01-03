@@ -29,7 +29,7 @@ describe('initializations', () => {
 
   it('mocking datetime before start() + stop halts mocking', async() => {
     const harness = new Harness({
-      directory: path.join(__dirname, 'collateral'),
+      directory: path.join(__dirname, 'collateral', 'project-without-source'),
       xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
     });
 

@@ -6,11 +6,12 @@
  * @module mock.cht-conf.nools-lib
  */
 module.exports.pathToProject = undefined;
-module.exports = function(c, user, Utils, Task, Target, emit) {
+module.exports = function(c, user, Utils, chtScriptApi, Task, Target, emit) {
   const cacheBefore = Object.keys(require.cache);
   try {
     global.Utils = Utils;
     global.user = user;
+    global.cht = chtScriptApi;
 
     const tasks = require(`${module.exports.pathToProject}/tasks.js`);
     const targets = require(`${module.exports.pathToProject}/targets.js`);
@@ -25,6 +26,7 @@ module.exports = function(c, user, Utils, Task, Target, emit) {
   } finally {
     delete global.Utils;
     delete global.user;
+    delete global.cht;
 
     const cacheAfter = Object.keys(require.cache).filter(key => !cacheBefore.includes(key));
     cacheAfter.forEach(key => { delete require.cache[key]; });
