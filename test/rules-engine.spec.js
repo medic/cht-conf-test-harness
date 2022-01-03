@@ -178,6 +178,8 @@ for (const coreVersion of availableCoreVersions) {
       const expectedLength = isChtApiSupported ? 1 : 0;
       const chwTasks = await harness.getTasks();
       expect(chwTasks.length).to.eq(expectedLength);
+      const chwTargets = await harness.getTargets();
+      expect(chwTargets[0].value.total).to.eq(expectedLength);
 
       harness.userRoles = ['other'];
       const otherTasks = await harness.getTasks();
