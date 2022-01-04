@@ -7,7 +7,7 @@
     "test": "npx mocha test/*.spec.js --timeout 25000 --slow 500",
     "build": "npm run docs && ./build.sh",
     "docs": "npx jsdoc src/*.js src/**/*.js ./JSDOC.md -d docs",
-    "explore": "node ./project-explorer/build-assets.js --path=./test/collateral && cd project-explorer && webpack && google-chrome ./project-explorer.html",
+    "explore": "node ./project-explorer/build-assets.js --path=./test/collateral/project-without-source --formPath=./test/collateral && cd project-explorer && webpack && google-chrome ./project-explorer.html",
     "eslint": "npx eslint .",
     "travis": "npm run build && npm run eslint && npm test"
   },
@@ -30,6 +30,7 @@
     "cht-core-3-10": "git+https://github.com/medic/cht-core.git#3.10.x",
     "cht-core-3-11": "git+https://github.com/medic/cht-core.git#3.11.x",
     "cht-core-3-12": "git+https://github.com/medic/cht-core.git#3.12.x",
+    "cht-core-3-13": "git+https://github.com/medic/cht-core.git#3.13.x",
     "cht-core-3-9": "git+https://github.com/medic/cht-core.git#3.9.x",
     "couchdb-compile": "^1.11.0",
     "enketo-core": "4.41.6",

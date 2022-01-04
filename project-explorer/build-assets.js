@@ -6,12 +6,14 @@ const jsonToXml = require('pojo2xml');
 const usage = `Usage: build-assets --path=[DIRECTORY]
 
 Builds the content of a project folder for user in project explorer.
-  --path         path to the medic project folder
-  --output       path where the built assets will be written (optional)
+  --path        path to the medic project folder (app_settings.json)
+  --formPath    path to folder containing app/*.xml or contact/*.xml (defaults to path)
+  --output      path where the built assets will be written (optional)
 `;
 
 const argv = require('minimist')(process.argv.slice(2));
 const pathToProject = path.resolve(argv.path);
+const formPath = argv.formPath ? path.resolve(argv.formPath) : pathToProject;
 
 if (!pathToProject) {
   console.error(usage);
@@ -19,7 +21,12 @@ if (!pathToProject) {
 }
 
 if (!fs.existsSync(pathToProject)) {
-  console.error(`Could not locate project folder at: ${path.resolve(pathToProject)}`);
+  console.error(`Could not locate project folder at: ${pathToProject}`);
+  return -1;
+}
+
+if (!fs.existsSync(formPath)) {
+  console.error(`Could not locate form folder at: ${formPath}`);
   return -1;
 }
 
@@ -45,14 +52,14 @@ if (!fs.existsSync(pathToProject)) {
   fs.writeFileSync(harnessDefaultDestinationPath, fileContent);
 
   const appFormPaths = [
-    pathToProject,
-    path.join(pathToProject, 'forms'),
-    path.join(pathToProject, 'forms/app'),
-    path.join(pathToProject, 'forms/collect'),
+    formPath,
+    path.join(formPath, 'forms'),
+    path.join(formPath, 'forms/app'),
+    path.join(formPath, 'forms/collect'),
   ];
 
   const contactFormPaths = [
-    path.join(pathToProject, 'forms/contact')
+    path.join(formPath, 'forms/contact')
   ];
 
   const getFilesInFolders = directoriesToScan => {
