@@ -20,7 +20,7 @@ const toDate = val => {
       t = DateTime.fromJSDate(parsedDate);
     }
   }
-  if (t instanceof DateTime && t.isValid){
+  if (DateTime.isDateTime(t) && t.isValid){
     return t.toUTC();
   }
   throw Error('Unsupported date value');
@@ -40,7 +40,7 @@ const toDuration = val => {
   if (typeof val === 'string'){
     d = Duration.fromISO(val);
   }
-  if (d instanceof Duration && d.isValid){  
+  if (Duration.isDuration(d) && d.isValid){
     return d;
   }
   throw Error('Unsupported duration value');
