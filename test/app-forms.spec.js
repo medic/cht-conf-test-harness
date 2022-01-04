@@ -254,4 +254,17 @@ describe('forms that have caused bugs', () => {
     const result2 = await harness.fillForm('empty', [1]);
     expect(result2.errors).to.not.be.empty;
   });
+
+  it('#148 - Support for parse-timestamp-to-date (added in 3.13)', async () => {
+    await harness.setNow('2000-01-01');
+    await harness.loadForm('covid19_rdt_provision');
+    await harness.page.evaluate(() => window.$$('input[name$="preview_session_state"]').removeAttr('data-required')); 
+    const result = await harness.fillForm(
+      ['nasal', 'asymptomatic'],
+      ['nasal', undefined, '2000-04-01', ''],
+      [],
+    );
+    expect(result.errors).to.be.empty;
+    expect(result.report.fields.preview_time_expired).to.include('Mar, 1972');
+  });
 });
