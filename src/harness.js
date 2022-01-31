@@ -208,10 +208,11 @@ class Harness {
    * Loads and fills a contact form,
    *
    * @param {string} contactType Type of contact that should be created
+   * @param {string} action Either create or edit, defaults to create
    * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
    */
-  async fillContactForm(contactType, ...answers) {
-    const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
+  async fillContactForm(contactType, action, ...answers) {
+    const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-${action}.xml`);
 
     const user = await resolveMock(this.coreAdapter, this.state, this.options.user);
     await doLoadForm(this, this.page, xformFilePath, {}, user);
