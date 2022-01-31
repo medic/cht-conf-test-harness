@@ -27,6 +27,7 @@ describe('contact forms', () => {
     await harness.setNow(now);
     const result = await harness.fillContactForm(
       'district_hospital',
+      'create',
       ['new_person', 'Full', 'Short', '1990-08-06', undefined, '+1-555-227-7744', undefined, 'female', 'patient'],
       ['yes']
     );
@@ -83,7 +84,7 @@ describe('contact forms', () => {
   });
 
   it('msf-niger investigator', async () => {
-    const result = await harness.fillContactForm('investigator', ['Mr. Investigator']);
+    const result = await harness.fillContactForm('investigator', 'create', ['Mr. Investigator']);
     expect(result.errors).to.be.empty;
 
     expect(result.contacts.length).to.eq(2);
@@ -119,7 +120,7 @@ describe('contact forms', () => {
   });
 
   it('#59 - msf-goma create person', async () => {
-    const result = await harness.fillContactForm('goma-person', [
+    const result = await harness.fillContactForm('goma-person', 'create', [
       'PARENT', 'patient', '123', 'Full Name', '1990-10-08', 'male',
       '555-123-4567', 'false', 'eng', 'yes', 'second', 'no', 'unknown',
       ['diabetes'], '', 'notes'
@@ -129,7 +130,7 @@ describe('contact forms', () => {
   });
 
   it('#59 - msf-goma-2 create person', async () => {
-    const result = await harness.fillContactForm('goma-person-2', [
+    const result = await harness.fillContactForm('goma-person-2', 'create', [
       '123', 'Full Name', '1990-10-08', 'male',
       'yes', 'second', 'no',
       'unknown',
@@ -142,7 +143,7 @@ describe('contact forms', () => {
   it('form without pages', async () => {
     const now = DateTime.fromISO('2000-01-01');
     await harness.setNow(now);
-    const result = await harness.fillContactForm('no_pages', [
+    const result = await harness.fillContactForm('no_pages', 'create', [
       undefined,
       'chw', '123', 'full name', '1990-10-08', undefined, 'male', '555-123-4567', 'no', 'english',
       'yes', 'second', 'no', 'unknown', ['diabetes'], 'true', 'notes'
