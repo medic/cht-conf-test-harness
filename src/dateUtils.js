@@ -15,7 +15,7 @@ const toDate = val => {
     t = DateTime.fromMillis(val);
   }
   if (typeof val === 'string'){
-    const parsedDate = new Date(val);
+    const parsedDate = parseDateStringIgnoringRFC2822(val);
     if (!isNaN(parsedDate.getTime())){
       t = DateTime.fromJSDate(parsedDate);
     }
@@ -44,6 +44,18 @@ const toDuration = val => {
     return d;
   }
   throw Error('Unsupported duration value');
+};
+
+// https://github.com/medic/cht-conf-test-harness/issues/160
+const parseDateStringIgnoringRFC2822 = val => {
+  const isRFC2822Format = typeof val === 'string' && val.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
+  if (isRFC2822Format) {
+    const parsedDate = new Date(val);
+    const timezoneOffset = parsedDate.getTimezoneOffset() * 60 * 1000;
+    return new Date(parsedDate.getTime() + timezoneOffset);
+  }
+
+  return new Date(val);
 };
 
 module.exports = {
