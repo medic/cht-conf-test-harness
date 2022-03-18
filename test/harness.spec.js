@@ -24,11 +24,16 @@ describe('Harness tests', () => {
   });
 
   describe('time management', () => {
-    it('set and retrieve now', async () => {
-      const expected = '1990-02-01';
-      await harness.setNow(expected);
-      const actual = await harness.getNow();
-      expect(new Date(actual).toString()).to.include('Feb 01 1990');
+    it('set and retrieve remains local', async () => {
+      await harness.setNow('1990-02-01');
+      const isoDateFormat = await harness.getNow();
+      expect(new Date(isoDateFormat).toLocaleString('en-US', { timeZone: 'America/Vancouver' })).to.include('2/1/1990');
+      expect(new Date(isoDateFormat).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' })).to.include('2/1/1990');
+
+      await harness.setNow('Feb 1 1990');
+      const dateFormat = await harness.getNow();
+      expect(new Date(dateFormat).toLocaleString('en-US', { timeZone: 'America/Vancouver' })).to.include('2/1/1990');
+      expect(new Date(dateFormat).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' })).to.include('2/1/1990');
     });
 
     it('getNow defaults to now when undefined', async () => {
