@@ -205,13 +205,14 @@ class Harness {
   }
 
   /**
-   * Loads and fills a contact form,
+   * Loads and fills a contact form with the appropriate action
    *
    * @param {string} contactType Type of contact that should be created
+   * @param {string} action one of 'create' or 'edit'
    * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
    */
-  async fillContactForm(contactType, ...answers) {
-    const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
+  async _fillContactForm(contactType, action, ...answers) {
+    const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-${action}.xml`);
 
     const user = await resolveMock(this.coreAdapter, this.state, this.options.user);
     await doLoadForm(this, this.page, xformFilePath, {}, user);
@@ -234,8 +235,37 @@ class Harness {
       /* this.log respects verbose option, use logFormErrors here */
       console.error(`Error encountered while filling form:`, JSON.stringify(fillResult.errors, null, 2));
     }
-
+    return fillResult;
+  }
+  
+  /**
+   * Loads and fills a contact form,
+   *
+   * @param {string} contactType Type of contact that should be created
+   * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
+   */
+  async fillContactForm(contactType, ...answers) {
+    const fillResult = await this._fillContactForm(contactType, 'create', ...answers);
     this.pushMockedDoc(...fillResult.contacts);
+    return fillResult;
+  }
+
+  /**
+   * Loads and fills a contact edit form,
+   *
+   * @param {string} contactType Type of contact that should be created
+   * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
+   */
+  async fillContactEditForm(contactType, ...answers) {
+    const fillResult = await this._fillContactForm(contactType, 'edit', ...answers);
+    
+    let _contact = this._state.contacts.find(contact => contact._id === this.subject._id);
+    _contact = { ..._contact, ...fillResult.contacts[0]};
+
+    this._state.contacts = this._state.contacts.filter(contact => contact._id !== this.subject._id);
+
+    this.pushMockedDoc(_contact);
+    
     return fillResult;
   }
 
