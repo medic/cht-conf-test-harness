@@ -104,7 +104,7 @@ class Harness {
     this.options = _.defaults(
       this.options,
       _.pick(fileBasedDefaults, 'coreVersion'),
-      { coreVersion: availableCoreVersions[availableCoreVersions.length-1] },
+      { coreVersion: availableCoreVersions[availableCoreVersions.length - 1] },
     );
 
     this.core = ChtCoreFactory.get(this.options.coreVersion);
@@ -237,7 +237,7 @@ class Harness {
     }
     return fillResult;
   }
-  
+
   /**
    * Loads and fills a contact form,
    *
@@ -257,15 +257,16 @@ class Harness {
    * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
    */
   async fillContactEditForm(contactType, ...answers) {
+    const assignValues = (target, props) =>
+      Object.entries(props).forEach(([k, v]) => (k !== '_id' && v) && (target[k] = v)); // replace all non empty/null values
+
     const fillResult = await this._fillContactForm(contactType, 'edit', ...answers);
-    
-    let _contact = this._state.contacts.find(contact => contact._id === this.subject._id);
-    _contact = { ..._contact, ...fillResult.contacts[0]};
+    const _contact = this.subject;
+    assignValues(_contact, fillResult.contacts[0]);
 
-    this._state.contacts = this._state.contacts.filter(contact => contact._id !== this.subject._id);
+    this._state.contacts = this._state.contacts.filter(contact => contact._id !== this.subject._id); // remove the contact
+    this.pushMockedDoc(_contact); // add the updated contact
 
-    this.pushMockedDoc(_contact);
-    
     return fillResult;
   }
 
@@ -591,7 +592,7 @@ class Harness {
     if (this.options.userSettingsDoc) {
       return this.options.userSettingsDoc;
     }
-  
+
     const user = this.user;
     if (!user) {
       return undefined;
@@ -757,7 +758,7 @@ const clearSync = (self) => {
     contacts,
     reports: [],
   };
-  self.onConsole = () => {};
+  self.onConsole = () => { };
   self._now = undefined;
 
   sinon.restore();

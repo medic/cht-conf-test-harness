@@ -1,0 +1,666 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>Modifier la personne</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/data/init/change_parent/no:label">
+            <value>No</value>
+          </text>
+          <text id="/data/init/change_parent/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/data/init/change_parent:label">
+            <value>Would you like to move them to another phone holder?</value>
+          </text>
+          <text id="/data/init/fname:label">
+            <value>First name</value>
+          </text>
+          <text id="/data/init/lname:label">
+            <value>Surname</value>
+          </text>
+          <text id="/data/init/name:label">
+            <value>Name and surname</value>
+          </text>
+          <text id="/data/init/note_place:label">
+            <value><output value=" /data/init/person_name "/>&amp;nbsp;currently belongs to **<output value=" /data/init/person_place_name "/>**</value>
+          </text>
+          <text id="/data/init/person_parent:label">
+            <value>Current Place</value>
+          </text>
+          <text id="/data/init/phone_owner:label">
+            <value>Select phone holder</value>
+          </text>
+          <text id="/data/person/age_months:jr:constraintMsg">
+            <value>Months must between 0 and 11</value>
+          </text>
+          <text id="/data/person/age_months:label">
+            <value>Age (months)</value>
+          </text>
+          <text id="/data/person/age_years:jr:constraintMsg">
+            <value>Age must be between 0 and 100</value>
+          </text>
+          <text id="/data/person/age_years:label">
+            <value>Age (years)</value>
+          </text>
+          <text id="/data/person/arv/arv_line/first:label">
+            <value>First Line</value>
+          </text>
+          <text id="/data/person/arv/arv_line/second:label">
+            <value>Second Line</value>
+          </text>
+          <text id="/data/person/arv/arv_line/third:label">
+            <value>Third Line</value>
+          </text>
+          <text id="/data/person/arv/arv_line:label">
+            <value>Type of ARV Treatment</value>
+          </text>
+          <text id="/data/person/arv/arv_status/no:label">
+            <value>No</value>
+          </text>
+          <text id="/data/person/arv/arv_status/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/data/person/arv/arv_status:label">
+            <value>Is <output value=" /data/person/c_patient_name "/> on ARV treatment?</value>
+          </text>
+          <text id="/data/person/arv/stable/stable:label">
+            <value>Stable</value>
+          </text>
+          <text id="/data/person/arv/stable/unknown:label">
+            <value>Unknown</value>
+          </text>
+          <text id="/data/person/arv/stable/unstable:label">
+            <value>Unstable</value>
+          </text>
+          <text id="/data/person/arv/stable:hint">
+            <value>Note: Unstable if CD4 &lt;350 or viral load&gt; 1000, or current opportunistic infection</value>
+          </text>
+          <text id="/data/person/arv/stable:label">
+            <value>What is the patients status, Stable or Unstable?</value>
+          </text>
+          <text id="/data/person/arv:label">
+            <value>ARV Treatment</value>
+          </text>
+          <text id="/data/person/arv_number:label">
+            <value>Patient code</value>
+          </text>
+          <text id="/data/person/date_of_birth:label">
+            <value>Date of Birth</value>
+          </text>
+          <text id="/data/person/location:label">
+            <value>Location</value>
+          </text>
+          <text id="/data/person/name:label">
+            <value>Name and surname</value>
+          </text>
+          <text id="/data/person/other/chronic_disease/diabetes:label">
+            <value>Obesity</value>
+          </text>
+          <text id="/data/person/other/chronic_disease/heart:label">
+            <value>Heart disease</value>
+          </text>
+          <text id="/data/person/other/chronic_disease/hepatitis_b:label">
+            <value>Hepatitis B</value>
+          </text>
+          <text id="/data/person/other/chronic_disease/hypertension:label">
+            <value>Hypertension</value>
+          </text>
+          <text id="/data/person/other/chronic_disease/obesity:label">
+            <value>Diabetes</value>
+          </text>
+          <text id="/data/person/other/chronic_disease:hint">
+            <value>(Check all that apply)</value>
+          </text>
+          <text id="/data/person/other/chronic_disease:label">
+            <value>Does <output value=" /data/person/c_patient_name "/> have any chronic disease?</value>
+          </text>
+          <text id="/data/person/other/pregnancy_due_date:jr:constraintMsg">
+            <value>Date must be or after today</value>
+          </text>
+          <text id="/data/person/other/pregnancy_due_date:label">
+            <value>Delivery date expected</value>
+          </text>
+          <text id="/data/person/other/pregnancy_status/no:label">
+            <value>No</value>
+          </text>
+          <text id="/data/person/other/pregnancy_status/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/data/person/other/pregnancy_status:label">
+            <value>Pregnant?</value>
+          </text>
+          <text id="/data/person/other:label">
+            <value>Additional details</value>
+          </text>
+          <text id="/data/person/sex/female:label">
+            <value>Female</value>
+          </text>
+          <text id="/data/person/sex/male:label">
+            <value>Male</value>
+          </text>
+          <text id="/data/person/sex:label">
+            <value>Gender</value>
+          </text>
+          <text id="/data/person/tb/tb_end:jr:constraintMsg">
+            <value>Date must be after start date</value>
+          </text>
+          <text id="/data/person/tb/tb_end:label">
+            <value>TB treatment end date</value>
+          </text>
+          <text id="/data/person/tb/tb_start:jr:constraintMsg">
+            <value>Date must be before today</value>
+          </text>
+          <text id="/data/person/tb/tb_start:label">
+            <value>TB treatment start date</value>
+          </text>
+          <text id="/data/person/tb/tb_status/no:label">
+            <value>No</value>
+          </text>
+          <text id="/data/person/tb/tb_status/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/data/person/tb/tb_status:label">
+            <value>In TB treatment?</value>
+          </text>
+          <text id="/data/person/tb:label">
+            <value>TB Treatment</value>
+          </text>
+          <text id="/data/person/tb_id:hint">
+            <value>If available.</value>
+          </text>
+          <text id="/data/person/tb_id:label">
+            <value>TB Number</value>
+          </text>
+          <text id="/data/person:label">
+            <value>Edit Person</value>
+          </text>
+        </translation>
+        <translation lang="fr">
+          <text id="/data/init/change_parent/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/data/init/change_parent/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/data/init/change_parent:label">
+            <value>Voulez-vous déplacer cette personne vers une autre détenteur de téléphone?</value>
+          </text>
+          <text id="/data/init/fname:label">
+            <value>Prénoms</value>
+          </text>
+          <text id="/data/init/lname:label">
+            <value>Nom</value>
+          </text>
+          <text id="/data/init/name:label">
+            <value>Nom et prénom</value>
+          </text>
+          <text id="/data/init/note_place:label">
+            <value><output value=" /data/init/person_name "/>&amp;nbsp;appartient à **<output value=" /data/init/person_place_name "/>**</value>
+          </text>
+          <text id="/data/init/person_parent:label">
+            <value>Place actuelle</value>
+          </text>
+          <text id="/data/init/phone_owner:label">
+            <value>Selectionner le détenteur du téléphone</value>
+          </text>
+          <text id="/data/init:label">
+            <value>-</value>
+          </text>
+          <text id="/data/person/age_months:jr:constraintMsg">
+            <value>Les mois doivent entre 0 et 11</value>
+          </text>
+          <text id="/data/person/age_months:label">
+            <value>Âge (mois)</value>
+          </text>
+          <text id="/data/person/age_years:jr:constraintMsg">
+            <value>L'âge doit se situer entre 0 et 100</value>
+          </text>
+          <text id="/data/person/age_years:label">
+            <value>Âge (ans)</value>
+          </text>
+          <text id="/data/person/arv/arv_line/first:label">
+            <value>Première ligne</value>
+          </text>
+          <text id="/data/person/arv/arv_line/second:label">
+            <value>Deuxième ligne</value>
+          </text>
+          <text id="/data/person/arv/arv_line/third:label">
+            <value>Troisième ligne</value>
+          </text>
+          <text id="/data/person/arv/arv_line:label">
+            <value>Type de traitement ARV</value>
+          </text>
+          <text id="/data/person/arv/arv_status/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/data/person/arv/arv_status/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/data/person/arv/arv_status:label">
+            <value>Est-ce que <output value=" /data/person/c_patient_name "/> est sous traitement ARV?</value>
+          </text>
+          <text id="/data/person/arv/stable/stable:label">
+            <value>Stable</value>
+          </text>
+          <text id="/data/person/arv/stable/unknown:label">
+            <value>Inconnu</value>
+          </text>
+          <text id="/data/person/arv/stable/unstable:label">
+            <value>Instable</value>
+          </text>
+          <text id="/data/person/arv/stable:hint">
+            <value>Remarque : Instable si CD4 &lt;350 ou charge virale&gt; 1000, ou infection opportuniste actuelle</value>
+          </text>
+          <text id="/data/person/arv/stable:label">
+            <value>Quel est le statut du patient, stable ou instable?</value>
+          </text>
+          <text id="/data/person/arv:label">
+            <value>Traitement ARV</value>
+          </text>
+          <text id="/data/person/arv_number:label">
+            <value>Code patient</value>
+          </text>
+          <text id="/data/person/date_of_birth:label">
+            <value>Date de naissance</value>
+          </text>
+          <text id="/data/person/location:label">
+            <value>Lieu</value>
+          </text>
+          <text id="/data/person/name:label">
+            <value>Nom et prénom</value>
+          </text>
+          <text id="/data/person/other/chronic_disease/diabetes:label">
+            <value>Obésité</value>
+          </text>
+          <text id="/data/person/other/chronic_disease/heart:label">
+            <value>Cardiopathie</value>
+          </text>
+          <text id="/data/person/other/chronic_disease/hepatitis_b:label">
+            <value>Hépatite B</value>
+          </text>
+          <text id="/data/person/other/chronic_disease/hypertension:label">
+            <value>Hypertension</value>
+          </text>
+          <text id="/data/person/other/chronic_disease/obesity:label">
+            <value>Diabète</value>
+          </text>
+          <text id="/data/person/other/chronic_disease:hint">
+            <value>(Cochez toutes les réponses qui s'appliquent)</value>
+          </text>
+          <text id="/data/person/other/chronic_disease:label">
+            <value>Est-ce que <output value=" /data/person/c_patient_name "/> a une maladie chronique?</value>
+          </text>
+          <text id="/data/person/other/pregnancy_due_date:jr:constraintMsg">
+            <value>La date doit être ou après aujourd'hui</value>
+          </text>
+          <text id="/data/person/other/pregnancy_due_date:label">
+            <value>Date d'accouchement prévue</value>
+          </text>
+          <text id="/data/person/other/pregnancy_status/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/data/person/other/pregnancy_status/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/data/person/other/pregnancy_status:label">
+            <value>La femme est-elle enceinte?</value>
+          </text>
+          <text id="/data/person/other:label">
+            <value>Détails supplémentaires</value>
+          </text>
+          <text id="/data/person/sex/female:label">
+            <value>Femme</value>
+          </text>
+          <text id="/data/person/sex/male:label">
+            <value>Homme</value>
+          </text>
+          <text id="/data/person/sex:label">
+            <value>Sexe</value>
+          </text>
+          <text id="/data/person/tb/tb_end:jr:constraintMsg">
+            <value>La date doit être postérieure à la date de début</value>
+          </text>
+          <text id="/data/person/tb/tb_end:label">
+            <value>Date de fin du traitement antituberculeux</value>
+          </text>
+          <text id="/data/person/tb/tb_start:jr:constraintMsg">
+            <value>La date doit être antérieure à aujourd'hui</value>
+          </text>
+          <text id="/data/person/tb/tb_start:label">
+            <value>Date de début du traitement antituberculeux</value>
+          </text>
+          <text id="/data/person/tb/tb_status/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/data/person/tb/tb_status/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/data/person/tb/tb_status:label">
+            <value>Sous traitement antituberculeux?</value>
+          </text>
+          <text id="/data/person/tb:label">
+            <value>Traitement TB</value>
+          </text>
+          <text id="/data/person/tb_id:hint">
+            <value>Si disponible.</value>
+          </text>
+          <text id="/data/person/tb_id:label">
+            <value>Numéro TB</value>
+          </text>
+          <text id="/data/person:label">
+            <value>Éditer personne</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="contact:person:edit" prefix="J1!contact:person:edit!" delimiter="#" version="2021-05-10 03:21:20">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <user>
+              <contact_id/>
+              <facility_id/>
+              <name/>
+            </user>
+          </inputs>
+          <person>
+            <parent>PARENT</parent>
+            <contact_type>patient</contact_type>
+            <arv_number/>
+            <tb_id/>
+            <name/>
+            <c_patient_name/>
+            <age_years/>
+            <age_months/>
+            <ephemeral_months/>
+            <ephemeral_years/>
+            <dob_approx/>
+            <dob_raw/>
+            <dob_iso/>
+            <date_of_birth/>
+            <sex/>
+            <location/>
+            <role>patient</role>
+            <arv>
+              <arv_status/>
+              <arv_line/>
+              <stable/>
+            </arv>
+            <tb>
+              <tb_status>PARENT</tb_status>
+              <tb_start>nurse_area</tb_start>
+              <tb_end/>
+            </tb>
+            <other>
+              <pregnancy_status/>
+              <pregnancy_due_date/>
+              <lmp_date/>
+              <chronic_disease/>
+            </other>
+            <rapidpro>
+              <arv/>
+              <tb/>
+            </rapidpro>
+            <meta tag="hidden">
+              <updated_by/>
+              <updated_by_person_uuid/>
+              <updated_by_place_uuid/>
+            </meta>
+          </person>
+          <init>
+            <person_name/>
+            <person_place_name/>
+            <person_parent/>
+            <type/>
+            <fname/>
+            <lname/>
+            <name/>
+            <note_place/>
+            <change_parent/>
+            <phone_owner/>
+          </init>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/inputs" relevant="0"/>
+      <bind nodeset="/data/inputs/user/contact_id" type="string"/>
+      <bind nodeset="/data/inputs/user/facility_id" type="string"/>
+      <bind nodeset="/data/inputs/user/name" type="string"/>
+      <bind nodeset="/data/init/person_name" type="string" calculate="../../person/name"/>
+      <bind nodeset="/data/init/person_place_name" type="string" calculate="../name"/>
+      <bind nodeset="/data/init/person_parent" type="string" readonly="true()" calculate=" /data/person/parent "/>
+      <bind nodeset="/data/init/type" type="string"/>
+      <bind nodeset="/data/init/fname" type="string" required="true()"/>
+      <bind nodeset="/data/init/lname" type="string" required="true()"/>
+      <bind nodeset="/data/init/name" type="string" calculate="concat( /data/init/fname , ' ',  /data/init/lname )" required="true()"/>
+      <bind nodeset="/data/init/note_place" readonly="true()" type="string"/>
+      <bind nodeset="/data/init/change_parent" type="select1" required="true()"/>
+      <bind nodeset="/data/init/phone_owner" type="string" relevant="../change_parent = 'yes'" required="true()"/>
+      <bind nodeset="/data/person/parent" type="string" calculate="coalesce( /data/init/phone_owner , /data/person/parent )"/>
+      <bind nodeset="/data/person/contact_type" type="string"/>
+      <bind nodeset="/data/person/arv_number" type="string" required="true()"/>
+      <bind nodeset="/data/person/tb_id" type="string"/>
+      <bind nodeset="/data/person/name" type="string" required="true()"/>
+      <bind nodeset="/data/person/c_patient_name" type="string" calculate="../name"/>
+      <bind nodeset="/data/person/age_years" type="int" jr:constraintMsg="jr:itext('/data/person/age_years:jr:constraintMsg')" constraint=". &gt;= 0 and . &lt;= 100" required="true()"/>
+      <bind nodeset="/data/person/age_months" type="int" jr:constraintMsg="jr:itext('/data/person/age_months:jr:constraintMsg')" constraint=". &gt;= 0 and . &lt;= 11" required="true()"/>
+      <bind nodeset="/data/person/ephemeral_months" type="string" calculate="if(format-date-time(today(),&quot;%m&quot;) - ../age_months &lt; 0, format-date-time(today(),&quot;%m&quot;) - ../age_months + 12, format-date-time(today(),&quot;%m&quot;) - ../age_months)"/>
+      <bind nodeset="/data/person/ephemeral_years" type="string" calculate="if(format-date-time(today(),&quot;%m&quot;) - ../age_months &lt; 0, format-date-time(today(),&quot;%Y&quot;) - ../age_years - 1, format-date-time(today(),&quot;%Y&quot;) -../age_years)"/>
+      <bind nodeset="/data/person/dob_approx" type="string" calculate="date(concat(string( /data/person/ephemeral_years ),'-',if( /data/person/ephemeral_months &lt;10, concat('0',string( /data/person/ephemeral_months )),  /data/person/ephemeral_months ),'-',string(format-date-time(today(), &quot;%d&quot;))))"/>
+      <bind nodeset="/data/person/dob_raw" type="string" calculate="if(../dob_calendar != '', 
+../dob_calendar,
+../dob_approx)"/>
+      <bind nodeset="/data/person/dob_iso" type="string" calculate="decimal-date-time(../dob_raw)"/>
+      <bind nodeset="/data/person/date_of_birth" type="string" calculate="format-date-time(date(../dob_iso),'%Y-%m-%d')"/>
+      <bind nodeset="/data/person/sex" type="select1" required="true()"/>
+      <bind nodeset="/data/person/location" type="string" required="true()"/>
+      <bind nodeset="/data/person/role" type="string"/>
+      <bind nodeset="/data/person/arv/arv_status" type="select1" required="true()"/>
+      <bind nodeset="/data/person/arv/arv_line" type="select1" relevant="selected(../arv_status,'yes')" required="true()"/>
+      <bind nodeset="/data/person/arv/stable" type="select1" relevant="selected(../arv_status,'yes')" required="true()"/>
+      <bind nodeset="/data/person/tb/tb_status" type="select1" required="true()"/>
+      <bind nodeset="/data/person/tb/tb_start" type="date" jr:constraintMsg="jr:itext('/data/person/tb/tb_start:jr:constraintMsg')" constraint="floor(decimal-date-time(.)) &lt;= floor(decimal-date-time(today()))" relevant="selected(../tb_status, 'yes')"/>
+      <bind nodeset="/data/person/tb/tb_end" type="date" jr:constraintMsg="jr:itext('/data/person/tb/tb_end:jr:constraintMsg')" constraint="floor(decimal-date-time(.)) &gt;= floor(decimal-date-time( /data/person/tb/tb_start ))" relevant="selected(../tb_status, 'yes')"/>
+      <bind nodeset="/data/person/other/pregnancy_status" type="select1" relevant="selected(../../sex, 'female')" required="true()"/>
+      <bind nodeset="/data/person/other/pregnancy_due_date" type="date" relevant="selected(../pregnancy_status, 'yes')" jr:constraintMsg="jr:itext('/data/person/other/pregnancy_due_date:jr:constraintMsg')" constraint="floor(decimal-date-time(.)) &gt;= floor(decimal-date-time(today()))" required="true()"/>
+      <bind nodeset="/data/person/other/lmp_date" type="string" calculate="format-date-time(date-time(decimal-date-time(../pregnancy_due_date) - 280)
+, &quot;%Y-%m-%d&quot;)" relevant="../pregnancy_due_date != ''"/>
+      <bind nodeset="/data/person/other/chronic_disease" type="select"/>
+      <bind nodeset="/data/person/rapidpro/arv" type="string" calculate="if( /data/person/arv/arv_status  = 'yes',if( /data/person/arv/stable  = 'stable','stable','unstable'),'false')"/>
+      <bind nodeset="/data/person/rapidpro/tb" type="string" calculate=" /data/person/tb/tb_status  = 'yes'"/>
+      <bind nodeset="/data/person/meta/updated_by" type="string" calculate="../../../inputs/user/name"/>
+      <bind nodeset="/data/person/meta/updated_by_person_uuid" type="string" calculate="../../../inputs/user/contact_id"/>
+      <bind nodeset="/data/person/meta/updated_by_place_uuid" type="string" calculate="../../../inputs/user/facility_id"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/inputs">
+      <group ref="/data/inputs/user">
+        <input ref="/data/inputs/user/contact_id"/>
+        <input ref="/data/inputs/user/facility_id"/>
+        <input ref="/data/inputs/user/name"/>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/data/init">
+      <input appearance="db-object hidden" ref="/data/init/person_parent">
+        <label ref="jr:itext('/data/init/person_parent:label')"/>
+      </input>
+      <input appearance="hidden" ref="/data/init/type"/>
+      <input ref="/data/init/fname">
+        <label ref="jr:itext('/data/init/fname:label')"/>
+      </input>
+      <input ref="/data/init/lname">
+        <label ref="jr:itext('/data/init/lname:label')"/>
+      </input>
+      <input ref="/data/init/note_place">
+        <label ref="jr:itext('/data/init/note_place:label')"/>
+      </input>
+      <select1 appearance="horizontal-compact" ref="/data/init/change_parent">
+        <label ref="jr:itext('/data/init/change_parent:label')"/>
+        <item>
+          <label ref="jr:itext('/data/init/change_parent/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/data/init/change_parent/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input appearance="select-contact type-phone_owner" ref="/data/init/phone_owner">
+        <label ref="jr:itext('/data/init/phone_owner:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/data/person">
+      <label ref="jr:itext('/data/person:label')"/>
+      <input ref="/data/person/arv_number">
+        <label ref="jr:itext('/data/person/arv_number:label')"/>
+      </input>
+      <input ref="/data/person/tb_id">
+        <label ref="jr:itext('/data/person/tb_id:label')"/>
+        <hint ref="jr:itext('/data/person/tb_id:hint')"/>
+      </input>
+      <input ref="/data/person/name">
+        <label ref="jr:itext('/data/person/name:label')"/>
+      </input>
+      <input ref="/data/person/age_years">
+        <label ref="jr:itext('/data/person/age_years:label')"/>
+      </input>
+      <input ref="/data/person/age_months">
+        <label ref="jr:itext('/data/person/age_months:label')"/>
+      </input>
+      <select1 appearance="horizontal" ref="/data/person/sex">
+        <label ref="jr:itext('/data/person/sex:label')"/>
+        <item>
+          <label ref="jr:itext('/data/person/sex/female:label')"/>
+          <value>female</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/data/person/sex/male:label')"/>
+          <value>male</value>
+        </item>
+      </select1>
+      <input ref="/data/person/location">
+        <label ref="jr:itext('/data/person/location:label')"/>
+      </input>
+      <group ref="/data/person/arv">
+        <label ref="jr:itext('/data/person/arv:label')"/>
+        <select1 ref="/data/person/arv/arv_status">
+          <label ref="jr:itext('/data/person/arv/arv_status:label')"/>
+          <item>
+            <label ref="jr:itext('/data/person/arv/arv_status/yes:label')"/>
+            <value>yes</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/arv/arv_status/no:label')"/>
+            <value>no</value>
+          </item>
+        </select1>
+        <select1 ref="/data/person/arv/arv_line">
+          <label ref="jr:itext('/data/person/arv/arv_line:label')"/>
+          <item>
+            <label ref="jr:itext('/data/person/arv/arv_line/first:label')"/>
+            <value>first</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/arv/arv_line/second:label')"/>
+            <value>second</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/arv/arv_line/third:label')"/>
+            <value>third</value>
+          </item>
+        </select1>
+        <select1 ref="/data/person/arv/stable">
+          <label ref="jr:itext('/data/person/arv/stable:label')"/>
+          <hint ref="jr:itext('/data/person/arv/stable:hint')"/>
+          <item>
+            <label ref="jr:itext('/data/person/arv/stable/stable:label')"/>
+            <value>stable</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/arv/stable/unstable:label')"/>
+            <value>unstable</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/arv/stable/unknown:label')"/>
+            <value>unknown</value>
+          </item>
+        </select1>
+      </group>
+      <group ref="/data/person/tb">
+        <label ref="jr:itext('/data/person/tb:label')"/>
+        <select1 ref="/data/person/tb/tb_status">
+          <label ref="jr:itext('/data/person/tb/tb_status:label')"/>
+          <item>
+            <label ref="jr:itext('/data/person/tb/tb_status/yes:label')"/>
+            <value>yes</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/tb/tb_status/no:label')"/>
+            <value>no</value>
+          </item>
+        </select1>
+        <input ref="/data/person/tb/tb_start">
+          <label ref="jr:itext('/data/person/tb/tb_start:label')"/>
+        </input>
+        <input ref="/data/person/tb/tb_end">
+          <label ref="jr:itext('/data/person/tb/tb_end:label')"/>
+        </input>
+      </group>
+      <group ref="/data/person/other">
+        <label ref="jr:itext('/data/person/other:label')"/>
+        <select1 ref="/data/person/other/pregnancy_status">
+          <label ref="jr:itext('/data/person/other/pregnancy_status:label')"/>
+          <item>
+            <label ref="jr:itext('/data/person/other/pregnancy_status/yes:label')"/>
+            <value>yes</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/other/pregnancy_status/no:label')"/>
+            <value>no</value>
+          </item>
+        </select1>
+        <input ref="/data/person/other/pregnancy_due_date">
+          <label ref="jr:itext('/data/person/other/pregnancy_due_date:label')"/>
+        </input>
+        <select ref="/data/person/other/chronic_disease">
+          <label ref="jr:itext('/data/person/other/chronic_disease:label')"/>
+          <hint ref="jr:itext('/data/person/other/chronic_disease:hint')"/>
+          <item>
+            <label ref="jr:itext('/data/person/other/chronic_disease/hypertension:label')"/>
+            <value>hypertension</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/other/chronic_disease/heart:label')"/>
+            <value>heart</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/other/chronic_disease/obesity:label')"/>
+            <value>obesity</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/other/chronic_disease/diabetes:label')"/>
+            <value>diabetes</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/data/person/other/chronic_disease/hepatitis_b:label')"/>
+            <value>hepatitis_b</value>
+          </item>
+        </select>
+      </group>
+      <group appearance="hidden" ref="/data/person/rapidpro"/>
+      <group appearance="hidden" ref="/data/person/meta"/>
+    </group>
+  </h:body>
+</h:html>

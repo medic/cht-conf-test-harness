@@ -128,6 +128,28 @@ describe('contact forms', () => {
     expect(result.errors).to.be.empty;
   });
 
+  it('msf-goma edit person', async () => {
+    const arv_number = '123';
+    let result = await harness.fillContactForm('goma-person', [
+      'PARENT', 'patient', arv_number, 'Full Name', '1990-10-08', 'male',
+      '555-123-4567', 'false', 'eng', 'yes', 'second', 'no', 'unknown',
+      ['diabetes'], '', 'notes'
+    ]);
+    expect(result.errors).to.be.empty; // create the person
+    harness.subject = result.contacts[0]; // set the person as subject
+
+    result = await harness.fillContactEditForm('goma-person', ...[
+      ['Updated', 'Name', 'no'],
+      ['123', '', 'Updated Name', '1', '11', 'male', 'location', 'no'],
+    ]);
+    expect(result.errors).to.be.empty;
+
+    const contact = harness.subject;
+    expect(contact.arv_number).to.be.eq(arv_number);
+    expect(contact.ephemeral_dob.dob_raw).to.be.eq('1990-10-08');
+    expect(contact.name).to.be.eq('Updated Name');
+  });
+
   it('#59 - msf-goma-2 create person', async () => {
     const result = await harness.fillContactForm('goma-person-2', [
       '123', 'Full Name', '1990-10-08', 'male',
