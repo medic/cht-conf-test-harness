@@ -12,14 +12,15 @@ trap exit_on_error EXIT
 
 npm ci
 rm -Rf dist build
-rm -Rf node_modules/enketo-core/node_modules/
-patch -f node_modules/enketo-core/src/js/Form.js < node_modules/cht-core-3-13/webapp/patches/enketo-inputs-always-relevant.patch
-patch -f node_modules/enketo-core/src/js/page.js < patches/enketo-handle-no-active-pages.patch
 node ./compile-ddocs.js
 
 dirs=($(find node_modules/cht-* -maxdepth 0 -type d))
 for dir in "${dirs[@]}"; do
+  (cd "$dir"/webapp && npm ci --production)
+  (cd "$dir"/api && npm ci --production)
   (cd "$dir"/shared-libs/rules-engine && npm ci --production)
+  (cd "$dir"/shared-libs/enketo-form-manager && npm ci --production)
+  (cd "$dir" && patch -f webapp/node_modules/enketo-core/src/js/calculate.js < webapp/patches/enketo-repeat-name-collision.patch)
 done
 
 npx webpack

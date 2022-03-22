@@ -13,7 +13,8 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.xml$/i, use: 'raw-loader' },
+      { test: /\.html$/i, use: 'raw-loader' },
+      { test: /\.model$/i, use: 'raw-loader' },
     ],
   },
   mode: 'development'

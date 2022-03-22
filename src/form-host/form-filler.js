@@ -1,8 +1,8 @@
 const _ = require('underscore');
 const $ = require('jquery');
 
-const getRecordForCompletedForm = require('./enketo');
-const saveContact = require('./save-contact');
+const getRecordForCompletedForm = () => {}; // require('./enketo');
+const saveContact = () => {}; // require('./save-contact');
 
 class FormFiller {
   constructor(formName, form, formXml, options) {
@@ -95,7 +95,6 @@ const fillForm = async (self, multiPageAnswer) => {
   const results = [];
   for (const pageIndex in multiPageAnswer) {
     const pageAnswer = multiPageAnswer[pageIndex];
-    makeNoteFieldsNotRequired();
     const result = await fillPage(self, pageAnswer);
     results.push(result);
 
@@ -260,15 +259,6 @@ const getVisibleQuestions = form => {
 
   return findQuestionsInSection(currentPage);
 };
-
-/*
-Not sure why the input element for the 'note' labels is a required field or how this
-doesn't trigger warnings in webapp. As a workaround, just update notes so that they are not
-required
-*/
-function makeNoteFieldsNotRequired() {
-  window.$$('label.note > input').attr('data-required', '');
-}
 
 const hasPages = form => form.pages.getCurrent().length > 0;
 

@@ -76,22 +76,42 @@ if (!fs.existsSync(formPath)) {
     return formsInDirectory;
   };
 
-  const appForms = getFilesInFolders(appFormPaths);
-  if (appForms.length === 0) {
+  const appFormXmlFilePath = getFilesInFolders(appFormPaths);
+  if (appFormXmlFilePath.length === 0) {
     console.error(`No xml files found in folders: ${pathToProject}`);
     return -1;
   }
 
+  const appFormHtmlPaths = [];
+  const appFormModelPaths = [];
+  for (const formPath of appFormXmlFilePath) {
+    const appFormContent = fs.readFileSync(formPath);
+    console.log(`Converting ${formPath}`);
+    try {
+      const { form, model } = await harness.core.convertFormXmlToXFormModel(appFormContent);
+      const outputHtmlPath = path.resolve(__dirname, '../build', path.basename(formPath, '.xml') + '.html');
+      const outputModelPath = path.resolve(__dirname, '../build', path.basename(formPath, '.xml') + '.model');
+      fs.writeFileSync(outputHtmlPath, form);
+      fs.writeFileSync(outputModelPath, model);
+      appFormHtmlPaths.push(outputHtmlPath);
+      appFormModelPaths.push(outputModelPath);
+    } catch (e) {
+      console.error(`Error during conversion:`, e);
+    }
+  }
+
   const windowsEscaping = str => str.replace(/\\/g, '\\\\');
-  const formsAsRequirements = formPaths => formPaths
-    .map(fullPath => `  '${path.basename(fullPath)}': require('${windowsEscaping(fullPath)}'),`)
+  const formsAsRequirements = (formPaths, ext) => formPaths
+    .map(fullPath => `  '${path.basename(fullPath, ext)}': require('${windowsEscaping(fullPath)}'),`)
     .join('\n');
   fs.writeFileSync(outputPath, `module.exports = {
-    appForms: {
-    ${formsAsRequirements(appForms)}
+    appFormHtml: {
+    ${formsAsRequirements(appFormHtmlPaths, '.html')}
+    },
+    appFormModel: {
+    ${formsAsRequirements(appFormModelPaths, '.model')}
     },
     contactForms: {
-    ${formsAsRequirements(getFilesInFolders(contactFormPaths))}
     }
   };`);
   console.log(`Compiling to ${outputPath}`);

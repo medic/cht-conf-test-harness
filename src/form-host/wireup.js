@@ -1,90 +1,195 @@
 const $ = require('jquery');
-const EnketoForm = require('enketo-core/src/js/Form');
+const { toBik_text } = require('bikram-sambat');
+const moment = require('moment');
 
-const xmlSerializer = new window.XMLSerializer();
+// /home/kenn/webapp/webapp/src/ts/providers/xpath-element-path.provider.ts
+const { Xpath } = require('@mm-providers/xpath-element-path.provider');
+
+const medicXpathExtensions = require('@medic-xpath-extensions');
+const {
+  ContactServices,
+  FileServices,
+  FormDataServices,
+  TranslationServices,
+  XmlServices,
+  EnketoFormManager
+} = require('@medic/enketo-form-manager');
+
 class FormWireup {
-  constructor(openrosa2html5form, openrosa2xmlmodel) {
-    this.htmlTransformer = initTransformer(openrosa2html5form);
-    this.modelTransformer = initTransformer(openrosa2xmlmodel);
+  constructor() {
   }
 
-  render(formXml, content, user, contactSummary) {
-    if (!formXml || typeof formXml !== 'string') {
-      throw new Error('Invalid argument: xformData');
-    }
+  async render(formHtml, formModel, instanceData) {
+    const userContact = { _id: 'user1' };
 
-    if (!content || typeof content !== 'object') {
-      throw new Error('Invalid argument: content');
-    }
+    // BREAK
+    const dbService = {
+      get: () => ({
+        getAttachment: (formId, attachment) => {
+          if (attachment === 'form.html') {
+            return Promise.resolve(formHtml);
+          }
+          if (attachment === 'model.xml') {
+            return Promise.resolve(formModel);
+          }
 
-    const xform = $.parseXML(formXml);
-
-    setLanguageOnForm(xform, 'en');
-
-    const html = this.htmlTransformer(xform);
-    const model = this.modelTransformer(xform);
-
-    const $html = $(html);
-    const enketoOptions = {
-      modelStr: model,
-      instanceStr: bindDataToModel(model, content, user),
-      external: contactSummary ? [ contactSummary ] : undefined,
+          throw new Error(`dbService.get().getAttachment(): Unrecognized attachment requested ${attachment}`);
+        },
+      }),
     };
+    const extractLineageService = {};
+    const userContactService = {
+      get: () => Promise.resolve(userContact),
+    };
+    const fileReaderService = {
+      utf8: x => x,
+    };
+    const contactSummaryService = {
+      get: (contact, reports, lineage) => {
+        // recycle reduce reuse
+        return {
+          fields: [],
+          cards: [],
+          context: { foo: 'bar' },
+        };
+      },
+    };
+    const enketoPrepopulationDataService = {
+      get: (model, data) => {
+        if (data && typeof data === 'string') {
+          return Promise.resolve(data);
+        }
+        
+        const xml = $($.parseXML(model));
+        const bindRoot = xml.find('model instance').children().first();
 
-    $('.container').first().html($html);
+        const userRoot = bindRoot.find('>inputs>user');
 
-    const element = $('#task-report').find('form').first();
-    const form = new EnketoForm(element, enketoOptions);
-    const loadErrors = form.init();
-    if (loadErrors && loadErrors.length) {
-      throw new Error(`Load Errors: ${JSON.stringify(loadErrors)}`);
-    }
+        if (data) {
+          bindJsonToXml(bindRoot, data, (name) => {
+            // Either a direct child or a direct child of inputs
+            return '>%, >inputs>%'.replace(/%/g, name);
+          });
+        }
 
-    return form;
+        if (userRoot.length) {
+          bindJsonToXml(userRoot, userContact);
+        }
+
+        return new window.XMLSerializer().serializeToString(bindRoot[0]);
+      }
+    };
+    const languageService = {
+      get: () => 'en',
+    };
+    const lineageModelGeneratorService = {
+      contact: () => Promise.resolve({
+        lineage: ['lineage_parent_1', 'lineage_parent_2'],
+      }),
+    };
+    const searchService = {
+      search: (type, filters, options, extensions, docIds) => {
+        // TODO
+        return [];
+      },
+    };
+    const translateService = {
+      instant: x => x,
+    };
+    const translateFromService = {
+      get: x => x,
+    };
+    const addAttachmentService = {};
+    const enketoTranslationService = {};
+    const getReportContentService = {};
+    const xmlFormsService = {};
+    const transitionsService = {};
+    const GlobalActions = {};
+
+    this.enketoFormMgr = new EnketoFormManager(
+      new ContactServices(extractLineageService, userContactService),
+      new FileServices(dbService, fileReaderService),
+      new FormDataServices(
+        contactSummaryService,
+        enketoPrepopulationDataService,
+        languageService,
+        lineageModelGeneratorService,
+        searchService
+      ),
+      new TranslationServices(translateService, translateFromService),
+      new XmlServices(
+        addAttachmentService,
+        enketoTranslationService,
+        getReportContentService,
+        xmlFormsService
+      ),
+      transitionsService,
+      GlobalActions,
+      Xpath
+    );
+
+    const zscoreUtil = {};
+    medicXpathExtensions.init(zscoreUtil, toBik_text, moment);
+
+    // BREAK
+    const selector = '#enketo-wrapper';
+    const formDoc = { _id: 'whatever', title: 'form name ABC 987' };
+    const renderedForm = await this.enketoFormMgr.render(selector, formDoc, instanceData);
+    return renderedForm;
+  }
+
+  renderContactForm(formContext) {
+    return this.enketoFormMgr.renderForm(formContext)
+      .then(form => registerListeners(
+        formContext.selector,
+        form,
+        formContext.editedListener,
+        formContext.valuechangeListener
+      ));
+  }
+
+  save(formInternalId, form, geoHandle, docId) {
+    // /inputs is ALWAYS relevant #4875
+    $('section[name$="/inputs"]').each((idx, element) => {
+      if(element.dataset) {
+        element.dataset.relevant = 'true()';
+      }
+    });
+
+    return Promise
+      .resolve(form.validate())
+      .then((valid) => {
+        if (!valid) {
+          throw new Error('Form is invalid');
+        }
+
+        $('form.or').trigger('beforesave');
+
+        return this.enketoFormMgr.save(formInternalId, form, geoHandle, docId);
+      });
+  }
+
+  unload(form) {
+    this.enketoFormMgr.unload(form);
   }
 }
 
-const initTransformer = transform => {
-  if (!transform) {
-    throw new Error('Invalid argument: value');
-  }
+const registerListeners = (selector, form, editedListener, valueChangeListener) => {
+  // const $selector = $(selector);
+  // if(editedListener) {
+  //   $selector.on('edited', () => this.ngZone.run(() => editedListener()));
+  // }
+  
+  // [
+  //   valueChangeListener,
+  //   () => this.enketoFormMgr.setupNavButtons(form, $selector, form.pages._getCurrentIndex())
+  // ].forEach(listener => {
+  //   if(listener) {
+  //     $selector.on('xforms-value-changed', () => this.ngZone.run(() => listener()));
+  //   }
+  // });
 
-  const xlt = $.parseXML(transform);
-  const processor = new window.XSLTProcessor();
-  processor.importStylesheet(xlt);
-
-  return xform => {
-    const transformedDoc = processor.transformToDocument(xform);
-    const rootElement = transformedDoc.documentElement.firstElementChild;
-    return xmlSerializer.serializeToString(rootElement);
-  };
-};
-
-// set the user's language as default so it'll be used for itext translations
-const setLanguageOnForm = function(xform, language) {
-  const $xform = $(xform);
-  $xform.find('model itext translation[lang="' + language + '"]').attr('default', '');
-  return xform;
-};
-
-/* Enketo Prepopulation Data */
-const bindDataToModel = (model, data, user) => {
-  const xmlModel = $($.parseXML(model));
-  const bindRoot = xmlModel.find('model instance').children().first();
-
-  const userRoot = bindRoot.find('>inputs>user');
-  if (data) {
-    bindJsonToXml(bindRoot, data, function(name) {
-      // Either a direct child or a direct child of inputs
-      return '>%, >inputs>%'.replace(/%/g, name);
-    });
-  }
-
-  if (userRoot.length) {
-    bindJsonToXml(userRoot, user);
-  }
-
-  return new window.XMLSerializer().serializeToString(bindRoot[0]);
+  return form;
 };
 
 /* Enketo Translation Service */
