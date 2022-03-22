@@ -19,6 +19,7 @@ for dir in "${dirs[@]}"; do
   (cd "$dir"/webapp && npm ci --production)
   (cd "$dir"/api && npm ci --production)
   (cd "$dir"/shared-libs/rules-engine && npm ci --production)
+  (cd "$dir"/shared-libs/phone-number && npm ci --production)
   (cd "$dir"/shared-libs/enketo-form-manager && npm ci --production)
   (cd "$dir" && patch -f webapp/node_modules/enketo-core/src/js/calculate.js < webapp/patches/enketo-repeat-name-collision.patch)
 done

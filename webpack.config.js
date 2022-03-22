@@ -46,6 +46,7 @@ module.exports = [
         // of jquery and remove this alias.
         'jquery': path.join(__dirname, 'node_modules/cht-core-4-0/webapp/node_modules/jquery'),
         '@medic/enketo-form-manager': path.join(__dirname, 'node_modules/cht-core-4-0/shared-libs/enketo-form-manager'),
+        '@medic/phone-number': path.join(__dirname, 'node_modules/cht-core-4-0/shared-libs/phone-number'),
         '@mm-providers/xpath-element-path.provider': path.join(__dirname, 'node_modules/cht-core-4-0/', 'webapp/src/ts/providers/xpath-element-path.provider.ts'),
         '@medic-xpath-extensions': path.join(__dirname, 'node_modules/cht-core-4-0/', 'webapp/src/js/enketo/medic-xpath-extensions'),
       }

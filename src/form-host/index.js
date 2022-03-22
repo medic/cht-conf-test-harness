@@ -2,16 +2,22 @@ const $ = require('jquery');
 const FormWireup = require('./wireup');
 const FormFiller = require('./form-filler');
 
-const formWireup = new FormWireup();
-
 window.$$ = $;
 
 // webapp/node_modules/bootstrap/js/dropdown.js expects this declared globally
 window.jQuery = $;
 
 // shared-libs/enketo-form-manager/src/enketo-form-manager.js writes into this object
-window.CHTCore = {};
+window.CHTCore = {
+  Select2Search: {
+    init: () => Promise.resolve(),
+  },
+  Language: { // TODO: Same as on interface to FormDataServices
+    get: () => Promise.resolve('en'),
+  },
+};
 
+const formWireup = new FormWireup();
 require('../../node_modules/cht-core-4-0/webapp/src/js/enketo/main.js');
 
 /* Register a global hook so that new forms can be rendered from PhantomJs */
