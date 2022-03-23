@@ -1231,7 +1231,7 @@ A urine test looks at the amount of sugar and protein that gives information abo
       <bind nodeset="/pregnancy/gestational_age/method_lmp_summary/lmp_check_note" readonly="true()" type="string"/>
       <bind nodeset="/pregnancy/gestational_age/method_lmp_summary/edd_note" readonly="true()" type="string"/>
       <bind nodeset="/pregnancy/gestational_age/method_lmp_summary/edd_check_note" readonly="true()" type="string"/>
-      <bind calculate="format-date-time( ../method_lmp/u_lmp_date,, &quot;%Y-%m-%d&quot;)" nodeset="/pregnancy/gestational_age/g_lmp_date_8601" type="string"/>
+      <bind calculate="format-date-time( ../method_lmp/u_lmp_date, &quot;%Y-%m-%d&quot;)" nodeset="/pregnancy/gestational_age/g_lmp_date_8601" type="string"/>
       <bind calculate="format-date-time(../g_lmp_date_8601, &quot;%e %b, %Y&quot;)" nodeset="/pregnancy/gestational_age/g_lmp_date" type="string"/>
       <bind calculate="to-bikram-sambat(../g_lmp_date_8601)" nodeset="/pregnancy/gestational_age/g_lmp_date_ne" type="string"/>
       <bind calculate="format-date-time(date-time(decimal-date-time(../g_lmp_date_8601)+280),&quot;%Y-%m-%d&quot;)" nodeset="/pregnancy/gestational_age/g_edd_8601" type="string"/>

@@ -25,6 +25,4 @@ for dir in "${dirs[@]}"; do
 done
 
 npx webpack
-cp ext/inbox.css dist
-
 printf "\033[0;32m== BUILD SUCCESSFUL ==\n"

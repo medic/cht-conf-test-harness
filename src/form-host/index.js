@@ -12,9 +12,22 @@ window.CHTCore = {
   Select2Search: {
     init: () => Promise.resolve(),
   },
+  Translate: { // TODO: Same as on interface to FormDataServices
+    get: x => Promise.resolve(x),
+    instant: x => x,
+  },
+  AndroidAppLauncher: {
+    isEnabled: () => false,
+  },
   Language: { // TODO: Same as on interface to FormDataServices
     get: () => Promise.resolve('en'),
   },
+  MRDT: {
+    enabled: () => false,
+  },
+  Settings: { // TODO: Used by phone-lib
+    get: () => Promise.resolve()
+  }
 };
 
 const formWireup = new FormWireup();
@@ -23,15 +36,15 @@ require('../../node_modules/cht-core-4-0/webapp/src/js/enketo/main.js');
 /* Register a global hook so that new forms can be rendered from PhantomJs */
 window.loadXform = async (formName, formHtml, formModel, content, user, contactSummary) => {
   const instanceData = {
+    contact: { _id: 'subject_123' }, // TODO: How get this?
     content,
     user,
-    contact: { _id: 'subject_123' }, // TODO: How get this?
     contactSummary,
   };
 
-  const form = await formWireup.render(formHtml, formModel, instanceData);
-  const formFiller = new FormFiller(formName, form, formHtml, { verbose: true });
+  const formManager = await formWireup.render(formHtml, formModel, instanceData);
+  const formFiller = new FormFiller(formName, formManager, formHtml, { verbose: true });
 
-  window.form = form;
+  window.form = formManager.currentForm;
   window.formFiller = formFiller;
 };

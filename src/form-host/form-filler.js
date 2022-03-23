@@ -1,13 +1,13 @@
 const _ = require('underscore');
 const $ = require('jquery');
 
-const getRecordForCompletedForm = () => {}; // require('./enketo');
 const saveContact = () => {}; // require('./save-contact');
 
 class FormFiller {
-  constructor(formName, form, formXml, options) {
-    this.form = form;
+  constructor(formName, formManager, formXml, options) {
     this.formName = formName;
+    this.formManager = formManager;
+    this.form = formManager.currentForm;
     this.formXml = formXml;
     this.options = _.defaults(options, {
       verbose: true,
@@ -33,7 +33,11 @@ class FormFiller {
 
   async fillAppForm(multiPageAnswer) {
     const { isComplete, errors } = await fillForm(this, multiPageAnswer);
-    const resultingDocs = isComplete ? getRecordForCompletedForm(this.form, this.formXml, this.formName, window.now) : [];
+    const resultingDocs = isComplete ? await this.formManager.save(
+      this.formName,
+      this.form,
+      undefined, // geoHandle
+    ) : [];
     const [report, ...additionalDocs] = resultingDocs;
 
     return {
@@ -109,7 +113,8 @@ const fillForm = async (self, multiPageAnswer) => {
 
   self.form.validateAll();
   const errors = await self.getVisibleValidationErrors();
-  const isComplete = self.form.pages.getCurrentIndex() === self.form.pages.$activePages.length - 1;
+  const lastPage = self.form.pages.activePages[self.form.pages.activePages.length - 1];
+  const isComplete = self.form.pages.current === lastPage;
   const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
 
   return {
@@ -141,7 +146,7 @@ const fillPage = async (self, pageAnswer) => {
     fillQuestion(nextUnansweredQuestion, answer);
   }
 
-  const allPagesSuccessful = hasPages(window.form) ? await window.form.pages.next() : true;
+  const allPagesSuccessful = hasPages(self.form) ? await self.form.pages._next() : true;
   const validationErrors = await self.getVisibleValidationErrors();
   const advanceFailure = allPagesSuccessful || validationErrors.length ? [] : [{
     type: 'general',
@@ -159,7 +164,7 @@ const fillQuestion = (question, answer) => {
   }
 
   const $question = $(question);
-  const allInputs = $question.find('input:not([type="hidden"]),textarea,button');
+  const allInputs = $question.find('input:not([type="hidden"]),textarea,button,select');
   const firstInput = Array.from(allInputs)[0];
 
   if (!firstInput) {
@@ -223,14 +228,17 @@ const fillQuestion = (question, answer) => {
     }
     break;
   }
+  case 'select-one':
+    allInputs.val(answer).trigger('change');
+    break;
   default:
     throw `Unhandled input type ${firstInput.type}`;
   }
 };
 
 const getVisibleQuestions = form => {
-  const currentPage = hasPages(form.form) ? form.form.pages.getCurrent() : form.form.pages.form.view.$;
-
+  const currentPage = $(form.form.pages.current);
+  
   if (!currentPage) {
     throw Error('Form has no active pages');
   }
@@ -244,13 +252,14 @@ const getVisibleQuestions = form => {
       .children(`
         section:not(.disabled,.or-appearance-hidden),
         fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label,#or-calculated-items),
-        label:not(.disabled,.note,.or-appearance-hidden),
-        div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count])
+        label:not(.disabled,.readonly,.or-appearance-hidden),
+        div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count]),
+        i
       `));
 
     const result = [];
     for (const child of inquisitiveChildren) {
-      const questions = child.localName === 'section' ? findQuestionsInSection(child) : [child];
+      const questions = ['section', 'i'].includes(child.localName) ? findQuestionsInSection(child) : [child];
       result.push(...questions);
     }
 
@@ -260,6 +269,6 @@ const getVisibleQuestions = form => {
   return findQuestionsInSection(currentPage);
 };
 
-const hasPages = form => form.pages.getCurrent().length > 0;
+const hasPages = form => form.pages.activePages.length > 0;
 
 module.exports = FormFiller;

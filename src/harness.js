@@ -141,7 +141,7 @@ class Harness {
     });
 
     await this.page.goto(`file://${pathToHost}`);
-    await this.page.waitForSelector('#task-report');
+    await this.page.waitForSelector('#enketo-wrapper');
 
     if (this._now) {
       await this.setNow(this._now);
@@ -199,7 +199,7 @@ class Harness {
     const contactSummary = options.contactSummary || await this.getContactSummary(content.contact);
     const serializedContactSummary = serializeContactSummary(contactSummary);
 
-    await doLoadForm(this, this.page, xformFilePath, content, options.userSettingsDoc, serializedContactSummary);
+    await doLoadForm(this, this.page, this.core, xformFilePath, content, options.userSettingsDoc, serializedContactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
@@ -214,7 +214,7 @@ class Harness {
     const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
 
     const user = await resolveMock(this.coreAdapter, this.state, this.options.user);
-    await doLoadForm(this, this.page, xformFilePath, {}, user);
+    await doLoadForm(this, this.page, this.core, xformFilePath, {}, user);
     this._state.pageContent = await this.page.content();
 
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
@@ -686,17 +686,19 @@ const readFileSync = (...args) => {
   return fs.readFileSync(filePath).toString();
 };
 
-const doLoadForm = async (self, page, xformFilePath, content, user, contactSummaryXml) => {
+const doLoadForm = async (self, page, core, xformFilePath, content, user, contactSummaryXml) => {
   self.log(`Loading form ${path.basename(xformFilePath)}...`);
-  const xform = readFileSync(xformFilePath);
-  if (!xform) {
+  const formXmlContent = readFileSync(xformFilePath);
+  if (!formXmlContent) {
     throw Error(`XForm not available at path: ${xformFilePath}`);
   }
   self.onConsole = msg => self._state.console.push(msg);
 
   const formNameWithoutDirectory = path.basename(xformFilePath, '.xml');
-  const loadXformWrapper = (innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary);
-  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, xform, content, user, contactSummaryXml);
+  const { form: formHtml, model: formModel } = await core.convertFormXmlToXFormModel(formXmlContent);
+  const loadXformWrapper = (innerFormName, innerFormHtml, innerFormModel, innerContent, innerUser, innerContactSummary) =>
+    window.loadXform(innerFormName, innerFormHtml, innerFormModel, innerContent, innerUser, innerContactSummary);
+  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, formHtml, formModel, content, user, contactSummaryXml);
 };
 
 const serializeContactSummary = (contactSummary = {}) => {

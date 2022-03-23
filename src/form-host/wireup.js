@@ -4,6 +4,8 @@ const moment = require('moment');
 
 // /home/kenn/webapp/webapp/src/ts/providers/xpath-element-path.provider.ts
 const { Xpath } = require('@mm-providers/xpath-element-path.provider');
+const { reportRecordToJs, 
+  getHiddenFieldList } = require('./enketo-translation');
 
 const medicXpathExtensions = require('@medic-xpath-extensions');
 const {
@@ -33,11 +35,23 @@ class FormWireup {
             return Promise.resolve(formModel);
           }
 
-          throw new Error(`dbService.get().getAttachment(): Unrecognized attachment requested ${attachment}`);
+          // it is probably an image
+          return Promise.resolve({});
+          // return Promise.resolve('data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==');
         },
+        bulkDocs: () => Promise.resolve([]),
       }),
     };
-    const extractLineageService = {};
+    const extractLineageService = {
+      extract: contact => {
+        return {
+          _id: contact._id,
+          parent: {
+            _id: 'minified_parent',
+          },
+        };
+      },
+    };
     const userContactService = {
       get: () => Promise.resolve(userContact),
     };
@@ -99,11 +113,30 @@ class FormWireup {
     const translateFromService = {
       get: x => x,
     };
-    const addAttachmentService = {};
-    const enketoTranslationService = {};
+    const addAttachmentService = {
+      add: () => {},
+    };
+    const enketoTranslationService = {
+      getRepeatPaths: (formXml) => {
+        return $(formXml)
+          .find('repeat[nodeset]')
+          .map((idx, element) => {
+            return $(element).attr('nodeset');
+          })
+          .get();
+      },
+      getHiddenFieldList,
+      reportRecordToJs,
+    };
     const getReportContentService = {};
-    const xmlFormsService = {};
-    const transitionsService = {};
+    const xmlFormsService = {
+      get: () => Promise.resolve({}),
+      findXFormAttachmentName: () => 'model.xml',
+    };
+    const transitionsService = {
+      // this is some muting business
+      applyTransitions: x => x,
+    };
     const GlobalActions = {};
 
     this.enketoFormMgr = new EnketoFormManager(
@@ -134,8 +167,8 @@ class FormWireup {
     // BREAK
     const selector = '#enketo-wrapper';
     const formDoc = { _id: 'whatever', title: 'form name ABC 987' };
-    const renderedForm = await this.enketoFormMgr.render(selector, formDoc, instanceData);
-    return renderedForm;
+    await this.enketoFormMgr.render(selector, formDoc, instanceData);
+    return this.enketoFormMgr;
   }
 
   renderContactForm(formContext) {

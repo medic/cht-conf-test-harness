@@ -2,21 +2,21 @@
 
 <head>
   <title>xForm Test Host</title>
-  <link rel="stylesheet" type="text/css" href="../../dist/inbox.css" />
+  <link rel="stylesheet" type="text/css" href="../../dist/styles.css" />
   <style>body { overflow-y: auto; }</style>
   <script charset="UTF-8" src="../../dist/form-host.dev.js"></script>
 </head>
 
 <body>
   <div class="enketo" id="task-report">
-    <div class="container pages">
-      <form id="test"></form>
-    </div>
-    <div class="form-footer">
-      <div class="loader inline small ng-hide"></div>
-      <button class="btn btn-default previous-page disabled">Prev</button>
-      <button class="btn btn-primary next-page disabled">Next</button>
-      <a class="btn submit btn-primary">Submit</a>
+    <div id="enketo-wrapper">
+      <div class="container pages"></div>
+      <div class="form-footer">
+        <div class="loader inline small ng-hide"></div>
+        <button class="btn btn-default previous-page disabled">Prev</button>
+        <button class="btn btn-primary next-page disabled">Next</button>
+        <a class="btn submit btn-primary">Submit</a>
+      </div>
     </div>
   </div>
 </body>
