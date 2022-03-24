@@ -168,7 +168,7 @@ class Harness {
    */
   async clear() {
     clearSync(this);
-    return this.page && await this.page.evaluate(() => delete window.now);
+    return this.page && await this.page.evaluate(() => window.restoreTimers());
   }
 
   /**
@@ -250,7 +250,7 @@ class Harness {
     const asTimestamp = toDate(now).toMillis();
     this._now = asTimestamp;
     sinon.useFakeTimers(asTimestamp);
-    return this.page && this.page.evaluate(innerNow => window.now = new Date(innerNow), this._now);
+    return this.page && this.page.evaluate(innerNow => window.fakeTimers(innerNow), this._now);
   }
 
   /**

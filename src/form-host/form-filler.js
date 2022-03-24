@@ -50,7 +50,7 @@ class FormFiller {
 
   async fillContactForm(contactType, multiPageAnswer) {
     const { isComplete, errors } = await fillForm(this, multiPageAnswer);
-    const contacts = isComplete ? await saveContact(this.form, contactType, window.now) : [];
+    const contacts = isComplete ? await saveContact(this.form, contactType, new Date() /* TODO was window.now */) : [];
 
     return {
       errors,

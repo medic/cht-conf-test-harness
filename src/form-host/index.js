@@ -1,6 +1,7 @@
 const $ = require('jquery');
 require('select2');
 
+const { useFakeTimers } = require('sinon/lib/sinon/util/fake-timers');
 const FormWireup = require('./wireup');
 const FormFiller = require('./form-filler');
 
@@ -10,6 +11,14 @@ window.$$ = $;
 window.jQuery = $;
 // webapp/src/js/enketo/main.js expects this for datepicker
 window.$ = $;
+
+let clock;
+window.fakeTimers = (...args) => {
+  window.restoreTimers();
+  clock = useFakeTimers(...args);
+};
+
+window.restoreTimers = () => clock && clock.uninstall();
 
 // shared-libs/enketo-form-manager/src/enketo-form-manager.js writes into this object
 window.CHTCore = {
