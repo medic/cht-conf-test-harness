@@ -2,11 +2,6 @@ const $ = require('jquery');
 const { toBik_text } = require('bikram-sambat');
 const moment = require('moment');
 
-// /home/kenn/webapp/webapp/src/ts/providers/xpath-element-path.provider.ts
-const { Xpath } = require('@mm-providers/xpath-element-path.provider');
-const { reportRecordToJs, 
-  getHiddenFieldList } = require('./enketo-translation');
-
 const medicXpathExtensions = require('@medic-xpath-extensions');
 const {
   ContactServices,
@@ -68,30 +63,10 @@ class FormWireup {
         };
       },
     };
-    const enketoPrepopulationDataService = {
-      get: (model, data) => {
-        if (data && typeof data === 'string') {
-          return Promise.resolve(data);
-        }
-        
-        const xml = $($.parseXML(model));
-        const bindRoot = xml.find('model instance').children().first();
-
-        const userRoot = bindRoot.find('>inputs>user');
-
-        if (data) {
-          bindJsonToXml(bindRoot, data, (name) => {
-            // Either a direct child or a direct child of inputs
-            return '>%, >inputs>%'.replace(/%/g, name);
-          });
-        }
-
-        if (userRoot.length) {
-          bindJsonToXml(userRoot, userContact);
-        }
-
-        return new window.XMLSerializer().serializeToString(bindRoot[0]);
-      }
+    const userSettingsService = {
+      get: () => Promise.resolve({
+        _id: 'user-settings-doc',
+      }),
     };
     const languageService = {
       get: () => 'en',
@@ -116,18 +91,6 @@ class FormWireup {
     const addAttachmentService = {
       add: () => {},
     };
-    const enketoTranslationService = {
-      getRepeatPaths: (formXml) => {
-        return $(formXml)
-          .find('repeat[nodeset]')
-          .map((idx, element) => {
-            return $(element).attr('nodeset');
-          })
-          .get();
-      },
-      getHiddenFieldList,
-      reportRecordToJs,
-    };
     const getReportContentService = {};
     const xmlFormsService = {
       get: () => Promise.resolve({}),
@@ -144,7 +107,7 @@ class FormWireup {
       new FileServices(dbService, fileReaderService),
       new FormDataServices(
         contactSummaryService,
-        enketoPrepopulationDataService,
+        userSettingsService,
         languageService,
         lineageModelGeneratorService,
         searchService
@@ -152,13 +115,11 @@ class FormWireup {
       new TranslationServices(translateService, translateFromService),
       new XmlServices(
         addAttachmentService,
-        enketoTranslationService,
         getReportContentService,
         xmlFormsService
       ),
       transitionsService,
-      GlobalActions,
-      Xpath
+      GlobalActions
     );
 
     const zscoreUtil = {};

@@ -33,7 +33,7 @@ module.exports = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('[{"validate_doc_update":"function(newDoc, oldDoc, userCtx) {\\n  /*\\n    LOCAL DOCUMENT VALIDATION\\n\\n    This is for validating document structure, irrespective of authority, so it\\n    can be run both on couchdb and pouchdb (where you are technically admin).\\n\\n    For validations around authority check lib/validate_doc_update.js, which is\\n    only run on the server.\\n  */\\n\\n  var _err = function(msg) {\\n    throw({ forbidden: msg });\\n  };\\n\\n  /**\\n   * Ensure that type=\'form\' documents are created with correctly formatted _id\\n   * property.\\n   */\\n  var validateForm = function(newDoc) {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var form_id = id_parts.slice(1).join(\':\');\\n    if (prefix !== \'form\') {\\n      _err(\'_id property must be prefixed with \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (!form_id) {\\n      _err(\'_id property must define a value after \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id property must be lower case. e.g. \\"form:registration\\"\');\\n    }\\n  };\\n\\n  var validateUserSettings = function(newDoc) {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var username = id_parts.slice(1).join(\':\');\\n    var idExample = \' e.g. \\"org.couchdb.user:sally\\"\';\\n    if (prefix !== \'org.couchdb.user\') {\\n      _err(\'_id must be prefixed with \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (!username) {\\n      _err(\'_id must define a value after \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id must be lower case.\' + idExample);\\n    }\\n    if (typeof newDoc.name === \'undefined\' || newDoc.name !== username) {\\n      _err(\'name property must be equivalent to username.\' + idExample);\\n    }\\n    if (newDoc.name.toLowerCase() !== username.toLowerCase()) {\\n      _err(\'name must be equivalent to username\');\\n    }\\n    if (typeof newDoc.known !== \'undefined\' && typeof newDoc.known !== \'boolean\') {\\n      _err(\'known is not a boolean.\');\\n    }\\n    if (typeof newDoc.roles !== \'object\') {\\n      _err(\'roles is a required array\');\\n    }\\n  };\\n\\n  if (userCtx.facility_id === newDoc._id) {\\n    _err(\'You are not authorized to edit your own place\');\\n  }\\n  if (newDoc.type === \'form\') {\\n    validateForm(newDoc);\\n  }\\n  if (newDoc.type === \'user-settings\') {\\n    validateUserSettings(newDoc);\\n  }\\n\\n  log(\\n    \'medic-client validate_doc_update passed for User \\"\' + userCtx.name +\\n    \'\\" changing document \\"\' +  newDoc._id + \'\\"\'\\n  );\\n}","views":{"contacts_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_last_visited":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n    if (typeof date !== \'number\' || isNaN(date)) {\\n      date = 0;\\n    }\\n    // Is a visit report about a family\\n    emit(doc.fields.visited_contact_uuid, date);\\n  } else if (doc.type === \'contact\' ||\\n             doc.type === \'clinic\' ||\\n             doc.type === \'health_center\' ||\\n             doc.type === \'district_hospital\' ||\\n             doc.type === \'person\') {\\n    // Is a contact type\\n    emit(doc._id, 0);\\n  }\\n}","reduce":"_stats"},"contacts_by_parent":{"map":"function(doc) {\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'person\') {\\n    var parentId = doc.parent && doc.parent._id;\\n    var type = doc.type === \'contact\' ? doc.contact_type : doc.type;\\n    if (parentId) {\\n      emit([parentId, type]);\\n    }\\n  }\\n}"},"contacts_by_phone":{"map":"function(doc) {\\n  if (doc.phone) {\\n    var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n    if (types.indexOf(doc.type) !== -1) {\\n      emit(doc.phone);\\n    }\\n  }\\n}"},"contacts_by_place":{"map":"function(doc) {\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n  if (idx !== -1) {\\n    var place = doc.parent;\\n    var order = idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], order);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"contacts_by_reference":{"map":"function(doc) {\\n  var tombstone = false;\\n  if (doc.type === \'tombstone\' && doc.tombstone) {\\n    tombstone = true;\\n    doc = doc.tombstone;\\n  }\\n\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'national_office\' ||\\n      doc.type === \'person\') {\\n\\n    var emitReference = function(prefix, key) {\\n      if (tombstone) {\\n        prefix = \'tombstone-\' + prefix;\\n      }\\n      emit([ prefix, String(key) ], doc.reported_date);\\n    };\\n\\n    if (doc.place_id) {\\n      emitReference(\'shortcode\', doc.place_id);\\n    }\\n    if (doc.patient_id) {\\n      emitReference(\'shortcode\', doc.patient_id);\\n    }\\n    if (doc.rc_code) {\\n      // need String because rewriter wraps everything in quotes\\n      // keep refid case-insenstive since data is usually coming from SMS\\n      emitReference(\'external\', String(doc.rc_code).toUpperCase());\\n    }\\n  }\\n}"},"contacts_by_type_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(type, key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([ type, key ], value);\\n    }\\n  };\\n\\n  var emitField = function(type, key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(type, word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(type, key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(type, key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_type":{"map":"function(doc) {\\n  var tombstone = false;\\n  if (doc.type === \'tombstone\' && doc.tombstone) {\\n    tombstone = true;\\n    doc = doc.tombstone;\\n  }\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (tombstone) {\\n    type = \'tombstone-\' + type;\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    emit([ type ], order);\\n  }\\n}"},"data_records_by_type":{"map":"function(doc) {\\n  if (doc.type === \'data_record\') {\\n    emit(doc.form ? \'report\' : \'message\');\\n  }\\n}","reduce":"_count"},"docs_by_id_lineage":{"map":"function(doc) {\\n\\n  var emitLineage = function(contact, depth) {\\n    while (contact && contact._id) {\\n      emit([ doc._id, depth++ ], { _id: contact._id });\\n      contact = contact.parent;\\n    }\\n  };\\n\\n  var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n\\n  if (types.indexOf(doc.type) !== -1) {\\n    // contact\\n    emitLineage(doc, 0);\\n  } else if (doc.type === \'data_record\' && doc.form) {\\n    // report\\n    emit([ doc._id, 0 ]);\\n    emitLineage(doc.contact, 1);\\n  }\\n}"},"doc_by_type":{"map":"function(doc) {\\n  if (doc.type === \'translations\') {\\n    emit([ \'translations\', doc.enabled ], {\\n      code: doc.code,\\n      name: doc.name\\n    });\\n    return;\\n  }\\n  emit([ doc.type ]);\\n}"},"messages_by_contact_date":{"map":"function(doc) {\\n\\n  var emitMessage = function(doc, contact, phone) {\\n    var id = (contact && contact._id) || phone || doc._id;\\n    emit([ id, doc.reported_date ], {\\n      id: doc._id,\\n      date: doc.reported_date,\\n      contact: contact && contact._id\\n    });\\n  };\\n\\n  if (doc.type === \'data_record\' && !doc.form) {\\n    if (doc.kujua_message && doc.tasks) {\\n      // outgoing\\n      doc.tasks.forEach(function(task) {\\n        var message = task.messages && task.messages[0];\\n        if(message) {\\n          emitMessage(doc, message.contact, message.to);\\n        }\\n      });\\n    } else if (doc.sms_message) {\\n      // incoming\\n      emitMessage(doc, doc.contact, doc.from);\\n    }\\n  }\\n}","reduce":"function(key, values) {\\n  var latest = { date: 0 };\\n  values.forEach(function(value) {\\n    if (value.date > latest.date) {\\n      latest = value;\\n    }\\n  });\\n  return latest;\\n}"},"registered_patients":{"map":"// NB: This returns *registrations* for contacts. If contacts are created by\\n//     means other then sending in a registration report (eg created in the UI)\\n//     they will not show up in this view.\\n//\\n//     For a view with all patients by their shortcode, use:\\n//        medic/docs_by_shortcode\\nfunction(doc) {\\n  var patientId = doc.patient_id || (doc.fields && doc.fields.patient_id);\\n  var placeId = doc.place_id || (doc.fields && doc.fields.place_id);\\n\\n  if (!doc.form || doc.type !== \'data_record\' || (doc.errors && doc.errors.length)) {\\n    return;\\n  }\\n\\n  if (patientId) {\\n    emit(String(patientId));\\n  }\\n\\n  if (placeId) {\\n    emit(String(placeId));\\n  }\\n}"},"reports_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.reported_date], doc.reported_date);\\n  }\\n}"},"reports_by_form":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.form], doc.reported_date);\\n  }\\n}","reduce":"function() {\\n  return true;\\n}"},"reports_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'content\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, reportedDate) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, reportedDate);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, reportedDate);\\n    }\\n  };\\n\\n  if (doc.type === \'data_record\' && doc.form) {\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], doc.reported_date);\\n    });\\n    if (doc.fields) {\\n      Object.keys(doc.fields).forEach(function(key) {\\n        emitField(key, doc.fields[key], doc.reported_date);\\n      });\\n    }\\n    if (doc.contact && doc.contact._id) {\\n      emitMaybe(\'contact:\' + doc.contact._id.toLowerCase(), doc.reported_date);\\n    }\\n  }\\n}"},"reports_by_place":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var place = doc.contact && doc.contact.parent;\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], doc.reported_date);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"reports_by_subject":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var emitField = function(obj, field) {\\n      if (obj[field]) {\\n        emit(obj[field], doc.reported_date);\\n      }\\n    };\\n\\n    emitField(doc, \'patient_id\');\\n    emitField(doc, \'place_id\');\\n    emitField(doc, \'case_id\');\\n\\n    if (doc.fields) {\\n      emitField(doc.fields, \'patient_id\');\\n      emitField(doc.fields, \'place_id\');\\n      emitField(doc.fields, \'case_id\');\\n      emitField(doc.fields, \'patient_uuid\');\\n      emitField(doc.fields, \'place_uuid\');\\n    }\\n  }\\n}"},"reports_by_validity":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([!doc.errors || doc.errors.length === 0], doc.reported_date);\\n  }\\n}"},"reports_by_verification":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.verified], doc.reported_date);\\n  }\\n}"},"tasks_by_contact":{"map":"function(doc) {\\n  if (doc.type === \'task\') {\\n    var isTerminalState = [\'Cancelled\', \'Completed\', \'Failed\'].indexOf(doc.state) >= 0;\\n    var owner = (doc.owner || \'_unassigned\');\\n\\n    if (!isTerminalState) {\\n      emit(\'owner-\' + owner);\\n    }\\n\\n    if (doc.requester) {\\n      emit(\'requester-\' + doc.requester);\\n    }\\n\\n    emit([\'owner\', \'all\', owner], { state: doc.state });\\n  }\\n}"},"total_clinics_by_facility":{"map":"function(doc) {\\n  var districtId = doc.parent && doc.parent.parent && doc.parent.parent._id;\\n  if (doc.type === \'clinic\' || (doc.type === \'contact\' && districtId)) {\\n    var healthCenterId = doc.parent && doc.parent._id;\\n    emit([ districtId, healthCenterId, doc._id, 0 ]);\\n    if (doc.contact && doc.contact._id) {\\n      emit([ districtId, healthCenterId, doc._id, 1 ], { _id: doc.contact._id });\\n    }\\n    var index = 2;\\n    var parent = doc.parent;\\n    while(parent) {\\n      if (parent._id) {\\n        emit([ districtId, healthCenterId, doc._id, index++ ], { _id: parent._id });\\n      }\\n      parent = parent.parent;\\n    }\\n  }\\n}"},"visits_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var visited_date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n\\n    // Is a visit report about a family\\n    emit(visited_date, doc.fields.visited_contact_uuid);\\n    emit([doc.fields.visited_contact_uuid, visited_date]);\\n  }\\n}"}},"_id":"_design/medic-client"}]');
+module.exports = JSON.parse('[{"_id":"_design/medic-client","validate_doc_update":"function(newDoc, oldDoc, userCtx) {\\n  /*\\n    LOCAL DOCUMENT VALIDATION\\n\\n    This is for validating document structure, irrespective of authority, so it\\n    can be run both on couchdb and pouchdb (where you are technically admin).\\n\\n    For validations around authority check lib/validate_doc_update.js, which is\\n    only run on the server.\\n  */\\n\\n  var _err = function(msg) {\\n    throw({ forbidden: msg });\\n  };\\n\\n  /**\\n   * Ensure that type=\'form\' documents are created with correctly formatted _id\\n   * property.\\n   */\\n  var validateForm = function(newDoc) {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var form_id = id_parts.slice(1).join(\':\');\\n    if (prefix !== \'form\') {\\n      _err(\'_id property must be prefixed with \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (!form_id) {\\n      _err(\'_id property must define a value after \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id property must be lower case. e.g. \\"form:registration\\"\');\\n    }\\n  };\\n\\n  var validateUserSettings = function(newDoc) {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var username = id_parts.slice(1).join(\':\');\\n    var idExample = \' e.g. \\"org.couchdb.user:sally\\"\';\\n    if (prefix !== \'org.couchdb.user\') {\\n      _err(\'_id must be prefixed with \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (!username) {\\n      _err(\'_id must define a value after \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id must be lower case.\' + idExample);\\n    }\\n    if (typeof newDoc.name === \'undefined\' || newDoc.name !== username) {\\n      _err(\'name property must be equivalent to username.\' + idExample);\\n    }\\n    if (newDoc.name.toLowerCase() !== username.toLowerCase()) {\\n      _err(\'name must be equivalent to username\');\\n    }\\n    if (typeof newDoc.known !== \'undefined\' && typeof newDoc.known !== \'boolean\') {\\n      _err(\'known is not a boolean.\');\\n    }\\n    if (typeof newDoc.roles !== \'object\') {\\n      _err(\'roles is a required array\');\\n    }\\n  };\\n\\n  if (userCtx.facility_id === newDoc._id) {\\n    _err(\'You are not authorized to edit your own place\');\\n  }\\n  if (newDoc.type === \'form\') {\\n    validateForm(newDoc);\\n  }\\n  if (newDoc.type === \'user-settings\') {\\n    validateUserSettings(newDoc);\\n  }\\n\\n  log(\\n    \'medic-client validate_doc_update passed for User \\"\' + userCtx.name +\\n    \'\\" changing document \\"\' +  newDoc._id + \'\\"\'\\n  );\\n}","views":{"contacts_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_last_visited":{"reduce":"_stats","map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n    if (typeof date !== \'number\' || isNaN(date)) {\\n      date = 0;\\n    }\\n    // Is a visit report about a family\\n    emit(doc.fields.visited_contact_uuid, date);\\n  } else if (doc.type === \'contact\' ||\\n             doc.type === \'clinic\' ||\\n             doc.type === \'health_center\' ||\\n             doc.type === \'district_hospital\' ||\\n             doc.type === \'person\') {\\n    // Is a contact type\\n    emit(doc._id, 0);\\n  }\\n}"},"contacts_by_phone":{"map":"function(doc) {\\n  if (doc.phone) {\\n    var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n    if (types.indexOf(doc.type) !== -1) {\\n      emit(doc.phone);\\n    }\\n  }\\n}"},"contacts_by_parent":{"map":"function(doc) {\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'person\') {\\n    var parentId = doc.parent && doc.parent._id;\\n    var type = doc.type === \'contact\' ? doc.contact_type : doc.type;\\n    if (parentId) {\\n      emit([parentId, type]);\\n    }\\n  }\\n}"},"contacts_by_place":{"map":"function(doc) {\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n  if (idx !== -1) {\\n    var place = doc.parent;\\n    var order = idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], order);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"contacts_by_reference":{"map":"function(doc) {\\n  var tombstone = false;\\n  if (doc.type === \'tombstone\' && doc.tombstone) {\\n    tombstone = true;\\n    doc = doc.tombstone;\\n  }\\n\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'national_office\' ||\\n      doc.type === \'person\') {\\n\\n    var emitReference = function(prefix, key) {\\n      if (tombstone) {\\n        prefix = \'tombstone-\' + prefix;\\n      }\\n      emit([ prefix, String(key) ], doc.reported_date);\\n    };\\n\\n    if (doc.place_id) {\\n      emitReference(\'shortcode\', doc.place_id);\\n    }\\n    if (doc.patient_id) {\\n      emitReference(\'shortcode\', doc.patient_id);\\n    }\\n    if (doc.rc_code) {\\n      // need String because rewriter wraps everything in quotes\\n      // keep refid case-insenstive since data is usually coming from SMS\\n      emitReference(\'external\', String(doc.rc_code).toUpperCase());\\n    }\\n  }\\n}"},"contacts_by_type_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(type, key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([ type, key ], value);\\n    }\\n  };\\n\\n  var emitField = function(type, key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(type, word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(type, key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(type, key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_type":{"map":"function(doc) {\\n  var tombstone = false;\\n  if (doc.type === \'tombstone\' && doc.tombstone) {\\n    tombstone = true;\\n    doc = doc.tombstone;\\n  }\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (tombstone) {\\n    type = \'tombstone-\' + type;\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    emit([ type ], order);\\n  }\\n}"},"data_records_by_type":{"map":"function(doc) {\\n  if (doc.type === \'data_record\') {\\n    emit(doc.form ? \'report\' : \'message\');\\n  }\\n}","reduce":"_count"},"docs_by_id_lineage":{"map":"function(doc) {\\n\\n  var emitLineage = function(contact, depth) {\\n    while (contact && contact._id) {\\n      emit([ doc._id, depth++ ], { _id: contact._id });\\n      contact = contact.parent;\\n    }\\n  };\\n\\n  var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n\\n  if (types.indexOf(doc.type) !== -1) {\\n    // contact\\n    emitLineage(doc, 0);\\n  } else if (doc.type === \'data_record\' && doc.form) {\\n    // report\\n    emit([ doc._id, 0 ]);\\n    emitLineage(doc.contact, 1);\\n  }\\n}"},"doc_by_type":{"map":"function(doc) {\\n  if (doc.type === \'translations\') {\\n    emit([ \'translations\', doc.enabled ], {\\n      code: doc.code,\\n      name: doc.name\\n    });\\n    return;\\n  }\\n  emit([ doc.type ]);\\n}"},"messages_by_contact_date":{"map":"function(doc) {\\n\\n  var emitMessage = function(doc, contact, phone) {\\n    var id = (contact && contact._id) || phone || doc._id;\\n    emit([ id, doc.reported_date ], {\\n      id: doc._id,\\n      date: doc.reported_date,\\n      contact: contact && contact._id\\n    });\\n  };\\n\\n  if (doc.type === \'data_record\' && !doc.form) {\\n    if (doc.kujua_message && doc.tasks) {\\n      // outgoing\\n      doc.tasks.forEach(function(task) {\\n        var message = task.messages && task.messages[0];\\n        if(message) {\\n          emitMessage(doc, message.contact, message.to);\\n        }\\n      });\\n    } else if (doc.sms_message) {\\n      // incoming\\n      emitMessage(doc, doc.contact, doc.from);\\n    }\\n  }\\n}","reduce":"function(key, values) {\\n  var latest = { date: 0 };\\n  values.forEach(function(value) {\\n    if (value.date > latest.date) {\\n      latest = value;\\n    }\\n  });\\n  return latest;\\n}"},"registered_patients":{"map":"// NB: This returns *registrations* for contacts. If contacts are created by\\n//     means other then sending in a registration report (eg created in the UI)\\n//     they will not show up in this view.\\n//\\n//     For a view with all patients by their shortcode, use:\\n//        medic/docs_by_shortcode\\nfunction(doc) {\\n  var patientId = doc.patient_id || (doc.fields && doc.fields.patient_id);\\n  var placeId = doc.place_id || (doc.fields && doc.fields.place_id);\\n\\n  if (!doc.form || doc.type !== \'data_record\' || (doc.errors && doc.errors.length)) {\\n    return;\\n  }\\n\\n  if (patientId) {\\n    emit(String(patientId));\\n  }\\n\\n  if (placeId) {\\n    emit(String(placeId));\\n  }\\n}"},"reports_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.reported_date], doc.reported_date);\\n  }\\n}"},"reports_by_form":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.form], doc.reported_date);\\n  }\\n}","reduce":"function() {\\n  return true;\\n}"},"reports_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'content\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, reportedDate) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, reportedDate);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, reportedDate);\\n    }\\n  };\\n\\n  if (doc.type === \'data_record\' && doc.form) {\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], doc.reported_date);\\n    });\\n    if (doc.fields) {\\n      Object.keys(doc.fields).forEach(function(key) {\\n        emitField(key, doc.fields[key], doc.reported_date);\\n      });\\n    }\\n    if (doc.contact && doc.contact._id) {\\n      emitMaybe(\'contact:\' + doc.contact._id.toLowerCase(), doc.reported_date);\\n    }\\n  }\\n}"},"reports_by_place":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var place = doc.contact && doc.contact.parent;\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], doc.reported_date);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"reports_by_validity":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([!doc.errors || doc.errors.length === 0], doc.reported_date);\\n  }\\n}"},"reports_by_subject":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var emitField = function(obj, field) {\\n      if (obj[field]) {\\n        emit(obj[field], doc.reported_date);\\n      }\\n    };\\n\\n    emitField(doc, \'patient_id\');\\n    emitField(doc, \'place_id\');\\n    emitField(doc, \'case_id\');\\n\\n    if (doc.fields) {\\n      emitField(doc.fields, \'patient_id\');\\n      emitField(doc.fields, \'place_id\');\\n      emitField(doc.fields, \'case_id\');\\n      emitField(doc.fields, \'patient_uuid\');\\n      emitField(doc.fields, \'place_uuid\');\\n    }\\n  }\\n}"},"tasks_by_contact":{"map":"function(doc) {\\n  if (doc.type === \'task\') {\\n    var isTerminalState = [\'Cancelled\', \'Completed\', \'Failed\'].indexOf(doc.state) >= 0;\\n    var owner = (doc.owner || \'_unassigned\');\\n\\n    if (!isTerminalState) {\\n      emit(\'owner-\' + owner);\\n    }\\n\\n    if (doc.requester) {\\n      emit(\'requester-\' + doc.requester);\\n    }\\n\\n    emit([\'owner\', \'all\', owner], { state: doc.state });\\n  }\\n}"},"total_clinics_by_facility":{"map":"function(doc) {\\n  var districtId = doc.parent && doc.parent.parent && doc.parent.parent._id;\\n  if (doc.type === \'clinic\' || (doc.type === \'contact\' && districtId)) {\\n    var healthCenterId = doc.parent && doc.parent._id;\\n    emit([ districtId, healthCenterId, doc._id, 0 ]);\\n    if (doc.contact && doc.contact._id) {\\n      emit([ districtId, healthCenterId, doc._id, 1 ], { _id: doc.contact._id });\\n    }\\n    var index = 2;\\n    var parent = doc.parent;\\n    while(parent) {\\n      if (parent._id) {\\n        emit([ districtId, healthCenterId, doc._id, index++ ], { _id: parent._id });\\n      }\\n      parent = parent.parent;\\n    }\\n  }\\n}"},"reports_by_verification":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.verified], doc.reported_date);\\n  }\\n}"},"visits_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var visited_date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n\\n    // Is a visit report about a family\\n    emit(visited_date, doc.fields.visited_contact_uuid);\\n    emit([doc.fields.visited_contact_uuid, visited_date]);\\n  }\\n}"}}}]');
 
 /***/ }),
 
@@ -23794,179 +23794,179 @@ module.exports = logger;
  * XForm generation service
  * @module generate-xform
  */
- const childProcess = __webpack_require__(/*! child_process */ "child_process");
- const path = __webpack_require__(/*! path */ "path");
- const htmlParser = __webpack_require__(/*! node-html-parser */ "./node_modules/cht-core-4-0/api/node_modules/node-html-parser/dist/esm/index.js");
- const logger = __webpack_require__(/*! ../logger */ "./node_modules/cht-core-4-0/api/src/logger.js");
- const markdown = __webpack_require__(/*! enketo-transformer/src/markdown */ "./node_modules/cht-core-4-0/api/node_modules/enketo-transformer/src/markdown.js");
- 
- const MODEL_ROOT_OPEN = '<root xmlns="http://www.w3.org/2002/xforms" xmlns:xf="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema">';
- const ROOT_CLOSE = '</root>';
- const JAVAROSA_SRC = / src="jr:\/\//gi;
- const MEDIA_SRC_ATTR = ' data-media-src="';
- 
- const FORM_STYLESHEET = path.join('/home/kenn/harness/node_modules/cht-core-4-0/api/src/api', '../xsl/openrosa2html5form.xsl');
- const MODEL_STYLESHEET = path.join('/home/kenn/harness/node_modules/cht-core-4-0/api/src/api', '../../node_modules/enketo-transformer/src/xsl/openrosa2xmlmodel.xsl');
- const XSLTPROC_CMD = 'xsltproc';
- 
- const processErrorHandler = (xsltproc, err, reject) => {
-   xsltproc.stdin.end();
-   if (err.code === 'EPIPE'                                                    // Node v10,v12,v14
-       || (err.code === 'ENOENT' && err.syscall === `spawn ${XSLTPROC_CMD}`)   // Node v8,v16+
-   ) {
-     const errMsg = `Unable to continue execution, check that '${XSLTPROC_CMD}' command is available.`;
-     logger.error(errMsg);
-     return reject(new Error(errMsg));
-   }
-   logger.error(err);
-   return reject(new Error(`Unknown Error: An error occurred when executing '${XSLTPROC_CMD}' command`));
- };
- 
- const transform = (formXml, stylesheet) => {
-   return new Promise((resolve, reject) => {
-     const xsltproc = childProcess.spawn(XSLTPROC_CMD, [ stylesheet, '-' ]);
-     let stdout = '';
-     let stderr = '';
-     xsltproc.stdout.on('data', data => stdout += data);
-     xsltproc.stderr.on('data', data => stderr += data);
-     xsltproc.stdin.setEncoding('utf-8');
-     xsltproc.stdin.on('error', err => {
-       // Errors related with spawned processes and stdin are handled here on Node v10
-       return processErrorHandler(xsltproc, err, reject);
-     });
-     try {
-       xsltproc.stdin.write(formXml);
-       xsltproc.stdin.end();
-     } catch (err) {
-       // Errors related with spawned processes and stdin are handled here on Node v12
-       return processErrorHandler(xsltproc, err, reject);
-     }
-     xsltproc.on('close', (code, signal) => {
-       if (code !== 0 || signal || stderr.length) {
-         let errorMsg = `Error transforming xml. xsltproc returned code "${code}", and signal "${signal}"`;
-         if (stderr.length) {
-           errorMsg += '. xsltproc stderr output:\n' + stderr;
-         }
-         return reject(new Error(errorMsg));
-       }
-       if (!stdout) {
-         return reject(new Error(`Error transforming xml. xsltproc returned no error but no output.`));
-       }
-       resolve(stdout);
-     });
-     xsltproc.on('error', err => {
-       // Errors related with spawned processes are handled here on Node v8,v14,v16+
-       return processErrorHandler(xsltproc, err, reject);
-     });
-   });
- };
- 
- const convertDynamicUrls = (original) => original.replace(
-   /<a[^>]+href="([^"]*---output[^"]*)"[^>]*>(.*?)<\/a>/gm,
-   '<a href="#" target="_blank" rel="noopener" class="dynamic-url">' +
-   '$2<span class="url hidden">$1</span>' +
-   '</a>');
- 
- const convertEmbeddedHtml = (original) => original
-   .replace(/&lt;\s*(\/|)\s*([\s\S]*?)\s*&gt;/gm, '<$1$2>')
-   .replace(/&quot;/g, '"')
-   .replace(/&#039;/g, '\'')
-   .replace(/&amp;/g, '&');
- 
- const replaceNode = (currentNode, newNode) => {
-   const { parentNode } = currentNode;
-   const idx = parentNode.childNodes.findIndex((child) => child === currentNode);
-   parentNode.childNodes = [
-     ...parentNode.childNodes.slice(0, idx),
-     newNode,
-     ...parentNode.childNodes.slice(idx + 1),
-   ];
- };
- 
- // Based on enketo/enketo-transformer
- // https://github.com/enketo/enketo-transformer/blob/377caf14153586b040367f8c2de53c9d794c19d4/src/transformer.js#L430
- const replaceAllMarkdown = (formString) => {
-   const replacements = {};
-   const form = htmlParser.parse(formString).querySelector('form');
- 
-   // First turn all outputs into text so *<span class="or-output></span>* can be detected
-   form.querySelectorAll('span.or-output').forEach((el, index) => {
-     const key = `---output-${index}`;
-     const textNode = el.childNodes[0];
-     replacements[key] = el.toString();
-     textNode.textContent = key;
-     replaceNode(el, textNode);
-     // Note that we end up in a situation where we likely have sibling text nodes...
-   });
- 
-   // Now render markdown
-   const questions = form.querySelectorAll('span.question-label');
-   const hints = form.querySelectorAll('span.or-hint');
-   questions.concat(hints).forEach((el, index) => {
-     const original = el.innerHTML;
-     let rendered = markdown.toHtml(original);
-     rendered = convertDynamicUrls(rendered);
-     rendered = convertEmbeddedHtml(rendered);
- 
-     if (original !== rendered) {
-       const key = `$$$${index}`;
-       replacements[key] = rendered;
-       el.innerHTML = key;
-     }
-   });
- 
-   let result = form.toString();
- 
-   // Now replace the placeholders with the rendered HTML
-   // in reverse order so outputs are done last
-   Object.keys(replacements).reverse().forEach(key => {
-     const replacement = replacements[key];
-     if (replacement) {
-       result = result.replace(key, replacement);
-     }
-   });
- 
-   return result;
- };
- 
- const generateForm = formXml => {
-   return transform(formXml, FORM_STYLESHEET).then(form => {
-     form = replaceAllMarkdown(form);
-     // rename the media src attributes so the browser doesn't try and
-     // request them, instead leaving it to custom code in the Enketo
-     // service to load them asynchronously
-     return form.replace(JAVAROSA_SRC, MEDIA_SRC_ATTR);
-   });
- };
- 
- const generateModel = formXml => {
-   return transform(formXml, MODEL_STYLESHEET).then(model => {
-     // remove the root node leaving just the model
-     model = model.replace(MODEL_ROOT_OPEN, '');
-     const index = model.lastIndexOf(ROOT_CLOSE);
-     if (index === -1) {
-       return model;
-     }
-     return model.slice(0, index) + model.slice(index + ROOT_CLOSE.length);
-   });
- };
- 
- const generate = formXml => {
-   return Promise.all([ generateForm(formXml), generateModel(formXml) ])
-     .then(([ form, model ]) => ({ form, model }));
- };
- 
- module.exports = {
- 
-   /**
-    * @param formXml The XML form string
-    * @returns a promise with the XML form transformed following
-    *          the stylesheet rules defined (XSL transformations)
-    */
-   generate
- 
- };
- 
+const childProcess = __webpack_require__(/*! child_process */ "child_process");
+const path = __webpack_require__(/*! path */ "path");
+const htmlParser = __webpack_require__(/*! node-html-parser */ "./node_modules/cht-core-4-0/api/node_modules/node-html-parser/dist/esm/index.js");
+const logger = __webpack_require__(/*! ../logger */ "./node_modules/cht-core-4-0/api/src/logger.js");
+const markdown = __webpack_require__(/*! enketo-transformer/src/markdown */ "./node_modules/cht-core-4-0/api/node_modules/enketo-transformer/src/markdown.js");
+
+const MODEL_ROOT_OPEN = '<root xmlns="http://www.w3.org/2002/xforms" xmlns:xf="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema">';
+const ROOT_CLOSE = '</root>';
+const JAVAROSA_SRC = / src="jr:\/\//gi;
+const MEDIA_SRC_ATTR = ' data-media-src="';
+
+const FORM_STYLESHEET = '/home/kenn/harness/node_modules/cht-core-4-0/api/src/xsl/openrosa2html5form.xsl';
+const MODEL_STYLESHEET = '/home/kenn/harness/node_modules/cht-core-4-0/api/node_modules/enketo-transformer/src/xsl/openrosa2xmlmodel.xsl';
+const XSLTPROC_CMD = 'xsltproc';
+
+const processErrorHandler = (xsltproc, err, reject) => {
+  xsltproc.stdin.end();
+  if (err.code === 'EPIPE'                                                    // Node v10,v12,v14
+      || (err.code === 'ENOENT' && err.syscall === `spawn ${XSLTPROC_CMD}`)   // Node v8,v16+
+  ) {
+    const errMsg = `Unable to continue execution, check that '${XSLTPROC_CMD}' command is available.`;
+    logger.error(errMsg);
+    return reject(new Error(errMsg));
+  }
+  logger.error(err);
+  return reject(new Error(`Unknown Error: An error occurred when executing '${XSLTPROC_CMD}' command`));
+};
+
+const transform = (formXml, stylesheet) => {
+  return new Promise((resolve, reject) => {
+    const xsltproc = childProcess.spawn(XSLTPROC_CMD, [ stylesheet, '-' ]);
+    let stdout = '';
+    let stderr = '';
+    xsltproc.stdout.on('data', data => stdout += data);
+    xsltproc.stderr.on('data', data => stderr += data);
+    xsltproc.stdin.setEncoding('utf-8');
+    xsltproc.stdin.on('error', err => {
+      // Errors related with spawned processes and stdin are handled here on Node v10
+      return processErrorHandler(xsltproc, err, reject);
+    });
+    try {
+      xsltproc.stdin.write(formXml);
+      xsltproc.stdin.end();
+    } catch (err) {
+      // Errors related with spawned processes and stdin are handled here on Node v12
+      return processErrorHandler(xsltproc, err, reject);
+    }
+    xsltproc.on('close', (code, signal) => {
+      if (code !== 0 || signal || stderr.length) {
+        let errorMsg = `Error transforming xml. xsltproc returned code "${code}", and signal "${signal}"`;
+        if (stderr.length) {
+          errorMsg += '. xsltproc stderr output:\n' + stderr;
+        }
+        return reject(new Error(errorMsg));
+      }
+      if (!stdout) {
+        return reject(new Error(`Error transforming xml. xsltproc returned no error but no output.`));
+      }
+      resolve(stdout);
+    });
+    xsltproc.on('error', err => {
+      // Errors related with spawned processes are handled here on Node v8,v14,v16+
+      return processErrorHandler(xsltproc, err, reject);
+    });
+  });
+};
+
+const convertDynamicUrls = (original) => original.replace(
+  /<a[^>]+href="([^"]*---output[^"]*)"[^>]*>(.*?)<\/a>/gm,
+  '<a href="#" target="_blank" rel="noopener" class="dynamic-url">' +
+  '$2<span class="url hidden">$1</span>' +
+  '</a>');
+
+const convertEmbeddedHtml = (original) => original
+  .replace(/&lt;\s*(\/|)\s*([\s\S]*?)\s*&gt;/gm, '<$1$2>')
+  .replace(/&quot;/g, '"')
+  .replace(/&#039;/g, '\'')
+  .replace(/&amp;/g, '&');
+
+const replaceNode = (currentNode, newNode) => {
+  const { parentNode } = currentNode;
+  const idx = parentNode.childNodes.findIndex((child) => child === currentNode);
+  parentNode.childNodes = [
+    ...parentNode.childNodes.slice(0, idx),
+    newNode,
+    ...parentNode.childNodes.slice(idx + 1),
+  ];
+};
+
+// Based on enketo/enketo-transformer
+// https://github.com/enketo/enketo-transformer/blob/377caf14153586b040367f8c2de53c9d794c19d4/src/transformer.js#L430
+const replaceAllMarkdown = (formString) => {
+  const replacements = {};
+  const form = htmlParser.parse(formString).querySelector('form');
+
+  // First turn all outputs into text so *<span class="or-output></span>* can be detected
+  form.querySelectorAll('span.or-output').forEach((el, index) => {
+    const key = `---output-${index}`;
+    const textNode = el.childNodes[0];
+    replacements[key] = el.toString();
+    textNode.textContent = key;
+    replaceNode(el, textNode);
+    // Note that we end up in a situation where we likely have sibling text nodes...
+  });
+
+  // Now render markdown
+  const questions = form.querySelectorAll('span.question-label');
+  const hints = form.querySelectorAll('span.or-hint');
+  questions.concat(hints).forEach((el, index) => {
+    const original = el.innerHTML;
+    let rendered = markdown.toHtml(original);
+    rendered = convertDynamicUrls(rendered);
+    rendered = convertEmbeddedHtml(rendered);
+
+    if (original !== rendered) {
+      const key = `$$$${index}`;
+      replacements[key] = rendered;
+      el.innerHTML = key;
+    }
+  });
+
+  let result = form.toString();
+
+  // Now replace the placeholders with the rendered HTML
+  // in reverse order so outputs are done last
+  Object.keys(replacements).reverse().forEach(key => {
+    const replacement = replacements[key];
+    if (replacement) {
+      result = result.replace(key, replacement);
+    }
+  });
+
+  return result;
+};
+
+const generateForm = formXml => {
+  return transform(formXml, FORM_STYLESHEET).then(form => {
+    form = replaceAllMarkdown(form);
+    // rename the media src attributes so the browser doesn't try and
+    // request them, instead leaving it to custom code in the Enketo
+    // service to load them asynchronously
+    return form.replace(JAVAROSA_SRC, MEDIA_SRC_ATTR);
+  });
+};
+
+const generateModel = formXml => {
+  return transform(formXml, MODEL_STYLESHEET).then(model => {
+    // remove the root node leaving just the model
+    model = model.replace(MODEL_ROOT_OPEN, '');
+    const index = model.lastIndexOf(ROOT_CLOSE);
+    if (index === -1) {
+      return model;
+    }
+    return model.slice(0, index) + model.slice(index + ROOT_CLOSE.length);
+  });
+};
+
+const generate = formXml => {
+  return Promise.all([ generateForm(formXml), generateModel(formXml) ])
+    .then(([ form, model ]) => ({ form, model }));
+};
+
+module.exports = {
+
+  /**
+   * @param formXml The XML form string
+   * @returns a promise with the XML form transformed following
+   *          the stylesheet rules defined (XSL transformations)
+   */
+  generate
+
+};
+
 
 /***/ }),
 

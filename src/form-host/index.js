@@ -1,4 +1,6 @@
 const $ = require('jquery');
+require('select2');
+
 const FormWireup = require('./wireup');
 const FormFiller = require('./form-filler');
 
@@ -6,6 +8,8 @@ window.$$ = $;
 
 // webapp/node_modules/bootstrap/js/dropdown.js expects this declared globally
 window.jQuery = $;
+// webapp/src/js/enketo/main.js expects this for datepicker
+window.$ = $;
 
 // shared-libs/enketo-form-manager/src/enketo-form-manager.js writes into this object
 window.CHTCore = {
