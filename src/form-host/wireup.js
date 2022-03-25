@@ -13,12 +13,7 @@ const {
 } = require('@medic/enketo-form-manager');
 
 class FormWireup {
-  constructor() {
-  }
-
-  async render(formHtml, formModel, instanceData) {
-    const userContact = { _id: 'user1' };
-
+  constructor(formHtml, formModel, userSettingsDoc) {
     // BREAK
     const dbService = {
       get: () => ({
@@ -48,8 +43,14 @@ class FormWireup {
       },
     };
     const userContactService = {
-      get: () => Promise.resolve(userContact),
+      get: () => Promise.resolve({
+        _id: 'user_contact_service',
+      }),
     };
+    const userSettingsService = {
+      get: () => Promise.resolve(userSettingsDoc),
+    };
+    
     const fileReaderService = {
       utf8: x => x,
     };
@@ -62,11 +63,6 @@ class FormWireup {
           context: { foo: 'bar' },
         };
       },
-    };
-    const userSettingsService = {
-      get: () => Promise.resolve({
-        _id: 'user-settings-doc',
-      }),
     };
     const languageService = {
       get: () => 'en',
@@ -121,25 +117,19 @@ class FormWireup {
       transitionsService,
       GlobalActions
     );
+  }
 
+  async render(content) {
     const zscoreUtil = {};
     medicXpathExtensions.init(zscoreUtil, toBik_text, moment);
 
-    // BREAK
     const selector = '#enketo-wrapper';
     const formDoc = { _id: 'whatever', title: 'form name ABC 987' };
-    await this.enketoFormMgr.render(selector, formDoc, instanceData);
-    return this.enketoFormMgr;
+    return await this.enketoFormMgr.render(selector, formDoc, content);
   }
 
   renderContactForm(formContext) {
-    return this.enketoFormMgr.renderForm(formContext)
-      .then(form => registerListeners(
-        formContext.selector,
-        form,
-        formContext.editedListener,
-        formContext.valuechangeListener
-      ));
+    return this.enketoFormMgr.renderForm(formContext);
   }
 
   save(formInternalId, form, geoHandle, docId) {
@@ -167,50 +157,5 @@ class FormWireup {
     this.enketoFormMgr.unload(form);
   }
 }
-
-const registerListeners = (selector, form, editedListener, valueChangeListener) => {
-  // const $selector = $(selector);
-  // if(editedListener) {
-  //   $selector.on('edited', () => this.ngZone.run(() => editedListener()));
-  // }
-  
-  // [
-  //   valueChangeListener,
-  //   () => this.enketoFormMgr.setupNavButtons(form, $selector, form.pages._getCurrentIndex())
-  // ].forEach(listener => {
-  //   if(listener) {
-  //     $selector.on('xforms-value-changed', () => this.ngZone.run(() => listener()));
-  //   }
-  // });
-
-  return form;
-};
-
-/* Enketo Translation Service */
-const bindJsonToXml = function(elem, data={}, childMatcher) {
-  Object.keys(data).map(key => [key, data[key]])
-    .forEach(function(pair) {
-      const current = findCurrentElement(elem, pair[0], childMatcher);
-      const value = pair[1];
-
-      if (value !== null && typeof value === 'object') {
-        if(current.children().length) {
-          bindJsonToXml(current, value);
-        } else {
-          current.text(value._id);
-        }
-      } else {
-        current.text(value);
-      }
-    });
-};
-
-const findCurrentElement = function(elem, name, childMatcher) {
-  if (childMatcher) {
-    return elem.find(childMatcher(name));
-  } 
-  
-  return elem.children(name);
-};
 
 module.exports = FormWireup;

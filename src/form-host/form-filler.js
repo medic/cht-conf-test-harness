@@ -4,11 +4,9 @@ const $ = require('jquery');
 const saveContact = () => {}; // require('./save-contact');
 
 class FormFiller {
-  constructor(formName, formManager, formXml, options) {
-    this.formName = formName;
-    this.formManager = formManager;
-    this.form = formManager.currentForm;
-    this.formXml = formXml;
+  constructor(saveCallback, form, options) {
+    this.saveCallback = saveCallback;
+    this.form = form;
     this.options = _.defaults(options, {
       verbose: true,
     });
@@ -33,7 +31,7 @@ class FormFiller {
 
   async fillAppForm(multiPageAnswer) {
     const { isComplete, errors } = await fillForm(this, multiPageAnswer);
-    const resultingDocs = isComplete ? await this.formManager.save(
+    const resultingDocs = isComplete ? await this.saveCallback(
       this.formName,
       this.form,
       undefined, // geoHandle
@@ -55,7 +53,7 @@ class FormFiller {
     return {
       errors,
       section: 'general',
-      contacts
+      contacts,
     };
   }
 

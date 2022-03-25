@@ -686,7 +686,7 @@ const readFileSync = (...args) => {
   return fs.readFileSync(filePath).toString();
 };
 
-const doLoadForm = async (self, page, core, xformFilePath, content, user, contactSummaryXml) => {
+const doLoadForm = async (self, page, core, xformFilePath, content, userSettingsDoc, contactSummaryXml) => {
   self.log(`Loading form ${path.basename(xformFilePath)}...`);
   const formXmlContent = readFileSync(xformFilePath);
   if (!formXmlContent) {
@@ -696,9 +696,9 @@ const doLoadForm = async (self, page, core, xformFilePath, content, user, contac
 
   const formNameWithoutDirectory = path.basename(xformFilePath, '.xml');
   const { form: formHtml, model: formModel } = await core.convertFormXmlToXFormModel(formXmlContent);
-  const loadXformWrapper = (innerFormName, innerFormHtml, innerFormModel, innerContent, innerUser, innerContactSummary) =>
-    window.loadXform(innerFormName, innerFormHtml, innerFormModel, innerContent, innerUser, innerContactSummary);
-  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, formHtml, formModel, content, user, contactSummaryXml);
+  const loadXformWrapper = (innerFormName, innerFormHtml, innerFormModel, innerContent, innerUserSettingsDoc, innerContactSummary) =>
+    window.loadXform(innerFormName, innerFormHtml, innerFormModel, innerContent, innerUserSettingsDoc, innerContactSummary);
+  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, formHtml, formModel, content, userSettingsDoc, contactSummaryXml);
 };
 
 const serializeContactSummary = (contactSummary = {}) => {
