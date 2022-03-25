@@ -76,29 +76,37 @@ if (!fs.existsSync(formPath)) {
     return formsInDirectory;
   };
 
-  const appFormXmlFilePath = getFilesInFolders(appFormPaths);
-  if (appFormXmlFilePath.length === 0) {
-    console.error(`No xml files found in folders: ${pathToProject}`);
-    return -1;
-  }
-
-  const appFormHtmlPaths = [];
-  const appFormModelPaths = [];
-  for (const formPath of appFormXmlFilePath) {
-    const appFormContent = fs.readFileSync(formPath);
-    console.log(`Converting ${formPath}`);
-    try {
-      const { form, model } = await harness.core.convertFormXmlToXFormModel(appFormContent);
-      const outputHtmlPath = path.resolve(__dirname, '../build', path.basename(formPath, '.xml') + '.html');
-      const outputModelPath = path.resolve(__dirname, '../build', path.basename(formPath, '.xml') + '.model');
-      fs.writeFileSync(outputHtmlPath, form);
-      fs.writeFileSync(outputModelPath, model);
-      appFormHtmlPaths.push(outputHtmlPath);
-      appFormModelPaths.push(outputModelPath);
-    } catch (e) {
-      console.error(`Error during conversion:`, e);
+  const convertXmlToPath = async (formPaths) => {
+    const formXmlFilePaths = getFilesInFolders(formPaths);
+    if (formXmlFilePaths.length === 0) {
+      console.error(`No xml files found in folders: ${pathToProject}`);
+      return -1;
     }
-  }
+
+    const htmlPaths = [];
+    const modelPaths = [];
+    for (const formPath of formXmlFilePaths) {
+      const appFormContent = fs.readFileSync(formPath);
+      console.log(`Converting ${formPath}`);
+      try {
+        const { form, model } = await harness.core.convertFormXmlToXFormModel(appFormContent);
+        const outputHtmlPath = path.resolve(__dirname, '../build', path.basename(formPath, '.xml') + '.html');
+        const outputModelPath = path.resolve(__dirname, '../build', path.basename(formPath, '.xml') + '.model');
+        fs.writeFileSync(outputHtmlPath, form);
+        fs.writeFileSync(outputModelPath, model);
+
+        htmlPaths.push(outputHtmlPath);
+        modelPaths.push(outputModelPath);
+      } catch (e) {
+        console.error(`\u001b[31mError during conversion\u001b[0m:`, e);
+      }
+    }
+
+    return { htmlPaths, modelPaths };
+  };
+
+  const { htmlPaths: appFormHtmlPaths, modelPaths: appFormModelPaths } = await convertXmlToPath(appFormPaths);
+  const { htmlPaths: contactFormHtmlPaths, modelPaths: contactFormModelPaths } = await convertXmlToPath(contactFormPaths);
 
   const windowsEscaping = str => str.replace(/\\/g, '\\\\');
   const formsAsRequirements = (formPaths, ext) => formPaths
@@ -111,8 +119,12 @@ if (!fs.existsSync(formPath)) {
     appFormModel: {
     ${formsAsRequirements(appFormModelPaths, '.model')}
     },
-    contactForms: {
-    }
+    contactFormHtml: {
+    ${formsAsRequirements(contactFormHtmlPaths, '.html')}
+    },
+    contactFormModel: {
+    ${formsAsRequirements(contactFormModelPaths, '.model')}
+    },
   };`);
   console.log(`Compiling to ${outputPath}`);
 })();

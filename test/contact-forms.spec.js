@@ -27,7 +27,7 @@ describe('contact forms', () => {
     await harness.setNow(now);
     const result = await harness.fillContactForm(
       'district_hospital',
-      ['new_person', 'Full', 'Short', '1990-08-06', undefined, '+1-555-227-7744', undefined, 'female', 'patient'],
+      ['new_person', 'Full', 'Short', '1990-08-06', undefined, '+1-778-227-7744', undefined, 'female', 'patient'],
       ['yes']
     );
     expect(result.errors).to.be.empty;

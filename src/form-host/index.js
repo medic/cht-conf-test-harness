@@ -39,7 +39,9 @@ window.CHTCore = {
     enabled: () => false,
   },
   Settings: { // TODO: Used by phone-lib
-    get: () => Promise.resolve()
+    get: () => Promise.resolve({
+      default_country_code: '1'
+    })
   }
 };
 

@@ -1,10 +1,11 @@
 const _ = require('underscore');
 const $ = require('jquery');
 
-const saveContact = () => {}; // require('./save-contact');
+const saveContact = () => []; // require('./save-contact');
 
 class FormFiller {
-  constructor(saveCallback, form, options) {
+  constructor(formName, saveCallback, form, options) {
+    this.formName = formName;
     this.saveCallback = saveCallback;
     this.form = form;
     this.options = _.defaults(options, {
@@ -109,10 +110,11 @@ const fillForm = async (self, multiPageAnswer) => {
     }
   }
 
-  self.form.validateAll();
+  // self.form.validateAll();
+  // TODO: what if there is an error on the last page?
   const errors = await self.getVisibleValidationErrors();
   const lastPage = self.form.pages.activePages[self.form.pages.activePages.length - 1];
-  const isComplete = self.form.pages.current === lastPage;
+  const isComplete = !lastPage || self.form.pages.current === lastPage;
   const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
 
   return {

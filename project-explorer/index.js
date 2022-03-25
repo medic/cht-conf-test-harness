@@ -4,7 +4,7 @@ const { content, user, contactSummary } = require('../dist/harness.defaults.json
 const projectAssets = require('../dist/project-assets');
 const forms = {
   appForms: Object.keys(projectAssets.appFormHtml),
-  contactForms: Object.keys(projectAssets.contactForms),
+  contactForms: Object.keys(projectAssets.contactFormHtml),
 };
 
 $(() => {

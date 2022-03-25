@@ -30,8 +30,14 @@ class FormWireup {
           // return Promise.resolve('data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==');
         },
         bulkDocs: () => Promise.resolve([]),
+
+        // used by phone-widget to now allow multiple contacts with the same phone
+        query: () => ({
+          rows: [],
+        }),
       }),
     };
+    window.CHTCore.DB = dbService;
     const extractLineageService = {
       extract: contact => {
         return {
