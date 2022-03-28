@@ -110,11 +110,17 @@ const fillForm = async (self, multiPageAnswer) => {
     }
   }
 
-  // self.form.validateAll();
-  // TODO: what if there is an error on the last page?
-  const errors = await self.getVisibleValidationErrors();
-  const lastPage = self.form.pages.activePages[self.form.pages.activePages.length - 1];
-  const isComplete = !lastPage || self.form.pages.current === lastPage;
+  let errors;
+  let isComplete;
+  let pageHasAdvanced;
+  // attempt to submit all the way to the end (replacement for validateAll)
+  do {
+    pageHasAdvanced = await nextPage(self.form);
+    errors = await self.getVisibleValidationErrors();
+    
+    const lastPage = self.form.pages.activePages[self.form.pages.activePages.length - 1];
+    isComplete = !lastPage || self.form.pages.current === lastPage;
+  } while (pageHasAdvanced && !isComplete && !errors.length);
   const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
 
   return {
@@ -146,7 +152,7 @@ const fillPage = async (self, pageAnswer) => {
     fillQuestion(nextUnansweredQuestion, answer);
   }
 
-  const allPagesSuccessful = hasPages(self.form) ? await self.form.pages._next() : true;
+  const allPagesSuccessful = hasPages(self.form) ? await nextPage(self.form) : true;
   const validationErrors = await self.getVisibleValidationErrors();
   const advanceFailure = allPagesSuccessful || validationErrors.length ? [] : [{
     type: 'general',
@@ -267,6 +273,19 @@ const getVisibleQuestions = form => {
   };
 
   return findQuestionsInSection(currentPage);
+};
+
+const nextPage = async form => {
+  const valid = await form.pages._next();
+
+  // Work-around for stale jr:choice-name() references in labels.  ref #3870
+  form.calc.update();
+
+  // Force forms to update jr:itext references in output fields that contain
+  // calculated values.  ref #4111
+  form.output.update();
+
+  return valid;
 };
 
 const hasPages = form => form.pages.activePages.length > 0;

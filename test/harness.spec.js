@@ -161,11 +161,11 @@ describe('Harness tests', () => {
     it('a different list of validation errors', async () => {
       const result = await harness.fillForm(formName, ['yes', '2100-01-01', '2100-01-01']);
       expect(result).to.nested.include({
-        'errors[0].msg': 'Value not allowed',
+        'errors[0].msg': 'enketo.constraint.invalid',
         'errors[0].type': 'validation',
-        'errors[0].question': 'When PNC visit was planned?*\nValue not allowed',
+        'errors[0].question': 'When PNC visit was planned?*\nenketo.constraint.invalid',
 
-        'errors[1].msg': 'Value not allowed',
+        'errors[1].msg': 'enketo.constraint.invalid',
       });
       expect(result.report).to.eq(undefined);
     });
@@ -210,12 +210,12 @@ describe('Harness tests', () => {
         patient_id: 'patient_id',
         s_pnc_visits: {
           s_pnc_visit: 'no',
-          s_pnc_planned_date_show: '',
-          s_pnc_date_show: '',
+          s_pnc_planned_date_show: 'Invalid Date',
+          s_pnc_date_show: 'Invalid Date',
         },
         next_pnc: {
           s_next_pnc: 'no',
-          next_pnc_date: '',
+          next_pnc_date: 'Invalid Date',
         },
         summary:
         {

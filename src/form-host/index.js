@@ -52,7 +52,7 @@ window.loadXform = async (formName, formHtml, formModel, content, userSettingsDo
   const wireup = new FormWireup(formHtml, formModel, userSettingsDoc, contactSummary);
   const form = await wireup.render(content);
   const saveCallback = wireup.save.bind(wireup);
-  const formFiller = new FormFiller(saveCallback, form, { verbose: true });
+  const formFiller = new FormFiller(formName, saveCallback, form, { verbose: true });
 
   window.form = form;
   window.formFiller = formFiller;

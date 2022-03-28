@@ -139,22 +139,9 @@ class FormWireup {
   }
 
   save(formInternalId, form, geoHandle, docId) {
-    // /inputs is ALWAYS relevant #4875
-    $('section[name$="/inputs"]').each((idx, element) => {
-      if(element.dataset) {
-        element.dataset.relevant = 'true()';
-      }
-    });
-
-    return Promise
-      .resolve(form.validate())
-      .then((valid) => {
-        if (!valid) {
-          throw new Error('Form is invalid');
-        }
-
+    return this.enketoFormMgr.validate(form)
+      .then(() => {
         $('form.or').trigger('beforesave');
-
         return this.enketoFormMgr.save(formInternalId, form, geoHandle, docId);
       });
   }
