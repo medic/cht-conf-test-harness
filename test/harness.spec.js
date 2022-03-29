@@ -31,6 +31,21 @@ describe('Harness tests', () => {
       expect(new Date(actual).toString()).to.include('Feb 01 1990');
     });
 
+    const timezones = ['America/Vancouver', 'Africa/Nairobi'];
+    for (const timezone of timezones) {
+      it(`#160 - ${timezone} do not default to ISO for RFC2822 date string formats`, async () => {
+        const existingTimezone = process.env.TZ;
+        process.env.TZ = timezone;
+        try {
+          await harness.setNow('1990-02-01');
+          const isoDateFormat = await harness.getNow();
+          expect(new Date(isoDateFormat).toLocaleString()).to.include('2/1/1990');
+        } finally {
+          process.env.TZ = existingTimezone;
+        }
+      });
+    }
+
     it('getNow defaults to now when undefined', async () => {
       const now = await harness.getNow();
       expect(now).to.be.lte(Date.now());
@@ -40,14 +55,14 @@ describe('Harness tests', () => {
       await harness.setNow('1985-08-06');
       await harness.flush({ years: 1, days: 1, hours: 2 });
       const now = await harness.getNow();
-      expect(new Date(now).toUTCString()).to.include('Thu, 07 Aug 1986 02:00:00');
+      expect(new Date(now).toString()).to.include('Thu Aug 07 1986 02:00:00');
     });
 
     it('flush shorthands as days', async () => {
       await harness.setNow('1985-08-06');
       await harness.flush(5);
       const now = await harness.getNow();
-      expect(new Date(now).toUTCString()).to.include('Sun, 11 Aug 1985 00:00:00');
+      expect(new Date(now).toString()).to.include('Sun Aug 11 1985 00:00:00');
     });
 
     it('control now', async () => {
@@ -90,7 +105,7 @@ describe('Harness tests', () => {
       const d = Duration.fromISO('P5Y3M'); // 5 years, 3 months
       await harness.flush(d);
       const now = await harness.getNow();
-      expect(new Date(now).toUTCString()).to.include('Fri, 01 Apr 2005 00:00:00');
+      expect(new Date(now).toString()).to.include('Fri Apr 01 2005 00:00:00');
     });
 
     it('#20 - flush accounts for DST', async () => {
@@ -106,7 +121,8 @@ describe('Harness tests', () => {
       let now;
 
       await harness.setNow('2000-01-01');
-      expect(harness.getNow()).to.equal(946684800000);
+      now = await harness.getNow();
+      expect(new Date(now).toString()).to.include('Sat Jan 01 2000');
 
       await harness.setNow('December 17, 2005');
       now = await harness.getNow();
