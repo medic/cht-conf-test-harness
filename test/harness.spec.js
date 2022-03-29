@@ -31,12 +31,20 @@ describe('Harness tests', () => {
       expect(new Date(actual).toString()).to.include('Feb 01 1990');
     });
 
-    it('#160 - do not default to ISO for RFC2822 date string formats', async () => {
-      await harness.setNow('1990-02-01');
-      const isoDateFormat = await harness.getNow();
-      expect(new Date(isoDateFormat).toLocaleString('en-US', { timeZone: 'America/Vancouver' })).to.include('2/1/1990');
-      expect(new Date(isoDateFormat).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' })).to.include('2/1/1990');
-    });
+    const timezones = ['America/Vancouver', 'Africa/Nairobi'];
+    for (const timezone of timezones) {
+      it(`#160 - ${timezone} do not default to ISO for RFC2822 date string formats`, async () => {
+        const existingTimezone = process.env.TZ;
+        process.env.TZ = timezone;
+        try {
+          await harness.setNow('1990-02-01');
+          const isoDateFormat = await harness.getNow();
+          expect(new Date(isoDateFormat).toLocaleString()).to.include('2/1/1990');
+        } finally {
+          process.env.TZ = existingTimezone;
+        }
+      });
+    }
 
     it('getNow defaults to now when undefined', async () => {
       const now = await harness.getNow();
