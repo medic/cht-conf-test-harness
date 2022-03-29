@@ -267,4 +267,13 @@ describe('forms that have caused bugs', () => {
     expect(result.errors).to.be.empty;
     expect(result.report.fields.preview_time_expired).to.include('Mar, 1972');
   });
+
+  it('#150 - to-bikram-sambat', async () => {
+    await harness.setNow('2000-01-01');
+    const result = await harness.fillForm('bikram', ['1999-11-01'], [], [1, 'yes', '1999-12-01'], [], ['no', 'no'], ['none'], Array(9).fill('no'), []);
+    expect(result.errors).to.be.empty;
+
+    const bikramDate = await harness.page.evaluate(() => window.$$('[data-itext-id="/pregnancy/summary/r_pregnancy_details:label"]').text()); 
+    expect(bikramDate).to.include('महिनावारी भएको अन्तिम मिति : १५ à¤•à¤¾à¤°à¥');
+  });
 });

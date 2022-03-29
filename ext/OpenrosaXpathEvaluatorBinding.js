@@ -1,10 +1,12 @@
 var _ = require('underscore'),
     ExtendedXpathEvaluator = require('extended-xpath'),
     openrosaExtensions = require('openrosa-xpath-extensions'),
+    moment = require('moment'),
+    { toBik_text } = require('bikram-sambat'),
 
     /* This file changed from v3.6 > v3.7, but not v3.7 > v3.11 */
-    medicExtensions = require('cht-core-3-13/webapp/src/js/enketo/medic-xpath-extensions'),
-    translator = require('cht-core-3-13/webapp/src/js/enketo/translator');
+    medicExtensions = require('cht-core-3-14/webapp/src/js/enketo/medic-xpath-extensions'),
+    translator = require('cht-core-3-14/webapp/src/js/enketo/translator');
 
 module.exports = function() {
     // re-implement XPathJS ourselves!
@@ -23,6 +25,9 @@ module.exports = function() {
         extensions._now = _now;
         medicExtensions.func.now =
           medicExtensions.func.today = function() { return { t: 'date', v: _now() }; };
+
+        const zscoreUtil = {};
+        medicExtensions.init(zscoreUtil, toBik_text, moment);
         extensions.func = _.extend(extensions.func, medicExtensions.func);
         var wrappedXpathEvaluator = function(v) {
             // Node requests (i.e. result types greater than 3 (BOOLEAN)

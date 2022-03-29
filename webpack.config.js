@@ -34,9 +34,9 @@ module.exports = [
     },
     resolve: {
       alias: {
-        '@medic/calendar-interval': path.join(__dirname, 'node_modules/cht-core-3-13/shared-libs/calendar-interval'),
-        '@medic/registration-utils': path.join(__dirname, 'node_modules/cht-core-3-13/shared-libs/registration-utils'),
-        '@medic/contact-types-utils': path.join(__dirname, 'node_modules/cht-core-3-13/shared-libs/contact-types-utils'),
+        '@medic/calendar-interval': path.join(__dirname, 'node_modules/cht-core-3-14/shared-libs/calendar-interval'),
+        '@medic/registration-utils': path.join(__dirname, 'node_modules/cht-core-3-14/shared-libs/registration-utils'),
+        '@medic/contact-types-utils': path.join(__dirname, 'node_modules/cht-core-3-14/shared-libs/contact-types-utils'),
       },
     },
     target: 'node',

@@ -533,6 +533,45 @@
 
         <tr>
             
+                <td class="name"><code>userRoles</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    harness configuration file
+                
+                </td>
+            
+
+            <td class="description last">The default <a href="global.html#HarnessInputs">HarnessInputs</a> controlling the environment in which your application is running</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>subject</code></td>
             
 
@@ -886,7 +925,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line501">line 501</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line510">line 510</a>
     </li></ul></dd>
     
 
@@ -953,7 +992,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line527">line 527</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line542">line 542</a>
     </li></ul></dd>
     
 
@@ -1015,7 +1054,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line522">line 522</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line537">line 537</a>
     </li></ul></dd>
     
 
@@ -1077,7 +1116,7 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line576">line 576</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line591">line 591</a>
     </li></ul></dd>
     
 
@@ -1139,7 +1178,69 @@ expect(result.report).to.deep.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line510">line 510</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line519">line 519</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="userRoles"><span class="type-signature"></span>userRoles<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    `userRoles` from the <a href="global.html#HarnessInputs">HarnessInputs</a> set through the constructor (defaulting to values from harness.defaults.json file)
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line531">line 531</a>
     </li></ul></dd>
     
 
@@ -1207,7 +1308,7 @@ known user information</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line545">line 545</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line560">line 560</a>
     </li></ul></dd>
     
 
@@ -1287,7 +1388,7 @@ known user information</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line167">line 167</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -1435,6 +1536,8 @@ known user information</li>
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1470,8 +1573,90 @@ known user information</li>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">Filter task documents counted to only those with emitted `title` equal to this parameter. Filter is skipped if undefined.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>user</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Default specified via constructor
+                
+                </td>
+            
+
+            <td class="description last">The current logged-in user which is viewing the tasks.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userRoles</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Default specified via constructor
+                
+                </td>
+            
+
+            <td class="description last">The roles associated with the current logged-in user which is viewing the tasks.</td>
         </tr>
 
     
@@ -1502,6 +1687,10 @@ known user information</li>
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">Filter task documents counted to only those whose action opens the form equal to this parameter. Filter is skipped if undefined.</td>
@@ -1535,6 +1724,10 @@ known user information</li>
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">Filter task documents counted to only those owned by the subject. Filter is skipped if false.</td>
@@ -1585,7 +1778,7 @@ known user information</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line375">line 375</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line381">line 381</a>
     </li></ul></dd>
     
 
@@ -1785,7 +1978,7 @@ expect(summary).to.nested.include({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line211">line 211</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line213">line 213</a>
     </li></ul></dd>
     
 
@@ -1969,7 +2162,7 @@ If an Object is provided, it can have attributes { form, user, content, contactS
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line289">line 289</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line291">line 291</a>
     </li></ul></dd>
     
 
@@ -2144,7 +2337,7 @@ const result = await harness.fillForm('my_form', ['1', '2'], ['3']});</code></pr
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line269">line 269</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line271">line 271</a>
     </li></ul></dd>
     
 
@@ -2365,7 +2558,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line632">line 632</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line647">line 647</a>
     </li></ul></dd>
     
 
@@ -2475,7 +2668,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line258">line 258</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line260">line 260</a>
     </li></ul></dd>
     
 
@@ -2623,6 +2816,8 @@ await flush(1); // move one day forward in time</code></pre>
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -2661,8 +2856,90 @@ await flush(1); // move one day forward in time</code></pre>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">Filter the returns targets to those with an `id` which matches type (when string) or is included in type (when Array).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>user</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Default specified via constructor
+                
+                </td>
+            
+
+            <td class="description last">The current logged-in user which is viewing the tasks.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userRoles</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Default specified via constructor
+                
+                </td>
+            
+
+            <td class="description last">The roles associated with the current logged-in user which is viewing the tasks.</td>
         </tr>
 
     
@@ -2710,7 +2987,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line411">line 411</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line419">line 419</a>
     </li></ul></dd>
     
 
@@ -2946,6 +3223,45 @@ await flush(1); // move one day forward in time</code></pre>
 
         <tr>
             
+                <td class="name"><code>userRoles</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Default specified via constructor
+                
+                </td>
+            
+
+            <td class="description last">The roles associated with the current logged-in user which is viewing the tasks.</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>actionForm</code></td>
             
 
@@ -3061,7 +3377,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line329">line 329</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line332">line 332</a>
     </li></ul></dd>
     
 
@@ -3220,7 +3536,7 @@ await flush(1); // move one day forward in time</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line457">line 457</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line466">line 466</a>
     </li></ul></dd>
     
 
@@ -3551,7 +3867,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line183">line 183</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line185">line 185</a>
     </li></ul></dd>
     
 
@@ -3722,7 +4038,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line582">line 582</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line597">line 597</a>
     </li></ul></dd>
     
 
@@ -3868,7 +4184,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line244">line 244</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line246">line 246</a>
     </li></ul></dd>
     
 
@@ -3956,7 +4272,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line128">line 128</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line130">line 130</a>
     </li></ul></dd>
     
 
@@ -4071,7 +4387,7 @@ expect(actual).to.be.empty;</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line157">line 157</a>
+        <a href="harness.js.html">harness.js</a>, <a href="harness.js.html#line159">line 159</a>
     </li></ul></dd>
     
 
@@ -4150,7 +4466,7 @@ expect(actual).to.be.empty;</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Sep 29 2021 11:20:47 GMT+0300 (East Africa Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Mar 18 2022 13:50:42 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

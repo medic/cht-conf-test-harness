@@ -47,4 +47,14 @@ module.exports = {
     Lineage: require('cht-core-3-13/shared-libs/lineage'),
     ChtScriptApi: require('cht-core-3-13/shared-libs/cht-script-api'),
   },
+  '3.14': {
+    ddocs: require('./build/cht-core-3-14-ddocs.json'),
+    RegistrationUtils: require('cht-core-3-14/shared-libs/registration-utils'),
+    CalendarInterval: require('cht-core-3-14/shared-libs/calendar-interval'),
+    RulesEngineCore: require('cht-core-3-14/shared-libs/rules-engine'),
+    RulesEmitter: require('cht-core-3-14/shared-libs/rules-engine/src/rules-emitter'),
+    nootils: require('cht-core-3-14/shared-libs/rules-engine/node_modules/cht-nootils'),
+    Lineage: require('cht-core-3-14/shared-libs/lineage'),
+    ChtScriptApi: require('cht-core-3-14/shared-libs/cht-script-api'),
+  }
 };
