@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Edit Person</h:title>
+    <model>
+      <instance>
+        <data delimiter="#" id="contact:household_contact:edit" prefix="J1!contact:household_contact:edit!" version="2019-12-09">
+          <household_contact>
+            <name/>
+            <date_of_birth/>
+            <sex/>
+            <notes/>
+            <phone/>
+            <alternate_phone/>
+            <contact_move_note/>
+            <parent/>
+          </household_contact>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/household_contact/name" type="string"/>
+      <bind constraint="floor(decimal-date-time(.)) &lt;= floor(decimal-date-time(today()))" jr:constraintMsg="Date must be before today" nodeset="/data/household_contact/date_of_birth" type="date"/>
+      <bind nodeset="/data/household_contact/sex" type="select1"/>
+      <bind nodeset="/data/household_contact/notes" type="string"/>
+      <bind jr:constraintMsg="Please enter a valid local number, or use the standard international format, which includes a plus sign (+) and country code. For example: +254712345678" nodeset="/data/household_contact/phone" type="string"/>
+      <bind jr:constraintMsg="Please enter a valid local number, or use the standard international format, which includes a plus sign (+) and country code. For example: +254712345678" nodeset="/data/household_contact/alternate_phone" type="string"/>
+      <bind nodeset="/data/household_contact/contact_move_note" readonly="true()" type="string"/>
+      <bind nodeset="/data/household_contact/parent" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/data/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/data/household_contact">
+      <label>Person Details</label>
+      <input ref="/data/household_contact/name">
+        <label>Names</label>
+        <hint>Please use three names.</hint>
+      </input>
+      <input ref="/data/household_contact/date_of_birth">
+        <label>Date of Birth</label>
+      </input>
+      <select1 appearance="horizontal" ref="/data/household_contact/sex">
+        <label>Gender</label>
+        <item>
+          <label>Female</label>
+          <value>female</value>
+        </item>
+        <item>
+          <label>Male</label>
+          <value>male</value>
+        </item>
+      </select1>
+      <input ref="/data/household_contact/notes">
+        <label>Notes (optional)</label>
+      </input>
+      <input appearance="numbers" ref="/data/household_contact/phone">
+        <label>Primary Mobile Number</label>
+        <hint>For example: +254712345678</hint>
+      </input>
+      <input appearance="numbers" ref="/data/household_contact/alternate_phone">
+        <label>Secondary Mobile Number</label>
+        <hint>For example: +254712345678</hint>
+      </input>
+      <input ref="/data/household_contact/contact_move_note">
+        <label>You can move <output value=" /data/household_contact/name "/> to another household by selecting another one below.</label>
+      </input>
+      <input appearance="select-contact type-household bind-id-only" ref="/data/household_contact/parent">
+        <label></label>
+      </input>
+    </group>
+  </h:body>
+</h:html>

@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>New person information</h:title>
+    <model>
+      <instance>
+        <data delimiter="#" id="contact:household_contact:create" prefix="J1!contact:household_contact:create!" version="2020-01-27">
+          <household_contact>
+            <parent>PARENT</parent>
+            <name/>
+            <date_of_birth/>
+            <age_in_years/>
+            <age_in_months/>
+            <sex/>
+            <init>
+              <age_set/>
+              <dob_known/>
+              <dob_calendar/>
+              <age_years/>
+              <age_months/>
+              <ephemeral_months/>
+              <ephemeral_years/>
+              <dob_approx/>
+              <dob_raw/>
+              <dob_iso/>
+              <dob_debug/>
+            </init>
+            <phone/>
+            <alternate_phone/>
+            <primary_caregiver_relatonship/>
+            <primary_caregiver_relatonship_other/>
+            <geolocation/>
+            <n_screening/>
+          </household_contact>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/household_contact/parent" type="string"/>
+      <bind nodeset="/data/household_contact/name" required="true()" type="string"/>
+      <bind calculate=" /data/household_contact/init/dob_iso " nodeset="/data/household_contact/date_of_birth" type="string"/>
+      <bind calculate="floor( difference-in-months(  /data/household_contact/date_of_birth , today() ) div 12 )" nodeset="/data/household_contact/age_in_years" type="string"/>
+      <bind calculate="difference-in-months(  /data/household_contact/date_of_birth , today() )" nodeset="/data/household_contact/age_in_months" type="string"/>
+      <bind nodeset="/data/household_contact/sex" required="true()" type="select1"/>
+      <bind nodeset="/data/household_contact/init/age_set" required="true()" type="select1"/>
+      <bind nodeset="/data/household_contact/init/dob_known" relevant=" /data/household_contact/init/age_set  = 'over5'" required="true()" type="select1"/>
+      <bind constraint="floor(decimal-date-time(.)) &lt;= floor(decimal-date-time(today())) and floor( difference-in-months( . , today() ) div 12 ) &lt;= 100" jr:constraintMsg="Date must be before today" nodeset="/data/household_contact/init/dob_calendar" relevant=" /data/household_contact/init/age_set  = 'under5' or  /data/household_contact/init/dob_known  = 'yes'" required="true()" type="date"/>
+      <bind constraint=". &gt;= 0 and . &lt;= 100" jr:constraintMsg="Age must be between 0 and 130" nodeset="/data/household_contact/init/age_years" relevant=" /data/household_contact/init/age_set  = 'over5' and  /data/household_contact/init/dob_known  != 'yes'" required="true()" type="int"/>
+      <bind calculate="0" nodeset="/data/household_contact/init/age_months" required="true()" type="string"/>
+      <bind calculate="if(format-date-time(today(),&quot;%m&quot;) -  /data/household_contact/init/age_months  &lt; 0, format-date-time(today(),&quot;%m&quot;) -  /data/household_contact/init/age_months  + 12, format-date-time(today(),&quot;%m&quot;) -  /data/household_contact/init/age_months )" nodeset="/data/household_contact/init/ephemeral_months" type="string"/>
+      <bind calculate="if(format-date-time(today(),&quot;%m&quot;) -  /data/household_contact/init/age_months  &lt; 0, format-date-time(today(),&quot;%Y&quot;) -  /data/household_contact/init/age_years  - 1, format-date-time(today(),&quot;%Y&quot;) -  /data/household_contact/init/age_years )" nodeset="/data/household_contact/init/ephemeral_years" type="string"/>
+      <bind calculate="date(concat(string( /data/household_contact/init/ephemeral_years ),'-',if( /data/household_contact/init/ephemeral_months &lt;10, concat('0',string( /data/household_contact/init/ephemeral_months )),  /data/household_contact/init/ephemeral_months ),'-',string(format-date-time(today(), &quot;%d&quot;))))" nodeset="/data/household_contact/init/dob_approx" type="string"/>
+      <bind calculate="if( /data/household_contact/init/dob_known  = 'yes' or  /data/household_contact/init/age_set  = 'under5',  /data/household_contact/init/dob_calendar , /data/household_contact/init/dob_approx )" nodeset="/data/household_contact/init/dob_raw" type="string"/>
+      <bind calculate="format-date-time(decimal-date-time(../dob_raw),&quot;%Y-%m-%d&quot;)" nodeset="/data/household_contact/init/dob_iso" type="string"/>
+      <bind nodeset="/data/household_contact/init/dob_debug" readonly="true()" relevant="0" type="string"/>
+      <bind jr:constraintMsg="Please enter a valid local number, or use the standard international format, which includes a plus sign (+) and country code. For example: +254712345678" nodeset="/data/household_contact/phone" type="tel"/>
+      <bind jr:constraintMsg="Please enter a valid local number, or use the standard international format, which includes a plus sign (+) and country code. For example: +254712345678" nodeset="/data/household_contact/alternate_phone" type="tel"/>
+      <bind nodeset="/data/household_contact/primary_caregiver_relatonship" required="true()" type="select1"/>
+      <bind nodeset="/data/household_contact/primary_caregiver_relatonship_other" relevant=" /data/household_contact/primary_caregiver_relatonship  = 'other'" required="true()" type="string"/>
+      <bind calculate="concat(../../inputs/meta/location/lat, concat(' ', ../../inputs/meta/location/long))" nodeset="/data/household_contact/geolocation" type="string"/>
+      <bind nodeset="/data/household_contact/n_screening" readonly="true()" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/data/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/data/household_contact">
+      <label></label>
+      <input appearance="hidden" ref="/data/household_contact/parent">
+        <label>Parent</label>
+        <hint>mandatory</hint>
+      </input>
+      <input ref="/data/household_contact/name">
+        <label>Names</label>
+        <hint>Please use three names.</hint>
+      </input>
+      <select1 appearance="horizontal" ref="/data/household_contact/sex">
+        <label>Gender</label>
+        <item>
+          <label>Female</label>
+          <value>female</value>
+        </item>
+        <item>
+          <label>Male</label>
+          <value>male</value>
+        </item>
+      </select1>
+      <group ref="/data/household_contact/init">
+        <label></label>
+        <select1 appearance="horizontal" ref="/data/household_contact/init/age_set">
+          <label>What is the age set of <output value=" /data/household_contact/name "/>?</label>
+          <item>
+            <label>Under 5</label>
+            <value>under5</value>
+          </item>
+          <item>
+            <label>Over 5</label>
+            <value>over5</value>
+          </item>
+        </select1>
+        <select1 appearance="horizontal" ref="/data/household_contact/init/dob_known">
+          <label>Does <output value=" /data/household_contact/name "/> know their date of birth?</label>
+          <item>
+            <label>Yes</label>
+            <value>yes</value>
+          </item>
+          <item>
+            <label>No</label>
+            <value>no</value>
+          </item>
+        </select1>
+        <input ref="/data/household_contact/init/dob_calendar">
+          <label>Age</label>
+          <hint>Date of Birth</hint>
+        </input>
+        <input ref="/data/household_contact/init/age_years">
+          <label>Age</label>
+          <hint>Years</hint>
+        </input>
+        <input ref="/data/household_contact/init/dob_debug">
+          <label>Months: <output value=" /data/household_contact/init/ephemeral_months "/>
+Year: <output value=" /data/household_contact/init/ephemeral_years "/>
+DOB Approx: <output value=" /data/household_contact/init/dob_approx "/>
+DOB Calendar: <output value=" /data/household_contact/init/dob_calendar "/>
+DOB ISO: <output value=" /data/household_contact/init/dob_iso "/>
+AGE Years: <output value=" /data/household_contact/age_in_years "/></label></input>
+      </group>
+      <input ref="/data/household_contact/phone">
+        <label>Primary Mobile Number</label>
+        <hint>For example: +254712345678</hint>
+      </input>
+      <input ref="/data/household_contact/alternate_phone">
+        <label>Secondary Mobile Number</label>
+        <hint>For example: +254712345678</hint>
+      </input>
+      <select1 ref="/data/household_contact/primary_caregiver_relatonship">
+        <label>What is the relationship to the household head?</label>
+        <item>
+          <label>Spouse</label>
+          <value>spouse</value>
+        </item>
+        <item>
+          <label>Child</label>
+          <value>child</value>
+        </item>
+        <item>
+          <label>Grandchild</label>
+          <value>grandchild</value>
+        </item>
+        <item>
+          <label>Brother</label>
+          <value>brother</value>
+        </item>
+        <item>
+          <label>Sister</label>
+          <value>sister</value>
+        </item>
+        <item>
+          <label>Other</label>
+          <value>other</value>
+        </item>
+      </select1>
+      <input ref="/data/household_contact/primary_caregiver_relatonship_other">
+        <label>Specify other:</label>
+      </input>
+      <input ref="/data/household_contact/n_screening">
+        <label>_**Please submit monthly screening form for <output value=" /data/household_contact/name "/> after submitting this person registration.**_</label>
+      </input>
+    </group>
+  </h:body>
+</h:html>

@@ -235,7 +235,10 @@ class Harness {
    */
   async fillContactEditForm(contactType, ...answers) {
     const fillResult = await _fillContactForm(this, contactType, 'edit', ...answers);
-    _.assignIn(this.subject, fillResult.contacts[0]);
+    const keepValueIfEmpty = (objValue, srcValue, key) => {
+      return key === '_id' || _.isEmpty(srcValue) ? objValue : srcValue;
+    };
+    _.assignInWith(this.subject, fillResult.contacts[0], keepValueIfEmpty);
     return fillResult;
   }
 
