@@ -130,7 +130,7 @@ describe('contact forms', () => {
   it('create and edit household contact', async () => {
     let result = await harness.fillContactForm('household_contact', ...[['Head', 'female', 'over5', 'no', '20', '', '', 'sister']]);
     expect(result.errors).to.be.empty; // create the person
-    const createdContact = { ...result.contacts[0] };
+    const contactBeforeEdit = { ...result.contacts[0] };
     harness.subject = result.contacts[0]; // set the person as subject
     result = await harness.fillContactEditForm('household_contact', []);
     expect(result.errors).to.be.empty;

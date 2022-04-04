@@ -682,7 +682,7 @@ class Harness {
  * @param {string} action one of 'create' or 'edit'
  * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
  */
-const _fillContactForm = async (harness, contactType, action, ...answers) => {
+const fillContactForm = async (harness, contactType, action, ...answers) => {
   const xformFilePath = path.resolve(harness.options.contactXFormFolderPath, `${contactType}-${action}.xml`);
 
   const user = await resolveMock(harness.coreAdapter, harness.state, harness.options.user);
