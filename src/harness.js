@@ -205,16 +205,15 @@ class Harness {
   }
 
   /**
-   * @deprecated
+   * @deprecated since version 2.4.1, use {@link fillContactCreateForm} instead
+   * 
    * Loads and fills a contact form,
    *
    * @param {string} contactType Type of contact that should be created
    * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
    */
   async fillContactForm(contactType, ...answers) {
-    const fillResult = await _fillContactForm(this, contactType, 'create', ...answers);
-    this.pushMockedDoc(...fillResult.contacts);
-    return fillResult;
+    return this.fillContactCreateForm(contactType, ...answers);
   }
 
   /**
@@ -224,7 +223,9 @@ class Harness {
  * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
  */
   async fillContactCreateForm(contactType, ...answers) {
-    return this.fillContactForm(contactType, ...answers);
+    const fillResult = await fillContactForm(this, contactType, 'create', ...answers);
+    this.pushMockedDoc(...fillResult.contacts);
+    return fillResult;
   }
 
   /**
@@ -234,7 +235,7 @@ class Harness {
    * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
    */
   async fillContactEditForm(contactType, ...answers) {
-    const fillResult = await _fillContactForm(this, contactType, 'edit', ...answers);
+    const fillResult = await fillContactForm(this, contactType, 'edit', ...answers);
     const keepValueIfEmpty = (objValue, srcValue, key) => {
       return key === '_id' || _.isEmpty(srcValue) ? objValue : srcValue;
     };

@@ -25,7 +25,7 @@ describe('contact forms', () => {
   it('district-hospital with new primary contact', async () => {
     const now = DateTime.fromISO('2000-01-01');
     await harness.setNow(now);
-    const result = await harness.fillContactForm(
+    const result = await harness.fillContactCreateForm(
       'district_hospital',
       ['new_person', 'Full', 'Short', '1990-08-06', undefined, '+1-555-227-7744', undefined, 'female', 'patient'],
       ['yes']
@@ -83,7 +83,7 @@ describe('contact forms', () => {
   });
 
   it('msf-niger investigator', async () => {
-    const result = await harness.fillContactForm('investigator', ['Mr. Investigator']);
+    const result = await harness.fillContactCreateForm('investigator', ['Mr. Investigator']);
     expect(result.errors).to.be.empty;
 
     expect(result.contacts.length).to.eq(2);
@@ -119,7 +119,7 @@ describe('contact forms', () => {
   });
 
   it('#59 - msf-goma create person', async () => {
-    const result = await harness.fillContactForm('goma-person', [
+    const result = await harness.fillContactCreateForm('goma-person', [
       'PARENT', 'patient', '123', 'Full Name', '1990-10-08', 'male',
       '555-123-4567', 'false', 'eng', 'yes', 'second', 'no', 'unknown',
       ['diabetes'], '', 'notes'
@@ -128,17 +128,17 @@ describe('contact forms', () => {
   });
 
   it('create and edit household contact', async () => {
-    let result = await harness.fillContactForm('household_contact', ...[['Head', 'female', 'over5', 'no', '20', '', '', 'sister']]);
+    let result = await harness.fillContactCreateForm('household_contact', ...[['Head', 'female', 'over5', 'no', '20', '', '', 'sister']]);
     expect(result.errors).to.be.empty; // create the person
     const contactBeforeEdit = { ...result.contacts[0] };
     harness.subject = result.contacts[0]; // set the person as subject
     result = await harness.fillContactEditForm('household_contact', []);
     expect(result.errors).to.be.empty;
-    Object.keys(harness.subject).forEach(key => createdContact[key] && expect(harness.subject[key], key).to.be.eq(createdContact[key]));
+    Object.keys(harness.subject).forEach(key => contactBeforeEdit[key] && expect(harness.subject[key], key).to.be.eq(contactBeforeEdit[key]));
   });
 
   it('#59 - msf-goma-2 create person', async () => {
-    const result = await harness.fillContactForm('goma-person-2', [
+    const result = await harness.fillContactCreateForm('goma-person-2', [
       '123', 'Full Name', '1990-10-08', 'male',
       'yes', 'second', 'no',
       'unknown',
@@ -151,7 +151,7 @@ describe('contact forms', () => {
   it('form without pages', async () => {
     const now = DateTime.fromISO('2000-01-01');
     await harness.setNow(now);
-    const result = await harness.fillContactForm('no_pages', [
+    const result = await harness.fillContactCreateForm('no_pages', [
       undefined,
       'chw', '123', 'full name', '1990-10-08', undefined, 'male', '555-123-4567', 'no', 'english',
       'yes', 'second', 'no', 'unknown', ['diabetes'], 'true', 'notes'
