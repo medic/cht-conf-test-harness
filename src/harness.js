@@ -696,9 +696,9 @@ const doLoadForm = async (self, page, core, xformFilePath, content, userSettings
 
   const formNameWithoutDirectory = path.basename(xformFilePath, '.xml');
   const { form: formHtml, model: formModel } = await core.convertFormXmlToXFormModel(formXmlContent);
-  const loadXformWrapper = (innerFormName, innerFormHtml, innerFormModel, innerContent, innerUserSettingsDoc, innerContactSummary) =>
-    window.loadXform(innerFormName, innerFormHtml, innerFormModel, innerContent, innerUserSettingsDoc, innerContactSummary);
-  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, formHtml, formModel, content, userSettingsDoc, contactSummaryXml);
+  const loadXformWrapper = (innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary) =>
+    window.loadXform(innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary);
+  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, formHtml, formModel, formXmlContent, content, userSettingsDoc, contactSummaryXml);
 };
 
 const serializeContactSummary = (contactSummary = {}) => {

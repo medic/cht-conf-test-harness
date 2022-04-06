@@ -13,7 +13,7 @@ const {
 } = require('@medic/enketo-form-manager');
 
 class FormWireup {
-  constructor(formHtml, formModel, userSettingsDoc) {
+  constructor(formHtml, formModel, formXml, userSettingsDoc) {
     // BREAK
     const dbService = {
       get: () => ({
@@ -23,6 +23,9 @@ class FormWireup {
           }
           if (attachment === 'model.xml') {
             return Promise.resolve(formModel);
+          }
+          if (attachment === 'form.xml') {
+            return Promise.resolve(formXml);
           }
 
           // it is probably an image
@@ -96,7 +99,7 @@ class FormWireup {
     const getReportContentService = {};
     const xmlFormsService = {
       get: () => Promise.resolve({}),
-      findXFormAttachmentName: () => 'model.xml',
+      findXFormAttachmentName: () => 'form.xml',
     };
     const transitionsService = {
       // this is some muting business
