@@ -10,14 +10,12 @@ const harness = new Harness({
   harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
   verbose: true,
   reportFormErrors: false,
-  headless: false,
 });
 
 describe('widget tests', () => {
   before(async () => { return await harness.start(); });
   after(async () => { return await harness.stop(); });
   beforeEach(async () => { return await harness.clear(); });
-  // afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
 
   describe('tel', () => {
     it('tel widget error', async () => {

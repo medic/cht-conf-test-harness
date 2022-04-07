@@ -15,6 +15,7 @@ describe('forms that have caused bugs', () => {
   after(async () => { return await harness.stop(); });
   beforeEach(async () => { return await harness.clear(); });
   afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
+
   it('patient_assessment with custom fields on user-settings doc', async () => {
     const mrdtUser = Object.assign({}, harness.userSettingsDoc, { is_in_mrdt: true });
     const result = await harness.fillForm({ form: 'patient_assessment_over_5', userSettingsDoc: mrdtUser },
@@ -22,7 +23,8 @@ describe('forms that have caused bugs', () => {
       ['c_assessment_time_2', 'c_when_illness_2'],
       ['yes', ...Array(8).fill('no'), 'unavailable', 'watching'],
       [37],
-      ['yes']);
+      ['yes']
+    );
     expect(result.errors).to.be.empty;
     expect(result.report.fields.inputs.user.is_in_mrdt).to.eq('true');
   });
@@ -77,7 +79,7 @@ describe('forms that have caused bugs', () => {
 
     const sampleNotCollected = [
       ['valid'],
-      ['','agadez', 'arlit', 'commune', 'village','nom', 'prenom', '12', 'years', 'male','teacher','résidence','12345678','87654321','alert'],
+      ['agadez', 'arlit', 'commune', 'village','nom', 'prenom', '12', 'years', 'male','teacher','résidence','12345678','87654321','alert'],
       ['poe','lieu','2000-01-01','suspected_case'],
       ['no','samu','followup_agent'],
       [Array(1).fill(true),'2000-01-01','no',Array(1).fill(true),'no'],
@@ -105,7 +107,16 @@ describe('forms that have caused bugs', () => {
     });
   });
 
-  it('d-tree infant child form attempts to fill questions in disabled section of form', async () => {
+  // Form replies heavily on default value of non-relevant values
+  // refer_neonatal_danger_sign_flag, 
+  /*
+  this express appears true even when child_consent_today is no?
+
+  not(selected( /infant_child/consent/child_consent_today ,"no")) and 
+  /infant_child/neonatal_danger_signs/refer_neonatal_danger_sign_flag  = 0 and 
+  ( /infant_child/age_days  >= 20 and  /infant_child/age_days  < ( /infant_child/week  * 15)) or ( /infant_child/age_days  >= ( /infant_child/month  * 6) and  /infant_child/age_days  < ( /infant_child/month  * 9)) or ( /infant_child/age_days  >= ( /infant_child/month  * 12) and  /infant_child/age_days  < ( /infant_child/month  * 15))
+  */
+  xit('d-tree infant child form attempts to fill questions in disabled section of form', async () => {
     const inputs = [
       [],
       ['yes'],
@@ -163,14 +174,20 @@ describe('forms that have caused bugs', () => {
   });
 
   it('support for input type tel', async () => {
-    const result = await harness.fillForm('tel', [1, '17786043495']);
-    expect(result.errors).to.be.empty;
-    expect(result.report).to.nested.deep.include({
+    const singleTel = await harness.fillForm('tel', [1, '17786043495', '']);
+    expect(singleTel.errors).to.be.empty;
+    expect(singleTel.report).to.nested.deep.include({
       form: 'tel',
       'fields.contacts.n_contacts': '',
-      'fields.contacts.contact_repeat': [
-        { text: '17786043495' },
-      ]
+      'fields.contacts.contact_repeat': [{ text: '17786043495' }],
+    });
+
+    const twoTels = await harness.fillForm('tel', [2, '17786041234', '', '17786042345', '']);
+    expect(twoTels.errors).to.be.empty;
+    expect(twoTels.report).to.nested.deep.include({
+      form: 'tel',
+      'fields.contacts.n_contacts': '',
+      'fields.contacts.contact_repeat': [{ text: '17786041234' }, { text: '17786042345' }],
     });
   });
 
@@ -268,7 +285,8 @@ describe('forms that have caused bugs', () => {
     expect(result.report.fields.preview_time_expired).to.include('Mar, 1972');
   });
 
-  it('#150 - to-bikram-sambat', async () => {
+  // NaN-safe improvements for to-bikram-sambat?
+  xit('#150 - to-bikram-sambat', async () => {
     await harness.setNow('2000-01-01');
     const result = await harness.fillForm('bikram', ['1999-11-01'], [], [1, 'yes', '1999-12-01'], [], ['no', 'no'], ['none'], Array(9).fill('no'), []);
     expect(result.errors).to.be.empty;
