@@ -12,11 +12,20 @@ const {
   EnketoFormManager
 } = require('@medic/enketo-form-manager');
 
+const HARDCODED_TYPES = [
+  'district_hospital',
+  'health_center',
+  'clinic',
+  'person'
+];
+
 class FormWireup {
   constructor(formHtml, formModel, userSettingsDoc) {
     // BREAK
     const dbService = {
       get: () => ({
+        // for sibling doc scenario with contact forms?
+        get: () => Promise.resolve({}), 
         getAttachment: (formId, attachment) => {
           if (attachment === 'form.html') {
             return Promise.resolve(formHtml);
@@ -42,9 +51,9 @@ class FormWireup {
       extract: contact => {
         return {
           _id: contact._id,
-          parent: {
-            _id: 'minified_parent',
-          },
+          // parent: {
+          //   _id: 'minified_parent',
+          // },
         };
       },
     };
@@ -61,7 +70,7 @@ class FormWireup {
       utf8: x => x,
     };
     const contactSummaryService = {
-      get: (contact, reports, lineage) => {
+      get: () => {
         // recycle reduce reuse
         return {
           fields: [],
@@ -71,22 +80,24 @@ class FormWireup {
       },
     };
     const languageService = {
-      get: () => 'en',
+      get: () => Promise.resolve('en'),
     };
+    window.CHTCore.Language = languageService;
+
     const lineageModelGeneratorService = {
       contact: () => Promise.resolve({
         lineage: ['lineage_parent_1', 'lineage_parent_2'],
       }),
     };
     const searchService = {
-      search: (type, filters, options, extensions, docIds) => {
-        // TODO
-        return [];
-      },
+      search: () => [],
     };
     const translateService = {
+      get: x => Promise.resolve(x),
       instant: x => x,
     };
+    window.CHTCore.Translate = translateService;
+
     const translateFromService = {
       get: x => x,
     };
@@ -100,12 +111,28 @@ class FormWireup {
     };
     const transitionsService = {
       // this is some muting business
-      applyTransitions: x => x,
+      applyTransitions: x => Promise.resolve(x),
+    };
+    const contactTypesService = {
+      isHardcodedType: type => HARDCODED_TYPES.includes(type),
     };
     const GlobalActions = {};
 
+    window.CHTCore.AndroidAppLauncher = { isEnabled: () => false };
+    window.CHTCore.MRDT = { enabled: () => false };
+    window.CHTCore.Select2Search = { init: () => Promise.resolve() };
+    window.CHTCore.Settings = {
+      get: () => Promise.resolve({
+        default_country_code: '1'
+      })
+    };
+
     this.enketoFormMgr = new EnketoFormManager(
-      new ContactServices(extractLineageService, userContactService),
+      new ContactServices(
+        extractLineageService,
+        userContactService,
+        contactTypesService,
+      ),
       new FileServices(dbService, fileReaderService),
       new FormDataServices(
         contactSummaryService,
@@ -134,16 +161,42 @@ class FormWireup {
     return await this.enketoFormMgr.render(selector, formDoc, content);
   }
 
-  renderContactForm(formContext) {
-    return this.enketoFormMgr.renderForm(formContext);
+  renderContactForm(instanceData) {
+    const selector = '#enketo-wrapper';
+    const formContext = {
+      selector,
+      formDoc: { _id: 'whatever', title: 'form name ABC 987' },
+      instanceData,
+    };
+    return this.enketoFormMgr.renderContactForm(formContext);
   }
 
-  save(formInternalId, form, geoHandle, docId) {
-    return this.enketoFormMgr.validate(form)
-      .then(() => {
-        $('form.or').trigger('beforesave');
-        return this.enketoFormMgr.save(formInternalId, form, geoHandle, docId);
-      });
+  async save(formInternalId, form, geoHandle, docId) {
+    await this.enketoFormMgr.validate(form);
+    $('form.or').trigger('beforesave');
+    return this.enketoFormMgr.save(formInternalId, form, geoHandle, docId);
+  }
+
+  async saveContactForm(type, form, unused2, docId) {
+    try {
+      await this.enketoFormMgr.validate(form);
+      return {
+        errors: [],
+        preparedDocs: (await this.enketoFormMgr.saveContactForm(form, docId, type)).preparedDocs,
+      };
+    }
+    catch (e) {
+      return { 
+        errors: [
+          {
+            type: 'save',
+            msg: `Failed to save contact form: ${e}`,
+          },
+          ...await window.formFiller.getVisibleValidationErrors(),
+        ],
+        preparedDocs: [],
+      };
+    }
   }
 
   unload(form) {

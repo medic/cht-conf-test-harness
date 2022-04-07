@@ -19,39 +19,25 @@ window.fakeTimers = (...args) => {
 };
 
 window.restoreTimers = () => clock && clock.uninstall();
-
-// shared-libs/enketo-form-manager/src/enketo-form-manager.js writes into this object
-window.CHTCore = {
-  Select2Search: {
-    init: () => Promise.resolve(),
-  },
-  Translate: { // TODO: Same as on interface to FormDataServices
-    get: x => Promise.resolve(x),
-    instant: x => x,
-  },
-  AndroidAppLauncher: {
-    isEnabled: () => false,
-  },
-  Language: { // TODO: Same as on interface to FormDataServices
-    get: () => Promise.resolve('en'),
-  },
-  MRDT: {
-    enabled: () => false,
-  },
-  Settings: { // TODO: Used by phone-lib
-    get: () => Promise.resolve({
-      default_country_code: '1'
-    })
-  }
-};
+window.CHTCore = {};
 
 require('../../node_modules/cht-core-4-0/webapp/src/js/enketo/main.js');
 
-/* Register a global hook so that new forms can be rendered from PhantomJs */
-window.loadXform = async (formName, formHtml, formModel, content, userSettingsDoc, contactSummary) => {
+/* Register a global hook so that new forms can be rendered from Puppeteer */
+window.loadAppForm = async (formName, formHtml, formModel, content, userSettingsDoc, contactSummary) => {
   const wireup = new FormWireup(formHtml, formModel, userSettingsDoc, contactSummary);
   const form = await wireup.render(content);
   const saveCallback = wireup.save.bind(wireup);
+  const formFiller = new FormFiller(formName, saveCallback, form, { verbose: true });
+
+  window.form = form;
+  window.formFiller = formFiller;
+};
+
+window.loadContactForm = async (formName, formHtml, formModel, content, userSettingsDoc) => {
+  const wireup = new FormWireup(formHtml, formModel, userSettingsDoc);
+  const form = await wireup.renderContactForm(content);
+  const saveCallback = wireup.saveContactForm.bind(wireup);
   const formFiller = new FormFiller(formName, saveCallback, form, { verbose: true });
 
   window.form = form;
