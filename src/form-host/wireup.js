@@ -1,8 +1,5 @@
 const $ = require('jquery');
-const { toBik_text } = require('bikram-sambat');
-const moment = require('moment');
 
-const medicXpathExtensions = require('@medic-xpath-extensions');
 const {
   ContactServices,
   FileServices,
@@ -156,9 +153,6 @@ class FormWireup {
   }
 
   async render(content) {
-    const zscoreUtil = {};
-    medicXpathExtensions.init(zscoreUtil, toBik_text, moment);
-
     const selector = '#enketo-wrapper';
     const formDoc = { _id: 'whatever', title: 'form name ABC 987' };
     return await this.enketoFormMgr.render(selector, formDoc, content);

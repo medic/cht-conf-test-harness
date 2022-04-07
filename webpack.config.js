@@ -45,10 +45,10 @@ module.exports = [
         // Once https://github.com/select2/select2/issues/5993 is resolved, we should try to coalesce back on one version
         // of jquery and remove this alias.
         'jquery': path.join(__dirname, 'node_modules/cht-core-4-0/webapp/node_modules/jquery'),
+        'moment': path.join(__dirname, 'node_modules/cht-core-4-0/webapp/node_modules/moment'),
         'select2': path.join(__dirname, 'node_modules/cht-core-4-0/webapp/node_modules/select2'),
         '@medic/enketo-form-manager': path.join(__dirname, 'node_modules/cht-core-4-0/webapp/src/js/enketo/enketo-form-manager.js'),
         '@medic/phone-number': path.join(__dirname, 'node_modules/cht-core-4-0/shared-libs/phone-number'),
-        '@medic-xpath-extensions': path.join(__dirname, 'node_modules/cht-core-4-0/', 'webapp/src/js/enketo/medic-xpath-extensions'),
       }
     },
     module: {

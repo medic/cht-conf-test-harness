@@ -2,6 +2,8 @@ const $ = require('jquery');
 require('select2');
 
 const { useFakeTimers } = require('sinon/lib/sinon/util/fake-timers');
+const { toBik_text } = require('bikram-sambat');
+const moment = require('moment');
 const FormWireup = require('./wireup');
 const FormFiller = require('./form-filler');
 
@@ -22,6 +24,8 @@ window.restoreTimers = () => clock && clock.uninstall();
 window.CHTCore = {};
 
 require('../../node_modules/cht-core-4-0/webapp/src/js/enketo/main.js');
+const xpathExtension = require('../../node_modules/cht-core-4-0/webapp/src/js/enketo/medic-xpath-extensions');
+xpathExtension.init({}, toBik_text, moment);
 
 /* Register a global hook so that new forms can be rendered from Puppeteer */
 window.loadAppForm = async (formName, formHtml, formModel, formXml, content, userSettingsDoc, contactSummary) => {
