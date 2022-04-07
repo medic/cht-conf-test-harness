@@ -29,6 +29,7 @@ ${htmlLinksToContactForms}`);
       formName,
       projectAssets[`${formType}FormHtml`][formName],
       projectAssets[`${formType}FormModel`][formName],
+      projectAssets[`${formType}FormXml`][formName],
       useContent,
       user,
       useContactSummary

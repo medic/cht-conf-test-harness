@@ -15,6 +15,7 @@ module.exports = {
     rules: [
       { test: /\.html$/i, use: 'raw-loader' },
       { test: /\.model$/i, use: 'raw-loader' },
+      { test: /\.xml$/i, use: 'raw-loader' },
     ],
   },
   mode: 'development'

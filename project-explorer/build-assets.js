@@ -102,11 +102,11 @@ if (!fs.existsSync(formPath)) {
       }
     }
 
-    return { htmlPaths, modelPaths };
+    return { htmlPaths, modelPaths, xmlPaths: formXmlFilePaths };
   };
 
-  const { htmlPaths: appFormHtmlPaths, modelPaths: appFormModelPaths } = await convertXmlToPath(appFormPaths);
-  const { htmlPaths: contactFormHtmlPaths, modelPaths: contactFormModelPaths } = await convertXmlToPath(contactFormPaths);
+  const { htmlPaths: appFormHtmlPaths, modelPaths: appFormModelPaths, xmlPaths: appFormXmlPaths } = await convertXmlToPath(appFormPaths);
+  const { htmlPaths: contactFormHtmlPaths, modelPaths: contactFormModelPaths, xmlPaths: contactFormXmlPaths } = await convertXmlToPath(contactFormPaths);
 
   const windowsEscaping = str => str.replace(/\\/g, '\\\\');
   const formsAsRequirements = (formPaths, ext) => formPaths
@@ -119,11 +119,17 @@ if (!fs.existsSync(formPath)) {
     appFormModel: {
     ${formsAsRequirements(appFormModelPaths, '.model')}
     },
+    appFormXml: {
+    ${formsAsRequirements(appFormXmlPaths, '.xml')}
+    },
     contactFormHtml: {
     ${formsAsRequirements(contactFormHtmlPaths, '.html')}
     },
     contactFormModel: {
     ${formsAsRequirements(contactFormModelPaths, '.model')}
+    },
+    contactFormXml: {
+    ${formsAsRequirements(contactFormXmlPaths, '.xml')}
     },
   };`);
   console.log(`Compiling to ${outputPath}`);
