@@ -71,6 +71,9 @@ module.exports = [
     },
     resolve: {
       alias: {
+        // inside cht-core/api/src/services/generate-xform.js
+        '../xsl/xsl-paths': path.join(__dirname, 'ext/xsl-paths.js'),
+
         '@medic/calendar-interval': path.join(__dirname, 'node_modules/cht-core-4-0/shared-libs/calendar-interval'),
         '@medic/registration-utils': path.join(__dirname, 'node_modules/cht-core-4-0/shared-libs/registration-utils'),
         '@medic/contact-types-utils': path.join(__dirname, 'node_modules/cht-core-4-0/shared-libs/contact-types-utils'),

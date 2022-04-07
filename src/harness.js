@@ -199,7 +199,7 @@ class Harness {
     const contactSummary = options.contactSummary || await this.getContactSummary(content.contact);
     const serializedContactSummary = serializeContactSummary(contactSummary);
 
-    await doLoadForm(this, this.page, this.core, xformFilePath, content, options.userSettingsDoc, serializedContactSummary);
+    await doLoadForm(this, this.page, this.core, 'app', xformFilePath, content, options.userSettingsDoc, serializedContactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
@@ -214,7 +214,7 @@ class Harness {
     const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
 
     const user = await resolveMock(this.coreAdapter, this.state, this.options.user);
-    await doLoadForm(this, this.page, this.core, xformFilePath, {}, user);
+    await doLoadForm(this, this.page, this.core, 'contact', xformFilePath, {}, user);
     this._state.pageContent = await this.page.content();
 
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
@@ -510,7 +510,9 @@ class Harness {
   get consoleErrors() {
     return this._state.console
       .filter(msg => msg.type() !== 'log')
-      .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_UNKNOWN_URL_SCHEME');
+      .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_UNKNOWN_URL_SCHEME')
+    ;
+
   }
 
   /**
@@ -686,7 +688,7 @@ const readFileSync = (...args) => {
   return fs.readFileSync(filePath).toString();
 };
 
-const doLoadForm = async (self, page, core, xformFilePath, content, userSettingsDoc, contactSummaryXml) => {
+const doLoadForm = async (self, page, core, formType, xformFilePath, content, userSettingsDoc, contactSummaryXml) => {
   self.log(`Loading form ${path.basename(xformFilePath)}...`);
   const formXmlContent = readFileSync(xformFilePath);
   if (!formXmlContent) {
@@ -696,9 +698,13 @@ const doLoadForm = async (self, page, core, xformFilePath, content, userSettings
 
   const formNameWithoutDirectory = path.basename(xformFilePath, '.xml');
   const { form: formHtml, model: formModel } = await core.convertFormXmlToXFormModel(formXmlContent);
-  const loadXformWrapper = (innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary) =>
-    window.loadXform(innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary);
-  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, formHtml, formModel, formXmlContent, content, userSettingsDoc, contactSummaryXml);
+  const loadAppFormWrapper = (innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary) =>
+    window.loadAppForm(innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary);
+  const loadContactFormWrapper = (innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc) =>
+    window.loadContactForm(innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc);
+  const toEvaluate = formType === 'contact' ? loadContactFormWrapper : loadAppFormWrapper;
+
+  await page.evaluate(toEvaluate, formNameWithoutDirectory, formHtml, formModel, formXmlContent, content, userSettingsDoc, contactSummaryXml);
 };
 
 const serializeContactSummary = (contactSummary = {}) => {

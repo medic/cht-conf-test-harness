@@ -1,8 +1,6 @@
 const _ = require('underscore');
 const $ = require('jquery');
 
-const saveContact = () => []; // require('./save-contact');
-
 class FormFiller {
   constructor(formName, saveCallback, form, options) {
     this.formName = formName;
@@ -49,47 +47,44 @@ class FormFiller {
 
   async fillContactForm(contactType, multiPageAnswer) {
     const { isComplete, errors } = await fillForm(this, multiPageAnswer);
-    const contacts = isComplete ? await saveContact(this.form, contactType, new Date() /* TODO was window.now */) : [];
+    if (!isComplete) {
+      return {
+        errors,
+        section: 'general',
+        contacts: [],
+      };
+    }
+
+    const savedContact = await this.saveCallback(
+      contactType,
+      this.form,
+      undefined,
+    );
 
     return {
-      errors,
+      errors: savedContact.errors,
       section: 'general',
-      contacts,
+      contacts: savedContact.preparedDocs,
     };
   }
 
   // Modified from enketo-core/src/js/Form.js validateContent
-  getVisibleValidationErrors() {
+  async getVisibleValidationErrors() {
     const self = this;
     const $container = self.form.view.$;
-    const validations = $container.find('.question').addBack('.question').map(() => {
-      const $elem = $(this).find('input:not(.ignore):not(:disabled), select:not(.ignore):not(:disabled), textarea:not(.ignore):not(:disabled)');
-      if ($elem.length === 0) {
-        return Promise.resolve();
-      }
-      return self.form.validateInput( $elem.eq( 0 ) );
-    }).toArray();
+    const validationErrors = $container
+      .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
+      .children('span.active:not(.question-label)')
+      .filter(function() {
+        return $(this).css('display') === 'block';
+      });
 
-    return Promise.all( validations )
-      .then(() => {
-        const validationErrors = $container
-          .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
-          .children('span.active:not(.question-label)')
-          .filter(function() {
-            return $(this).css('display') === 'block';
-          });
-
-        return Array.from(validationErrors)
-          .map(span => ({
-            type: 'validation',
-            question: span.parentElement.innerText,
-            msg: span.innerText,
-          }));
-      })
-      .catch(err => [{
-        type: 'failure to validate',
-        msg: err,
-      }]);
+    return Array.from(validationErrors)
+      .map(span => ({
+        type: 'validation',
+        question: span.parentElement.innerText,
+        msg: span.innerText,
+      }));
   }
 }
 
@@ -135,7 +130,7 @@ const fillPage = async (self, pageAnswer) => {
   const answeredQuestions = new Set();
   for (let i = 0; i < pageAnswer.length; i++) {
     const answer = pageAnswer[i];
-    const $questions = getVisibleQuestions(self);
+    const $questions = getVisibleQuestions(self.form);
     if ($questions.length <= i) {
       return {
         errors: [{
@@ -243,7 +238,10 @@ const fillQuestion = (question, answer) => {
 };
 
 const getVisibleQuestions = form => {
-  const currentPage = $(form.form.pages.current);
+  const currentPage = !form.pages.current ? 
+    // in cases where forms have a single page, the current page is undefined
+    form.view.$ :  
+    $(form.pages.current);
   
   if (!currentPage) {
     throw Error('Form has no active pages');

@@ -1,5 +1,7 @@
 const { expect } = require('chai');
+const { DateTime } = require('luxon');
 const path = require('path');
+
 const Harness = require('../src/harness');
 
 const harness = new Harness({
@@ -18,10 +20,15 @@ describe('widget tests', () => {
   // afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
 
   describe('tel', () => {
-    // not seeing any error at all showing
-    it('invalid telephone number shows error', async () => {
-      const singleTel = await harness.fillForm('tel', [1, '9873', '']);
-      expect(singleTel.errors.length).to.eq(2); // 1 general + 1 specific
+    it('tel widget error', async () => {
+      const now = DateTime.fromISO('2000-01-01');
+      await harness.setNow(now);
+      const result = await harness.fillContactForm('no_pages', [
+        'chw', '123', 'full name', '1990-10-08', undefined, 'male', '555-123-4567', 'no', 'english',
+        'yes', 'second', 'no', 'unknown', ['diabetes'], 'true', 'notes'
+      ]);
+      expect(result.errors.length).to.eq(2);
+      expect(result.errors[1].msg).to.include('valid local number');
     });
   });
 });
