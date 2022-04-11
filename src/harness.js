@@ -683,27 +683,27 @@ class Harness {
  * @param {string} action one of 'create' or 'edit'
  * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
  */
-const fillContactForm = async (harness, contactType, action, ...answers) => {
-  const xformFilePath = path.resolve(harness.options.contactXFormFolderPath, `${contactType}-${action}.xml`);
+const fillContactForm = async (self, contactType, action, ...answers) => {
+  const xformFilePath = path.resolve(self.options.contactXFormFolderPath, `${contactType}-${action}.xml`);
 
-  const user = await resolveMock(harness.coreAdapter, harness.state, harness.options.user);
-  await doLoadForm(harness, harness.page, xformFilePath, {}, user);
-  harness._state.pageContent = await harness.page.content();
+  const user = await resolveMock(self.coreAdapter, self.state, self.options.user);
+  await doLoadForm(self, self.page, xformFilePath, {}, user);
+  self._state.pageContent = await self.page.content();
 
-  harness.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-  const fillResult = await harness.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
-  harness.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
+  self.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
+  const fillResult = await self.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
+  self.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
   // https://github.com/medic/cht-conf-test-harness/issues/105
-  if (harness.subject && harness.subject.parent) {
+  if (self.subject && self.subject.parent) {
     fillResult.contacts.forEach(contact => {
       if (!contact.parent || !contact.parent._id) {
-        contact.parent = harness.subject.parent;
+        contact.parent = self.subject.parent;
       }
     });
   }
 
-  if (harness.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
+  if (self.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
     /* this.log respects verbose option, use logFormErrors here */
     console.error(`Error encountered while filling form:`, JSON.stringify(fillResult.errors, null, 2));
   }

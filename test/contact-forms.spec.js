@@ -3,6 +3,7 @@ const { DateTime } = require('luxon');
 const chaiExclude = require('chai-exclude');
 const path = require('path');
 const Harness = require('../src/harness');
+const { cloneDeep } = require('lodash');
 
 chai.use(chaiExclude);
 const { expect } = chai;
@@ -130,11 +131,11 @@ describe('contact forms', () => {
   it('create and edit household contact', async () => {
     let result = await harness.fillContactCreateForm('household_contact', ['Head', 'female', 'over5', 'no', '20', '', '', 'sister']);
     expect(result.errors).to.be.empty; // create the person
-    const contactBeforeEdit = { ...result.contacts[0] };
+    const contactBeforeEdit = cloneDeep(result.contacts[0]);
     harness.subject = result.contacts[0]; // set the person as subject
     result = await harness.fillContactEditForm('household_contact', []);
     expect(result.errors).to.be.empty;
-    Object.keys(harness.subject).forEach(key => contactBeforeEdit[key] && expect(harness.subject[key], key).to.be.eq(contactBeforeEdit[key]));
+    expect(harness.subject).excluding(['notes', 'contact_move_note']).to.deep.equal(contactBeforeEdit);
   });
 
   it('#59 - msf-goma-2 create person', async () => {
