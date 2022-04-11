@@ -217,7 +217,7 @@ class Harness {
   }
 
   /**
- * Loads and fills a contact form,
+ * Loads and fills a contact form
  *
  * @param {string} contactType Type of contact that should be created
  * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
@@ -229,7 +229,7 @@ class Harness {
   }
 
   /**
-   * Loads and fills a contact edit form,
+   * Loads and fills a contact edit form
    *
    * @param {string} contactType Type of contact that should be created
    * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.

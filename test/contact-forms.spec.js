@@ -128,7 +128,7 @@ describe('contact forms', () => {
   });
 
   it('create and edit household contact', async () => {
-    let result = await harness.fillContactCreateForm('household_contact', ...[['Head', 'female', 'over5', 'no', '20', '', '', 'sister']]);
+    let result = await harness.fillContactCreateForm('household_contact', ['Head', 'female', 'over5', 'no', '20', '', '', 'sister']);
     expect(result.errors).to.be.empty; // create the person
     const contactBeforeEdit = { ...result.contacts[0] };
     harness.subject = result.contacts[0]; // set the person as subject
