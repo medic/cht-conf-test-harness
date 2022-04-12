@@ -285,14 +285,14 @@ describe('forms that have caused bugs', () => {
     expect(result.report.fields.preview_time_expired).to.include('Mar, 1972');
   });
 
-  // NaN-safe improvements for to-bikram-sambat?
-  xit('#150 - to-bikram-sambat', async () => {
+  it('#150 - to-bikram-sambat', async () => {
     await harness.setNow('2000-01-01');
     const result = await harness.fillForm('bikram', ['1999-11-01'], [], [1, 'yes', '1999-12-01'], [], ['no', 'no'], ['none'], Array(9).fill('no'), []);
     expect(result.errors).to.be.empty;
 
     const bikramDate = await harness.page.evaluate(() => window.$$('[data-itext-id="/pregnancy/summary/r_pregnancy_details:label"]').text()); 
-    expect(bikramDate).to.include('महिनावारी भएको अन्तिम मिति : १५ à¤•à¤¾à¤°à¥');
+    expect(bikramDate).to.include('३ साउन');
+    expect(bikramDate).to.include('१५ कार्तिक २०५६');
   });
 
   it('explicit set of contact-summary context', async () => {

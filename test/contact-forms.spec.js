@@ -118,11 +118,11 @@ describe('contact forms', () => {
     expect(harness.state.contacts).to.deep.include(result.contacts[1]);
   });
 
-  // Inputs without a "name" cause a crash
-  xit('#59 - msf-goma create person', async () => {
+  // previously had 'patient' but now it is selected by default and it is getting unselected
+  it('#59 - msf-goma create person', async () => {
     const result = await harness.fillContactForm('goma-person', [
-      'PARENT', 'patient', '123', 'Full Name', '1990-10-08', 'male',
-      '555-123-4567', 'false', 'eng', 'yes', 'second', 'no', 'unknown',
+      '', '123', 'Full Name', '1990-10-08', 'male',
+      '+1-604-315-4567', 'false', 'eng', 'yes', 'second', 'no', 'unknown',
       ['diabetes'], '', 'notes'
     ]);
 

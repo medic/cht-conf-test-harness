@@ -226,12 +226,12 @@ describe('Harness tests', () => {
         patient_id: 'patient_id',
         s_pnc_visits: {
           s_pnc_visit: 'no',
-          s_pnc_planned_date_show: 'Invalid Date',
-          s_pnc_date_show: 'Invalid Date',
+          s_pnc_planned_date_show: '',
+          s_pnc_date_show: '',
         },
         next_pnc: {
           s_next_pnc: 'no',
-          next_pnc_date: 'Invalid Date',
+          next_pnc_date: '',
         },
         summary:
         {
