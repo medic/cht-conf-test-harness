@@ -104,7 +104,7 @@ class Harness {
     this.options = _.defaults(
       this.options,
       _.pick(fileBasedDefaults, 'coreVersion'),
-      { coreVersion: availableCoreVersions[availableCoreVersions.length-1] },
+      { coreVersion: availableCoreVersions[availableCoreVersions.length - 1] },
     );
 
     this.core = ChtCoreFactory.get(this.options.coreVersion);
@@ -205,37 +205,41 @@ class Harness {
   }
 
   /**
+   * @deprecated since version 2.4.1, use {@link fillContactCreateForm} instead
+   * 
    * Loads and fills a contact form,
    *
    * @param {string} contactType Type of contact that should be created
    * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
    */
   async fillContactForm(contactType, ...answers) {
-    const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-create.xml`);
+    return this.fillContactCreateForm(contactType, ...answers);
+  }
 
-    const user = await resolveMock(this.coreAdapter, this.state, this.options.user);
-    await doLoadForm(this, this.page, xformFilePath, {}, user);
-    this._state.pageContent = await this.page.content();
-
-    this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-    const fillResult = await this.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
-    this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
-
-    // https://github.com/medic/cht-conf-test-harness/issues/105
-    if (this.subject && this.subject.parent) {
-      fillResult.contacts.forEach(contact => {
-        if (!contact.parent || !contact.parent._id) {
-          contact.parent = this.subject.parent;
-        }
-      });
-    }
-
-    if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
-      /* this.log respects verbose option, use logFormErrors here */
-      console.error(`Error encountered while filling form:`, JSON.stringify(fillResult.errors, null, 2));
-    }
-
+  /**
+ * Loads and fills a contact form
+ *
+ * @param {string} contactType Type of contact that should be created
+ * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
+ */
+  async fillContactCreateForm(contactType, ...answers) {
+    const fillResult = await fillContactForm(this, contactType, 'create', ...answers);
     this.pushMockedDoc(...fillResult.contacts);
+    return fillResult;
+  }
+
+  /**
+   * Loads and fills a contact edit form
+   *
+   * @param {string} contactType Type of contact that should be created
+   * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
+   */
+  async fillContactEditForm(contactType, ...answers) {
+    const fillResult = await fillContactForm(this, contactType, 'edit', ...answers);
+    const keepValueIfEmpty = (objValue, srcValue, key) => {
+      return key === '_id' || _.isEmpty(srcValue) ? objValue : srcValue;
+    };
+    _.assignInWith(this.subject, fillResult.contacts[0], keepValueIfEmpty);
     return fillResult;
   }
 
@@ -561,7 +565,7 @@ class Harness {
     if (this.options.userSettingsDoc) {
       return this.options.userSettingsDoc;
     }
-  
+
     const user = this.user;
     if (!user) {
       return undefined;
@@ -672,6 +676,40 @@ class Harness {
   }
 }
 
+/**
+ * Loads and fills a contact form with the appropriate action
+ *
+ * @param {string} contactType Type of contact that should be created
+ * @param {string} action one of 'create' or 'edit'
+ * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
+ */
+const fillContactForm = async (self, contactType, action, ...answers) => {
+  const xformFilePath = path.resolve(self.options.contactXFormFolderPath, `${contactType}-${action}.xml`);
+
+  const user = await resolveMock(self.coreAdapter, self.state, self.options.user);
+  await doLoadForm(self, self.page, xformFilePath, {}, user);
+  self._state.pageContent = await self.page.content();
+
+  self.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
+  const fillResult = await self.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
+  self.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
+
+  // https://github.com/medic/cht-conf-test-harness/issues/105
+  if (self.subject && self.subject.parent) {
+    fillResult.contacts.forEach(contact => {
+      if (!contact.parent || !contact.parent._id) {
+        contact.parent = self.subject.parent;
+      }
+    });
+  }
+
+  if (self.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
+    /* this.log respects verbose option, use logFormErrors here */
+    console.error(`Error encountered while filling form:`, JSON.stringify(fillResult.errors, null, 2));
+  }
+  return fillResult;
+};
+
 const loadJsonFromFile = filePath => {
   const content = readFileSync(filePath);
   return content && JSON.parse(content);
@@ -727,7 +765,7 @@ const clearSync = (self) => {
     contacts,
     reports: [],
   };
-  self.onConsole = () => {};
+  self.onConsole = () => { };
   self._now = undefined;
 
   sinon.restore();
