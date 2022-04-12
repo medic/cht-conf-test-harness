@@ -294,4 +294,15 @@ describe('forms that have caused bugs', () => {
     const bikramDate = await harness.page.evaluate(() => window.$$('[data-itext-id="/pregnancy/summary/r_pregnancy_details:label"]').text()); 
     expect(bikramDate).to.include('महिनावारी भएको अन्तिम मिति : १५ à¤•à¤¾à¤°à¥');
   });
+
+  it('explicit set of contact-summary context', async () => {
+    const result = await harness.fillForm({
+      form: 'instance-contact-summary',
+      contactSummary: {
+        context: { data: 'override' }
+      },
+    }, []);
+    expect(result.errors).to.be.empty;
+    expect(result.report.fields.data_from_cs).to.eq('override');
+  });
 });

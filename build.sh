@@ -18,7 +18,7 @@ dirs=($(find node_modules/cht-* -maxdepth 0 -type d))
 for dir in "${dirs[@]}"; do
   (cd "$dir"/webapp && npm ci --production)
   (cd "$dir"/api && npm ci --production)
-  (cd "$dir"/shared-libs/rules-engine && npm ci --production)
+  (cd "$dir"/shared-libs/rules-engine && npm ci)
   (cd "$dir"/shared-libs/phone-number && npm ci --production)
 
   # patch the daterangepicker for responsiveness

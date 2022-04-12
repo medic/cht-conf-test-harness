@@ -17,7 +17,7 @@ const HARDCODED_TYPES = [
 ];
 
 class FormWireup {
-  constructor(formHtml, formModel, formXml, userSettingsDoc) {
+  constructor(formHtml, formModel, formXml, userSettingsDoc, contactSummary) {
     // BREAK
     const dbService = {
       get: () => ({
@@ -70,14 +70,8 @@ class FormWireup {
       utf8: x => x,
     };
     const contactSummaryService = {
-      get: () => {
-        // recycle reduce reuse
-        return {
-          fields: [],
-          cards: [],
-          context: { foo: 'bar' },
-        };
-      },
+      get: () => contactSummary,
+      
     };
     const languageService = {
       get: () => Promise.resolve('en'),

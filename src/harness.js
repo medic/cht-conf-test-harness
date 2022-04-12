@@ -197,9 +197,8 @@ class Harness {
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
     const content = await resolveContent(this.coreAdapter, this.state, options.content, options.subject);
     const contactSummary = options.contactSummary || await this.getContactSummary(content.contact);
-    const serializedContactSummary = serializeContactSummary(contactSummary);
 
-    await doLoadForm(this, this.page, this.core, 'app', xformFilePath, content, options.userSettingsDoc, serializedContactSummary);
+    await doLoadForm(this, this.page, this.core, 'app', xformFilePath, content, options.userSettingsDoc, contactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
@@ -710,23 +709,6 @@ const doLoadForm = async (self, page, core, formType, xformFilePath, content, us
   const toEvaluate = formType === 'contact' ? loadContactFormWrapper : loadAppFormWrapper;
 
   await page.evaluate(toEvaluate, formNameWithoutDirectory, formHtml, formModel, formXmlContent, content, userSettingsDoc, contactSummaryXml);
-};
-
-const serializeContactSummary = (contactSummary = {}) => {
-  if (typeof contactSummary !== 'object') {
-    throw Error('Invalid contactSummary. Object is expected');
-  }
-
-  if (contactSummary.xmlStr) {
-    return contactSummary;
-  }
-
-  const serialize = cs => ({ id: 'contact-summary', xmlStr: jsonToXml(cs) });
-  if (contactSummary.context) {
-    return serialize({ context: contactSummary.context });
-  }
-
-  return serialize({ context: contactSummary });
 };
 
 const clearSync = (self) => {
