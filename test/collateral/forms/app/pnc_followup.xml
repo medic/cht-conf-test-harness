@@ -594,7 +594,7 @@
       <bind nodeset="/pnc_followup/inputs" relevant="./source = 'user'"/>
       <bind nodeset="/pnc_followup/inputs/source" type="string"/>
       <bind nodeset="/pnc_followup/inputs/source_id" type="string"/>
-      <bind constraint="true()" jr:constraintMsg="jr:itext('/pnc_followup/inputs/contact/_id:jr:constraintMsg')" nodeset="/pnc_followup/inputs/contact/_id" type="db:person"/>
+      <bind constraint=" /pnc_followup/patient_age_in_years  &lt; 5" jr:constraintMsg="jr:itext('/pnc_followup/inputs/contact/_id:jr:constraintMsg')" nodeset="/pnc_followup/inputs/contact/_id" type="db:person"/>
       <bind nodeset="/pnc_followup/inputs/contact/name" type="string"/>
       <bind nodeset="/pnc_followup/inputs/contact/date_of_birth" type="string"/>
       <bind nodeset="/pnc_followup/inputs/contact/sex" type="string"/>

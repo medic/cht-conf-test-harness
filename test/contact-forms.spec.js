@@ -118,7 +118,7 @@ describe('contact forms', () => {
     expect(harness.state.contacts).to.deep.include(result.contacts[1]);
   });
 
-  // previously had 'patient' but now it is selected by default and it is getting unselected
+  // TODO: previously had 'patient' but now it is selected by default and it is getting unselected
   it('#59 - msf-goma create person', async () => {
     const result = await harness.fillContactForm('goma-person', [
       '', '123', 'Full Name', '1990-10-08', 'male',
