@@ -1,7 +1,6 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
-const jsonToXml = require('pojo2xml');
 const process = require('process');
 const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');

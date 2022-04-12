@@ -16,7 +16,6 @@
     "luxon": "^1.27.0",
     "md5": "^2.3.0",
     "nools": "^0.4.4",
-    "pojo2xml": "^1.7.2",
     "pouchdb": "^7.2.2",
     "pouchdb-adapter-memory": "^7.2.2",
     "puppeteer-chromium-resolver": "^10.0.0",

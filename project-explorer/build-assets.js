@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const Harness = require('..');
-const jsonToXml = require('pojo2xml');
 
 const usage = `Usage: build-assets --path=[DIRECTORY]
 
@@ -43,11 +42,8 @@ if (!fs.existsSync(formPath)) {
   console.log(`Writing ${harnessDefaultDestinationPath}`);
   const fileContent = JSON.stringify({
     user: harness.user,
-    content: harness.content,
-    contactSummary: {
-      id: 'contact-summary',
-      xmlStr: jsonToXml({ context: (await harness.getContactSummary()).context }),
-    },
+    content: Object.assign(harness.content, { contact: harness.patient }),
+    contactSummary: await harness.getContactSummary(),
   }, null, 2);
   fs.writeFileSync(harnessDefaultDestinationPath, fileContent);
 
