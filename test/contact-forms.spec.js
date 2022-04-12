@@ -154,7 +154,6 @@ describe('contact forms', () => {
     const now = DateTime.fromISO('2000-01-01');
     await harness.setNow(now);
     const result = await harness.fillContactCreateForm('no_pages', [
-      undefined,
       'chw', '123', 'full name', '1990-10-08', undefined, 'male', '778-318-4567', 'no', 'english',
       'yes', 'second', 'no', 'unknown', ['diabetes'], 'true', 'notes'
     ]);
