@@ -197,7 +197,8 @@ class Harness {
     const content = await resolveContent(this.coreAdapter, this.state, options.content, options.subject);
     const contactSummary = options.contactSummary || await this.getContactSummary(content.contact);
 
-    await doLoadForm(this, this.page, this.core, 'app', xformFilePath, content, options.userSettingsDoc, contactSummary);
+    const formNameWithoutDirectory = path.basename(xformFilePath, '.xml');
+    await doLoadForm(this, this.page, this.core, formNameWithoutDirectory, 'app', xformFilePath, content, options.userSettingsDoc, contactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
@@ -304,7 +305,7 @@ class Harness {
     }
 
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-    const fillResult = await this.page.evaluate(async innerAnswer => await window.formFiller.fillAppForm(innerAnswer), answers);
+    const fillResult = await this.page.evaluate(async innerAnswer => await window.fillAndSave(innerAnswer), answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
     if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
@@ -692,11 +693,11 @@ const fillContactForm = async (self, contactType, action, ...answers) => {
   const xformFilePath = path.resolve(self.options.contactXFormFolderPath, `${contactType}-${action}.xml`);
 
   const user = await resolveMock(self.coreAdapter, self.state, self.options.user);
-  await doLoadForm(self, self.page, self.core, 'contact', xformFilePath, {}, user);
+  await doLoadForm(self, self.page, self.core, contactType, 'contact', xformFilePath, {}, user);
   self._state.pageContent = await self.page.content();
 
   self.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-  const fillResult = await self.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
+  const fillResult = await self.page.evaluate(async innerAnswer => await window.fillAndSave(innerAnswer), answers);
   self.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
   // https://github.com/medic/cht-conf-test-harness/issues/105
@@ -729,7 +730,7 @@ const readFileSync = (...args) => {
   return fs.readFileSync(filePath).toString();
 };
 
-const doLoadForm = async (self, page, core, formType, xformFilePath, content, userSettingsDoc, contactSummaryXml) => {
+const doLoadForm = async (self, page, core, formName, formType, xformFilePath, content, userSettingsDoc, contactSummaryXml) => {
   self.log(`Loading form ${path.basename(xformFilePath)}...`);
   const formXmlContent = readFileSync(xformFilePath);
   if (!formXmlContent) {
@@ -737,15 +738,11 @@ const doLoadForm = async (self, page, core, formType, xformFilePath, content, us
   }
   self.onConsole = msg => self._state.console.push(msg);
 
-  const formNameWithoutDirectory = path.basename(xformFilePath, '.xml');
   const { form: formHtml, model: formModel } = await core.convertFormXmlToXFormModel(formXmlContent);
-  const loadAppFormWrapper = (innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary) =>
-    window.loadAppForm(innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary);
-  const loadContactFormWrapper = (innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc) =>
-    window.loadContactForm(innerFormName, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc);
-  const toEvaluate = formType === 'contact' ? loadContactFormWrapper : loadAppFormWrapper;
+  const loadFormWrapper = (innerFormName, innerFormType, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary) =>
+    window.loadForm(innerFormName, innerFormType, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary);
 
-  await page.evaluate(toEvaluate, formNameWithoutDirectory, formHtml, formModel, formXmlContent, content, userSettingsDoc, contactSummaryXml);
+  await page.evaluate(loadFormWrapper, formName, formType, formHtml, formModel, formXmlContent, content, userSettingsDoc, contactSummaryXml);
 };
 
 const clearSync = (self) => {

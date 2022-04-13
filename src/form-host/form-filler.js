@@ -2,9 +2,7 @@ const _ = require('lodash');
 const $ = require('jquery');
 
 class FormFiller {
-  constructor(formName, saveCallback, form, options) {
-    this.formName = formName;
-    this.saveCallback = saveCallback;
+  constructor(form, options) {
     this.form = form;
     this.options = _.defaults(options, {
       verbose: true,
@@ -28,44 +26,9 @@ class FormFiller {
    * @property {string} msg Description of the error
    */
 
-  async fillAppForm(multiPageAnswer) {
+  async fillForm(multiPageAnswer) {
     const { isComplete, errors } = await fillForm(this, multiPageAnswer);
-    const resultingDocs = isComplete ? await this.saveCallback(
-      this.formName,
-      this.form,
-      undefined, // geoHandle
-    ) : [];
-    const [report, ...additionalDocs] = resultingDocs;
-
-    return {
-      errors,
-      section: 'general',
-      report,
-      additionalDocs,
-    };
-  }
-
-  async fillContactForm(contactType, multiPageAnswer) {
-    const { isComplete, errors } = await fillForm(this, multiPageAnswer);
-    if (!isComplete) {
-      return {
-        errors,
-        section: 'general',
-        contacts: [],
-      };
-    }
-
-    const savedContact = await this.saveCallback(
-      contactType,
-      this.form,
-      undefined,
-    );
-
-    return {
-      errors: savedContact.errors,
-      section: 'general',
-      contacts: savedContact.preparedDocs,
-    };
+    return { isComplete, errors };
   }
 
   // Modified from enketo-core/src/js/Form.js validateContent

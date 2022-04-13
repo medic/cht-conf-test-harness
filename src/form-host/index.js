@@ -1,49 +1,54 @@
-const $ = require('jquery');
-require('select2');
+require('./cht-environment');
 
-const { useFakeTimers } = require('sinon/lib/sinon/util/fake-timers');
-const { toBik_text } = require('bikram-sambat');
-const moment = require('moment');
-const FormWireup = require('./wireup');
+const FormWireupApp = require('./form-host-app');
+const FormWireupContact = require('./form-host-contact');
 const FormFiller = require('./form-filler');
 
-window.$$ = $;
-
-// webapp/node_modules/bootstrap/js/dropdown.js expects this declared globally
-window.jQuery = $;
-// webapp/src/js/enketo/main.js expects this for datepicker
-window.$ = $;
-
-let clock;
-window.fakeTimers = (...args) => {
-  window.restoreTimers();
-  clock = useFakeTimers(...args);
+/* Register global hook so new forms can be rendered from Puppeteer */
+window.loadForm = (formName, formType, formHtml, formModel, formXml, content, userSettingsDoc, contactSummary) => {
+  const wireupType = formType === 'contact' ? FormWireupContact : FormWireupApp;
+  return loadForm(wireupType, formName, formHtml, formModel, formXml, content, userSettingsDoc, contactSummary);
 };
 
-window.restoreTimers = () => clock && clock.uninstall();
-window.CHTCore = {};
-
-require('../../node_modules/cht-core-4-0/webapp/src/js/enketo/main.js');
-const xpathExtension = require('../../node_modules/cht-core-4-0/webapp/src/js/enketo/medic-xpath-extensions');
-xpathExtension.init({}, toBik_text, moment);
-
-/* Register a global hook so that new forms can be rendered from Puppeteer */
-window.loadAppForm = async (formName, formHtml, formModel, formXml, content, userSettingsDoc, contactSummary) => {
+const loadForm = async (FormWireup, formName, formHtml, formModel, formXml, content, userSettingsDoc, contactSummary) => {
   const wireup = new FormWireup(formHtml, formModel, formXml, userSettingsDoc, contactSummary);
   const form = await wireup.render(content);
-  const saveCallback = wireup.save.bind(wireup);
-  const formFiller = new FormFiller(formName, saveCallback, form, { verbose: true });
+  const formFiller = new FormFiller(form, { verbose: true });
 
   window.form = form;
   window.formFiller = formFiller;
-};
 
-window.loadContactForm = async (formName, formHtml, formModel, formXml, content, userSettingsDoc) => {
-  const wireup = new FormWireup(formHtml, formModel, formXml, userSettingsDoc);
-  const form = await wireup.renderContactForm(content);
-  const saveCallback = wireup.saveContactForm.bind(wireup);
-  const formFiller = new FormFiller(formName, saveCallback, form, { verbose: true });
+  const untransformedFillAndSave = async (multipageAnswer) => {
+    const { isComplete, errors } = await formFiller.fillForm(multipageAnswer);
+    if (!isComplete) {
+      return {
+        errors,
+        section: 'general',
+        result: [],
+      };
+    }
 
-  window.form = form;
-  window.formFiller = formFiller;
+    try {
+      return {
+        errors: [],
+        section: 'general',
+        result: await wireup.save(formName, form),
+      };
+    }
+    catch (e) {
+      return { 
+        errors: [
+          {
+            type: 'save',
+            msg: `Failed to save app form: ${e}`,
+          },
+          ...await formFiller.getVisibleValidationErrors(),
+        ],
+        section: 'general',
+        result: [],
+      };
+    }
+  };
+
+  window.fillAndSave = async multipageAnswer => wireup.transformResult(await untransformedFillAndSave(multipageAnswer));
 };
