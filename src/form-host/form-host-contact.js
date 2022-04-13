@@ -9,7 +9,7 @@ class ContactFormWireup {
     const selector = '#enketo-wrapper';
     const formContext = {
       selector,
-      formDoc: { _id: 'whatever', title: 'form name ABC 987' },
+      formDoc: { _id: 'contact-form', title: 'cht-conf-test-harness Contact Form' },
       instanceData: content,
     };
     return this.enketoFormMgr.renderContactForm(formContext);

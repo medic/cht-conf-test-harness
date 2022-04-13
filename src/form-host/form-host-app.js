@@ -8,7 +8,7 @@ class AppFormWireup {
 
   render(content) {
     const selector = '#enketo-wrapper';
-    const formDoc = { _id: 'whatever', title: 'form name ABC 987' };
+    const formDoc = { _id: 'app-form', title: 'cht-conf-test-harness Application Form' };
     return this.enketoFormMgr.render(selector, formDoc, content);
   }
 
