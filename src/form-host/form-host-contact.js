@@ -1,4 +1,3 @@
-const $ = require('jquery');
 const createFormManager = require('./create-enketo-form-manager');
 
 class ContactFormWireup {
@@ -22,7 +21,9 @@ class ContactFormWireup {
   }
 
   transformResult(resultObj) {
-    if (!resultObj) return resultObj;
+    if (!resultObj) {
+      return resultObj;
+    }
     
     return {
       errors: resultObj.errors,

@@ -19,7 +19,9 @@ class AppFormWireup {
   }
 
   transformResult(resultObj) {
-    if (!resultObj) return resultObj;
+    if (!resultObj) {
+      return resultObj;
+    }
 
     const [report, ...additionalDocs] = resultObj.result;
     return {
