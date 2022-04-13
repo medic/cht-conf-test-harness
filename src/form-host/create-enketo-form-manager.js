@@ -5,7 +5,7 @@ const {
   TranslationServices,
   XmlServices,
   EnketoFormManager
-} = require('@medic/enketo-form-manager');
+} = require('@cht-core/webapp/src/js/enketo/enketo-form-manager');
 
 const HARDCODED_TYPES = [
   'district_hospital',

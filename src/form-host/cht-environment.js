@@ -9,6 +9,8 @@ require('select2');
 window.jQuery = $;
 // webapp/src/js/enketo/main.js expects this for datepicker
 window.$ = $;
+// backward compatibility with harness v2
+window.$$ = $;
 
 let clock;
 window.fakeTimers = (...args) => {
@@ -19,6 +21,6 @@ window.restoreTimers = () => clock && clock.uninstall();
 
 window.CHTCore = {};
 
-require('../../node_modules/cht-core-4-0/webapp/src/js/enketo/main.js');
-const xpathExtension = require('../../node_modules/cht-core-4-0/webapp/src/js/enketo/medic-xpath-extensions');
+require('@cht-core/webapp/src/js/enketo/main.js');
+const xpathExtension = require('@cht-core/webapp/src/js/enketo/medic-xpath-extensions');
 xpathExtension.init({}, toBik_text, moment);

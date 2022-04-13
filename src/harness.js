@@ -139,7 +139,8 @@ class Harness {
       }
     });
 
-    await this.page.goto(`file://${pathToHost}`);
+    const formHostVersion = this.coreVersion.replace('.', '-');
+    await this.page.goto(`file://${pathToHost}?core=${formHostVersion}`);
     await this.page.waitForSelector('#enketo-wrapper');
 
     if (this._now) {

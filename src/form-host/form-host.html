@@ -4,7 +4,17 @@
   <title>xForm Test Host</title>
   <link rel="stylesheet" type="text/css" href="../../dist/styles.css" />
   <style>body { overflow-y: auto; }</style>
-  <script charset="UTF-8" src="../../dist/form-host.dev.js"></script>
+  <script>
+    const params = new URL(window.location).searchParams;
+    const coreVersion = params.get('core') || '4-0';
+
+    const script = document.createElement('script');
+    script.src = `../../dist/form-host-cht-core-${coreVersion}.dev.js`;
+    script.type = 'text/javascript';
+    script.charset = 'UTF-8';
+
+    document.head.appendChild(script);
+  </script>
 </head>
 
 <body>
