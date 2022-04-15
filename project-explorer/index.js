@@ -24,9 +24,9 @@ ${htmlLinksToContactForms}`);
 
     const useContent = formType === 'contact' ? {} : content;
     const useContactSummary = formType === 'contact' ? undefined : contactSummary;
-    const loadFunction = formType === 'contact' ? window.loadContactForm : window.loadAppForm;
-    const doLoad = () => loadFunction(
+    const doLoad = () => window.loadForm(
       formName,
+      formType,
       projectAssets[`${formType}FormHtml`][formName],
       projectAssets[`${formType}FormModel`][formName],
       projectAssets[`${formType}FormXml`][formName],
