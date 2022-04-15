@@ -51,4 +51,5 @@ const loadForm = async (FormWireup, formName, formHtml, formModel, formXml, cont
   };
 
   window.fillAndSave = async multipageAnswer => wireup.transformResult(await untransformedFillAndSave(multipageAnswer));
+  window.unload = () => wireup.unload(form);
 };
