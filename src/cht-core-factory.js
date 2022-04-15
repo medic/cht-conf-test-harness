@@ -21,6 +21,7 @@ const get = version => {
     throw Error(`cht-core version ${versionKey} is not supported by cht-conf-test-harness. Supported versions are: ${availableCoreVersions}`);
   }
 
+  result.version = versionKey;
   return result;
 };
 

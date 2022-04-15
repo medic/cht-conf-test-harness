@@ -139,7 +139,7 @@ class Harness {
       }
     });
 
-    const formHostVersion = this.coreVersion.replace('.', '-');
+    const formHostVersion = this.core.version.replace('.', '-');
     await this.page.goto(`file://${pathToHost}?core=${formHostVersion}`);
     await this.page.waitForSelector('#enketo-wrapper');
 
@@ -168,7 +168,10 @@ class Harness {
    */
   async clear() {
     clearSync(this);
-    return this.page && await this.page.evaluate(() => window.restoreTimers());
+    return this.page && await this.page.evaluate(() => Promise.all([
+      window.restoreTimers(),
+      window.unload && window.unload(),
+    ]));
   }
 
   /**
