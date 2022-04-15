@@ -162,11 +162,17 @@ const fillQuestion = (question, answer) => {
     $question.find(`input[value="${answer}"]`).click();
     break;
   case 'date':
-  case 'text':
   case 'tel':
   case 'time':
   case 'number':
     allInputs.val(answer).trigger('change');
+    break;
+  case 'text':
+    if (allInputs.parent().hasClass('date')) {
+      allInputs.first().datepicker('setDate', answer);
+    } else {
+      allInputs.val(answer).trigger('change');
+    }
     break;
   case 'checkbox': {
     /*
@@ -221,12 +227,13 @@ const getVisibleQuestions = form => {
         fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label,#or-calculated-items),
         label:not(.disabled,.readonly,.or-appearance-hidden),
         div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count]),
-        i
+        i,
+        b
       `));
 
     const result = [];
     for (const child of inquisitiveChildren) {
-      const questions = ['section', 'i'].includes(child.localName) ? findQuestionsInSection(child) : [child];
+      const questions = ['section', 'i', 'b'].includes(child.localName) ? findQuestionsInSection(child) : [child];
       result.push(...questions);
     }
 
