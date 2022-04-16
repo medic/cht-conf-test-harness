@@ -30,9 +30,8 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
           return Promise.resolve(formXml);
         }
 
-        // it is probably an image
-        return Promise.resolve({});
-        // return Promise.resolve('data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==');
+        // assume media attachment
+        return Promise.resolve(new Blob());
       },
       bulkDocs: () => Promise.resolve([]),
 

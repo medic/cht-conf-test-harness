@@ -168,10 +168,7 @@ class Harness {
    */
   async clear() {
     clearSync(this);
-    return this.page && await this.page.evaluate(() => Promise.all([
-      window.restoreTimers(),
-      window.unload && window.unload(),
-    ]));
+    return this.page && await this.page.evaluate(() => window.restoreTimers());
   }
 
   /**
@@ -735,6 +732,8 @@ const readFileSync = (...args) => {
 };
 
 const doLoadForm = async (self, page, core, formName, formType, xformFilePath, content, userSettingsDoc, contactSummaryXml) => {
+  await page.evaluate(() => window.unload && window.unload());
+
   self.log(`Loading form ${path.basename(xformFilePath)}...`);
   const formXmlContent = readFileSync(xformFilePath);
   if (!formXmlContent) {
