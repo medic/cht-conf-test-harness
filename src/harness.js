@@ -168,7 +168,12 @@ class Harness {
    */
   async clear() {
     clearSync(this);
-    return this.page && await this.page.evaluate(() => window.restoreTimers());
+    if(!this.page) {
+      return Promise.resolve();
+    }
+
+    await this.page.reload();
+    return await this.page.evaluate(() => window.restoreTimers());
   }
 
   /**
