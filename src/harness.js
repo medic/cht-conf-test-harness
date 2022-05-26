@@ -205,6 +205,22 @@ class Harness {
   }
 
   /**
+   * Loads a contact form with the appropriate action
+   *
+   * @param {string} contactType type of contact
+   * @param {string} action one of 'create' or 'edit'
+   * @deprecated Use {@link fillContactCreateForm} or {@link fillContactEditForm}
+   */
+  async loadContactForm(contactType, action) {
+    const xformFilePath = path.resolve(this.options.contactXFormFolderPath, `${contactType}-${action}.xml`);
+
+    const user = await resolveMock(this.coreAdapter, this.state, this.options.user);
+    await doLoadForm(this, this.page, this.core, contactType, 'contact', xformFilePath, {}, user);
+    this._state.pageContent = await this.page.content();
+    return this._state;
+  }
+
+  /**
    * @deprecated since version 2.4.1, use {@link fillContactCreateForm} instead
    * 
    * Loads and fills a contact form,
@@ -691,11 +707,7 @@ class Harness {
  * @param  {...string[]} answers Provide an array for the answers given on each page. See fillForm for more details.
  */
 const fillContactForm = async (self, contactType, action, ...answers) => {
-  const xformFilePath = path.resolve(self.options.contactXFormFolderPath, `${contactType}-${action}.xml`);
-
-  const user = await resolveMock(self.coreAdapter, self.state, self.options.user);
-  await doLoadForm(self, self.page, self.core, contactType, 'contact', xformFilePath, {}, user);
-  self._state.pageContent = await self.page.content();
+  await self.loadContactForm(contactType, action);
 
   self.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
   const fillResult = await self.page.evaluate(async innerAnswer => await window.fillAndSave(innerAnswer), answers);
