@@ -46,7 +46,7 @@ module.exports = JSON.parse('[{"_id":"_design/medic-client","validate_doc_update
 const path = __webpack_require__(/*! path */ "path");
 
 module.exports = {
-  FORM_STYLESHEET: path.join(__dirname, './openrosa2html5form.xsl'),
+  FORM_STYLESHEET: path.join(__dirname, './chtopenrosa2html5form.xsl'),
   MODEL_STYLESHEET: path.join(__dirname, './openrosa2xmlmodel.xsl'),
 };
 

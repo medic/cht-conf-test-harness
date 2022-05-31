@@ -97,8 +97,9 @@ module.exports = [
     plugins: [
       new CopyPlugin({
         patterns: [
-          { from: './node_modules/cht-core-4-0/api/src/xsl/openrosa2html5form.xsl', to: 'openrosa2html5form.xsl' },
+          { from: './ext/chtopenrosa2html5form.xsl', to: 'chtopenrosa2html5form.xsl' },
           { from: './node_modules/cht-core-4-0/api/node_modules/enketo-transformer/src/xsl/openrosa2xmlmodel.xsl', to: 'openrosa2xmlmodel.xsl' },
+          { from: './node_modules/cht-core-4-0/api/node_modules/enketo-transformer/src/xsl/openrosa2html5form.xsl', to: 'openrosa2html5form.xsl' },
         ],
       }),
     ],
