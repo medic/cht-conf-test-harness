@@ -1,3 +1,4 @@
+const CopyPlugin = require('copy-webpack-plugin');
 const fs = require('fs');
 const path = require('path');
 
@@ -92,6 +93,14 @@ module.exports = [
     },
     target: 'node',
     mode: 'development',
-    devtool: 'source-map'
+    devtool: 'source-map',
+    plugins: [
+      new CopyPlugin({
+        patterns: [
+          { from: './node_modules/cht-core-4-0/api/src/xsl/openrosa2html5form.xsl', to: 'openrosa2html5form.xsl' },
+          { from: './node_modules/cht-core-4-0/api/node_modules/enketo-transformer/src/xsl/openrosa2xmlmodel.xsl', to: 'openrosa2xmlmodel.xsl' },
+        ],
+      }),
+    ],
   }
 ];
