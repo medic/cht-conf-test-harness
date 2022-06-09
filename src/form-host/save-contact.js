@@ -2,7 +2,7 @@
 This code is a slightly altered fork of https://github.com/medic/cht-core/blob/3.8.x/webapp/src/js/services/contact-save.js
 */
 const _ = require('lodash/core');
-const uuidV4 = require('uuid/v4');
+const uuidV4 = require('uuid').v4;
 
 const { contactRecordToJs } = require('./enketo-translation');
 

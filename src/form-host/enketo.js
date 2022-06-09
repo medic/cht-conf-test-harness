@@ -2,7 +2,7 @@
 This code is a slightly altered fork of https://github.com/medic/cht-core/blob/3.8.x/webapp/src/js/services/enketo.js
 */
 const $ = require('jquery');
-const uuid = require('uuid/v4');
+const uuid = require('uuid').v4;
 
 const { reportRecordToJs } = require('./enketo-translation');
 

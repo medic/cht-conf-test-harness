@@ -64,15 +64,15 @@ class FormFiller {
       if ($elem.length === 0) {
         return Promise.resolve();
       }
-      return self.form.validateInput( $elem.eq( 0 ) );
+      return self.form.validateInput($elem.eq(0));
     }).toArray();
 
-    return Promise.all( validations )
+    return Promise.all(validations)
       .then(() => {
         const validationErrors = $container
           .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
           .children('span.active:not(.question-label)')
-          .filter(function() {
+          .filter(function () {
             return $(this).css('display') === 'block';
           });
 
@@ -155,7 +155,7 @@ const fillPage = async (self, pageAnswer) => {
 };
 
 const fillQuestion = (question, answer) => {
-  if(answer === null || answer === undefined) {
+  if (answer === null || answer === undefined) {
     return;
   }
 
@@ -202,10 +202,10 @@ const fillQuestion = (question, answer) => {
     break;
   case 'checkbox': {
     /*
-    There are two accepted formats for multi-select checkboxes
-    Option 1 - A set of comma-delimited boolean strings representing the state of the boxes. eg. "true,false,true" checks the first and third box
-    Option 2 - A set of comma-delimited values to be checked. eg. "heart_condition,none" checks the two boxes with corresponding values
-    */
+                      There are two accepted formats for multi-select checkboxes
+                      Option 1 - A set of comma-delimited boolean strings representing the state of the boxes. eg. "true,false,true" checks the first and third box
+                      Option 2 - A set of comma-delimited values to be checked. eg. "heart_condition,none" checks the two boxes with corresponding values
+                      */
     const answerArray = Array.isArray(answer) ? answer.map(answer => answer.toString()) : answer.split(',');
     const isNonBooleanString = str => !str || !['true', 'false'].includes(str.toLowerCase());
     const answerContainsSpecificValues = answerArray.some(isNonBooleanString);

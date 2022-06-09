@@ -4,7 +4,7 @@
 
 const md5 = require('md5');
 const PouchDB = require('pouchdb');
-const uuid = require('uuid/v4');
+const uuid = require('uuid').v4;
 
 PouchDB.plugin(require('pouchdb-adapter-memory'));
 

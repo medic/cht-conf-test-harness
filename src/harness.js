@@ -5,7 +5,7 @@ const jsonToXml = require('pojo2xml');
 const process = require('process');
 const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
-const uuid = require('uuid/v4');
+const uuid = require('uuid').v4;
 
 const devMode = require('./dev-mode');
 const coreAdapter = require('./core-adapter');
@@ -206,7 +206,7 @@ class Harness {
 
   /**
    * @deprecated since version 2.4.1, use {@link fillContactCreateForm} instead
-   * 
+   *
    * Loads and fills a contact form,
    *
    * @param {string} contactType Type of contact that should be created
