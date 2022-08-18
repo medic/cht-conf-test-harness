@@ -351,13 +351,7 @@ class Harness {
       throw Error('getTasks({ now }) is not supported. See setNow() for mocking time.');
     }
 
-    const user = await resolveMock(this.coreAdapter, this.state, options.user);
-    const subject = await resolveMock(this.coreAdapter, this.state, options.subject, { hydrate: false });
-    const tasks = await this.coreAdapter.fetchTasksFor(user, options.userRoles, stateEnsuringPresenceOfMocks(this.state, user, subject));
-
-    tasks.forEach(task => task.emission.actions.forEach(action => {
-      action.forId = task.emission.forId; // required to hydrate contact in loadAction()
-    }));
+    const { subject, tasks } = await prepareTasks(this.coreAdapter, this.state, options);
 
     return filterTaskDocs(tasks, subject._id, options);
   }
@@ -386,13 +380,14 @@ class Harness {
     options = _.defaults(options, {
       subject: this.options.subject,
       actionForm: this.options.actionForm,
+      userRoles: this.options.userRoles,
+      user: this.options.user,
       ownedBySubject: this.options.ownedBySubject,
       title: undefined,
     });
 
-    await this.getTasks(options);
+    const { allTaskDocs } = await prepareTasks(this.coreAdapter, this.state, options);
 
-    const allTaskDocs = await this.coreAdapter.fetchTaskDocs();
     const subjectId = typeof this.subject === 'object' ? this.subject._id : this.subject;
     const relevantTaskDocs = filterTaskDocs(allTaskDocs, subjectId, options);
     const summary = {
@@ -792,6 +787,29 @@ const resolveMock = async (coreAdapter, state, mock, options = {}) => {
   }
 
   return mock;
+};
+
+const prepareTasks = async (coreAdapter, state, options) => {
+  const user = await resolveMock(coreAdapter, state, options.user);
+  const subject = await resolveMock(coreAdapter, state, options.subject, { hydrate: false });
+  const tasks = await coreAdapter.fetchTasksFor(user, options.userRoles, stateEnsuringPresenceOfMocks(state, user, subject));
+  const allTaskDocs = await coreAdapter.fetchTaskDocs(); // Should come after tasks
+
+  tasks.forEach(task => task.emission.actions.forEach(action => {
+    action.forId = task.emission.forId; // required to hydrate contact in loadAction()
+  }));
+
+  const tasksEmissionLog = _.countBy(filterTaskDocs(allTaskDocs, subject._id, options), (taskDoc) => {
+    return `${taskDoc.emission.title}~${taskDoc.emission.forId}`;
+  });
+
+  const highTaskEmissionLog = _.pickBy(tasksEmissionLog, tasksEmitted => tasksEmitted > 3);
+
+  if(!_.isEmpty(highTaskEmissionLog)){
+    console.warn('Too many tasks emitted for the subject\n', highTaskEmissionLog);
+  }
+
+  return {subject, tasks, allTaskDocs, highTaskEmissionLog};
 };
 
 const filterTaskDocs = (taskDocs, subjectId, { ownedBySubject, actionForm, title }) => taskDocs
