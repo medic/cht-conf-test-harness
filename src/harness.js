@@ -799,11 +799,11 @@ const prepareTasks = async (coreAdapter, state, options) => {
     action.forId = task.emission.forId; // required to hydrate contact in loadAction()
   }));
 
-  const tasksEmissionLog = _.countBy(filterTaskDocs(allTaskDocs, subject._id, {}), (taskDoc) => {
+  const tasksEmissionLog = _.countBy(allTaskDocs, (taskDoc) => {
     return `${taskDoc.emission.title}~${taskDoc.emission.forId}`;
   });
 
-  const highTaskEmissionLog = _.pickBy(tasksEmissionLog, tasksEmitted => tasksEmitted > 3);
+  const highTaskEmissionLog = _.pickBy(tasksEmissionLog, tasksEmitted => tasksEmitted > 10);
 
   if(!_.isEmpty(highTaskEmissionLog)){
     console.warn('Too many tasks generated for the subject\n', highTaskEmissionLog);

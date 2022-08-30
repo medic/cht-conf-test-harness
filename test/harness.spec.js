@@ -418,7 +418,7 @@ describe('Harness tests', () => {
       const mockDoc = { form: 'assessment', reported_date: Date.now(), fields: { foo: 'bar' } };
       harness.pushMockedDoc(mockDoc);
 
-      const tasks = await harness.countTaskDocsByState({actionForm: 'follow_up_1'});
+      await harness.countTaskDocsByState({actionForm: 'follow_up_1'});
       //console.log(tasks);
     });
   }); */

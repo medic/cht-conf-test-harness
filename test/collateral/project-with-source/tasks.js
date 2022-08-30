@@ -18,7 +18,7 @@ const taskEvent = ({
     return !!r;
   },
   actions: [{ form: 'follow_up' }],
-  events: [1, 2, 3, 5, 12, 19, 26, 33, 40, 47]
+  events: [1, 2, 3, 5, 12, 19, 26, 33, 40, 47, 53]
     .map(days => ({
       id: `followup+${days}`,
       start: 1,
