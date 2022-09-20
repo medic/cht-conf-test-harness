@@ -25,7 +25,7 @@
  */
 
 /**
- * cht-config-test-harness provides interfaces for mocking all inputs so you can easily test the possible behaviors of your configuration.
+ * cht-conf-test-harness provides interfaces for mocking all inputs so you can easily test the possible behaviors of your configuration.
  * The data of the HarnessInputs represents the environment/data in which your forms, tasks, targets, and contact-summaries are running within your CHT application.
  *
  * You can provide default values for these inputs through a file called `harness.defaults.json` in your configuration project's folder ([example](https://github.com/medic/cht-conf-test-harness/blob/master/harness.defaults.json.example)).
