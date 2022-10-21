@@ -408,4 +408,19 @@ describe('Harness tests', () => {
     });
   });
 
+
+  /* describe.only('throw warning for high number of tasks generated', ()=>{
+    const harness = new Harness({
+      directory: path.join(__dirname, 'collateral', 'project-with-source'),
+      harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json')
+    });
+    it('getTasks function', async () => {
+      const mockDoc = { form: 'assessment', reported_date: Date.now(), fields: { foo: 'bar' } };
+      harness.pushMockedDoc(mockDoc);
+
+      await harness.countTaskDocsByState({actionForm: 'follow_up_1'});
+      //console.log(tasks);
+    });
+  }); */
+
 });
