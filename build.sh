@@ -10,16 +10,17 @@ exit_on_error() {
 set -e
 trap exit_on_error EXIT
 
-npm ci
+npm ci --legacy-peer-deps
 rm -Rf dist build
 node ./compile-ddocs.js
 
 dirs=($(find node_modules/cht-* -maxdepth 0 -type d))
 for dir in "${dirs[@]}"; do
-  (cd "$dir"/webapp && npm ci --production)
-  (cd "$dir"/api && npm ci --production)
-  (cd "$dir"/shared-libs/rules-engine && npm ci)
-  (cd "$dir"/shared-libs/phone-number && npm ci --production)
+  (cd "$dir"/webapp && npm ci --legacy-peer-deps --production)
+  (cd "$dir"/api && npm ci --legacy-peer-deps --production)
+  (cd "$dir"/shared-libs/calendar-interval && npm ci --legacy-peer-deps)
+  (cd "$dir"/shared-libs/rules-engine && npm ci --legacy-peer-deps)
+  (cd "$dir"/shared-libs/phone-number && npm ci --legacy-peer-deps --production)
 
   # patch the daterangepicker for responsiveness
   # https://github.com/dangrossman/bootstrap-daterangepicker/pull/437

@@ -91,12 +91,12 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
     get: x => x,
   };
   const addAttachmentService = {
-    add: () => {},
+    remove: () => {},
   };
   const getReportContentService = {};
   const xmlFormsService = {
     get: () => Promise.resolve({}),
-    findXFormAttachmentName: () => 'form.xml',
+    getDocAndFormAttachment: () => Promise.resolve({ xml: formXml, doc: {} }),
   };
   const transitionsService = {
     // this is some muting business
