@@ -172,6 +172,8 @@ class Harness {
       return Promise.resolve();
     }
 
+    // Clear any WebMediaPlayers created by countdown-widget
+    // https://github.com/medic/cht-conf-test-harness/issues/185
     await this.page.reload();
     return await this.page.evaluate(() => window.restoreTimers());
   }
