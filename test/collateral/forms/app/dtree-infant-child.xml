@@ -4326,6 +4326,7 @@ Kwa mtoto wako unaweza:</value>
                 <message/>
               </location>
             </meta>
+            <source>user</source>
             <num_child_visits/>
             <small_baby/>
             <bcg/>
@@ -4790,6 +4791,7 @@ Kwa mtoto wako unaweza:</value>
       </instance>
       <instance id="contact-summary"/>
       <bind nodeset="/infant_child/inputs" relevant="./source = 'user'"/>
+      <bind nodeset="/infant_child/inputs/source" type="string"/>
       <bind nodeset="/infant_child/inputs/num_child_visits" type="string"/>
       <bind nodeset="/infant_child/inputs/small_baby" type="string"/>
       <bind nodeset="/infant_child/inputs/bcg" type="string"/>
