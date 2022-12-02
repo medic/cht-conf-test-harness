@@ -105,7 +105,7 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
   const contactTypesService = {
     isHardcodedType: type => HARDCODED_TYPES.includes(type),
   };
-  const GlobalActions = {};
+  const GlobalActions = { setSnackbarContent : () => {} };
 
   window.CHTCore.AndroidAppLauncher = { isEnabled: () => false };
   window.CHTCore.MRDT = { enabled: () => false };
