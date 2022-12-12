@@ -11,6 +11,7 @@ const devMode = require('./dev-mode');
 const coreAdapter = require('./core-adapter');
 const ChtCoreFactory = require('./cht-core-factory');
 const { toDate, toDuration } = require('./dateUtils');
+const ConsoleOverride = require('./console-override');
 
 const pathToHost = path.join(__dirname, 'form-host/form-host.html');
 if (!fs.existsSync(pathToHost)) {
@@ -117,6 +118,7 @@ class Harness {
       devMode.mockRulesEngine(this.core, this.options.appSettingsPath);
     }
 
+    this.consoleOverride = new ConsoleOverride(options);
     clearSync(this);
   }
 
@@ -147,6 +149,7 @@ class Harness {
       await this.setNow(this._now);
     }
 
+    this.consoleOverride.start();
     return this.browser;
   }
 
@@ -158,6 +161,7 @@ class Harness {
    */
   async stop() {
     this.log('Closing harness');
+    this.consoleOverride.stop();
     sinon.restore();
     return this.browser && this.browser.close();
   }
@@ -206,7 +210,7 @@ class Harness {
 
   /**
    * @deprecated since version 2.4.1, use {@link fillContactCreateForm} instead
-   * 
+   *
    * Loads and fills a contact form,
    *
    * @param {string} contactType Type of contact that should be created
