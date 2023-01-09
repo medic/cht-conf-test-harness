@@ -44,14 +44,7 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
   window.CHTCore.DB = dbService;
 
   const extractLineageService = {
-    extract: contact => {
-      return {
-        _id: contact._id,
-        // parent: {
-        //   _id: 'minified_parent',
-        // },
-      };
-    },
+    extract: contact => contact,
   };
   const userContactService = {
     get: () => Promise.resolve({
