@@ -3,20 +3,20 @@ const $ = require('jquery');
 const { content, user, contactSummary } = require('../dist/harness.defaults.json');
 const projectAssets = require('../dist/project-assets');
 const forms = {
-  appForms: Object.keys(projectAssets.appForms),
-  contactForms: Object.keys(projectAssets.contactForms),
+  appForms: Object.keys(projectAssets.appFormHtml),
+  contactForms: Object.keys(projectAssets.contactFormHtml),
 };
 
 $(() => {
-  const renderForm = (type, formName) => `<a class="formLink" href="#" data-type="${type}" data-name="${formName}">${formName}</a>`;
-  const appHtml = forms.appForms.map(formName => renderForm('app', formName)).join('');
-  const contactHtml = forms.contactForms.map(formName => renderForm('contact', formName)).join('');
+  const generateLinkToOpenForm = (type, formName) => `<a class="formLink" href="#" data-type="${type}" data-name="${formName}">${formName}</a>`;
+  const htmlLinksToAppForms = forms.appForms.map(formName => generateLinkToOpenForm('app', formName)).join('');
+  const htmlLinksToContactForms = forms.contactForms.map(formName => generateLinkToOpenForm('contact', formName)).join('');
   console.log('fileList', projectAssets);
 
   $('#formList').html(`<p>App</p>
-${appHtml}
+${htmlLinksToAppForms}
 <p>Contact</p>
-${contactHtml}`);
+${htmlLinksToContactForms}`);
 
   $('.formLink').click(function() {
     const formType = $(this).attr('data-type');
@@ -24,7 +24,17 @@ ${contactHtml}`);
 
     const useContent = formType === 'contact' ? {} : content;
     const useContactSummary = formType === 'contact' ? undefined : contactSummary;
-    const doLoad = () => window.loadXform(formName, projectAssets[`${formType}Forms`][formName], useContent, user, useContactSummary);
+    const doLoad = () => window.loadForm(
+      formName,
+      formType,
+      projectAssets[`${formType}FormHtml`][formName],
+      projectAssets[`${formType}FormModel`][formName],
+      projectAssets[`${formType}FormXml`][formName],
+      useContent,
+      user,
+      useContactSummary
+    );
+
     $('#reload').click(doLoad);
     doLoad();
   });

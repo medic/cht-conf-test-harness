@@ -28,7 +28,7 @@ describe('contact forms', () => {
     await harness.setNow(now);
     const result = await harness.fillContactCreateForm(
       'district_hospital',
-      ['new_person', 'Full', 'Short', '1990-08-06', undefined, '+1-555-227-7744', undefined, 'female', 'patient'],
+      ['new_person', 'Full', 'Short', '1990-08-06', undefined, '+1-778-227-7744', undefined, 'female', 'patient'],
       ['yes']
     );
     expect(result.errors).to.be.empty;
@@ -40,7 +40,7 @@ describe('contact forms', () => {
         external_id: '',
         geolocation: '',
         is_name_generated: 'true',
-        name: "'s Health Facility", // actual bug in form
+        name: "Full's Health Facility",
         notes: '',
         parent: {
           _id: 'family_id',
@@ -72,7 +72,7 @@ describe('contact forms', () => {
         parent: {
           _id: result.contacts[0]._id,
         },
-        phone: '+1-555-227-7744',
+        phone: '+17782277744',
         phone_alternate: '',
         reported_date: now.valueOf(),
         role: 'patient',
@@ -121,8 +121,8 @@ describe('contact forms', () => {
 
   it('#59 - msf-goma create person', async () => {
     const result = await harness.fillContactCreateForm('goma-person', [
-      'PARENT', 'patient', '123', 'Full Name', '1990-10-08', 'male',
-      '555-123-4567', 'false', 'eng', 'yes', 'second', 'no', 'unknown',
+      '', '123', 'Full Name', '1990-10-08', 'male',
+      '+1-604-315-4567', 'false', 'eng', 'yes', 'second', 'no', 'unknown',
       ['diabetes'], '', 'notes'
     ]);
     expect(result.errors).to.be.empty;
@@ -153,8 +153,7 @@ describe('contact forms', () => {
     const now = DateTime.fromISO('2000-01-01');
     await harness.setNow(now);
     const result = await harness.fillContactCreateForm('no_pages', [
-      undefined,
-      'chw', '123', 'full name', '1990-10-08', undefined, 'male', '555-123-4567', 'no', 'english',
+      'chw', '123', 'full name', '1990-10-08', undefined, 'male', '778-318-4567', 'no', 'english',
       'yes', 'second', 'no', 'unknown', ['diabetes'], 'true', 'notes'
     ]);
     expect(result.errors).to.be.empty;
@@ -176,7 +175,7 @@ describe('contact forms', () => {
         dob_iso: '1990-10-08'
       },
       sex: 'male',
-      phone: '555-123-4567',
+      phone: '+17783184567',
       shared_phone: '',
       preferred_language: '',
       arv: { arv_status: 'yes', arv_line: 'second', stable: 'no' },

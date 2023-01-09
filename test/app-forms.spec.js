@@ -15,6 +15,7 @@ describe('forms that have caused bugs', () => {
   after(async () => { return await harness.stop(); });
   beforeEach(async () => { return await harness.clear(); });
   afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
+
   it('patient_assessment with custom fields on user-settings doc', async () => {
     const mrdtUser = Object.assign({}, harness.userSettingsDoc, { is_in_mrdt: true });
     const result = await harness.fillForm({ form: 'patient_assessment_over_5', userSettingsDoc: mrdtUser },
@@ -22,7 +23,8 @@ describe('forms that have caused bugs', () => {
       ['c_assessment_time_2', 'c_when_illness_2'],
       ['yes', ...Array(8).fill('no'), 'unavailable', 'watching'],
       [37],
-      ['yes']);
+      ['yes']
+    );
     expect(result.errors).to.be.empty;
     expect(result.report.fields.inputs.user.is_in_mrdt).to.eq('true');
   });
@@ -77,7 +79,7 @@ describe('forms that have caused bugs', () => {
 
     const sampleNotCollected = [
       ['valid'],
-      ['','agadez', 'arlit', 'commune', 'village','nom', 'prenom', '12', 'years', 'male','teacher','résidence','12345678','87654321','alert'],
+      ['agadez', 'arlit', 'commune', 'village','nom', 'prenom', '12', 'years', 'male','teacher','résidence','12345678','87654321','alert'],
       ['poe','lieu','2000-01-01','suspected_case'],
       ['no','samu','followup_agent'],
       [Array(1).fill(true),'2000-01-01','no',Array(1).fill(true),'no'],
@@ -163,14 +165,20 @@ describe('forms that have caused bugs', () => {
   });
 
   it('support for input type tel', async () => {
-    const result = await harness.fillForm('tel', [1, '17786043495']);
-    expect(result.errors).to.be.empty;
-    expect(result.report).to.nested.deep.include({
+    const singleTel = await harness.fillForm('tel', [1, '17786043495', '']);
+    expect(singleTel.errors).to.be.empty;
+    expect(singleTel.report).to.nested.deep.include({
       form: 'tel',
       'fields.contacts.n_contacts': '',
-      'fields.contacts.contact_repeat': [
-        { text: '17786043495' },
-      ]
+      'fields.contacts.contact_repeat': [{ text: '17786043495' }],
+    });
+
+    const twoTels = await harness.fillForm('tel', [2, '17786041234', '', '17786042345', '']);
+    expect(twoTels.errors).to.be.empty;
+    expect(twoTels.report).to.nested.deep.include({
+      form: 'tel',
+      'fields.contacts.n_contacts': '',
+      'fields.contacts.contact_repeat': [{ text: '17786041234' }, { text: '17786042345' }],
     });
   });
 
@@ -274,6 +282,18 @@ describe('forms that have caused bugs', () => {
     expect(result.errors).to.be.empty;
 
     const bikramDate = await harness.page.evaluate(() => window.$$('[data-itext-id="/pregnancy/summary/r_pregnancy_details:label"]').text()); 
-    expect(bikramDate).to.include('महिनावारी भएको अन्तिम मिति : १५ à¤•à¤¾à¤°à¥');
+    expect(bikramDate).to.include('३ साउन');
+    expect(bikramDate).to.include('१५ कार्तिक २०५६');
+  });
+
+  it('explicit set of contact-summary context', async () => {
+    const result = await harness.fillForm({
+      form: 'instance-contact-summary',
+      contactSummary: {
+        context: { data: 'override' }
+      },
+    }, []);
+    expect(result.errors).to.be.empty;
+    expect(result.report.fields.data_from_cs).to.eq('override');
   });
 });

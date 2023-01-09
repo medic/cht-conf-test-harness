@@ -10,7 +10,7 @@
       "name": "Build Assets (test collateral)",
       "program": "${workspaceFolder}/project-explorer/build-assets.js",
       "args": [
-        "--appSettingPath=${workspaceFolder}/test/collateral/project-without-source",
+        "--path=${workspaceFolder}/test/collateral/project-without-source",
         "--formPath=${workspaceFolder}/test/collateral"
       ]
     },

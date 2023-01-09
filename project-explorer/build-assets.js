@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const Harness = require('..');
-const jsonToXml = require('pojo2xml');
 
 const usage = `Usage: build-assets --path=[DIRECTORY]
 
@@ -43,11 +42,8 @@ if (!fs.existsSync(formPath)) {
   console.log(`Writing ${harnessDefaultDestinationPath}`);
   const fileContent = JSON.stringify({
     user: harness.user,
-    content: harness.content,
-    contactSummary: {
-      id: 'contact-summary',
-      xmlStr: jsonToXml({ context: (await harness.getContactSummary()).context }),
-    },
+    content: Object.assign(harness.content, { contact: harness.patient }),
+    contactSummary: await harness.getContactSummary(),
   }, null, 2);
   fs.writeFileSync(harnessDefaultDestinationPath, fileContent);
 
@@ -76,23 +72,61 @@ if (!fs.existsSync(formPath)) {
     return formsInDirectory;
   };
 
-  const appForms = getFilesInFolders(appFormPaths);
-  if (appForms.length === 0) {
-    console.error(`No xml files found in folders: ${pathToProject}`);
-    return -1;
-  }
+  const convertXmlToPath = async (formPaths) => {
+    const formXmlFilePaths = getFilesInFolders(formPaths);
+    if (formXmlFilePaths.length === 0) {
+      console.error(`No xml files found in folders: ${pathToProject}`);
+      return -1;
+    }
+
+    const htmlPaths = [];
+    const modelPaths = [];
+    for (const formPath of formXmlFilePaths) {
+      const appFormContent = fs.readFileSync(formPath);
+      console.log(`Converting ${formPath}`);
+      try {
+        const { form, model } = await harness.core.convertFormXmlToXFormModel(appFormContent);
+        const outputHtmlPath = path.resolve(__dirname, '../build', path.basename(formPath, '.xml') + '.html');
+        const outputModelPath = path.resolve(__dirname, '../build', path.basename(formPath, '.xml') + '.model');
+        fs.writeFileSync(outputHtmlPath, form);
+        fs.writeFileSync(outputModelPath, model);
+
+        htmlPaths.push(outputHtmlPath);
+        modelPaths.push(outputModelPath);
+      } catch (e) {
+        console.error(`\u001b[31mError during conversion\u001b[0m:`, e);
+      }
+    }
+
+    return { htmlPaths, modelPaths, xmlPaths: formXmlFilePaths };
+  };
+
+  const { htmlPaths: appFormHtmlPaths, modelPaths: appFormModelPaths, xmlPaths: appFormXmlPaths } = await convertXmlToPath(appFormPaths);
+  const { htmlPaths: contactFormHtmlPaths, modelPaths: contactFormModelPaths, xmlPaths: contactFormXmlPaths } = await convertXmlToPath(contactFormPaths);
 
   const windowsEscaping = str => str.replace(/\\/g, '\\\\');
-  const formsAsRequirements = formPaths => formPaths
-    .map(fullPath => `  '${path.basename(fullPath)}': require('${windowsEscaping(fullPath)}'),`)
+  const formsAsRequirements = (formPaths, ext) => formPaths
+    .map(fullPath => `  '${path.basename(fullPath, ext)}': require('${windowsEscaping(fullPath)}'),`)
     .join('\n');
   fs.writeFileSync(outputPath, `module.exports = {
-    appForms: {
-    ${formsAsRequirements(appForms)}
+    appFormHtml: {
+    ${formsAsRequirements(appFormHtmlPaths, '.html')}
     },
-    contactForms: {
-    ${formsAsRequirements(getFilesInFolders(contactFormPaths))}
-    }
+    appFormModel: {
+    ${formsAsRequirements(appFormModelPaths, '.model')}
+    },
+    appFormXml: {
+    ${formsAsRequirements(appFormXmlPaths, '.xml')}
+    },
+    contactFormHtml: {
+    ${formsAsRequirements(contactFormHtmlPaths, '.html')}
+    },
+    contactFormModel: {
+    ${formsAsRequirements(contactFormModelPaths, '.model')}
+    },
+    contactFormXml: {
+    ${formsAsRequirements(contactFormXmlPaths, '.xml')}
+    },
   };`);
   console.log(`Compiling to ${outputPath}`);
 })();

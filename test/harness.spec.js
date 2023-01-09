@@ -177,11 +177,11 @@ describe('Harness tests', () => {
     it('a different list of validation errors', async () => {
       const result = await harness.fillForm(formName, ['yes', '2100-01-01', '2100-01-01']);
       expect(result).to.nested.include({
-        'errors[0].msg': 'Value not allowed',
+        'errors[0].msg': 'enketo.constraint.invalid',
         'errors[0].type': 'validation',
-        'errors[0].question': 'When PNC visit was planned?*\nValue not allowed',
+        'errors[0].question': 'When PNC visit was planned?*\nenketo.constraint.invalid',
 
-        'errors[1].msg': 'Value not allowed',
+        'errors[1].msg': 'enketo.constraint.invalid',
       });
       expect(result.report).to.eq(undefined);
     });

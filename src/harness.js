@@ -1,7 +1,6 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
-const jsonToXml = require('pojo2xml');
 const process = require('process');
 const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
@@ -140,8 +139,9 @@ class Harness {
       }
     });
 
-    await this.page.goto(`file://${pathToHost}`);
-    await this.page.waitForSelector('#task-report');
+    const formHostVersion = this.core.version.replace('.', '-');
+    await this.page.goto(`file://${pathToHost}?core=${formHostVersion}`);
+    await this.page.waitForSelector('#enketo-wrapper');
 
     if (this._now) {
       await this.setNow(this._now);
@@ -168,7 +168,14 @@ class Harness {
    */
   async clear() {
     clearSync(this);
-    return this.page && await this.page.evaluate(() => delete window.now);
+    if(!this.page) {
+      return Promise.resolve();
+    }
+
+    // Clear any WebMediaPlayers created by countdown-widget
+    // https://github.com/medic/cht-conf-test-harness/issues/185
+    await this.page.reload();
+    return await this.page.evaluate(() => window.restoreTimers());
   }
 
   /**
@@ -197,9 +204,9 @@ class Harness {
     const xformFilePath = path.resolve(this.options.appXFormFolderPath, `${formName}.xml`);
     const content = await resolveContent(this.coreAdapter, this.state, options.content, options.subject);
     const contactSummary = options.contactSummary || await this.getContactSummary(content.contact);
-    const serializedContactSummary = serializeContactSummary(contactSummary);
 
-    await doLoadForm(this, this.page, xformFilePath, content, options.userSettingsDoc, serializedContactSummary);
+    const formNameWithoutDirectory = path.basename(xformFilePath, '.xml');
+    await doLoadForm(this, this.page, this.core, formNameWithoutDirectory, 'app', xformFilePath, content, options.userSettingsDoc, contactSummary);
     this._state.pageContent = await this.page.content();
     return this._state;
   }
@@ -254,7 +261,7 @@ class Harness {
     const asTimestamp = toDate(now).toMillis();
     this._now = asTimestamp;
     sinon.useFakeTimers(asTimestamp);
-    return this.page && this.page.evaluate(innerNow => window.now = new Date(innerNow), this._now);
+    return this.page && this.page.evaluate(innerNow => window.fakeTimers(innerNow), this._now);
   }
 
   /**
@@ -306,7 +313,7 @@ class Harness {
     }
 
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-    const fillResult = await this.page.evaluate(async innerAnswer => await window.formFiller.fillAppForm(innerAnswer), answers);
+    const fillResult = await this.page.evaluate(async innerAnswer => await window.fillAndSave(innerAnswer), answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
     if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
@@ -514,7 +521,14 @@ class Harness {
   get consoleErrors() {
     return this._state.console
       .filter(msg => msg.type() !== 'log')
-      .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_UNKNOWN_URL_SCHEME');
+      .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_UNKNOWN_URL_SCHEME')
+      .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_FILE_NOT_FOUND') // BUG
+      .filter(msg => !msg.text().startsWith('Error fetching media file')) // BUG
+      .filter(msg => !msg.text().startsWith('Deprecation warning:')) // BUG
+      .filter(msg => !msg.text().includes('with null-based index')) // BUG
+      .filter(msg => msg.text() !== 'Data node: /*/meta/deprecatedID with null-based index: undefined not found. Ignored.') // BUG
+    ;
+
   }
 
   /**
@@ -687,11 +701,11 @@ const fillContactForm = async (self, contactType, action, ...answers) => {
   const xformFilePath = path.resolve(self.options.contactXFormFolderPath, `${contactType}-${action}.xml`);
 
   const user = await resolveMock(self.coreAdapter, self.state, self.options.user);
-  await doLoadForm(self, self.page, xformFilePath, {}, user);
+  await doLoadForm(self, self.page, self.core, contactType, 'contact', xformFilePath, {}, user);
   self._state.pageContent = await self.page.content();
 
   self.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-  const fillResult = await self.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
+  const fillResult = await self.page.evaluate(async innerAnswer => await window.fillAndSave(innerAnswer), answers);
   self.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
   // https://github.com/medic/cht-conf-test-harness/issues/105
@@ -724,34 +738,21 @@ const readFileSync = (...args) => {
   return fs.readFileSync(filePath).toString();
 };
 
-const doLoadForm = async (self, page, xformFilePath, content, user, contactSummaryXml) => {
+const doLoadForm = async (self, page, core, formName, formType, xformFilePath, content, userSettingsDoc, contactSummaryXml) => {
+  await page.evaluate(() => window.unload && window.unload());
+
   self.log(`Loading form ${path.basename(xformFilePath)}...`);
-  const xform = readFileSync(xformFilePath);
-  if (!xform) {
+  const formXmlContent = readFileSync(xformFilePath);
+  if (!formXmlContent) {
     throw Error(`XForm not available at path: ${xformFilePath}`);
   }
   self.onConsole = msg => self._state.console.push(msg);
 
-  const formNameWithoutDirectory = path.basename(xformFilePath, '.xml');
-  const loadXformWrapper = (innerFormName, innerForm, innerContent, innerUser, innerContactSummary) => window.loadXform(innerFormName, innerForm, innerContent, innerUser, innerContactSummary);
-  await page.evaluate(loadXformWrapper, formNameWithoutDirectory, xform, content, user, contactSummaryXml);
-};
+  const { form: formHtml, model: formModel } = await core.convertFormXmlToXFormModel(formXmlContent);
+  const loadFormWrapper = (innerFormName, innerFormType, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary) =>
+    window.loadForm(innerFormName, innerFormType, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary);
 
-const serializeContactSummary = (contactSummary = {}) => {
-  if (typeof contactSummary !== 'object') {
-    throw Error('Invalid contactSummary. Object is expected');
-  }
-
-  if (contactSummary.xmlStr) {
-    return contactSummary;
-  }
-
-  const serialize = cs => ({ id: 'contact-summary', xmlStr: jsonToXml(cs) });
-  if (contactSummary.context) {
-    return serialize({ context: contactSummary.context });
-  }
-
-  return serialize({ context: contactSummary });
+  await page.evaluate(loadFormWrapper, formName, formType, formHtml, formModel, formXmlContent, content, userSettingsDoc, contactSummaryXml);
 };
 
 const clearSync = (self) => {

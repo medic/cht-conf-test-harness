@@ -1,14 +1,9 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const $ = require('jquery');
 
-const getRecordForCompletedForm = require('./enketo');
-const saveContact = require('./save-contact');
-
 class FormFiller {
-  constructor(formName, form, formXml, options) {
+  constructor(form, options) {
     this.form = form;
-    this.formName = formName;
-    this.formXml = formXml;
     this.options = _.defaults(options, {
       verbose: true,
     });
@@ -31,62 +26,28 @@ class FormFiller {
    * @property {string} msg Description of the error
    */
 
-  async fillAppForm(multiPageAnswer) {
+  async fillForm(multiPageAnswer) {
     const { isComplete, errors } = await fillForm(this, multiPageAnswer);
-    const resultingDocs = isComplete ? getRecordForCompletedForm(this.form, this.formXml, this.formName, window.now) : [];
-    const [report, ...additionalDocs] = resultingDocs;
-
-    return {
-      errors,
-      section: 'general',
-      report,
-      additionalDocs,
-    };
-  }
-
-  async fillContactForm(contactType, multiPageAnswer) {
-    const { isComplete, errors } = await fillForm(this, multiPageAnswer);
-    const contacts = isComplete ? await saveContact(this.form, contactType, window.now) : [];
-
-    return {
-      errors,
-      section: 'general',
-      contacts
-    };
+    return { isComplete, errors };
   }
 
   // Modified from enketo-core/src/js/Form.js validateContent
-  getVisibleValidationErrors() {
+  async getVisibleValidationErrors() {
     const self = this;
     const $container = self.form.view.$;
-    const validations = $container.find('.question').addBack('.question').map(() => {
-      const $elem = $(this).find('input:not(.ignore):not(:disabled), select:not(.ignore):not(:disabled), textarea:not(.ignore):not(:disabled)');
-      if ($elem.length === 0) {
-        return Promise.resolve();
-      }
-      return self.form.validateInput( $elem.eq( 0 ) );
-    }).toArray();
+    const validationErrors = $container
+      .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
+      .children('span.active:not(.question-label)')
+      .filter(function() {
+        return $(this).css('display') === 'block';
+      });
 
-    return Promise.all( validations )
-      .then(() => {
-        const validationErrors = $container
-          .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
-          .children('span.active:not(.question-label)')
-          .filter(function() {
-            return $(this).css('display') === 'block';
-          });
-
-        return Array.from(validationErrors)
-          .map(span => ({
-            type: 'validation',
-            question: span.parentElement.innerText,
-            msg: span.innerText,
-          }));
-      })
-      .catch(err => [{
-        type: 'failure to validate',
-        msg: err,
-      }]);
+    return Array.from(validationErrors)
+      .map(span => ({
+        type: 'validation',
+        question: span.parentElement.innerText,
+        msg: span.innerText,
+      }));
   }
 }
 
@@ -95,7 +56,6 @@ const fillForm = async (self, multiPageAnswer) => {
   const results = [];
   for (const pageIndex in multiPageAnswer) {
     const pageAnswer = multiPageAnswer[pageIndex];
-    makeNoteFieldsNotRequired();
     const result = await fillPage(self, pageAnswer);
     results.push(result);
 
@@ -108,9 +68,17 @@ const fillForm = async (self, multiPageAnswer) => {
     }
   }
 
-  self.form.validateAll();
-  const errors = await self.getVisibleValidationErrors();
-  const isComplete = self.form.pages.getCurrentIndex() === self.form.pages.$activePages.length - 1;
+  let errors;
+  let isComplete;
+  let pageHasAdvanced;
+  // attempt to submit all the way to the end (replacement for validateAll)
+  do {
+    pageHasAdvanced = await nextPage(self.form);
+    errors = await self.getVisibleValidationErrors();
+    
+    const lastPage = self.form.pages.activePages[self.form.pages.activePages.length - 1];
+    isComplete = !lastPage || self.form.pages.current === lastPage;
+  } while (pageHasAdvanced && !isComplete && !errors.length);
   const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
 
   return {
@@ -125,7 +93,7 @@ const fillPage = async (self, pageAnswer) => {
   const answeredQuestions = new Set();
   for (let i = 0; i < pageAnswer.length; i++) {
     const answer = pageAnswer[i];
-    const $questions = getVisibleQuestions(self);
+    const $questions = getVisibleQuestions(self.form);
     if ($questions.length <= i) {
       return {
         errors: [{
@@ -142,7 +110,7 @@ const fillPage = async (self, pageAnswer) => {
     fillQuestion(nextUnansweredQuestion, answer);
   }
 
-  const allPagesSuccessful = hasPages(window.form) ? await window.form.pages.next() : true;
+  const allPagesSuccessful = hasPages(self.form) ? await nextPage(self.form) : true;
   const validationErrors = await self.getVisibleValidationErrors();
   const advanceFailure = allPagesSuccessful || validationErrors.length ? [] : [{
     type: 'general',
@@ -160,7 +128,7 @@ const fillQuestion = (question, answer) => {
   }
 
   const $question = $(question);
-  const allInputs = $question.find('input:not([type="hidden"]),textarea,button');
+  const allInputs = $question.find('input:not([type="hidden"]),textarea,button,select');
   const firstInput = Array.from(allInputs)[0];
 
   if (!firstInput) {
@@ -194,11 +162,17 @@ const fillQuestion = (question, answer) => {
     $question.find(`input[value="${answer}"]`).click();
     break;
   case 'date':
-  case 'text':
   case 'tel':
   case 'time':
   case 'number':
     allInputs.val(answer).trigger('change');
+    break;
+  case 'text':
+    if (allInputs.parent().hasClass('date')) {
+      allInputs.first().datepicker('setDate', answer);
+    } else {
+      allInputs.val(answer).trigger('change');
+    }
     break;
   case 'checkbox': {
     /*
@@ -224,14 +198,20 @@ const fillQuestion = (question, answer) => {
     }
     break;
   }
+  case 'select-one':
+    allInputs.val(answer).trigger('change');
+    break;
   default:
     throw `Unhandled input type ${firstInput.type}`;
   }
 };
 
 const getVisibleQuestions = form => {
-  const currentPage = hasPages(form.form) ? form.form.pages.getCurrent() : form.form.pages.form.view.$;
-
+  const currentPage = !form.pages.current ? 
+    // in cases where forms have a single page, the current page is undefined
+    form.view.$ :  
+    $(form.pages.current);
+  
   if (!currentPage) {
     throw Error('Form has no active pages');
   }
@@ -245,13 +225,15 @@ const getVisibleQuestions = form => {
       .children(`
         section:not(.disabled,.or-appearance-hidden),
         fieldset:not(.disabled,.note,.or-appearance-hidden,.or-appearance-label,#or-calculated-items),
-        label:not(.disabled,.note,.or-appearance-hidden),
-        div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count])
+        label:not(.disabled,.readonly,.or-appearance-hidden),
+        div.or-repeat-info:not(.disabled,.or-appearance-hidden):not([data-repeat-count]),
+        i,
+        b
       `));
 
     const result = [];
     for (const child of inquisitiveChildren) {
-      const questions = child.localName === 'section' ? findQuestionsInSection(child) : [child];
+      const questions = ['section', 'i', 'b'].includes(child.localName) ? findQuestionsInSection(child) : [child];
       result.push(...questions);
     }
 
@@ -261,15 +243,19 @@ const getVisibleQuestions = form => {
   return findQuestionsInSection(currentPage);
 };
 
-/*
-Not sure why the input element for the 'note' labels is a required field or how this
-doesn't trigger warnings in webapp. As a workaround, just update notes so that they are not
-required
-*/
-function makeNoteFieldsNotRequired() {
-  window.$$('label.note > input').attr('data-required', '');
-}
+const nextPage = async form => {
+  const valid = await form.pages._next();
 
-const hasPages = form => form.pages.getCurrent().length > 0;
+  // Work-around for stale jr:choice-name() references in labels.  ref #3870
+  form.calc.update();
+
+  // Force forms to update jr:itext references in output fields that contain
+  // calculated values.  ref #4111
+  form.output.update();
+
+  return valid;
+};
+
+const hasPages = form => form.pages.activePages.length > 0;
 
 module.exports = FormFiller;

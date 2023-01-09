@@ -10,19 +10,33 @@ exit_on_error() {
 set -e
 trap exit_on_error EXIT
 
-npm ci
+npm ci --legacy-peer-deps
 rm -Rf dist build
-rm -Rf node_modules/enketo-core/node_modules/
-patch -f node_modules/enketo-core/src/js/Form.js < node_modules/cht-core-3-13/webapp/patches/enketo-inputs-always-relevant.patch
-patch -f node_modules/enketo-core/src/js/page.js < patches/enketo-handle-no-active-pages.patch
 node ./compile-ddocs.js
 
 dirs=($(find node_modules/cht-* -maxdepth 0 -type d))
 for dir in "${dirs[@]}"; do
-  (cd "$dir"/shared-libs/rules-engine && npm ci --production)
+  (cd "$dir"/webapp && npm ci --legacy-peer-deps --production)
+  (cd "$dir"/api && npm ci --legacy-peer-deps --production)
+  (cd "$dir"/shared-libs/calendar-interval && npm ci --legacy-peer-deps)
+  (cd "$dir"/shared-libs/rules-engine && npm ci --legacy-peer-deps)
+  (cd "$dir"/shared-libs/phone-number && npm ci --legacy-peer-deps --production)
+
+  # patch the daterangepicker for responsiveness
+  # https://github.com/dangrossman/bootstrap-daterangepicker/pull/437
+  (cd "$dir" && patch -f webapp/node_modules/bootstrap-daterangepicker/daterangepicker.js < webapp/patches/bootstrap-daterangepicker.patch)
+
+  # patch enketo to always mark the /inputs group as relevant
+  (cd "$dir" && patch -f webapp/node_modules/enketo-core/src/js/form.js < webapp/patches/enketo-inputs-always-relevant_form.patch)
+  (cd "$dir" && patch -f webapp/node_modules/enketo-core/src/js/relevant.js < webapp/patches/enketo-inputs-always-relevant_relevant.patch)
+
+  # patch enketo to fix repeat name collision bug - this should be removed when upgrading to a new version of enketo-core
+  # https://github.com/enketo/enketo-core/issues/815
+  (cd "$dir" && patch -f webapp/node_modules/enketo-core/src/js/calculate.js < webapp/patches/enketo-repeat-name-collision.patch)
+
+  # patch messageformat to add a default plural function for languages not yet supported by make-plural #5705
+  (cd "$dir" && patch -f webapp/node_modules/messageformat/lib/plurals.js < webapp/patches/messageformat-default-plurals.patch)
 done
 
 npx webpack
-cp ext/inbox.css dist
-
 printf "\033[0;32m== BUILD SUCCESSFUL ==\n"
