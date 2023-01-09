@@ -107,16 +107,7 @@ describe('forms that have caused bugs', () => {
     });
   });
 
-  // Form replies heavily on default value of non-relevant values
-  // refer_neonatal_danger_sign_flag, 
-  /*
-  this express appears true even when child_consent_today is no?
-
-  not(selected( /infant_child/consent/child_consent_today ,"no")) and 
-  /infant_child/neonatal_danger_signs/refer_neonatal_danger_sign_flag  = 0 and 
-  ( /infant_child/age_days  >= 20 and  /infant_child/age_days  < ( /infant_child/week  * 15)) or ( /infant_child/age_days  >= ( /infant_child/month  * 6) and  /infant_child/age_days  < ( /infant_child/month  * 9)) or ( /infant_child/age_days  >= ( /infant_child/month  * 12) and  /infant_child/age_days  < ( /infant_child/month  * 15))
-  */
-  it.skip('d-tree infant child form attempts to fill questions in disabled section of form', async () => {
+  it('d-tree infant child form attempts to fill questions in disabled section of form', async () => {
     const inputs = [
       [],
       ['yes'],
