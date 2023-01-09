@@ -14,6 +14,11 @@ npm ci --legacy-peer-deps
 rm -Rf dist build
 node ./compile-ddocs.js
 
+mkdir -p ext/xsl
+mkdir -p ext/enketo-transformer/xsl
+cp ./node_modules/cht-core-4-0/api/src/xsl/openrosa2html5form.xsl ext/xsl
+cp ./node_modules/cht-core-4-0/api/src/enketo-transformer/xsl/* ext/enketo-transformer/xsl
+
 dirs=($(find node_modules/cht-* -maxdepth 0 -type d))
 for dir in "${dirs[@]}"; do
   (cd "$dir"/webapp && npm ci --legacy-peer-deps --production)
