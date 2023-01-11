@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const { DateTime } = require('luxon');
 const process = require('process');
 const PuppeteerChromiumResolver = require('puppeteer-chromium-resolver');
 const sinon = require('sinon');
@@ -312,15 +313,7 @@ class Harness {
       answers.shift();
     }
 
-    this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-    const fillResult = await this.page.evaluate(async innerAnswer => await window.fillAndSave(innerAnswer), answers);
-    this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
-
-    if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
-      /* this.log respects verbose option, use logFormErrors here */
-      console.error(`Error encountered while filling form:`, JSON.stringify(fillResult.errors, null, 2));
-    }
-
+    const fillResult = await doFillPage(this.page, this.log, this.options, answers);
     if (fillResult.report) {
       fillResult.additionalDocs.forEach(doc => { doc._id = uuid(); });
       this.pushMockedDoc(fillResult.report, ...fillResult.additionalDocs);
@@ -704,9 +697,7 @@ const fillContactForm = async (self, contactType, action, ...answers) => {
   await doLoadForm(self, self.page, self.core, contactType, 'contact', xformFilePath, {}, user);
   self._state.pageContent = await self.page.content();
 
-  self.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-  const fillResult = await self.page.evaluate(async innerAnswer => await window.fillAndSave(innerAnswer), answers);
-  self.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
+  const fillResult = await doFillPage(self.page, self.log, self.options, answers);
 
   // https://github.com/medic/cht-conf-test-harness/issues/105
   if (self.subject && self.subject.parent) {
@@ -717,10 +708,6 @@ const fillContactForm = async (self, contactType, action, ...answers) => {
     });
   }
 
-  if (self.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
-    /* this.log respects verbose option, use logFormErrors here */
-    console.error(`Error encountered while filling form:`, JSON.stringify(fillResult.errors, null, 2));
-  }
   return fillResult;
 };
 
@@ -753,6 +740,32 @@ const doLoadForm = async (self, page, core, formName, formType, xformFilePath, c
     window.loadForm(innerFormName, innerFormType, innerFormHtml, innerFormModel, innerFormXml, innerContent, innerUserSettingsDoc, innerContactSummary);
 
   await page.evaluate(loadFormWrapper, formName, formType, formHtml, formModel, formXmlContent, content, userSettingsDoc, contactSummaryXml);
+};
+
+const doFillPage = async (page, log, options, pages) => {
+  const processedAnswers = pages.map(answers => answers.map(answer => {
+    let result = answer;
+    if (result instanceof Date) {
+      result = DateTime.fromJSDate(result);
+    }
+
+    if (result && result.isLuxonDateTime) {
+      result = result.toISODate();
+    }
+
+    return result;
+  }));
+
+  log(`Filling ${processedAnswers.length} pages with answer: ${JSON.stringify(processedAnswers)}`);
+  const fillResult = await page.evaluate(async innerAnswer => await window.fillAndSave(innerAnswer), processedAnswers);
+  log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
+
+  if (options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
+    /* this.log respects verbose option, use logFormErrors here */
+    console.error(`Error encountered while filling form:`, JSON.stringify(fillResult.errors, null, 2));
+  }
+
+  return fillResult;
 };
 
 const clearSync = (self) => {
