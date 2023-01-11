@@ -766,7 +766,7 @@ const doFillPage = async (page, log, options, pages) => {
   }
 
   return fillResult;
-}
+};
 
 const clearSync = (self) => {
   const contacts = [];
