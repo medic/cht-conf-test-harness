@@ -697,7 +697,7 @@ const fillContactForm = async (self, contactType, action, ...answers) => {
   await doLoadForm(self, self.page, self.core, contactType, 'contact', xformFilePath, {}, user);
   self._state.pageContent = await self.page.content();
 
-  const fillResult = await doFillPage(this.page, this.log, this.options, answers);
+  const fillResult = await doFillPage(self.page, self.log, self.options, answers);
 
   // https://github.com/medic/cht-conf-test-harness/issues/105
   if (self.subject && self.subject.parent) {
