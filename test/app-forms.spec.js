@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { DateTime } = require('luxon');
 const path = require('path');
 const Harness = require('../src/harness');
 
@@ -7,7 +8,7 @@ const harness = new Harness({
   xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
   harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
   verbose: false,
-  reportFormErrors: false
+  reportFormErrors: false,
 });
 
 describe('forms that have caused bugs', () => {
@@ -284,6 +285,22 @@ describe('forms that have caused bugs', () => {
     const bikramDate = await harness.page.evaluate(() => window.$$('[data-itext-id="/pregnancy/summary/r_pregnancy_details:label"]').text()); 
     expect(bikramDate).to.include('३ साउन');
     expect(bikramDate).to.include('१५ कार्तिक २०५६');
+  });
+
+  it('#205 - fill using luxon DateTime', async () => {
+    await harness.setNow('2000-01-01');
+    const dateAnswer = DateTime.fromObject({ year: 2000, month: 1, day: 7 });
+    const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', dateAnswer]);
+    expect(formResult.errors).to.be.empty;
+    expect(formResult.report.fields.next_pnc.s_next_pnc_date).to.eq('2000-01-07');
+  });
+
+  it('#205 - fill using Date', async () => {
+    await harness.setNow('2000-01-01');
+    const dateAnswer = DateTime.fromObject({ year: 2000, month: 1, day: 7 });
+    const formResult = await harness.fillForm('pnc_followup', ['no'], ['yes', dateAnswer.toJSDate()]);
+    expect(formResult.errors).to.be.empty;
+    expect(formResult.report.fields.next_pnc.s_next_pnc_date).to.eq('2000-01-07');
   });
 
   it('explicit set of contact-summary context', async () => {
