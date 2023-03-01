@@ -307,6 +307,14 @@ describe('forms that have caused bugs', () => {
     await harness.fillForm('cash_add_member', [], ['yes', 'hh_member_id', 'no', '2023-02-23', 'individual', 'yes', 11111111 ], [])
   });
 
+  it('#211 - uuid no match', async () => {
+    const result = await harness.fillForm('cash_add_member', [], 
+      ['no', 'Member One', 'male', 'no', 25, 11111111, 'no', '2023-02-23', 'individual', 'yes', 11111111 ],
+      []);
+    expect(result.errors).to.be.empty;
+    expect(result.report.fields.patient_id).to.eq(result.additionalDocs[0]._id);
+  })
+
   it('explicit set of contact-summary context', async () => {
     const result = await harness.fillForm({
       form: 'instance-contact-summary',
