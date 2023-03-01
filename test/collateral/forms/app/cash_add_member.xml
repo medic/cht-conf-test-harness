@@ -1,0 +1,741 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>Add member</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/cash_add_member/general/n_general_rules:label">
+            <value>&lt;b&gt;Discuss the CVSS General Rules&lt;/b&gt;</value>
+          </text>
+          <text id="/cash_add_member/general:label">
+            <value>CVSS General rules</value>
+          </text>
+          <text id="/cash_add_member/inputs/contact/_id:label">
+            <value>CHW</value>
+          </text>
+          <text id="/cash_add_member/inputs/contact/contact_type:label">
+            <value>Contact Type</value>
+          </text>
+          <text id="/cash_add_member/inputs/contact/name:label">
+            <value>Name</value>
+          </text>
+          <text id="/cash_add_member/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/cash_add_member/inputs/source_id:label">
+            <value>Source ID</value>
+          </text>
+          <text id="/cash_add_member/member_details/account:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/cash_add_member/member_details/account:label">
+            <value>Money transfer account number</value>
+          </text>
+          <text id="/cash_add_member/member_details/handicapped/dont_know:label">
+            <value>Don't know</value>
+          </text>
+          <text id="/cash_add_member/member_details/handicapped/no:label">
+            <value>No</value>
+          </text>
+          <text id="/cash_add_member/member_details/handicapped/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/cash_add_member/member_details/handicapped:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/cash_add_member/member_details/handicapped:label">
+            <value>Does the member have any handicap?</value>
+          </text>
+          <text id="/cash_add_member/member_details/join_date:jr:constraintMsg">
+            <value>The date should not be in future</value>
+          </text>
+          <text id="/cash_add_member/member_details/join_date:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/cash_add_member/member_details/join_date:label">
+            <value>Date of joining the fund?</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_age_years:label">
+            <value>Age(Year)</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_dob:jr:constraintMsg">
+            <value>The date should not be in future</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_dob:label">
+            <value>Date</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_has_account/no:label">
+            <value>No</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_has_account/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_has_account:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_has_account:label">
+            <value>Does the member have a money transfer account?</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_known_dob/no:label">
+            <value>No</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_known_dob/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_known_dob:label">
+            <value>Known date of birth</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_phone:jr:constraintMsg">
+            <value>Put the number in XXXXXXXX format (Put 8 digits, without spaces)</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_phone:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_phone:label">
+            <value>Telephone number</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_profile/created_by_doc:label">
+            <value>-</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_profile/parent/_id:label">
+            <value>-</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_sex/female:label">
+            <value>Female</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_sex/male:label">
+            <value>Male</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_sex:label">
+            <value>Sex</value>
+          </text>
+          <text id="/cash_add_member/member_details/membership/household:label">
+            <value>Household</value>
+          </text>
+          <text id="/cash_add_member/member_details/membership/individual:label">
+            <value>Individual</value>
+          </text>
+          <text id="/cash_add_member/member_details/membership:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/cash_add_member/member_details/membership:label">
+            <value>Type of membership</value>
+          </text>
+          <text id="/cash_add_member/member_details/name_ask:hint">
+            <value>Note: Indicate all 3 names</value>
+          </text>
+          <text id="/cash_add_member/member_details/name_ask:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/cash_add_member/member_details/name_ask:label">
+            <value>Name</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/add_new_member:label">
+            <value>Add new members</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/name:label">
+            <value>Name</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/registered/no:label">
+            <value>No</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/registered/yes:label">
+            <value>Yes</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/registered:jr:requiredMsg">
+            <value>This field is required</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/registered:label">
+            <value>Is the person already registered in a household?</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/uuid:label">
+            <value>Select the person</value>
+          </text>
+          <text id="/cash_add_member/member_details:label">
+            <value>Member details</value>
+          </text>
+          <text id="/cash_add_member/summary/cvss_details:label">
+            <value>CVSS Details</value>
+          </text>
+          <text id="/cash_add_member/summary/n_form_submission:label">
+            <value>** Make sure you submit the form to complete this action **</value>
+          </text>
+          <text id="/cash_add_member/summary/n_manager_lead_name:label">
+            <value>Sex : <output value=" /cash_add_member/member_sex_en "/></value>
+          </text>
+          <text id="/cash_add_member/summary/n_meeting_month:label">
+            <value><output value=" /cash_add_member/member_details/member_name "/> has a money transfer account</value>
+          </text>
+          <text id="/cash_add_member/summary/n_meeting_period:label">
+            <value><output value=" /cash_add_member/member_details/member_name "/> does not have a money transfer account</value>
+          </text>
+          <text id="/cash_add_member/summary/n_member_age:label">
+            <value>Age : <output value=" /cash_add_member/member_details/member_age_years "/></value>
+          </text>
+          <text id="/cash_add_member/summary/n_member_dob:label">
+            <value>Date of Birth : <output value=" /cash_add_member/member_details/member_dob "/></value>
+          </text>
+          <text id="/cash_add_member/summary/n_number_of_members:label">
+            <value>Joining Date : <output value=" /cash_add_member/member_details/join_date "/></value>
+          </text>
+          <text id="/cash_add_member/summary/n_treasure_name:label">
+            <value>Telephone : <output value=" /cash_add_member/patient_phone "/></value>
+          </text>
+          <text id="/cash_add_member/summary/n_village_name:label">
+            <value>Full Name : <output value=" /cash_add_member/member_details/member_name "/></value>
+          </text>
+          <text id="/cash_add_member/summary:label">
+            <value>Summary</value>
+          </text>
+        </translation>
+        <translation lang="fr">
+          <text id="/cash_add_member/general/n_general_rules:label">
+            <value>&lt;b&gt;Discutez des régles générales du CVSS&lt;/b&gt;</value>
+          </text>
+          <text id="/cash_add_member/inputs/contact/_id:label">
+            <value>ASC</value>
+          </text>
+          <text id="/cash_add_member/inputs/contact/contact_type:label">
+            <value>Contact Type</value>
+          </text>
+          <text id="/cash_add_member/inputs/contact/name:label">
+            <value>Nom</value>
+          </text>
+          <text id="/cash_add_member/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/cash_add_member/inputs/source_id:label">
+            <value>Source ID</value>
+          </text>
+          <text id="/cash_add_member/member_details/account:jr:requiredMsg">
+            <value>Ce champs est obligatoire</value>
+          </text>
+          <text id="/cash_add_member/member_details/account:label">
+            <value>Numéro de compte de transfert d'argent</value>
+          </text>
+          <text id="/cash_add_member/member_details/handicapped/dont_know:label">
+            <value>Ne sait pas</value>
+          </text>
+          <text id="/cash_add_member/member_details/handicapped/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/cash_add_member/member_details/handicapped/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/cash_add_member/member_details/handicapped:jr:requiredMsg">
+            <value>Ce champs est obligatoire</value>
+          </text>
+          <text id="/cash_add_member/member_details/handicapped:label">
+            <value>Le membre a-t-il un handicap?</value>
+          </text>
+          <text id="/cash_add_member/member_details/join_date:jr:constraintMsg">
+            <value>La date ne doit pas etre dans le passeé</value>
+          </text>
+          <text id="/cash_add_member/member_details/join_date:jr:requiredMsg">
+            <value>Ce champs est obligatoire</value>
+          </text>
+          <text id="/cash_add_member/member_details/join_date:label">
+            <value>Quelle est la date d'adhésion du nouveau membre ?</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_age_years:label">
+            <value>Age (an)</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_dob:jr:constraintMsg">
+            <value>La date ne doit pas etre dans le passeé</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_dob:label">
+            <value>Date</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_has_account/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_has_account/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_has_account:jr:requiredMsg">
+            <value>Ce champs est obligatoire</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_has_account:label">
+            <value>Le membre a-t-il un compte de transfert d'argent ?</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_known_dob/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_known_dob/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_known_dob:label">
+            <value>Date de naissance connue</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_phone:jr:constraintMsg">
+            <value>Veuillez entrer un numéro local valide. Par exemple: XXXXXXXX</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_phone:jr:requiredMsg">
+            <value>Ce champs est obligatoire</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_phone:label">
+            <value>N° Téléphone</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_sex/female:label">
+            <value>Femelle</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_sex/male:label">
+            <value>Homme</value>
+          </text>
+          <text id="/cash_add_member/member_details/member_sex:label">
+            <value>Sexe</value>
+          </text>
+          <text id="/cash_add_member/member_details/membership/household:label">
+            <value>Ménage</value>
+          </text>
+          <text id="/cash_add_member/member_details/membership/individual:label">
+            <value>Individuel</value>
+          </text>
+          <text id="/cash_add_member/member_details/membership:jr:requiredMsg">
+            <value>Ce champs est obligatoire</value>
+          </text>
+          <text id="/cash_add_member/member_details/membership:label">
+            <value>Quel est le type d'adhésion ?</value>
+          </text>
+          <text id="/cash_add_member/member_details/name_ask:hint">
+            <value>Note: Indiquez les 3 noms</value>
+          </text>
+          <text id="/cash_add_member/member_details/name_ask:jr:requiredMsg">
+            <value>Ce champs est obligatoire</value>
+          </text>
+          <text id="/cash_add_member/member_details/name_ask:label">
+            <value>Nom</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/add_new_member:label">
+            <value>Ajoutez de nouvelles personnes</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/name:label">
+            <value>Nom</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/registered/no:label">
+            <value>Non</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/registered/yes:label">
+            <value>Oui</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/registered:jr:requiredMsg">
+            <value>Ce champs est obligatoire</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/registered:label">
+            <value>La personne est-elle déjà inscrite dans un foyer ?</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration/uuid:label">
+            <value>Sélectionner la personne</value>
+          </text>
+          <text id="/cash_add_member/member_details/registration:label">
+            <value>-</value>
+          </text>
+          <text id="/cash_add_member/member_details:label">
+            <value>Details du membre</value>
+          </text>
+          <text id="/cash_add_member/summary/cvss_details:label">
+            <value>Détails de l'adhérant CVSS</value>
+          </text>
+          <text id="/cash_add_member/summary/n_form_submission:label">
+            <value>**Assurez-vous de soumettre le formulaire pour terminer cette action**</value>
+          </text>
+          <text id="/cash_add_member/summary/n_manager_lead_name:label">
+            <value>Sexe : <output value=" /cash_add_member/member_sex_fr "/></value>
+          </text>
+          <text id="/cash_add_member/summary/n_meeting_month:label">
+            <value><output value=" /cash_add_member/member_details/member_name "/> a de compte de transfert d'argent.</value>
+          </text>
+          <text id="/cash_add_member/summary/n_meeting_period:label">
+            <value><output value=" /cash_add_member/member_details/member_name "/> n'a pas de compte de transfert d'argent.</value>
+          </text>
+          <text id="/cash_add_member/summary/n_member_age:label">
+            <value>Âge : <output value=" /cash_add_member/member_details/member_age_years "/></value>
+          </text>
+          <text id="/cash_add_member/summary/n_member_dob:label">
+            <value>Date de naissance : <output value=" /cash_add_member/member_details/member_dob "/></value>
+          </text>
+          <text id="/cash_add_member/summary/n_number_of_members:label">
+            <value>Date d'adhésion : <output value=" /cash_add_member/member_details/join_date "/></value>
+          </text>
+          <text id="/cash_add_member/summary/n_treasure_name:label">
+            <value>Numéro de téléphone : <output value=" /cash_add_member/patient_phone "/></value>
+          </text>
+          <text id="/cash_add_member/summary/n_village_name:label">
+            <value>Nom et prénom : <output value=" /cash_add_member/member_details/member_name "/></value>
+          </text>
+          <text id="/cash_add_member/summary:label">
+            <value>Résumé</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <cash_add_member id="cash_add_member" prefix="J1!cash_add_member!" delimiter="#" version="2023-02-09 21:03:54">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <source>user</source>
+            <source_id/>
+            <contact>
+              <_id/>
+              <name/>
+              <contact_type/>
+              <parent>
+                <_id/>
+                <parent>
+                  <_id/>
+                  <parent>
+                    <_id/>
+                    <parent>
+                      <_id/>
+                      <parent>
+                        <_id/>
+                        <parent>
+                          <_id/>
+                        </parent>
+                      </parent>
+                    </parent>
+                  </parent>
+                </parent>
+              </parent>
+            </contact>
+          </inputs>
+          <site_id tag="hidden"/>
+          <supervision_id tag="hidden"/>
+          <health_area_id tag="hidden"/>
+          <district_id tag="hidden"/>
+          <region_id tag="hidden"/>
+          <central_id tag="hidden"/>
+          <place_id/>
+          <new_patient_id/>
+          <patient_id db-doc-ref=" /cash_add_member/member_details/member_profile "/>
+          <group_min_fee/>
+          <general>
+            <n_general_rules/>
+          </general>
+          <member_details>
+            <registration>
+              <registered/>
+              <uuid/>
+              <name tag="hidden"/>
+              <add_new_member/>
+            </registration>
+            <name_ask tag="hidden"/>
+            <member_name/>
+            <member_sex/>
+            <member_known_dob/>
+            <member_dob/>
+            <member_age_years/>
+            <member_phone/>
+            <handicapped/>
+            <join_date/>
+            <membership/>
+            <member_has_account/>
+            <account/>
+            <member_profile db-doc="true" tag="hidden">
+              <name/>
+              <sex/>
+              <date_of_birth/>
+              <phone_member/>
+              <type>contact</type>
+              <contact_type>c92_household</contact_type>
+              <created_by_doc db-doc-ref="/cash_add_member"/>
+              <parent>
+                <_id/>
+                <parent>
+                  <_id/>
+                  <parent>
+                    <_id/>
+                    <parent>
+                      <_id/>
+                      <parent>
+                        <_id/>
+                        <parent>
+                          <_id/>
+                          <parent>
+                            <_id/>
+                          </parent>
+                        </parent>
+                      </parent>
+                    </parent>
+                  </parent>
+                </parent>
+              </parent>
+            </member_profile>
+          </member_details>
+          <patient_name/>
+          <member_age_in_years/>
+          <patient_phone/>
+          <member_sex_fr/>
+          <member_sex_en/>
+          <summary>
+            <n_form_submission/>
+            <cvss_details/>
+            <n_village_name/>
+            <n_member_age/>
+            <n_member_dob/>
+            <n_manager_lead_name/>
+            <n_treasure_name/>
+            <n_number_of_members/>
+            <n_meeting_period/>
+            <n_meeting_month/>
+          </summary>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </cash_add_member>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/cash_add_member/inputs" relevant="./source = 'user'"/>
+      <bind nodeset="/cash_add_member/inputs/source" type="string"/>
+      <bind nodeset="/cash_add_member/inputs/source_id" type="string"/>
+      <bind nodeset="/cash_add_member/inputs/contact/_id" type="db:person"/>
+      <bind nodeset="/cash_add_member/inputs/contact/name" type="string"/>
+      <bind nodeset="/cash_add_member/inputs/contact/contact_type" type="string"/>
+      <bind nodeset="/cash_add_member/inputs/contact/parent/_id" type="string"/>
+      <bind nodeset="/cash_add_member/inputs/contact/parent/parent/_id" type="string"/>
+      <bind nodeset="/cash_add_member/inputs/contact/parent/parent/parent/_id" type="string"/>
+      <bind nodeset="/cash_add_member/inputs/contact/parent/parent/parent/parent/_id" type="string"/>
+      <bind nodeset="/cash_add_member/inputs/contact/parent/parent/parent/parent/parent/_id" type="string"/>
+      <bind nodeset="/cash_add_member/inputs/contact/parent/parent/parent/parent/parent/parent/_id" type="string"/>
+      <bind nodeset="/cash_add_member/site_id" type="string" calculate="../inputs/contact/parent/_id"/>
+      <bind nodeset="/cash_add_member/supervision_id" type="string" calculate="../inputs/contact/parent/parent/_id"/>
+      <bind nodeset="/cash_add_member/health_area_id" type="string" calculate="../inputs/contact/parent/parent/parent/_id"/>
+      <bind nodeset="/cash_add_member/district_id" type="string" calculate="../inputs/contact/parent/parent/parent/parent/_id"/>
+      <bind nodeset="/cash_add_member/region_id" type="string" calculate="../inputs/contact/parent/parent/parent/parent/parent/_id"/>
+      <bind nodeset="/cash_add_member/central_id" type="string" calculate="../inputs/contact/parent/parent/parent/parent/parent/parent/_id"/>
+      <bind nodeset="/cash_add_member/place_id" type="string" calculate="../inputs/contact/_id"/>
+      <bind nodeset="/cash_add_member/new_patient_id" type="string" calculate="if( /cash_add_member/member_details/registration/registered  = 'yes', ' ',  /cash_add_member/member_details/member_profile )"/>
+      <bind nodeset="/cash_add_member/patient_id" type="string" calculate=" /cash_add_member/member_details/registration/uuid "/>
+      <bind nodeset="/cash_add_member/group_min_fee" type="string" calculate="instance('contact-summary')/context/min_fee"/>
+      <bind nodeset="/cash_add_member/general/n_general_rules" readonly="true()" type="string"/>
+      <bind nodeset="/cash_add_member/member_details/registration/registered" type="select1" jr:requiredMsg="jr:itext('/cash_add_member/member_details/registration/registered:jr:requiredMsg')" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/registration/uuid" type="string" relevant=" /cash_add_member/member_details/registration/registered  = 'yes'"/>
+      <bind nodeset="/cash_add_member/member_details/registration/name" type="string" relevant=" /cash_add_member/member_details/registration/registered  = 'yes'"/>
+      <bind nodeset="/cash_add_member/member_details/registration/add_new_member" readonly="true()" type="string"/>
+      <bind nodeset="/cash_add_member/member_details/name_ask" type="string" relevant=" /cash_add_member/member_details/registration/registered  = 'no'" jr:requiredMsg="jr:itext('/cash_add_member/member_details/name_ask:jr:requiredMsg')" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/member_name" type="string" calculate="coalesce(../registration/name,  /cash_add_member/member_details/name_ask )"/>
+      <bind nodeset="/cash_add_member/member_details/member_sex" type="select1" relevant=" /cash_add_member/member_details/registration/registered  = 'no'" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/member_known_dob" type="select1" relevant=" /cash_add_member/member_details/registration/registered  = 'no'" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/member_dob" type="date" jr:constraintMsg="jr:itext('/cash_add_member/member_details/member_dob:jr:constraintMsg')" constraint=".&lt;now()" relevant=" /cash_add_member/member_details/member_known_dob  ='yes'" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/member_age_years" type="int" relevant=" /cash_add_member/member_details/member_known_dob  ='no'" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/member_phone" type="int" jr:constraintMsg="jr:itext('/cash_add_member/member_details/member_phone:jr:constraintMsg')" constraint="regex(., '^(\d{2}\s?){4}$')" jr:requiredMsg="jr:itext('/cash_add_member/member_details/member_phone:jr:requiredMsg')" relevant=" /cash_add_member/member_details/registration/registered  = 'no'" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/handicapped" type="select1" jr:requiredMsg="jr:itext('/cash_add_member/member_details/handicapped:jr:requiredMsg')" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/join_date" type="date" jr:constraintMsg="jr:itext('/cash_add_member/member_details/join_date:jr:constraintMsg')" constraint=".&lt;now()" jr:requiredMsg="jr:itext('/cash_add_member/member_details/join_date:jr:requiredMsg')" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/membership" type="select1" jr:requiredMsg="jr:itext('/cash_add_member/member_details/membership:jr:requiredMsg')" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/member_has_account" type="select1" jr:requiredMsg="jr:itext('/cash_add_member/member_details/member_has_account:jr:requiredMsg')" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/account" type="int" relevant=" /cash_add_member/member_details/member_has_account  = 'yes'" jr:requiredMsg="jr:itext('/cash_add_member/member_details/account:jr:requiredMsg')" required="true()"/>
+      <bind nodeset="/cash_add_member/member_details/member_profile" relevant=" /cash_add_member/member_details/registration/registered  = 'no'"/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/name" type="string" calculate=" /cash_add_member/member_details/member_name "/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/sex" type="string" calculate=" /cash_add_member/member_details/member_sex "/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/date_of_birth" type="string" calculate=" /cash_add_member/member_details/member_dob "/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/phone_member" type="string" calculate=" /cash_add_member/member_details/member_phone "/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/type" type="string"/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/contact_type" type="string"/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/created_by_doc" type="string" calculate="."/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/parent/_id" type="string" calculate=" /cash_add_member/place_id "/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/parent/parent/_id" type="string" calculate=" /cash_add_member/site_id "/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/parent/parent/parent/_id" type="string" calculate=" /cash_add_member/supervision_id "/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/parent/parent/parent/parent/_id" type="string" calculate=" /cash_add_member/health_area_id "/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/parent/parent/parent/parent/parent/_id" type="string" calculate=" /cash_add_member/district_id "/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/parent/parent/parent/parent/parent/parent/_id" type="string" calculate=" /cash_add_member/region_id "/>
+      <bind nodeset="/cash_add_member/member_details/member_profile/parent/parent/parent/parent/parent/parent/parent/_id" type="string" calculate=" /cash_add_member/central_id "/>
+      <bind nodeset="/cash_add_member/patient_name" type="string" calculate=" /cash_add_member/member_details/member_name "/>
+      <bind nodeset="/cash_add_member/member_age_in_years" type="string" calculate="floor( difference-in-months(  /cash_add_member/member_details/member_dob , now() ) div 12 )"/>
+      <bind nodeset="/cash_add_member/patient_phone" type="string" calculate=" /cash_add_member/member_details/member_profile/phone_member "/>
+      <bind nodeset="/cash_add_member/member_sex_fr" type="string" calculate="if( /cash_add_member/member_details/member_sex ='male', 'Homme', 'Femme')"/>
+      <bind nodeset="/cash_add_member/member_sex_en" type="string" calculate="if( /cash_add_member/member_details/member_sex ='male', 'Male', 'Female')"/>
+      <bind nodeset="/cash_add_member/summary/n_form_submission" readonly="true()" type="string"/>
+      <bind nodeset="/cash_add_member/summary/cvss_details" readonly="true()" type="string"/>
+      <bind nodeset="/cash_add_member/summary/n_village_name" readonly="true()" type="string"/>
+      <bind nodeset="/cash_add_member/summary/n_member_age" readonly="true()" type="string" relevant=" /cash_add_member/member_details/member_known_dob  ='no'"/>
+      <bind nodeset="/cash_add_member/summary/n_member_dob" readonly="true()" type="string" relevant=" /cash_add_member/member_details/member_known_dob  ='yes'"/>
+      <bind nodeset="/cash_add_member/summary/n_manager_lead_name" readonly="true()" type="string"/>
+      <bind nodeset="/cash_add_member/summary/n_treasure_name" readonly="true()" type="string"/>
+      <bind nodeset="/cash_add_member/summary/n_number_of_members" readonly="true()" type="string"/>
+      <bind nodeset="/cash_add_member/summary/n_meeting_period" readonly="true()" type="string" relevant=" /cash_add_member/member_details/member_has_account ='no'"/>
+      <bind nodeset="/cash_add_member/summary/n_meeting_month" readonly="true()" type="string" relevant=" /cash_add_member/member_details/member_has_account ='yes'"/>
+      <bind nodeset="/cash_add_member/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/cash_add_member/inputs">
+      <group ref="/cash_add_member/inputs/contact">
+        <input appearance="db-object" ref="/cash_add_member/inputs/contact/_id">
+          <label ref="jr:itext('/cash_add_member/inputs/contact/_id:label')"/>
+        </input>
+        <group ref="/cash_add_member/inputs/contact/parent">
+          <group ref="/cash_add_member/inputs/contact/parent/parent">
+            <group ref="/cash_add_member/inputs/contact/parent/parent/parent">
+              <group ref="/cash_add_member/inputs/contact/parent/parent/parent/parent">
+                <group ref="/cash_add_member/inputs/contact/parent/parent/parent/parent/parent">
+                  <group ref="/cash_add_member/inputs/contact/parent/parent/parent/parent/parent/parent"/>
+                </group>
+              </group>
+            </group>
+          </group>
+        </group>
+      </group>
+    </group>
+    <group ref="/cash_add_member/general">
+      <label ref="jr:itext('/cash_add_member/general:label')"/>
+      <input ref="/cash_add_member/general/n_general_rules">
+        <label ref="jr:itext('/cash_add_member/general/n_general_rules:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/cash_add_member/member_details">
+      <label ref="jr:itext('/cash_add_member/member_details:label')"/>
+      <group ref="/cash_add_member/member_details/registration">
+        <select1 ref="/cash_add_member/member_details/registration/registered">
+          <label ref="jr:itext('/cash_add_member/member_details/registration/registered:label')"/>
+          <item>
+            <label ref="jr:itext('/cash_add_member/member_details/registration/registered/yes:label')"/>
+            <value>yes</value>
+          </item>
+          <item>
+            <label ref="jr:itext('/cash_add_member/member_details/registration/registered/no:label')"/>
+            <value>no</value>
+          </item>
+        </select1>
+        <input appearance="select-contact type-c92_household" ref="/cash_add_member/member_details/registration/uuid">
+          <label ref="jr:itext('/cash_add_member/member_details/registration/uuid:label')"/>
+        </input>
+        <input ref="/cash_add_member/member_details/registration/add_new_member">
+          <label ref="jr:itext('/cash_add_member/member_details/registration/add_new_member:label')"/>
+        </input>
+      </group>
+      <input ref="/cash_add_member/member_details/name_ask">
+        <label ref="jr:itext('/cash_add_member/member_details/name_ask:label')"/>
+        <hint ref="jr:itext('/cash_add_member/member_details/name_ask:hint')"/>
+      </input>
+      <select1 ref="/cash_add_member/member_details/member_sex">
+        <label ref="jr:itext('/cash_add_member/member_details/member_sex:label')"/>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/member_sex/male:label')"/>
+          <value>male</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/member_sex/female:label')"/>
+          <value>female</value>
+        </item>
+      </select1>
+      <select1 ref="/cash_add_member/member_details/member_known_dob">
+        <label ref="jr:itext('/cash_add_member/member_details/member_known_dob:label')"/>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/member_known_dob/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/member_known_dob/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/cash_add_member/member_details/member_dob">
+        <label ref="jr:itext('/cash_add_member/member_details/member_dob:label')"/>
+      </input>
+      <input ref="/cash_add_member/member_details/member_age_years">
+        <label ref="jr:itext('/cash_add_member/member_details/member_age_years:label')"/>
+      </input>
+      <input ref="/cash_add_member/member_details/member_phone">
+        <label ref="jr:itext('/cash_add_member/member_details/member_phone:label')"/>
+      </input>
+      <select1 ref="/cash_add_member/member_details/handicapped">
+        <label ref="jr:itext('/cash_add_member/member_details/handicapped:label')"/>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/handicapped/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/handicapped/no:label')"/>
+          <value>no</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/handicapped/dont_know:label')"/>
+          <value>dont_know</value>
+        </item>
+      </select1>
+      <input ref="/cash_add_member/member_details/join_date">
+        <label ref="jr:itext('/cash_add_member/member_details/join_date:label')"/>
+      </input>
+      <select1 ref="/cash_add_member/member_details/membership">
+        <label ref="jr:itext('/cash_add_member/member_details/membership:label')"/>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/membership/household:label')"/>
+          <value>household</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/membership/individual:label')"/>
+          <value>individual</value>
+        </item>
+      </select1>
+      <select1 ref="/cash_add_member/member_details/member_has_account">
+        <label ref="jr:itext('/cash_add_member/member_details/member_has_account:label')"/>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/member_has_account/yes:label')"/>
+          <value>yes</value>
+        </item>
+        <item>
+          <label ref="jr:itext('/cash_add_member/member_details/member_has_account/no:label')"/>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/cash_add_member/member_details/account">
+        <label ref="jr:itext('/cash_add_member/member_details/account:label')"/>
+      </input>
+      <group ref="/cash_add_member/member_details/member_profile">
+        <group ref="/cash_add_member/member_details/member_profile/parent">
+          <group ref="/cash_add_member/member_details/member_profile/parent/parent">
+            <group ref="/cash_add_member/member_details/member_profile/parent/parent/parent">
+              <group ref="/cash_add_member/member_details/member_profile/parent/parent/parent/parent">
+                <group ref="/cash_add_member/member_details/member_profile/parent/parent/parent/parent/parent">
+                  <group ref="/cash_add_member/member_details/member_profile/parent/parent/parent/parent/parent/parent">
+                    <group ref="/cash_add_member/member_details/member_profile/parent/parent/parent/parent/parent/parent/parent"/>
+                  </group>
+                </group>
+              </group>
+            </group>
+          </group>
+        </group>
+      </group>
+    </group>
+    <group appearance="field-list summary" ref="/cash_add_member/summary">
+      <label ref="jr:itext('/cash_add_member/summary:label')"/>
+      <input ref="/cash_add_member/summary/n_form_submission">
+        <label ref="jr:itext('/cash_add_member/summary/n_form_submission:label')"/>
+      </input>
+      <input appearance="h1 yellow" ref="/cash_add_member/summary/cvss_details">
+        <label ref="jr:itext('/cash_add_member/summary/cvss_details:label')"/>
+      </input>
+      <input ref="/cash_add_member/summary/n_village_name">
+        <label ref="jr:itext('/cash_add_member/summary/n_village_name:label')"/>
+      </input>
+      <input ref="/cash_add_member/summary/n_member_age">
+        <label ref="jr:itext('/cash_add_member/summary/n_member_age:label')"/>
+      </input>
+      <input ref="/cash_add_member/summary/n_member_dob">
+        <label ref="jr:itext('/cash_add_member/summary/n_member_dob:label')"/>
+      </input>
+      <input ref="/cash_add_member/summary/n_manager_lead_name">
+        <label ref="jr:itext('/cash_add_member/summary/n_manager_lead_name:label')"/>
+      </input>
+      <input ref="/cash_add_member/summary/n_treasure_name">
+        <label ref="jr:itext('/cash_add_member/summary/n_treasure_name:label')"/>
+      </input>
+      <input ref="/cash_add_member/summary/n_number_of_members">
+        <label ref="jr:itext('/cash_add_member/summary/n_number_of_members:label')"/>
+      </input>
+      <input ref="/cash_add_member/summary/n_meeting_period">
+        <label ref="jr:itext('/cash_add_member/summary/n_meeting_period:label')"/>
+      </input>
+      <input ref="/cash_add_member/summary/n_meeting_month">
+        <label ref="jr:itext('/cash_add_member/summary/n_meeting_month:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>
