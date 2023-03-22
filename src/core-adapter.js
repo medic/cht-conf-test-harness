@@ -73,8 +73,7 @@ class CoreAdapter {
   }
 
   runContactSummary(appSettingsPath, contact, reports, lineage, userRoles){
-    // this.core, this.rulesEngine, this.appSettings
-    const cht = chtScriptApiWithDefaults(this.core, this.appSettings, userRoles)
+    const cht = chtScriptApiWithDefaults(this.core, this.appSettings, userRoles);
     const pathToProject = path.dirname(appSettingsPath);
     return mockContactSummary(pathToProject, contact, reports, lineage, cht);
   }
