@@ -675,7 +675,7 @@ class Harness {
     }
 
     if (this.options.useDevMode) {
-      return devMode.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage);
+      return this.coreAdapter.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage, this.options.userRoles);
     } else {
       const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
       return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);

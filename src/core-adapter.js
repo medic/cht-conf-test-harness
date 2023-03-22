@@ -5,6 +5,9 @@
 const md5 = require('md5');
 const PouchDB = require('pouchdb');
 const uuid = require('uuid/v4');
+const path = require('path');
+
+const mockContactSummary = require('./dev-mode/mock.cht-conf.contact-summary-lib');
 
 PouchDB.plugin(require('pouchdb-adapter-memory'));
 
@@ -68,6 +71,15 @@ class CoreAdapter {
   minify(doc) {
     return this.lineageLib.minify(doc);
   }
+
+  runContactSummary(appSettingsPath, contact, reports, lineage, userRoles){
+    // this.core, this.rulesEngine, this.appSettings
+    const cht = chtScriptApiWithDefaults(this.core, this.appSettings, userRoles)
+    const pathToProject = path.dirname(appSettingsPath);
+    return mockContactSummary(pathToProject, contact, reports, lineage, cht);
+  }
+
+  
 }
 
 const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, userRoles, state) => {
@@ -179,6 +191,8 @@ const chtScriptApiWithDefaults = (chtScriptApi, settingsDoc, defaultUserRoles) =
   if (!chtScriptApi) {
     return;
   }
+
+  console.log(defaultUserRoles);
 
   const defaultChtPermissionSettings = settingsDoc.permissions;
   return {
