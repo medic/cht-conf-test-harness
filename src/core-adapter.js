@@ -5,9 +5,6 @@
 const md5 = require('md5');
 const PouchDB = require('pouchdb');
 const uuid = require('uuid/v4');
-const path = require('path');
-
-const mockContactSummary = require('./dev-mode/mock.cht-conf.contact-summary-lib');
 
 PouchDB.plugin(require('pouchdb-adapter-memory'));
 
@@ -72,11 +69,7 @@ class CoreAdapter {
     return this.lineageLib.minify(doc);
   }
 
-  runContactSummary(appSettingsPath, contact, reports, lineage, userRoles){
-    const cht = chtScriptApiWithDefaults(this.core, this.appSettings, userRoles);
-    const pathToProject = path.dirname(appSettingsPath);
-    return mockContactSummary(pathToProject, contact, reports, lineage, cht);
-  }
+ chtScriptApi =(userRoles) => chtScriptApiWithDefaults(this.core.ChtScriptApi, this.appSettings, userRoles);
 
   
 }
@@ -191,8 +184,6 @@ const chtScriptApiWithDefaults = (chtScriptApi, settingsDoc, defaultUserRoles) =
     return;
   }
 
-  console.log(defaultUserRoles);
-
   const defaultChtPermissionSettings = settingsDoc.permissions;
   return {
     v1: {
@@ -200,7 +191,7 @@ const chtScriptApiWithDefaults = (chtScriptApi, settingsDoc, defaultUserRoles) =
         return chtScriptApi.v1.hasPermissions(permissions, userRoles, chtPermissionsSettings);
       },
       hasAnyPermission: (permissionsGroupList, userRoles = defaultUserRoles, chtPermissionsSettings = defaultChtPermissionSettings) => {
-        return chtScriptApi.v1.hasAnyPermission(permissionsGroupList, userRoles, chtPermissionsSettings);
+        return chtScriptApi.ChtScriptApi.v1.hasAnyPermission(permissionsGroupList, userRoles, chtPermissionsSettings);
       }
     }
   };

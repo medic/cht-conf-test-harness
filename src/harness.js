@@ -674,11 +674,12 @@ class Harness {
       resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, stateEnsuringPresenceOfMocks(this.state, user, subject));
     }
 
+    const chtApi = this.coreAdapter.chtScriptApi(this.options.userRoles);
     if (this.options.useDevMode) {
-      return this.coreAdapter.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage, this.options.userRoles);
+      return devMode.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage, chtApi);
     } else {
-      const contactSummaryFunction = new Function('contact', 'reports', 'lineage', self.appSettings.contact_summary);
-      return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage);
+      const contactSummaryFunction = new Function('contact', 'reports', 'lineage', 'cht', self.appSettings.contact_summary);
+      return contactSummaryFunction(resolvedContact, resolvedReports, resolvedLineage, chtApi);
     }
   }
 }
