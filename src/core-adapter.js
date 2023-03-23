@@ -193,7 +193,7 @@ const chtScriptApiWithDefaults = (chtScriptApi, settingsDoc, defaultUserRoles) =
         return chtScriptApi.v1.hasPermissions(permissions, userRoles, chtPermissionsSettings);
       },
       hasAnyPermission: (permissionsGroupList, userRoles = defaultUserRoles, chtPermissionsSettings = defaultChtPermissionSettings) => {
-        return chtScriptApi.ChtScriptApi.v1.hasAnyPermission(permissionsGroupList, userRoles, chtPermissionsSettings);
+        return chtScriptApi.v1.hasAnyPermission(permissionsGroupList, userRoles, chtPermissionsSettings);
       }
     }
   };

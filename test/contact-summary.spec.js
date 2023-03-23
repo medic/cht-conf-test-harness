@@ -2,6 +2,7 @@ const { expect } = require('chai');
 const path = require('path');
 const rewire = require('rewire');
 const sinon = require('sinon');
+const CoreAdapter = require('../src/core-adapter');
 
 const Harness = rewire('../src/harness');
 
@@ -17,6 +18,7 @@ const harness = new Harness({
 describe('getContactSummary', () => {
   let functionStub;
   let basicReport;
+  const coreAdapter = new CoreAdapter(harness.core, harness.appSettings);
 
   before(async () => {
     await harness.start();
@@ -37,8 +39,9 @@ describe('getContactSummary', () => {
     const contact = {};
     const reports = [];
     const lineage = [];
-    await harness.getContactSummary(contact, reports, lineage);
-    expect(functionStub.args[0]).to.deep.eq([contact, reports, lineage]);
+    const cht = coreAdapter.chtScriptApi(['default_roles']);
+    await harness.getContactSummary(contact, reports, lineage, cht);
+    expect(functionStub.args[0]).to.deep.eq([contact, reports, lineage, cht]);
   }));
 
   it('mocks datetime - setNow after start', async () => {
@@ -51,7 +54,7 @@ describe('getContactSummary', () => {
     await harness.getContactSummary();
 
     const args = functionStub.args[0];
-    expect(args.length).to.eq(3);
+    expect(args.length).to.eq(4);
     expect(args[0]).to.nested.include({
       _id: 'patient_id',
       name: 'Patient Name',
@@ -72,17 +75,18 @@ describe('getContactSummary', () => {
 
   it('state used for reports and lineage but not contact', async () => Harness.__with__({ Function: function() { return functionStub; } })(async () => {
     const mockContact = { _id: 'foo' };
+    const cht = coreAdapter.chtScriptApi(['default_roles']);
     await harness.getContactSummary(mockContact);
-    expect(functionStub.args[0]).to.deep.eq([mockContact, [], []]);
+    expect(functionStub.args[0]).to.deep.eq([mockContact, [], [], cht]);
   }));
 
   it('#71 - mocked reports in state are passed to contact-summary', async () => Harness.__with__({ Function: function() { return functionStub; } })(async () => {
     const mockContact = { _id: 'foo', type: 'person' };
     const mockReport = { _id: 'bar', patient_id: mockContact._id };
-
+    const cht = coreAdapter.chtScriptApi(['default_roles']);
     harness.pushMockedDoc(mockReport);
     await harness.getContactSummary(mockContact);
-    expect(functionStub.args[0]).to.deep.eq([mockContact, [mockReport], []]);
+    expect(functionStub.args[0]).to.deep.eq([mockContact, [mockReport], [], cht]);
   }));
 
   it('contact summary for patient_id', async () => {
