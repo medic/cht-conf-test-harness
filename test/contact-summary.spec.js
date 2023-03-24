@@ -1,4 +1,4 @@
-const { expect, assert } = require('chai');
+const { expect } = require('chai');
 const path = require('path');
 const rewire = require('rewire');
 const sinon = require('sinon');
@@ -38,11 +38,8 @@ describe('getContactSummary', () => {
     const reports = [];
     const lineage = [];
     await harness.getContactSummary(contact, reports, lineage);
-    const slicedArgs = functionStub.args[0].slice(0, 3);
-    expect(slicedArgs).to.deep.eq([contact, reports, lineage]);
-    const chtApi = functionStub.args[0][3];
-    assert.isFunction(chtApi.v1.hasPermissions);
-    assert.isFunction(chtApi.v1.hasAnyPermission);
+    expect(functionStub.args[0]).to.deep.include.members([contact, reports, lineage]);
+    expect(functionStub.args[0][3].v1).to.not.be.undefined;
   }));
 
   it('mocks datetime - setNow after start', async () => {
@@ -77,11 +74,8 @@ describe('getContactSummary', () => {
   it('state used for reports and lineage but not contact', async () => Harness.__with__({ Function: function() { return functionStub; } })(async () => {
     const mockContact = { _id: 'foo' };
     await harness.getContactSummary(mockContact);
-    const slicedArgs = functionStub.args[0].slice(0, 3);
-    expect(slicedArgs).to.deep.eq([mockContact, [], []]);
-    const chtApi = functionStub.args[0][3];
-    assert.isFunction(chtApi.v1.hasPermissions);
-    assert.isFunction(chtApi.v1.hasAnyPermission);
+    expect(functionStub.args[0]).to.deep.include.members([mockContact, [], []]);
+    expect(functionStub.args[0][3].v1).to.not.be.undefined;
   }));
 
   it('#71 - mocked reports in state are passed to contact-summary', async () => Harness.__with__({ Function: function() { return functionStub; } })(async () => {
@@ -89,12 +83,8 @@ describe('getContactSummary', () => {
     const mockReport = { _id: 'bar', patient_id: mockContact._id };
     harness.pushMockedDoc(mockReport);
     await harness.getContactSummary(mockContact);
-
-    const slicedArgs = functionStub.args[0].slice(0, 3);
-    expect(slicedArgs).to.deep.eq([mockContact, [mockReport], []]);
-    const chtApi = functionStub.args[0][3];
-    assert.isFunction(chtApi.v1.hasPermissions);
-    assert.isFunction(chtApi.v1.hasAnyPermission);
+    expect(functionStub.args[0]).to.deep.include.members([mockContact, [mockReport], []]);
+    expect(functionStub.args[0][3].v1).to.not.be.undefined;
   }));
 
   it('contact summary for patient_id', async () => {
@@ -126,4 +116,14 @@ describe('getContactSummary', () => {
       expect(error.message).to.contain('_id');
     }
   });
+
+  it('Cht API end-to-end test', async () => {
+    const chtScriptApi  = await harness.core.ChtScriptApi;
+    expect(chtScriptApi).to.not.be.undefined;
+    const hasPermissions =  chtScriptApi.v1.hasPermissions(['can_view_analytics', 'can_verify_reports'], harness.userRoles);
+    const hasAnyPermission  = chtScriptApi.v1.hasAnyPermission([['can_view_analytics']], harness.userRoles);
+    expect(hasPermissions).to.be.false;
+    expect(hasAnyPermission).to.be.false;
+  });
+
 });
