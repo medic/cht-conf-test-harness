@@ -306,7 +306,13 @@ class Harness {
     }
 
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-    const fillResult = await this.page.evaluate(async innerAnswer => await window.formFiller.fillAppForm(innerAnswer), answers);
+    const fillResult = await this.page.evaluate(async innerAnswer => {
+      try {
+        return await window.formFiller.fillForm(innerAnswer);
+      } catch (err) {
+        throw new Error(`Error encountered while filling form: ${err}`);
+      }
+    }, answers);
     this.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
     if (this.options.logFormErrors && fillResult.errors && fillResult.errors.length > 0) {
@@ -691,7 +697,13 @@ const fillContactForm = async (self, contactType, action, ...answers) => {
   self._state.pageContent = await self.page.content();
 
   self.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
-  const fillResult = await self.page.evaluate(async (innerContactType, innerAnswer) => await window.formFiller.fillContactForm(innerContactType, innerAnswer), contactType, answers);
+  const fillResult = await self.page.evaluate(async (innerContactType, innerAnswer) => {
+    try {
+      await window.formFiller.fillContactForm(innerContactType, innerAnswer);
+    } catch (err) {
+      throw new Error(`Error encountered while filling form: ${err}`);
+    }
+  }, contactType, answers);
   self.log(`Result of fill is: ${JSON.stringify(fillResult, null, 2)}`);
 
   // https://github.com/medic/cht-conf-test-harness/issues/105
