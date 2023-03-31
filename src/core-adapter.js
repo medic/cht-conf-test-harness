@@ -68,6 +68,10 @@ class CoreAdapter {
   minify(doc) {
     return this.lineageLib.minify(doc);
   }
+
+  chtScriptApi(userRoles) {
+    return chtScriptApiWithDefaults(this.core.ChtScriptApi, this.appSettings, userRoles);
+  }
 }
 
 const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, userRoles, state) => {
