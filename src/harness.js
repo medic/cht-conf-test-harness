@@ -308,7 +308,7 @@ class Harness {
     this.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
     const fillResult = await this.page.evaluate(async innerAnswer => {
       try {
-        return await window.formFiller.fillForm(innerAnswer);
+        return await window.formFiller.fillAppForm(innerAnswer);
       } catch (err) {
         throw new Error(`Error encountered while filling form: ${err}`);
       }
@@ -699,7 +699,7 @@ const fillContactForm = async (self, contactType, action, ...answers) => {
   self.log(`Filling ${answers.length} pages with answer: ${JSON.stringify(answers)}`);
   const fillResult = await self.page.evaluate(async (innerContactType, innerAnswer) => {
     try {
-      await window.formFiller.fillContactForm(innerContactType, innerAnswer);
+      return await window.formFiller.fillContactForm(innerContactType, innerAnswer);
     } catch (err) {
       throw new Error(`Error encountered while filling form: ${err}`);
     }
