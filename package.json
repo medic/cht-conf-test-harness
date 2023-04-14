@@ -47,6 +47,7 @@
     "semver": "^7.3.5",
     "underscore": "^1.10.2",
     "webpack": "^5.37.0",
+    "webpack-clean-console-plugin": "0.0.7",
     "webpack-cli": "^3.3.0"
   }
 }

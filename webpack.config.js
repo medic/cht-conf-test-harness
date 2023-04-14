@@ -1,4 +1,6 @@
 const path = require('path');
+const WebpackCleanConsolePlugin = require('webpack-clean-console-plugin');
+
 
 module.exports = [
   {
@@ -41,6 +43,9 @@ module.exports = [
     },
     target: 'node',
     mode: 'development',
-    devtool: 'source-map'
+    devtool: 'source-map',
+    plugins: [
+      new WebpackCleanConsolePlugin({ include: ['debug'] }),
+    ],
   }
 ];
