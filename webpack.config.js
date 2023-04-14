@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const WebpackCleanConsolePlugin = require('webpack-clean-console-plugin');
+
 
 const coreVersions = fs.readdirSync('node_modules')
   .filter(dir => dir.startsWith('cht-core-'));
@@ -34,14 +36,14 @@ const formHostConfig = (chtCoreTag) => {
         'lodash/intersection': path.join(chtCorePath, 'webapp/node_modules/lodash/intersection'),
         'lodash/partial': path.join(chtCorePath, 'webapp/node_modules/lodash/partial'),
         'lodash/uniq': path.join(chtCorePath, 'webapp/node_modules/lodash/uniq'),
-        
+
         // enketo geopicker widget css requires these two images as backgrounds
         // they don't exist in the enketo source and the styles are commented out in the latest version
         // https://github.com/enketo/enketo-core/blob/master/src/widget/geo/geopicker.scss#L1119
         // the builder throws an error if the paths are not resolved
         '../../../build/images/layers.png': path.join(chtCorePath, 'webapp/src/img/layers.png'),
         '../../../build/images/layers-2x.png': path.join(chtCorePath, 'webapp/src/img/layers.png'),
-        
+
         // Exclude the node-forge dependency from the bundle. This breaks the `digest` xForm function from
         // openrosa-xpath-evaluator, but keeping it in adds 72.51KB to the bundle size.
         // https://github.com/medic/cht-core/issues/7324
@@ -54,7 +56,7 @@ const formHostConfig = (chtCoreTag) => {
         'moment': path.join(chtCorePath, 'api/node_modules/moment'),
         'select2': path.join(chtCorePath, 'webapp/node_modules/select2'),
         '@medic/phone-number': path.join(chtCorePath, 'shared-libs/phone-number'),
-        
+
         '@cht-core': chtCorePath,
       }
     },
@@ -70,7 +72,6 @@ const formHostConfig = (chtCoreTag) => {
 
 module.exports = [
   ...coreVersions.map(formHostConfig),
-
   {
     entry: './all-chts-bundle.js',
     output: {
@@ -92,6 +93,9 @@ module.exports = [
     },
     target: 'node',
     mode: 'development',
-    devtool: 'source-map'
-  }
+    devtool: 'source-map',
+    plugins: [
+      new WebpackCleanConsolePlugin({ include: ['debug'] }),
+    ],
+  },
 ];
