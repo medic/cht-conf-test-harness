@@ -37,6 +37,7 @@
     "raw-loader": "^1.0.0",
     "rewire": "^4.0.1",
     "webpack": "^5.37.0",
+    "webpack-clean-console-plugin": "^0.0.7",
     "webpack-cli": "^3.3.0"
   }
 }
