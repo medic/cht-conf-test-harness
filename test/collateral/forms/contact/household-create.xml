@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>Add household</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/data/contact/contact_name:hint">
+            <value>Please include both names</value>
+          </text>
+          <text id="/data/contact/contact_name:jr:constraintMsg">
+            <value>Enter a valid name consisting of only letters starting with a capital letter</value>
+          </text>
+          <text id="/data/contact/contact_name:label">
+            <value>Names</value>
+          </text>
+          <text id="/data/contact/name:label">
+            <value>Household Head</value>
+          </text>
+          <text id="/data/contact:label">
+            <value>Household Head</value>
+          </text>
+        </translation>
+        <translation lang="lg">
+          <text id="/data/contact/contact_name:hint">
+            <value>Osabibwa oteekewo amannya gombi</value>
+          </text>
+          <text id="/data/contact/contact_name:jr:constraintMsg">
+            <value>Yingizaamu erinnya ettuufu nga likolebwa nnukuta zokka ate nga litandisa nnukuta nnene</value>
+          </text>
+          <text id="/data/contact/contact_name:label">
+            <value>Amannya</value>
+          </text>
+          <text id="/data/contact/name:label">
+            <value>Akulira amaka</value>
+          </text>
+          <text id="/data/contact:label">
+            <value>Akulira amaka</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="contact:clinic:create" prefix="J1!contact:clinic:create!" delimiter="#" version="2023-04-18 03:47:20">
+          <contact>
+            <name/>
+            <contact_name/>
+          </contact>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/contact/name" type="string" calculate="concat(../contact_name, ' Household')" required="true()"/>
+      <bind nodeset="/data/contact/contact_name" type="string" required="true()" jr:constraintMsg="jr:itext('/data/contact/contact_name:jr:constraintMsg')"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/data/contact">
+      <label ref="jr:itext('/data/contact:label')"/>
+      <input ref="/data/contact/contact_name">
+        <label ref="jr:itext('/data/contact/contact_name:label')"/>
+        <hint ref="jr:itext('/data/contact/contact_name:hint')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>

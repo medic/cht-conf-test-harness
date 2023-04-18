@@ -188,4 +188,11 @@ describe('contact forms', () => {
       reported_date: now.valueOf()
     });
   });
+  it('should log error thrown during filling a contact form', async () => {
+    try {
+      await harness.fillContactCreateForm('household', ['Peter"s']);
+    } catch(error) {
+      expect(error.message).to.contain('Error encountered while filling form');
+    }
+  });
 });
