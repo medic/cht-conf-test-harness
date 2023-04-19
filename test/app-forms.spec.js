@@ -313,4 +313,14 @@ describe('forms that have caused bugs', () => {
     expect(result.errors).to.be.empty;
     expect(result.report.fields.data_from_cs).to.eq('override');
   });
+
+  it('#228 - jquery self closing tags', async () => {
+    const result = await harness.fillForm({
+      form: 'two_two_eight',
+      contactSummary: {
+        context: { muted: 'fixed' }
+      },
+    }, []);
+    expect(result.errors).to.be.empty;
+  });
 });
