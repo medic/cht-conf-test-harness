@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>Bug Harness#228</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/two_two_eight/fp_follow_up/display_is_muted:label">
+            <value>Show Mute Status</value>
+          </text>
+          <text id="/two_two_eight/fp_follow_up/form:label">
+            <value>This field breaks above</value>
+          </text>
+          <text id="/two_two_eight/fp_follow_up:label">
+            <value>Bug cht-conf-test-harness#228</value>
+          </text>
+          <text id="/two_two_eight/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/two_two_eight/inputs/source_id:label">
+            <value>Source ID</value>
+          </text>
+          <text id="/two_two_eight/inputs:label">
+            <value>Patient</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <two_two_eight id="fp_follow_up" prefix="J1!fp_follow_up!" delimiter="#" version="2021-08-27 00:00:00">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <source>user</source>
+            <source_id/>
+            <contact>
+              <_id>user</_id>
+              <source/>
+            </contact>
+          </inputs>
+          <is_muted/>
+          <patient_uuid/>
+          <fp_follow_up>
+            <display_is_muted/>
+            <form/>
+          </fp_follow_up>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </two_two_eight>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/two_two_eight/inputs" relevant="./source= 'user'" constraint="field-list"/>
+      <bind nodeset="/two_two_eight/inputs/source" type="string"/>
+      <bind nodeset="/two_two_eight/inputs/source_id" type="string"/>
+      <bind nodeset="/two_two_eight/inputs/contact" relevant="./source= 'user'" constraint="field-list"/>
+      <bind nodeset="/two_two_eight/inputs/contact/_id" type="string"/>
+      <bind nodeset="/two_two_eight/inputs/contact/source" type="string"/>
+      <bind nodeset="/two_two_eight/is_muted" type="string" calculate="instance('contact-summary')/context/muted"/>
+      <bind nodeset="/two_two_eight/patient_uuid" type="string" calculate="../inputs/contact/_id"/>
+      <bind nodeset="/two_two_eight/fp_follow_up/display_is_muted" type="string" calculate=" /two_two_eight/is_muted " required="true()"/>
+      <bind nodeset="/two_two_eight/fp_follow_up/form" type="string"/>
+      <bind nodeset="/two_two_eight/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/two_two_eight/inputs">
+      <label ref="jr:itext('/two_two_eight/inputs:label')"/>
+      <group ref="/two_two_eight/inputs/contact"/>
+    </group>
+    <group appearance="field-list" ref="/two_two_eight/fp_follow_up">
+      <label ref="jr:itext('/two_two_eight/fp_follow_up:label')"/>
+      <input ref="/two_two_eight/fp_follow_up/display_is_muted">
+        <label ref="jr:itext('/two_two_eight/fp_follow_up/display_is_muted:label')"/>
+      </input>
+      <input ref="/two_two_eight/fp_follow_up/form">
+        <label ref="jr:itext('/two_two_eight/fp_follow_up/form:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>
