@@ -315,12 +315,14 @@ describe('forms that have caused bugs', () => {
   });
 
   it('#228 - jquery self closing tags', async () => {
+    const actual = 'fixed';
     const result = await harness.fillForm({
       form: 'two_two_eight',
       contactSummary: {
-        context: { muted: 'fixed' }
+        context: { muted: actual }
       },
     }, []);
     expect(result.errors).to.be.empty;
+    expect(result.report.fields.fp_follow_up.display_is_muted).to.eq(actual);
   });
 });
