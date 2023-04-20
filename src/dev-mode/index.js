@@ -5,9 +5,10 @@ const stubbedNoolsLib = require('./mock.cht-conf.nools-lib');
 const devRulesEmitter = require('./mock.rules-engine.rules-emitter');
 
 module.exports = {
-  runContactSummary: (appSettingsPath, contact, reports, lineage) => {
+
+  runContactSummary: (appSettingsPath, contact, reports, lineage, cht) => {
     const pathToProject = path.dirname(appSettingsPath);
-    return mockContactSummary(pathToProject, contact, reports, lineage);
+    return mockContactSummary(pathToProject, contact, reports, lineage, cht);
   },
 
   mockRulesEngine: (core, appSettingsPath) => {

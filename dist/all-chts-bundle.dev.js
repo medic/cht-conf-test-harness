@@ -46537,7 +46537,7 @@ const groupPermissions = (permissions) => {
 
 const debug = (reason, permissions, roles) => {
   // eslint-disable-next-line no-console
-  console.debug(`CHT Script API :: ${reason}. User roles: ${roles}. Wanted permissions: ${permissions}`);
+   ;
 };
 
 const checkUserHasPermissions = (permissions, userRoles, chtPermissionsSettings, expectedToHave) => {
@@ -90220,7 +90220,7 @@ const medicPouchProvider = db => {
         return Promise.resolve([]);
       }
 
-      console.debug(`Committing ${taskDocs.length} task document updates`);
+       ;
       return db.bulkDocs(taskDocs)
         .catch(err => console.error('Error committing task documents', err));
     },

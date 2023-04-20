@@ -5,12 +5,13 @@
  * It behaves the same as the production version but can be run inside node require() instead of relying on the resolution aliasing provided by webpack.
  * @module mock.cht-conf.contact-summary-lib
  */
-module.exports = (pathToProject, contact, reports, lineage) => {
+module.exports = (pathToProject, contact, reports, lineage, cht) => {
   const cacheBefore = Object.keys(require.cache);
   try {
     global.contact = contact;
     global.reports = reports;
     global.lineage = lineage;
+    global.cht = cht;
 
     const contactSummaryEmitter = require(`${pathToProject}/node_modules/cht-conf/src/contact-summary/contact-summary-emitter`);
     const pathToContactSummary = `${pathToProject}/contact-summary.templated.js`;
@@ -22,6 +23,7 @@ module.exports = (pathToProject, contact, reports, lineage) => {
     delete global.contact;
     delete global.reports;
     delete global.lineage;
+    delete global.cht;
 
     const cacheAfter = Object.keys(require.cache).filter(key => !cacheBefore.includes(key));
     cacheAfter.forEach(key => { delete require.cache[key]; });
