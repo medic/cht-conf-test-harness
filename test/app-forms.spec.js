@@ -304,7 +304,7 @@ describe('forms that have caused bugs', () => {
   });
 
   it('#210 - select2 crashes when used (eg. select-contact type-person)', async () => {
-    const result = await harness.fillForm('cash_add_member', [], ['yes', 'hh_member_id', 'no', '2023-02-23', 'individual', 'yes', 11111111 ], [])
+    const result = await harness.fillForm('cash_add_member', [], ['yes', 'hh_member_id', 'no', '2023-02-23', 'individual', 'yes', 11111111 ], []);
     expect(result.errors).to.be.empty;
   });
 
