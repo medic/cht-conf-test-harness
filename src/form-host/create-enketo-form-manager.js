@@ -7,6 +7,8 @@ const {
   EnketoFormManager
 } = require('@cht-core/webapp/src/js/enketo/enketo-form-manager');
 
+const Select2Service = require('./select2');
+
 const HARDCODED_TYPES = [
   'district_hospital',
   'health_center',
@@ -101,13 +103,29 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
   const GlobalActions = { setSnackbarContent : () => {} };
 
   window.CHTCore.AndroidAppLauncher = { isEnabled: () => false };
-  window.CHTCore.MRDT = { enabled: () => false };
-  window.CHTCore.Select2Search = { init: () => Promise.resolve() };
-  window.CHTCore.Settings = {
+  window.CHTCore.MRDT = { enabled: () => false };  
+  const settingsService = {
     get: () => Promise.resolve({
       default_country_code: '1'
     })
   };
+  window.CHTCore.Settings = settingsService;
+
+  window.CHTCore.Select2Search = Select2Service(
+    // formatProvider
+    { sender: x => x },
+    
+    translateService,
+    lineageModelGeneratorService,
+    searchService,
+    // sessionService,
+    { isOnlineOnly: () => false },
+
+    settingsService,
+    
+    // contactMutedService
+    { getMuted: () => false },
+  );
 
   return new EnketoFormManager(
     new ContactServices(
