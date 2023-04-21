@@ -1,3 +1,4 @@
+const phoneNumber = require('@cht-core/shared-libs/phone-number');
 
 function Select2Service(
   formatProvider,
@@ -178,27 +179,29 @@ function Select2Service(
     }
   }
 
-  return async function init(selectEl, _types, _options) {
-    const settings = await settingsService.get();
-    const types = Array.isArray(_types) ? _types : [ _types ];
-    const options = {
-      ..._options,
-      templateSelection: _options.templateSelection || defaultTemplateSelection.bind(this),
-      initialValue: _options.initialValue || selectEl.val(),
-      sendMessageExtras: _options.sendMessageExtras || defaultSendMessageExtras,
-      allowNew: _options.allowNew || false,
-      pageSize: _options.pageSize || 20,
-      tags: _options.tags || false,
-      templateResult: _options.templateResult || defaultTemplateResult.bind(this)
-    };
+  return {
+    init: async function init(selectEl, _types, _options) {
+      const settings = await settingsService.get();
+      const types = Array.isArray(_types) ? _types : [ _types ];
+      const options = {
+        ..._options,
+        templateSelection: _options.templateSelection || defaultTemplateSelection.bind(this),
+        initialValue: _options.initialValue || selectEl.val(),
+        sendMessageExtras: _options.sendMessageExtras || defaultSendMessageExtras,
+        allowNew: _options.allowNew || false,
+        pageSize: _options.pageSize || 20,
+        tags: _options.tags || false,
+        templateResult: _options.templateResult || defaultTemplateResult.bind(this)
+      };
 
-    if (options.allowNew && types.length !== 1) {
-      throw new Error('Unsupported options: cannot allowNew with ' + types.length + ' types');
-    }
+      if (options.allowNew && types.length !== 1) {
+        throw new Error('Unsupported options: cannot allowNew with ' + types.length + ' types');
+      }
 
-    initSelect2(selectEl, options, types);
+      initSelect2(selectEl, options, types);
 
-    return resolveInitialValue(selectEl, options, settings);
+      return resolveInitialValue(selectEl, options, settings);
+    },
   };
 };
 

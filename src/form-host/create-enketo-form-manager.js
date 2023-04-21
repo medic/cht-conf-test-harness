@@ -1,3 +1,5 @@
+const Select2Service = require('./select2-service');
+const { sortBy } = require('lodash');
 const {
   ContactServices,
   FileServices,
@@ -7,7 +9,9 @@ const {
   EnketoFormManager
 } = require('@cht-core/webapp/src/js/enketo/enketo-form-manager');
 
-const Select2Service = require('./select2');
+
+// weird dependency in select2
+window._sortBy = sortBy;
 
 const HARDCODED_TYPES = [
   'district_hospital',
@@ -68,13 +72,15 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
   };
   window.CHTCore.Language = languageService;
 
+  const documentFoundBySelect2 = { _id: 'patient_id', name: 'food' };
   const lineageModelGeneratorService = {
     contact: () => Promise.resolve({
+      doc: documentFoundBySelect2,
       lineage: ['lineage_parent_1', 'lineage_parent_2'],
     }),
   };
   const searchService = {
-    search: () => [],
+    search: () => Promise.resolve([documentFoundBySelect2]),
   };
   const translateService = {
     get: x => Promise.resolve(x),
@@ -111,10 +117,25 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
   };
   window.CHTCore.Settings = settingsService;
 
+  const formatProvider = {
+    sender: (options) => {
+      const parts = [];
+      if (options.name) {
+        parts.push('<span class="name">' + _.escape(options.name) + '</span>');
+      }
+      if (options.muted) {
+        parts.push('<span class="muted">' + _.escape(this.translateService.instant('contact.muted')) + '</span>');
+      }
+      if (options.phone) {
+        parts.push('<span>' + _.escape(options.phone) + '</span>');
+      }
+
+      return '<span class="sender">' + parts.join('') + '</span>';
+    } 
+  };
+
   window.CHTCore.Select2Search = Select2Service(
-    // formatProvider
-    { sender: x => x },
-    
+    formatProvider,
     translateService,
     lineageModelGeneratorService,
     searchService,
@@ -127,7 +148,7 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
     { getMuted: () => false },
   );
 
-  return new EnketoFormManager(
+  const enketoFormManager = new EnketoFormManager(
     new ContactServices(
       extractLineageService,
       userContactService,
@@ -150,6 +171,9 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
     transitionsService,
     GlobalActions
   );
+
+  window.CHTCore.Enketo = enketoFormManager;
+  return enketoFormManager;
 };
 
 module.exports = createEnketoFormManager;
