@@ -1,4 +1,7 @@
+const { sortBy: _sortBy } = require('lodash');
 const phoneNumber = require('@cht-core/shared-libs/phone-number');
+
+const { $ } = window;
 
 function Select2Service(
   formatProvider,
@@ -203,6 +206,6 @@ function Select2Service(
       return resolveInitialValue(selectEl, options, settings);
     },
   };
-};
+}
 
 module.exports = Select2Service;

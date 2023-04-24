@@ -1,5 +1,4 @@
 const Select2Service = require('./select2-service');
-const { sortBy } = require('lodash');
 const {
   ContactServices,
   FileServices,
@@ -8,10 +7,6 @@ const {
   XmlServices,
   EnketoFormManager
 } = require('@cht-core/webapp/src/js/enketo/enketo-form-manager');
-
-
-// weird dependency in select2
-window._sortBy = sortBy;
 
 const HARDCODED_TYPES = [
   'district_hospital',
