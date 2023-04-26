@@ -107,7 +107,7 @@ const fillPage = async (self, pageAnswer) => {
 
     const nextUnansweredQuestion = Array.from($questions).find(question => !answeredQuestions.has(question));
     answeredQuestions.add(nextUnansweredQuestion);
-    fillQuestion(nextUnansweredQuestion, answer);
+    await fillQuestion(nextUnansweredQuestion, answer);
   }
 
   const allPagesSuccessful = hasPages(self.form) ? await nextPage(self.form) : true;
@@ -122,7 +122,7 @@ const fillPage = async (self, pageAnswer) => {
   };
 };
 
-const fillQuestion = (question, answer) => {
+const fillQuestion = async (question, answer) => {
   if(answer === null || answer === undefined) {
     return;
   }
@@ -137,6 +137,28 @@ const fillQuestion = (question, answer) => {
 
   if (firstInput.localName === 'textarea') {
     return allInputs.val(answer).trigger('change');
+  }
+
+  if ($question.hasClass('or-appearance-select-contact')) {
+    console.log('opening select2');
+    await new Promise(resolve => {
+      $(allInputs[1]).on('select2:opening', () => resolve());
+      $(allInputs[1]).select2('open');
+    })
+
+    console.log('typing answer');
+    await new Promise(resolve => {
+      $(allInputs[1]).on('change.select2', () => resolve());
+      $('.select2-search__field').val(answer);
+      $(allInputs[1]).trigger('change.select2');
+    });
+    
+    console.log('selecting first result');
+    // relies on selectOnClose: true
+    await new Promise(resolve => {
+      $(allInputs[1]).on('select2:select', () => resolve());
+      $(allInputs[1]).select2('close');
+    });
   }
 
   switch (firstInput.type) {
@@ -164,6 +186,7 @@ const fillQuestion = (question, answer) => {
   case 'date':
   case 'tel':
   case 'time':
+  case 'select-one':
   case 'number':
     allInputs.val(answer).trigger('change');
     break;
@@ -198,9 +221,6 @@ const fillQuestion = (question, answer) => {
     }
     break;
   }
-  case 'select-one':
-    allInputs.val(answer).trigger('change');
-    break;
   default:
     throw `Unhandled input type ${firstInput.type}`;
   }

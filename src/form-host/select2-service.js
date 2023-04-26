@@ -129,12 +129,13 @@ function Select2Service(
   function initSelect2(selectEl, options, types) {
     selectEl.select2({
       ajax: {
-        delay: 500,
+        delay: 0,
         transport: (params, successCb, failureCb) => query(params, successCb, failureCb, options, types)
       },
       allowClear: true,
       placeholder: '',
       tags: options.tags,
+      selectOnClose: true,
       templateResult: options.templateResult,
       templateSelection: options.templateSelection,
       width: '100%',
