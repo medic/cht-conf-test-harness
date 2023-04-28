@@ -277,10 +277,7 @@ describe('forms that have caused bugs', () => {
     expect(bikramDate).to.include('महिनावारी भएको अन्तिम मिति : १५ à¤•à¤¾à¤°à¥');
   });
   it('should log error thrown during filling an app form', async () => {
-    try {
-      await harness.fillForm('mother_name', ['Jane"s']);
-    } catch(error) {
-      expect(error.message).to.contain('Error encountered while filling form');
-    }
+    await expect(harness.fillForm('mother_name', ['Jane"s']))
+      .to.be.rejectedWith('Error encountered while filling form');
   });
 });

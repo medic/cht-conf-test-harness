@@ -4,8 +4,11 @@ const chaiExclude = require('chai-exclude');
 const path = require('path');
 const Harness = require('../src/harness');
 const { cloneDeep } = require('lodash');
+const  chaiAsPromised = require('chai-as-promised');
+
 
 chai.use(chaiExclude);
+chai.use(chaiAsPromised);
 const { expect } = chai;
 
 
@@ -189,10 +192,8 @@ describe('contact forms', () => {
     });
   });
   it('should log error thrown during filling a contact form', async () => {
-    try {
-      await harness.fillContactCreateForm('household', ['Peter"s']);
-    } catch(error) {
-      expect(error.message).to.contain('Error encountered while filling form');
-    }
+    
+    await expect(harness.fillContactCreateForm('household', ['Peter"s']))
+      .to.be.rejectedWith('Error encountered while filling form');
   });
 });
