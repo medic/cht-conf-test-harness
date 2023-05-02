@@ -12,7 +12,6 @@
     "travis": "npm run build && npm run eslint && npm test"
   },
   "dependencies": {
-    "chai-as-promised": "^7.1.1",
     "lodash": "^4.17.15",
     "luxon": "^1.27.0",
     "md5": "^2.3.0",
@@ -28,6 +27,7 @@
     "@medic/eslint-config": "^1.1.0",
     "bikram-sambat": "^1.7.0",
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "chai-exclude": "^2.0.2",
     "cht-core-3-10": "git+https://github.com/medic/cht-core.git#3.10.x",
     "cht-core-3-11": "git+https://github.com/medic/cht-core.git#3.11.x",
