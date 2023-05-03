@@ -303,6 +303,11 @@ describe('forms that have caused bugs', () => {
     expect(formResult.report.fields.next_pnc.s_next_pnc_date).to.eq('2000-01-07');
   });
 
+  it('#210 - select2 crashes when used (eg. select-contact type-person)', async () => {
+    const result = await harness.fillForm('cash_add_member', [], ['yes', 'hh_member_id', 'no', '2023-02-23', 'individual', 'yes', 11111111 ], []);
+    expect(result.errors).to.be.empty;
+  });
+
   it('explicit set of contact-summary context', async () => {
     const result = await harness.fillForm({
       form: 'instance-contact-summary',

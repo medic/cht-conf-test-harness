@@ -31,6 +31,9 @@ for dir in "${dirs[@]}"; do
   # https://github.com/dangrossman/bootstrap-daterangepicker/pull/437
   (cd "$dir" && patch -f webapp/node_modules/bootstrap-daterangepicker/daterangepicker.js < webapp/patches/bootstrap-daterangepicker.patch)
 
+  # 210 patch to disable db-object-widget
+  (cd "$dir" && patch -f webapp/src/js/enketo/widgets.js < ../../patches/210-disable-db-object-widgets.patch)
+
   # patch enketo to always mark the /inputs group as relevant
   (cd "$dir" && patch -f webapp/node_modules/enketo-core/src/js/form.js < webapp/patches/enketo-inputs-always-relevant_form.patch)
   (cd "$dir" && patch -f webapp/node_modules/enketo-core/src/js/relevant.js < webapp/patches/enketo-inputs-always-relevant_relevant.patch)

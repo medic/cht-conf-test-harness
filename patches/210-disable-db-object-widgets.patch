@@ -1,0 +1,11 @@
+--- webapp/src/js/enketo/widgets.js	2023-04-20 16:37:35.734190381 -0700
++++ "webapp/src/js/enketo/widgets copy.js"	2023-04-20 16:37:09.310232244 -0700
+@@ -22,7 +22,7 @@
+     require( 'enketo-core/src/widget/textarea/textarea' ).default,
+     require( 'enketo-core/src/widget/select-autocomplete/autocomplete' ).default,
+     require( './widgets/countdown-widget' ),
+-    require( './widgets/db-object-widget' ),
++    // require( './widgets/db-object-widget' ),
+     require( './widgets/phone-widget' ),
+     require( './widgets/unselectable-radios' ),
+     require( './widgets/android-datepicker' ),
