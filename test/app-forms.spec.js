@@ -278,6 +278,6 @@ describe('forms that have caused bugs', () => {
   });
   it('should log error thrown during filling an app form', async () => {
     await expect(harness.fillForm('mother_name', ['Jane"s']))
-      .to.be.rejectedWith('Error encountered while filling form');
+      .to.be.rejectedWith("FormLogicError: Could not evaluate: concat(../mother_name, ' baby')");
   });
 });

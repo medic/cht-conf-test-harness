@@ -191,9 +191,9 @@ describe('contact forms', () => {
       reported_date: now.valueOf()
     });
   });
-  it('should log error thrown during filling a contact form', async () => {
-    
+  it('should log descriptive error thrown during filling a contact form', async () => {
+
     await expect(harness.fillContactCreateForm('household', ['Peter"s']))
-      .to.be.rejectedWith('Error encountered while filling form');
+      .to.be.rejectedWith("FormLogicError: Could not evaluate: concat(../contact_name, ' Household')");
   });
 });
