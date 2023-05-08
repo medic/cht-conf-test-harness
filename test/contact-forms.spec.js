@@ -4,8 +4,11 @@ const chaiExclude = require('chai-exclude');
 const path = require('path');
 const Harness = require('../src/harness');
 const { cloneDeep } = require('lodash');
+const  chaiAsPromised = require('chai-as-promised');
+
 
 chai.use(chaiExclude);
+chai.use(chaiAsPromised);
 const { expect } = chai;
 
 
@@ -187,5 +190,10 @@ describe('contact forms', () => {
       contact_type: 'no_pages',
       reported_date: now.valueOf()
     });
+  });
+  it('should log descriptive error thrown during filling a contact form', async () => {
+
+    await expect(harness.fillContactCreateForm('household', ['Peter"s']))
+      .to.be.rejectedWith("FormLogicError: Could not evaluate: concat(../contact_name, ' Household')");
   });
 });

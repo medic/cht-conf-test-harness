@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>Add household</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/mother_name/contact/mother_name:label">
+            <value>Whose baby is it ?</value>
+          </text>
+          <text id="/mother_name/contact/name:label">
+            <value>Baby mother</value>
+          </text>
+          <text id="/mother_name/contact:label">
+            <value>Baby mother</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <mother_name id="contact:clinic:create" prefix="J1!contact:clinic:create!" delimiter="#" version="2023-04-18 04:46:19">
+          <contact>
+            <name/>
+            <mother_name/>
+          </contact>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </mother_name>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/mother_name/contact/name" type="string" required="true()" calculate="concat(../mother_name, ' baby')"/>
+      <bind nodeset="/mother_name/contact/mother_name" type="string" required="true()"/>
+      <bind nodeset="/mother_name/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/mother_name/contact">
+      <label ref="jr:itext('/mother_name/contact:label')"/>
+      <input ref="/mother_name/contact/mother_name">
+        <label ref="jr:itext('/mother_name/contact/mother_name:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>

@@ -276,4 +276,8 @@ describe('forms that have caused bugs', () => {
     const bikramDate = await harness.page.evaluate(() => window.$$('[data-itext-id="/pregnancy/summary/r_pregnancy_details:label"]').text()); 
     expect(bikramDate).to.include('महिनावारी भएको अन्तिम मिति : १५ à¤•à¤¾à¤°à¥');
   });
+  it('should log error thrown during filling an app form', async () => {
+    await expect(harness.fillForm('mother_name', ['Jane"s']))
+      .to.be.rejectedWith("FormLogicError: Could not evaluate: concat(../mother_name, ' baby')");
+  });
 });
