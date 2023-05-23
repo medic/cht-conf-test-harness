@@ -5,6 +5,7 @@ const Harness = require('../src/harness');
 
 const harness = new Harness({
   directory: path.join(__dirname, 'collateral', 'project-without-source'),
+  headless: false, 
   xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
   harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
   verbose: false,
@@ -305,6 +306,11 @@ describe('forms that have caused bugs', () => {
 
   it('#210 - select2 crashes when used (eg. select-contact type-person)', async () => {
     const result = await harness.fillForm('cash_add_member', [], ['yes', 'hh_member_id', 'no', '2023-02-23', 'individual', 'yes', 11111111 ], []);
+    expect(result.errors).to.be.empty;
+  });
+
+  it('#234 - fill datetime field', async () => {
+    const result = await harness.fillForm('bug_234', ['2023-01-01']);
     expect(result.errors).to.be.empty;
   });
 
