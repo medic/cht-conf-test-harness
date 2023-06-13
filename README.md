@@ -1,4 +1,4 @@
-# Medic Test Harness for Projects
+# Test Harness for CHT Configuration
 
 View the documentation [here](http://docs.communityhealthtoolkit.org/cht-conf-test-harness/).
 
