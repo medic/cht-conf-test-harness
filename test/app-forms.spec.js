@@ -310,8 +310,14 @@ describe('forms that have caused bugs', () => {
   });
 
   it('#234 - fill datetime field', async () => {
-    const result = await harness.fillForm('bug_234', ['2023-01-01']);
+    const result = await harness.fillForm('bug_234', ['2023-01-01 1:22']);
     expect(result.errors).to.be.empty;
+  });
+
+  it('#234 - datetime field is required', async () => {
+    const result = await harness.fillForm('bug_234', ['2023-01-01']);
+    expect(result.errors).to.not.be.empty;
+    expect(result.errors[0].msg).to.eq('enketo.constraint.required');
   });
 
   it('explicit set of contact-summary context', async () => {
