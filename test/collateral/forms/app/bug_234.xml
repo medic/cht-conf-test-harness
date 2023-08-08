@@ -90,7 +90,7 @@
       <bind nodeset="/bug_234/inputs/source" type="string"/>
       <bind nodeset="/bug_234/inputs/source_id" type="string"/>
       <bind nodeset="/bug_234/items/desc" readonly="true()" type="string"/>
-      <bind nodeset="/bug_234/items/two_three_four" type="dateTime"/>
+      <bind nodeset="/bug_234/items/two_three_four" type="dateTime" required="true()"/>
       <bind nodeset="/bug_234/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
     </model>
   </h:head>
@@ -108,7 +108,7 @@
       <input ref="/bug_234/items/desc">
         <label ref="jr:itext('/bug_234/items/desc:label')"/>
       </input>
-      <input appearance="hidden" ref="/bug_234/items/two_three_four">
+      <input ref="/bug_234/items/two_three_four">
         <label ref="jr:itext('/bug_234/items/two_three_four:label')"/>
       </input>
     </group>
