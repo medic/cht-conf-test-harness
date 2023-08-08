@@ -1,11 +1,14 @@
-const { expect } = require('chai');
+const chai = require('chai');
+chai.use(require('chai-as-promised'));
+
 const { DateTime } = require('luxon');
 const path = require('path');
 const Harness = require('../src/harness');
 
+const { expect } = chai;
+
 const harness = new Harness({
   directory: path.join(__dirname, 'collateral', 'project-without-source'),
-  headless: false, 
   xformFolderPath: path.join(__dirname, 'collateral', 'forms'),
   harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
   verbose: false,
@@ -314,8 +317,13 @@ describe('forms that have caused bugs', () => {
     expect(result.errors).to.be.empty;
   });
 
+  it('#234 - fill datetime expected input format', () => {
+    return expect(harness.fillForm('bug_234', ['2023-01-01']))
+      .to.be.rejectedWith('expect input in format');
+  });
+
   it('#234 - datetime field is required', async () => {
-    const result = await harness.fillForm('bug_234', ['2023-01-01']);
+    const result = await harness.fillForm('bug_234', ['2023-01-01 x']);
     expect(result.errors).to.not.be.empty;
     expect(result.errors[0].msg).to.eq('enketo.constraint.required');
   });
