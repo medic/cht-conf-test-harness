@@ -1,7 +1,11 @@
-const { expect } = require('chai');
+const chai = require('chai');
+chai.use(require('chai-as-promised'));
+
 const { DateTime } = require('luxon');
 const path = require('path');
 const Harness = require('../src/harness');
+
+const { expect } = chai;
 
 const harness = new Harness({
   directory: path.join(__dirname, 'collateral', 'project-without-source'),
@@ -306,6 +310,22 @@ describe('forms that have caused bugs', () => {
   it('#210 - select2 crashes when used (eg. select-contact type-person)', async () => {
     const result = await harness.fillForm('cash_add_member', [], ['yes', 'hh_member_id', 'no', '2023-02-23', 'individual', 'yes', 11111111 ], []);
     expect(result.errors).to.be.empty;
+  });
+
+  it('#234 - datetime field with correct input format', async () => {
+    const result = await harness.fillForm('bug_234', ['2023-01-01 1:22']);
+    expect(result.errors).to.be.empty;
+  });
+
+  it('#234 - datetime field fails to fill due to invalid input', () => {
+    return expect(harness.fillForm('bug_234', ['2023-01-01']))
+      .to.be.rejectedWith('expect input in format');
+  });
+
+  it('#234 - datetime field fails enketo validation', async () => {
+    const result = await harness.fillForm('bug_234', ['2023-01-01 x']);
+    expect(result.errors).to.not.be.empty;
+    expect(result.errors[0].msg).to.eq('enketo.constraint.required');
   });
 
   it('explicit set of contact-summary context', async () => {

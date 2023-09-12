@@ -170,6 +170,14 @@ const fillQuestion = (question, answer) => {
   case 'text':
     if (allInputs.parent().hasClass('date')) {
       allInputs.first().datepicker('setDate', answer);
+    } if (allInputs.hasClass('timepicker-default')) {
+      const [date, time] = answer.split(' ', 2);
+      if (!time) {
+        throw new Error('Elements of type datetime expect input in format: "2022-12-31 13:21"');
+      }
+
+      allInputs.eq(0).datepicker('setDate', date);
+      allInputs.eq(1).val(time).trigger('change');
     } else {
       allInputs.val(answer).trigger('change');
     }

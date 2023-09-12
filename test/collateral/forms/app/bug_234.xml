@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>Yala Yala - Visite à domicile</h:title>
+    <model>
+      <itext>
+        <translation lang="bm">
+          <text id="/bug_234/inputs/source:label">
+            <value>-</value>
+          </text>
+          <text id="/bug_234/inputs/source_id:label">
+            <value>-</value>
+          </text>
+          <text id="/bug_234/inputs:label">
+            <value>Patient</value>
+          </text>
+          <text id="/bug_234/items/desc:label">
+            <value>-</value>
+          </text>
+          <text id="/bug_234/items/two_three_four:label">
+            <value>-</value>
+          </text>
+          <text id="/bug_234/items:label">
+            <value>-</value>
+          </text>
+        </translation>
+        <translation lang="en">
+          <text id="/bug_234/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/bug_234/inputs/source_id:label">
+            <value>Source ID</value>
+          </text>
+          <text id="/bug_234/inputs:label">
+            <value>Patient</value>
+          </text>
+          <text id="/bug_234/items/desc:label">
+            <value>A form with only a DateTime input element</value>
+          </text>
+          <text id="/bug_234/items/two_three_four:label">
+            <value>Example DateTime</value>
+          </text>
+        </translation>
+        <translation lang="fr">
+          <text id="/bug_234/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/bug_234/inputs/source_id:label">
+            <value>Source de l'Identifiant</value>
+          </text>
+          <text id="/bug_234/inputs:label">
+            <value>Patient</value>
+          </text>
+          <text id="/bug_234/items/desc:label">
+            <value>-</value>
+          </text>
+          <text id="/bug_234/items/two_three_four:label">
+            <value>-</value>
+          </text>
+          <text id="/bug_234/items:label">
+            <value>-</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <bug_234 id="bug_234" prefix="J1!bug_234!" delimiter="#" version="2023-05-23">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <source>user</source>
+            <source_id/>
+          </inputs>
+          <items>
+            <desc/>
+            <two_three_four/>
+          </items>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </bug_234>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/bug_234/inputs" relevant="./source = 'user'"/>
+      <bind nodeset="/bug_234/inputs/source" type="string"/>
+      <bind nodeset="/bug_234/inputs/source_id" type="string"/>
+      <bind nodeset="/bug_234/items/desc" readonly="true()" type="string"/>
+      <bind nodeset="/bug_234/items/two_three_four" type="dateTime" required="true()"/>
+      <bind nodeset="/bug_234/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/bug_234/inputs">
+      <label ref="jr:itext('/bug_234/inputs:label')"/>
+      <input appearance="hidden" ref="/bug_234/inputs/source">
+        <label ref="jr:itext('/bug_234/inputs/source:label')"/>
+      </input>
+      <input appearance="hidden" ref="/bug_234/inputs/source_id">
+        <label ref="jr:itext('/bug_234/inputs/source_id:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/bug_234/items">
+      <input ref="/bug_234/items/desc">
+        <label ref="jr:itext('/bug_234/items/desc:label')"/>
+      </input>
+      <input ref="/bug_234/items/two_three_four">
+        <label ref="jr:itext('/bug_234/items/two_three_four:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>
