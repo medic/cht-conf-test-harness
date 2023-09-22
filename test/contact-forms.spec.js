@@ -193,7 +193,7 @@ describe('contact forms', () => {
     const result = await harness.fillContactCreateForm(
       'clinic',
       ['no'],
-      ['no', 'Joe', '', 'male',40,'', '', '2000-01-01', 'national', 'CN123456789076', 'no', 'no', 'negative', 'no', 'no', 'no', 'no', 'no', 'yes', 'yes'],
+      ['no', 'Joe', '', 'male', 40, '', '', '2000-01-01', 'national', 'CN123456789076', 'no', 'no', 'negative', 'no', 'no', 'no', 'no', 'no', 'yes', 'yes'],
       ['no'], 
       ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'flush', 'mud', 'yes_connected_to_sewer', 'yes', 'water_soap_available', 'yes']
     );
