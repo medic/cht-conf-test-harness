@@ -187,4 +187,16 @@ describe('contact forms', () => {
       reported_date: now.valueOf()
     });
   });
+
+  it('#239 - fillContactCreateForm yields error undefined (reading map)', async () => {
+    await harness.setNow('2000-01-01');
+    const result = await harness.fillContactCreateForm(
+      'clinic',
+      ['no'],
+      ['no', 'Joe', '', 'male', 40, '', '', '2000-01-01', 'national', 'CN123456789076', 'no', 'no', 'negative', 'no', 'no', 'no', 'no', 'no', 'yes', 'yes'],
+      ['no'], 
+      ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'flush', 'mud', 'yes_connected_to_sewer', 'yes', 'water_soap_available', 'yes']
+    );
+    expect(result.errors).to.be.empty;
+  });
 });
