@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "devDependencies": {
-    "cht-conf": "github:medic/cht-conf#main"
+    "cht-conf": "^3.9.3"
   }
 }
