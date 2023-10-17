@@ -222,27 +222,23 @@ const getRulesSettings = (chtCore, settingsDoc, userContactDoc, userRoles, sessi
 };
 
 const getRules = (coreVersion, settingsTasks) => {
-  const addBoilerplateToCode = code => `define Target { _id: null, contact: null, deleted: null, type: null, pass: null, date: null, groupBy: null }
+  const addNoolsBoilerplateToCode = code => `define Target { _id: null, contact: null, deleted: null, type: null, pass: null, date: null, groupBy: null }
 define Contact { contact: null, reports: null, tasks: null }
-define Task { _id: null, deleted: null, doc: null, contact: null, icon: null, date: null, readyStart: null, readyEnd: null, title: null, fields: null, resolved: null, priority: null, priorityLabel: null, reports: null, actions: null }
+define Task {
+  _id: null, deleted: null, doc: null, contact: null, icon: null, date: null, readyStart: null, readyEnd: null, 
+  title: null, fields: null, resolved: null, priority: null, priorityLabel: null, reports: null, actions: null
+}
 rule GenerateEvents {
   when { c: Contact } then { ${code} }
 }`;
 
+  // rules mutation added in cht-conf 3.19.0
   const actualCoreVersion = semver.coerce(coreVersion);
-  const addNoolsBoilerplate = semver.lt(actualCoreVersion, '4.2.0-dev');
-  if (settingsTasks.isDeclarative && addNoolsBoilerplate) {
-    return {
-      rules: addBoilerplateToCode(settingsTasks.rules),
-      // do not set the isDeclarative flag when the code has nools boilerplate
-      rulesAreDeclarative: false,
-    };
-  }
-
-  return {
-    rules: settingsTasks.rules,
-    rulesAreDeclarative: !!settingsTasks.isDeclarative,
-  };
+  const addNoolsBoilerplate = settingsTasks.isDeclarative && semver.lt(actualCoreVersion, '4.2.0-dev');
+  const rules = addNoolsBoilerplate ? addNoolsBoilerplateToCode(settingsTasks.rules) : settingsTasks.rules;
+  // do not set the isDeclarative flag when the code has nools boilerplate
+  const rulesAreDeclarative = addNoolsBoilerplate && !!settingsTasks.isDeclarative;
+  return { rules, rulesAreDeclarative };
 };
 
 module.exports = CoreAdapter;
