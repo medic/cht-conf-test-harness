@@ -71,6 +71,11 @@ describe('getContactSummary', () => {
     expect(args[2][2]).to.be.undefined;
   }));
 
+  it('#240 - contact summary includes reports of the selected contacts children', async () => Harness.__with__({ Function: function () { return functionStub; } })(async () => {
+    await harness.getContactSummary('family_id');
+    expect(functionStub.args[0][1]).to.deep.eq(basicReport);
+  }));
+
   it('state used for reports and lineage but not contact', async () => Harness.__with__({ Function: function () { return functionStub; } })(async () => {
     const mockContact = { _id: 'foo' };
     await harness.getContactSummary(mockContact);
