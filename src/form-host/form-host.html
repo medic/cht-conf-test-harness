@@ -2,8 +2,13 @@
 
 <head>
   <title>xForm Test Host</title>
-  <link rel="stylesheet" type="text/css" href="../../ext/styles.css" />
-  <style>body { overflow-y: auto; }</style>
+<!--  <link rel="stylesheet" type="text/css" href="../../ext/styles.css" />-->
+<!--  <style>body { overflow-y: auto; }</style>-->
+  <script src="../../dist/cht-form_runtime.js"></script>
+  <script src="../../dist/cht-form_polyfills.js"></script>
+  <script src="../../dist/cht-form_scripts.js"></script>
+  <script src="../../dist/cht-form_main.js"></script>
+  <link rel="stylesheet" href="../../dist/cht-form_styles.css">
   <script>
     const params = new URL(window.location).searchParams;
     const coreVersion = params.get('core') || '4-0';
@@ -15,21 +20,73 @@
 
     document.head.appendChild(script);
   </script>
+<!--  <script type="text/javascript" src="samu.js"></script>-->
 </head>
 
 <body>
-  <div class="content-pane">
-    <div class="enketo" id="task-report">
-      <div id="enketo-wrapper">
-        <div class="container pages"></div>
-        <div class="form-footer">
-          <button class="btn btn-default previous-page disabled">Prev</button>
-          <button class="btn btn-primary next-page disabled">Next</button>
-          <a class="btn submit btn-primary">Submit</a>
-        </div>
-      </div>
-    </div>
-  </div>
+  <cht-form id="enketo-wrapper"></cht-form>
+<!--  <div class="content-pane">-->
+<!--    <div class="enketo" id="task-report">-->
+<!--      <div id="enketo-wrapper">-->
+<!--        <div class="container pages"></div>-->
+<!--        <div class="form-footer">-->
+<!--          <button class="btn btn-default previous-page disabled">Prev</button>-->
+<!--          <button class="btn btn-primary next-page disabled">Next</button>-->
+<!--          <a class="btn submit btn-primary">Submit</a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 </body>
+
+<script>
+
+  // const myForm = document.getElementById('enketo-wrapper');
+  //
+  // myForm.addEventListener('onRender', (e) => {
+  //   console.log(`jkuester - scripted onRender`);
+  //   const form = e.detail;
+  //   const currentPage = $(form.pages.current);
+  //   const tryChildren = Array.from($(currentPage).children(`fieldset.question.simple-select`));
+  //   const tryQuestion = $(tryChildren[0]);
+  //   const tryInput = tryQuestion.find(`input[value="yes"]`);
+  //   tryInput.click();
+
+    // const workingQuestion = $('#cht-form-id > div.container.pages > form > section.or-group.or-appearance-field-list.current > fieldset:nth-child(2)');
+    // const workingInput = workingQuestion.find(`input[value="yes"]`);
+    // workingInput.click();
+
+  // });
+
+  // myForm.user = {
+  //   contact_id: 'test_user'
+  // };
+  // myForm.contactSummary = { pregnancy_uuid : 'myPregUUID'};
+  // myForm.content = {
+  //   contact: { name: "My Test Patient" },
+  //   text_widgets: { text: "hello world" },
+  // };
+  //
+  // myForm.formHtml = formData.formHtml;
+  // myForm.formModel = formData.formModel;
+  // myForm.formXml = formData.formXml;
+
+  // myForm.addEventListener('onSubmit', async (e) => {
+  //   myForm.style.display = 'none';
+  //   const submittedData = document.getElementById('submittedData');
+  //   submittedData.innerText = JSON.stringify(e.detail, null, 2);
+  //   const submitBanner = document.getElementById('submitBanner');
+  //   submitBanner.style.display = 'block';
+  // });
+  // myForm.addEventListener('onCancel', async (e) => {
+  //   myForm.style.display = 'none';
+  //   const cancelBanner = document.getElementById('cancelBanner');
+  //   cancelBanner.style.display = 'block';
+  // });
+  // myForm.addEventListener('onRender', async (e) => {
+  //   console.log('onrender -',JSON.stringify(e.detail.model.getStr()));
+  // });
+
+</script>
 
 </html>

@@ -1,9 +1,15 @@
 const _ = require('lodash');
-const $ = require('jquery');
+// const $ = require('jquery');
+// const $ = window.$;
+
+const getForm = () => $('form');
+const hasInvalidField = () => $('.invalid-required').length;
+const getPages = () => $('section.or-appearance-field-list.or-group:not(.disabled),  section.or-appearance-field-list.or-group-data:not(.disabled)');
+const getCurrentPage = () => $('section.or-group.or-appearance-field-list.current, section.or-group-data.or-appearance-field-list.current');
+
 
 class FormFiller {
-  constructor(form, options) {
-    this.form = form;
+  constructor(options) {
     this.options = _.defaults(options, {
       verbose: true,
     });
@@ -34,7 +40,7 @@ class FormFiller {
   // Modified from enketo-core/src/js/Form.js validateContent
   async getVisibleValidationErrors() {
     const self = this;
-    const $container = self.form.view.$;
+    const $container = getForm();
     const validationErrors = $container
       .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
       .children('span.active:not(.question-label)')
@@ -73,11 +79,11 @@ const fillForm = async (self, multiPageAnswer) => {
   let pageHasAdvanced;
   // attempt to submit all the way to the end (replacement for validateAll)
   do {
-    pageHasAdvanced = await nextPage(self.form);
+    pageHasAdvanced = await nextPage();
     errors = await self.getVisibleValidationErrors();
-    
-    const lastPage = self.form.pages.activePages[self.form.pages.activePages.length - 1];
-    isComplete = !lastPage || self.form.pages.current === lastPage;
+
+    const pages = getPages();
+    isComplete = pages.index(getCurrentPage()) === pages.length - 1;
   } while (pageHasAdvanced && !isComplete && !errors.length);
   const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
 
@@ -93,7 +99,7 @@ const fillPage = async (self, pageAnswer) => {
   const answeredQuestions = new Set();
   for (let i = 0; i < pageAnswer.length; i++) {
     const answer = pageAnswer[i];
-    const $questions = getVisibleQuestions(self.form);
+    const $questions = getVisibleQuestions();
     if ($questions.length <= i) {
       return {
         errors: [{
@@ -110,7 +116,7 @@ const fillPage = async (self, pageAnswer) => {
     fillQuestion(nextUnansweredQuestion, answer);
   }
 
-  const allPagesSuccessful = hasPages(self.form) ? await nextPage(self.form) : true;
+  const allPagesSuccessful = await nextPage();
   const validationErrors = await self.getVisibleValidationErrors();
   const advanceFailure = allPagesSuccessful || validationErrors.length ? [] : [{
     type: 'general',
@@ -214,11 +220,8 @@ const fillQuestion = (question, answer) => {
   }
 };
 
-const getVisibleQuestions = form => {
-  const currentPage = !form.pages.current ? 
-    // in cases where forms have a single page, the current page is undefined
-    form.view.$ :  
-    $(form.pages.current);
+const getVisibleQuestions = () => {
+  const currentPage = getCurrentPage();
   
   if (!currentPage) {
     throw Error('Form has no active pages');
@@ -251,19 +254,32 @@ const getVisibleQuestions = form => {
   return findQuestionsInSection(currentPage);
 };
 
-const nextPage = async form => {
-  const valid = await form.pages._next();
+const nextPage = async () => {
+  const currentPageIndex = getPages().index(getCurrentPage());
+  const nextButton = $('button.next-page');
+  if(nextButton.is(':hidden')) {
+    return !hasInvalidField();
+  }
 
-  // Work-around for stale jr:choice-name() references in labels.  ref #3870
-  form.calc.update();
+  return new Promise(resolve => {
+    const observer = new MutationObserver(mutations => {
+      if(getPages().index(getCurrentPage()) > currentPageIndex) {
+        observer.disconnect();
+        return resolve(true);
+      }
+      if(hasInvalidField()) {
+        observer.disconnect();
+        return resolve(false);
+      }
+    });
 
-  // Force forms to update jr:itext references in output fields that contain
-  // calculated values.  ref #4111
-  form.output.update();
-
-  return valid;
+    observer.observe(getForm().get(0), {
+      childList: true,
+      subtree: true,
+      attributeFilter: ['class', 'display'],
+    });
+    nextButton.click();
+  });
 };
-
-const hasPages = form => form.pages.activePages.length > 0;
 
 module.exports = FormFiller;

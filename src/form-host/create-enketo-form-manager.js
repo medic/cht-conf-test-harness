@@ -1,11 +1,11 @@
-const {
-  ContactServices,
-  FileServices,
-  FormDataServices,
-  TranslationServices,
-  XmlServices,
-  EnketoFormManager
-} = require('@cht-core/webapp/src/js/enketo/enketo-form-manager');
+// const {
+//   ContactServices,
+//   FileServices,
+//   FormDataServices,
+//   TranslationServices,
+//   XmlServices,
+//   EnketoFormManager
+// } = require('@cht-core/webapp/src/js/enketo/enketo-form-manager');
 
 const HARDCODED_TYPES = [
   'district_hospital',
@@ -41,7 +41,7 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
       }),
     }),
   };
-  window.CHTCore.DB = dbService;
+  // window.CHTCore.DB = dbService;
 
   const extractLineageService = {
     extract: contact => contact,
@@ -64,7 +64,7 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
   const languageService = {
     get: () => Promise.resolve('en'),
   };
-  window.CHTCore.Language = languageService;
+  // window.CHTCore.Language = languageService;
 
   const lineageModelGeneratorService = {
     contact: () => Promise.resolve({
@@ -78,7 +78,7 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
     get: x => Promise.resolve(x),
     instant: x => x,
   };
-  window.CHTCore.Translate = translateService;
+  // window.CHTCore.Translate = translateService;
 
   const translateFromService = {
     get: x => x,
@@ -100,38 +100,39 @@ const createEnketoFormManager = (formHtml, formModel, formXml, userSettingsDoc, 
   };
   const GlobalActions = { setSnackbarContent : () => {} };
 
-  window.CHTCore.AndroidAppLauncher = { isEnabled: () => false };
-  window.CHTCore.MRDT = { enabled: () => false };
-  window.CHTCore.Select2Search = { init: () => Promise.resolve() };
-  window.CHTCore.Settings = {
-    get: () => Promise.resolve({
-      default_country_code: '1'
-    })
-  };
+  // window.CHTCore.AndroidAppLauncher = { isEnabled: () => false };
+  // window.CHTCore.MRDT = { enabled: () => false };
+  // window.CHTCore.Select2Search = { init: () => Promise.resolve() };
+  // window.CHTCore.Settings = {
+  //   get: () => Promise.resolve({
+  //     default_country_code: '1'
+  //   })
+  // };
 
-  return new EnketoFormManager(
-    new ContactServices(
-      extractLineageService,
-      userContactService,
-      contactTypesService,
-    ),
-    new FileServices(dbService, fileReaderService),
-    new FormDataServices(
-      contactSummaryService,
-      userSettingsService,
-      languageService,
-      lineageModelGeneratorService,
-      searchService
-    ),
-    new TranslationServices(translateService, translateFromService),
-    new XmlServices(
-      addAttachmentService,
-      getReportContentService,
-      xmlFormsService
-    ),
-    transitionsService,
-    GlobalActions
-  );
+  return {};
+  // return new EnketoFormManager(
+  //   new ContactServices(
+  //     extractLineageService,
+  //     userContactService,
+  //     contactTypesService,
+  //   ),
+  //   new FileServices(dbService, fileReaderService),
+  //   new FormDataServices(
+  //     contactSummaryService,
+  //     userSettingsService,
+  //     languageService,
+  //     lineageModelGeneratorService,
+  //     searchService
+  //   ),
+  //   new TranslationServices(translateService, translateFromService),
+  //   new XmlServices(
+  //     addAttachmentService,
+  //     getReportContentService,
+  //     xmlFormsService
+  //   ),
+  //   transitionsService,
+  //   GlobalActions
+  // );
 };
 
 module.exports = createEnketoFormManager;

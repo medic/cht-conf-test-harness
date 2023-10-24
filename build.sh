@@ -47,4 +47,10 @@ for dir in "${dirs[@]}"; do
 done
 
 npx webpack
+
+cp ./node_modules/cht-form/main.js dist/cht-form_main.js
+cp ./node_modules/cht-form/polyfills.js dist/cht-form_polyfills.js
+cp ./node_modules/cht-form/runtime.js dist/cht-form_runtime.js
+cp ./node_modules/cht-form/scripts.js dist/cht-form_scripts.js
+cp ./node_modules/cht-form/styles.css dist/cht-form_styles.css
 printf "\033[0;32m== BUILD SUCCESSFUL ==\n"
