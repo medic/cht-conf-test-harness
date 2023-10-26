@@ -32,7 +32,7 @@ const loadForm = async (FormWireup, formName, formHtml, formModel, formXml, cont
       return {
         errors: [],
         section: 'general',
-        result: await wireup.save(formName, form),
+        result: await wireup.save(),
       };
     }
     catch (e) {

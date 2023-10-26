@@ -1,20 +1,12 @@
 const _ = require('lodash');
-// const $ = require('jquery');
-// const $ = window.$;
 
 const getForm = () => $('form');
-// TODO Prob just change to getVisibleValidationErrors
-// const hasInvalidField = () => $('.invalid-required, .invalid-constraint').length;
 const getValidationErrors = () => getForm()
   .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
   .children('span.active:not(.question-label)')
   .filter(function() {
     return $(this).css('display') === 'block';
   });
-const hasInvalidField = () => getValidationErrors().length;
-
-// const getPages = () => $('[role="page"]:not(section:not(:has(*)))');// [role="page"]:not(section:not(:has(*)))
-
 
 const getSiblingElement = ( element, selector = '*' ) =>{
   let found;
@@ -28,8 +20,9 @@ const getSiblingElement = ( element, selector = '*' ) =>{
   }
 
   return found;
-}
+};
 
+// Copied from https://github.com/enketo/enketo-core/blob/master/src/js/page.js
 const getPages = () => {
   const form = getForm()[0];
   if(!form.classList.contains('pages')) {
@@ -47,12 +40,11 @@ const getPages = () => {
         ( el.matches( '.or-repeat-info' ) && !getSiblingElement( el, '.or-repeat' ) ) );
   } );
 };
-// const getCurrentPage = () => $('[role="page"]:not(section:not(:has(*))).current');
+
 const getCurrentPage = () => {
   const pages = getPages();
   return pages.find( page => page.classList.contains( 'current' ) ) || pages[pages.length - 1];
 }
-
 
 class FormFiller {
   constructor(options) {
@@ -297,16 +289,16 @@ const nextPage = async () => {
   const currentPageIndex = getPages().indexOf(getCurrentPage());
   const nextButton = $('button.next-page');
   if(nextButton.is(':hidden')) {
-    return !hasInvalidField();
+    return !getValidationErrors().length;
   }
 
   return new Promise(resolve => {
-    const observer = new MutationObserver(mutations => {
+    const observer = new MutationObserver(() => {
       if(getPages().indexOf(getCurrentPage()) > currentPageIndex) {
         observer.disconnect();
         return resolve(true);
       }
-      if(hasInvalidField()) {
+      if(getValidationErrors().length) {
         observer.disconnect();
         return resolve(false);
       }
