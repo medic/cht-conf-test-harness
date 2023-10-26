@@ -5,8 +5,45 @@ const _ = require('lodash');
 const getForm = () => $('form');
 // TODO Prob just change to getVisibleValidationErrors
 const hasInvalidField = () => $('.invalid-required, .invalid-constraint').length;
-const getPages = () => $('[role="page"]');
-const getCurrentPage = () => $('[role="page"].current');
+// const getPages = () => $('[role="page"]:not(section:not(:has(*)))');// [role="page"]:not(section:not(:has(*)))
+
+
+const getSiblingElement = ( element, selector = '*' ) =>{
+  let found;
+  let current = element.parentElement.firstElementChild;
+
+  while ( current && !found ) {
+    if ( current !== element && current.matches( selector ) ) {
+      found = current;
+    }
+    current = current.nextElementSibling;
+  }
+
+  return found;
+}
+
+const getPages = () => {
+  const form = getForm()[0];
+  if(!form.classList.contains('pages')) {
+    // This is not a multipage form
+    return [form];
+  }
+
+  const allPages = [...getForm()[0].querySelectorAll( '[role="page"]' )];
+  return allPages.filter( el => {
+    return !el.closest( '.disabled' ) &&
+      ( el.matches( '.question' ) || el.querySelector( '.question:not(.disabled)' ) ||
+        // or-repeat-info is only considered a page by itself if it has no sibling repeats
+        // When there are siblings repeats, we use CSS trickery to show the + button underneath the last
+        // repeat.
+        ( el.matches( '.or-repeat-info' ) && !getSiblingElement( el, '.or-repeat' ) ) );
+  } );
+};
+// const getCurrentPage = () => $('[role="page"]:not(section:not(:has(*))).current');
+const getCurrentPage = () => {
+  const pages = getPages();
+  return pages.find( page => page.classList.contains( 'current' ) ) || pages[pages.length - 1];
+}
 
 
 class FormFiller {
@@ -84,7 +121,7 @@ const fillForm = async (self, multiPageAnswer) => {
     errors = await self.getVisibleValidationErrors();
 
     const pages = getPages();
-    isComplete = pages.index(getCurrentPage()) === pages.length - 1;
+    isComplete = pages.indexOf(getCurrentPage()) === pages.length - 1;
   } while (pageHasAdvanced && !isComplete && !errors.length);
   const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
 
@@ -222,7 +259,7 @@ const fillQuestion = (question, answer) => {
 };
 
 const getVisibleQuestions = () => {
-  const currentPage = getCurrentPage();
+  const currentPage = $(getCurrentPage());
   
   if (!currentPage) {
     throw Error('Form has no active pages');
@@ -256,7 +293,7 @@ const getVisibleQuestions = () => {
 };
 
 const nextPage = async () => {
-  const currentPageIndex = getPages().index(getCurrentPage());
+  const currentPageIndex = getPages().indexOf(getCurrentPage());
   const nextButton = $('button.next-page');
   if(nextButton.is(':hidden')) {
     return !hasInvalidField();
@@ -264,7 +301,7 @@ const nextPage = async () => {
 
   return new Promise(resolve => {
     const observer = new MutationObserver(mutations => {
-      if(getPages().index(getCurrentPage()) > currentPageIndex) {
+      if(getPages().indexOf(getCurrentPage()) > currentPageIndex) {
         observer.disconnect();
         return resolve(true);
       }

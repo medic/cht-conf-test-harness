@@ -6,7 +6,7 @@ class ContactFormWireup {
   constructor(formHtml, formModel, formXml, userSettingsDoc, contactSummary, contactType) {
     const formWrapper = $('#enketo-wrapper')[0];
     formWrapper.user = userSettingsDoc;
-    formWrapper.contactSummary = contactSummary;
+    formWrapper.contactSummary = contactSummary?.context;
     formWrapper.contactType = contactType;
     formWrapper.formHtml = formHtml;
     formWrapper.formModel = formModel;
@@ -19,9 +19,9 @@ class ContactFormWireup {
       console.log(`jkuester - form-host-app.render start`);
       // console.log(JSON.stringify(window.CHTCore));
       const formWrapper = $('#enketo-wrapper')[0];
-      formWrapper.addEventListener('onRender', (e) => {
+      formWrapper.addEventListener('onRender', () => {
         console.log(`jkuester - form-host-app.render onRender`);
-        resolve(e.detail);
+        resolve();
       });
       formWrapper.content = content;
     });
@@ -35,9 +35,25 @@ class ContactFormWireup {
   }
 
   async save(formInternalId, form, geoHandle, docId) {
-    const formWrapper = $('#enketo-wrapper')[0];
     return new Promise((resolve, reject) => {
+
+      const observer = new MutationObserver(() => {
+        if ($('#enketo-wrapper')[0].status.error) {
+          observer.disconnect();
+          return reject();
+        }
+      });
+      const formWrapper = $('#enketo-wrapper')[0];
+      observer.observe(formWrapper, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        // attributeFilter: ['status'], // TODO Make this more efficient
+      });
+
+
       formWrapper.addEventListener('onSubmit', async (e) => {
+        observer.disconnect();
         resolve(e.detail);
       });
       $('.enketo .submit').click();

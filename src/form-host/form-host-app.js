@@ -20,7 +20,7 @@ class AppFormWireup {
       // console.log(`jkuester - form-host-app.render start`);
       // console.log(JSON.stringify(window.CHTCore));
       const formWrapper = $('#enketo-wrapper')[0];
-      formWrapper.addEventListener('onRender', (e) => {
+      formWrapper.addEventListener('onRender', () => {
         console.log(`jkuester - form-host-app.render onRender`);
         resolve();
       });
