@@ -4,11 +4,16 @@
     <h:title>Contact Summary</h:title>
     <model>
       <itext>
-        <translation lang="en"/>
+        <translation lang="en">
+          <text id="/instance-contact-summary/hello_world:label">
+            <value>Hello World</value>
+          </text>
+        </translation>
       </itext>
       <instance>
         <instance-contact-summary id="Instance-contact-summary" prefix="J1!Instance-contact-summary!" delimiter="#" version="2022-04-11  19-42">
           <inputs/>
+          <hello_world/>
           <data_from_cs tag="hidden"/>
           <meta tag="hidden">
             <instanceID/>
@@ -17,11 +22,17 @@
       </instance>
       <instance id="contact-summary"/>
       <bind nodeset="/instance-contact-summary/inputs" relevant="./source = 'user'"/>
+
+      <bind nodeset="/instance-contact-summary/hello_world" readonly="true()" type="string"/>
+
       <bind nodeset="/instance-contact-summary/data_from_cs" type="string" calculate="instance('contact-summary')/context/data"/>
       <bind nodeset="/instance-contact-summary/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
     </model>
   </h:head>
   <h:body class="pages">
     <group appearance="field-list" ref="/instance-contact-summary/inputs"/>
+    <input ref="/instance-contact-summary/hello_world">
+      <label ref="jr:itext('/instance-contact-summary/hello_world:label')"/>
+    </input>
   </h:body>
 </h:html>

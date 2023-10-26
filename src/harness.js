@@ -514,9 +514,11 @@ class Harness {
   get consoleErrors() {
     return this._state.console
       .filter(msg => msg.type() !== 'log')
+      .filter(msg => !msg.text().startsWith('Error submitting form data:'))
       .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_REQUEST_RANGE_NOT_SATISFIABLE') // BUG: #219
       .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_UNKNOWN_URL_SCHEME') // BUG: #220
       .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_FILE_NOT_FOUND') // BUG: #221
+      .filter(msg => !msg.text().startsWith('Not allowed to load local resource: blob:null')) // Related to previous message. Thrown when trying to load form images.
       .filter(msg => !msg.text().startsWith('Error fetching media file')) // BUG: #222
       .filter(msg => !msg.text().startsWith('Deprecation warning:')) // BUG: #223
       .filter(msg => !msg.text().includes('with null-based index')) // BUG: #224

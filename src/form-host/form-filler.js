@@ -3,9 +3,10 @@ const _ = require('lodash');
 // const $ = window.$;
 
 const getForm = () => $('form');
-const hasInvalidField = () => $('.invalid-required').length;
-const getPages = () => $('section.or-appearance-field-list.or-group:not(.disabled),  section.or-appearance-field-list.or-group-data:not(.disabled)');
-const getCurrentPage = () => $('section.or-group.or-appearance-field-list.current, section.or-group-data.or-appearance-field-list.current');
+// TODO Prob just change to getVisibleValidationErrors
+const hasInvalidField = () => $('.invalid-required, .invalid-constraint').length;
+const getPages = () => $('[role="page"]');
+const getCurrentPage = () => $('[role="page"].current');
 
 
 class FormFiller {

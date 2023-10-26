@@ -38,11 +38,12 @@ const loadForm = async (FormWireup, formName, formHtml, formModel, formXml, cont
     catch (e) {
       return { 
         errors: [
+          ...await formFiller.getVisibleValidationErrors(),
+          // TODO Should consider actually not adding this extra error if the form submission error is a validation error
           {
             type: 'save',
             msg: `Failed to save app form: ${e}`,
-          },
-          ...await formFiller.getVisibleValidationErrors(),
+          }
         ],
         section: 'general',
         result: [],

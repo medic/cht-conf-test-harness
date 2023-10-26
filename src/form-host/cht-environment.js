@@ -3,14 +3,14 @@ const { useFakeTimers } = require('sinon/lib/sinon/util/fake-timers');
 const { toBik_text } = require('bikram-sambat');
 const moment = require('moment');
 
-require('select2');
+// require('select2');
 
 // // webapp/node_modules/bootstrap/js/dropdown.js expects this declared globally
 // window.jQuery = $;
 // // webapp/src/js/enketo/main.js expects this for datepicker
 // window.$ = $;
 // // backward compatibility with harness v2
-// window.$$ = $;
+window.$$ = window.$;
 
 let clock;
 window.fakeTimers = (...args) => {
