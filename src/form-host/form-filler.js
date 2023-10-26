@@ -4,7 +4,15 @@ const _ = require('lodash');
 
 const getForm = () => $('form');
 // TODO Prob just change to getVisibleValidationErrors
-const hasInvalidField = () => $('.invalid-required, .invalid-constraint').length;
+// const hasInvalidField = () => $('.invalid-required, .invalid-constraint').length;
+const getValidationErrors = () => getForm()
+  .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
+  .children('span.active:not(.question-label)')
+  .filter(function() {
+    return $(this).css('display') === 'block';
+  });
+const hasInvalidField = () => getValidationErrors().length;
+
 // const getPages = () => $('[role="page"]:not(section:not(:has(*)))');// [role="page"]:not(section:not(:has(*)))
 
 
@@ -77,14 +85,7 @@ class FormFiller {
 
   // Modified from enketo-core/src/js/Form.js validateContent
   async getVisibleValidationErrors() {
-    const self = this;
-    const $container = getForm();
-    const validationErrors = $container
-      .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
-      .children('span.active:not(.question-label)')
-      .filter(function() {
-        return $(this).css('display') === 'block';
-      });
+    const validationErrors = getValidationErrors();
 
     return Array.from(validationErrors)
       .map(span => ({
