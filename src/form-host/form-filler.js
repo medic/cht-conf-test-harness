@@ -44,7 +44,7 @@ const getPages = () => {
 const getCurrentPage = () => {
   const pages = getPages();
   return pages.find( page => page.classList.contains( 'current' ) ) || pages[pages.length - 1];
-}
+};
 
 class FormFiller {
   constructor(options) {

@@ -2,7 +2,9 @@ class FormWireup {
   constructor(formHtml, formModel, formXml, userSettingsDoc, contactSummary, formName) {
     const formWrapper = this._getFormWrapper();
     formWrapper.user = userSettingsDoc;
-    formWrapper.contactSummary = contactSummary?.context;
+    if (contactSummary) {
+      formWrapper.contactSummary = contactSummary.context;
+    }
     formWrapper.formId = formName;
     formWrapper.formHtml = formHtml;
     formWrapper.formModel = formModel;

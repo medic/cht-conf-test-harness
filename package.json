@@ -34,10 +34,8 @@
     "jquery": "^3.5.1",
     "jsdoc": "^3.6.3",
     "mocha": "^6.1.4",
-    "moment": "^2.29.4",
     "raw-loader": "^1.0.0",
     "rewire": "^4.0.1",
-    "select2": "^4.0.3",
     "webpack": "^5.37.0",
     "webpack-clean-console-plugin": "^0.0.7",
     "webpack-cli": "^3.3.0"

@@ -1,4 +1,3 @@
-const fs = require('fs');
 const path = require('path');
 const WebpackCleanConsolePlugin = require('webpack-clean-console-plugin');
 

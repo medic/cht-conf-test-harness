@@ -1,12 +1,13 @@
 {
   "extends": "@medic",
   "env": {
-    "node": true
+    "node": true,
+    "jquery": true
   },
   "parserOptions": {
     "ecmaVersion": 9
   },
-  "ignorePatterns": ["docs/"],
+  "ignorePatterns": ["docs/", "build/cht-core"],
   "rules": {
     "max-len": ["error", 200, { "ignoreStrings": true, "ignoreComments": true }],
     "no-console": "off",
