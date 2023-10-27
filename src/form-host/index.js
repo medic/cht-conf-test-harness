@@ -12,11 +12,8 @@ window.loadForm = (formName, formType, formHtml, formModel, formXml, content, us
 
 const loadForm = async (FormWireup, formName, formHtml, formModel, formXml, content, userSettingsDoc, contactSummary) => {
   const wireup = new FormWireup(formHtml, formModel, formXml, userSettingsDoc, contactSummary, formName);
-  const form = await wireup.render(content);
+  await wireup.render(content);
   const formFiller = new FormFiller({ verbose: true });
-
-  // window.form = form;
-  window.formFiller = formFiller;
 
   const untransformedFillAndSave = async (multipageAnswer) => {
     const { isComplete, errors } = await formFiller.fillForm(multipageAnswer);
@@ -38,12 +35,11 @@ const loadForm = async (FormWireup, formName, formHtml, formModel, formXml, cont
     catch (e) {
       return { 
         errors: [
-          ...await formFiller.getVisibleValidationErrors(),
-          // TODO Should consider actually not adding this extra error if the form submission error is a validation error
           {
             type: 'save',
             msg: `Failed to save app form: ${e}`,
-          }
+          },
+          ...await formFiller.getVisibleValidationErrors(),
         ],
         section: 'general',
         result: [],

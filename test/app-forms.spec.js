@@ -307,7 +307,7 @@ describe('forms that have caused bugs', () => {
     expect(formResult.report.fields.next_pnc.s_next_pnc_date).to.eq('2000-01-07');
   });
 
-  it.skip('#210 - select2 crashes when used (eg. select-contact type-person)', async () => {
+  it('#210 - select2 crashes when used (eg. select-contact type-person)', async () => {
     const result = await harness.fillForm('cash_add_member', [], ['yes', 'hh_member_id', 'no', '2023-02-23', 'individual', 'yes', 11111111 ], []);
     expect(result.errors).to.be.empty;
   });
@@ -325,7 +325,7 @@ describe('forms that have caused bugs', () => {
   it('#234 - datetime field fails enketo validation', async () => {
     const result = await harness.fillForm('bug_234', ['2023-01-01 x']);
     expect(result.errors).to.not.be.empty;
-    expect(result.errors[0].msg).to.eq('enketo.constraint.required');
+    expect(result.errors[1].msg).to.eq('enketo.constraint.required');
   });
 
   it('explicit set of contact-summary context', async () => {
@@ -333,7 +333,7 @@ describe('forms that have caused bugs', () => {
       form: 'instance-contact-summary',
       contactSummary: {
         context: { data: 'override' }
-      }
+      },
     }, []);
     expect(result.errors).to.be.empty;
     expect(result.report.fields.data_from_cs).to.eq('override');

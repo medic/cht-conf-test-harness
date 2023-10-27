@@ -20,9 +20,10 @@ class FormWireup {
   async save() {
     return new Promise((resolve, reject) => {
       const observer = new MutationObserver(() => {
-        if ($('#enketo-wrapper')[0].status.error) {
+        const errorStatus = $('#enketo-wrapper')[0].status.error;
+        if (errorStatus) {
           observer.disconnect();
-          return reject();
+          return reject(errorStatus);
         }
       });
       const formWrapper = $('#enketo-wrapper')[0];

@@ -11,46 +11,47 @@ set -e
 trap exit_on_error EXIT
 
 npm ci --legacy-peer-deps
-rm -Rf dist build
+
+for item in `ls build | grep -v cht-core`; do
+    rm -rf $item
+done
+
+if [ -d "build/cht-core" ]; then
+    (cd build/cht-core && git checkout 7462_forms_module && git pull)
+    (cd build/cht-core && git reset --hard)
+else
+  git clone -b 7462_forms_module https://github.com/medic/cht-core.git build/cht-core
+fi
+
+(cd build/cht-core && npm ci)
+
 node ./compile-ddocs.js
 
 mkdir -p ext/xsl
 mkdir -p ext/enketo-transformer/xsl
-cp ./node_modules/cht-core-4-0/api/src/xsl/openrosa2html5form.xsl ext/xsl
-cp ./node_modules/cht-core-4-0/api/src/enketo-transformer/xsl/* ext/enketo-transformer/xsl
+cp ./build/cht-core/api/src/xsl/openrosa2html5form.xsl ext/xsl
+cp ./build/cht-core/api/src/enketo-transformer/xsl/* ext/enketo-transformer/xsl
 
-dirs=($(find node_modules/cht-* -maxdepth 0 -type d))
-for dir in "${dirs[@]}"; do
-  (cd "$dir"/webapp && npm ci --legacy-peer-deps --production)
+#dirs=($(find node_modules/cht-* -maxdepth 0 -type d))
+#for dir in "${dirs[@]}"; do
+dir="build/cht-core"
+
+
+#  (cd "$dir"/webapp && npm ci --legacy-peer-deps --production)
   (cd "$dir"/api && npm ci --legacy-peer-deps --production)
-  (cd "$dir"/shared-libs/calendar-interval && npm ci --legacy-peer-deps)
-  (cd "$dir"/shared-libs/rules-engine && npm ci --legacy-peer-deps)
-  (cd "$dir"/shared-libs/phone-number && npm ci --legacy-peer-deps --production)
-
-  # patch the daterangepicker for responsiveness
-  # https://github.com/dangrossman/bootstrap-daterangepicker/pull/437
-  (cd "$dir" && patch -f webapp/node_modules/bootstrap-daterangepicker/daterangepicker.js < webapp/patches/bootstrap-daterangepicker.patch)
+  (cd "$dir" && patch -f api/src/services/generate-xform.js < ../../patches/generate-xform.patch)
 
   # 210 patch to disable db-object-widget
   (cd "$dir" && patch -f webapp/src/js/enketo/widgets.js < ../../patches/210-disable-db-object-widgets.patch)
-
-  # patch enketo to always mark the /inputs group as relevant
-  (cd "$dir" && patch -f webapp/node_modules/enketo-core/src/js/form.js < webapp/patches/enketo-inputs-always-relevant_form.patch)
-  (cd "$dir" && patch -f webapp/node_modules/enketo-core/src/js/relevant.js < webapp/patches/enketo-inputs-always-relevant_relevant.patch)
-
-  # patch enketo to fix repeat name collision bug - this should be removed when upgrading to a new version of enketo-core
-  # https://github.com/enketo/enketo-core/issues/815
-  (cd "$dir" && patch -f webapp/node_modules/enketo-core/src/js/calculate.js < webapp/patches/enketo-repeat-name-collision.patch)
-
-  # patch messageformat to add a default plural function for languages not yet supported by make-plural #5705
-  (cd "$dir" && patch -f webapp/node_modules/messageformat/lib/plurals.js < webapp/patches/messageformat-default-plurals.patch)
-done
+#done
 
 npx webpack
 
-cp ./node_modules/cht-form/main.js dist/cht-form_main.js
-cp ./node_modules/cht-form/polyfills.js dist/cht-form_polyfills.js
-cp ./node_modules/cht-form/runtime.js dist/cht-form_runtime.js
-cp ./node_modules/cht-form/scripts.js dist/cht-form_scripts.js
-cp ./node_modules/cht-form/styles.css dist/cht-form_styles.css
+(cd build/cht-core && npm run build-cht-form)
+
+cp build/cht-core/build/cht-form/main.js dist/cht-form_main.js
+cp build/cht-core/build/cht-form/polyfills.js dist/cht-form_polyfills.js
+cp build/cht-core/build/cht-form/runtime.js dist/cht-form_runtime.js
+cp build/cht-core/build/cht-form/scripts.js dist/cht-form_scripts.js
+cp build/cht-core/build/cht-form/styles.css dist/cht-form_styles.css
 printf "\033[0;32m== BUILD SUCCESSFUL ==\n"
