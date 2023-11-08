@@ -200,7 +200,7 @@ for (const coreVersion of availableCoreVersions) {
       beforeEach(async () => { return await harness.clear(); });
       afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
 
-      it('support for cht-conf prior to v3.18.3', async () => {   
+      it('support for cht-conf prior to v3.19.0', async () => {   
         const tasks = await harness.getTasks();
         expect(tasks).to.be.empty;
       });
