@@ -17,8 +17,7 @@ for item in `ls build | grep -v cht-core`; do
 done
 
 if [ -d "build/cht-core" ]; then
-    (cd build/cht-core && git checkout 7462_forms_module && git pull)
-    (cd build/cht-core && git reset --hard)
+    (cd build/cht-core && git fetch && git reset --hard origin/7462_forms_module)
 else
   git clone -b 7462_forms_module https://github.com/medic/cht-core.git build/cht-core
 fi
