@@ -20,7 +20,8 @@
     "pouchdb-adapter-memory": "^7.2.2",
     "puppeteer-chromium-resolver": "^10.0.0",
     "semver": "^7.3.5",
-    "sinon": "^7.5.0",
+    "sinon": "^10.0.1",
+    "util": "^0.12.5",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
