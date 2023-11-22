@@ -4,6 +4,7 @@
 
 const md5 = require('md5');
 const PouchDB = require('pouchdb');
+const semver = require('semver');
 const uuid = require('uuid/v4');
 
 PouchDB.plugin(require('pouchdb-adapter-memory'));
@@ -82,7 +83,7 @@ const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateH
 };
 
 const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, userRoles, sessionId) => {
-  const rulesSettings = getRulesSettings(appSettings, user, userRoles, sessionId, chtCore.ChtScriptApi);
+  const rulesSettings = getRulesSettings(chtCore, appSettings, user, userRoles, sessionId);
 
   if (!rulesEngine.isEnabled()) {
     await rulesEngine.initialize(rulesSettings);
@@ -197,13 +198,14 @@ const chtScriptApiWithDefaults = (chtScriptApi, settingsDoc, defaultUserRoles) =
   };
 };
 
-const getRulesSettings = (settingsDoc, userContactDoc, userRoles, sessionId, chtScriptApi) => {
+const getRulesSettings = (chtCore, settingsDoc, userContactDoc, userRoles, sessionId) => {
   const settingsTasks = settingsDoc && settingsDoc.tasks || {};
   // https://github.com/medic/cht-conf-test-harness/issues/106
   // const filterTargetByContext = (target) => target.context ? !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
   const targets = settingsTasks.targets && settingsTasks.targets.items || [];
+  const rules = getRules(chtCore.version, settingsTasks);
   return {
-    rules: settingsTasks.rules,
+    ...rules,
     taskSchedules: settingsTasks.schedules,
     targets: targets,
     enableTasks: true,
@@ -215,8 +217,28 @@ const getRulesSettings = (settingsDoc, userContactDoc, userRoles, sessionId, cht
     },
     monthStartDate: getMonthStartDate(settingsDoc),
     sessionId,
-    chtScriptApi: chtScriptApiWithDefaults(chtScriptApi, settingsDoc, userRoles),
+    chtScriptApi: chtScriptApiWithDefaults(chtCore.ChtScriptApi, settingsDoc, userRoles),
   };
+};
+
+const getRules = (coreVersion, settingsTasks) => {
+  const addNoolsBoilerplateToCode = code => `define Target { _id: null, contact: null, deleted: null, type: null, pass: null, date: null, groupBy: null }
+define Contact { contact: null, reports: null, tasks: null }
+define Task {
+  _id: null, deleted: null, doc: null, contact: null, icon: null, date: null, readyStart: null, readyEnd: null, 
+  title: null, fields: null, resolved: null, priority: null, priorityLabel: null, reports: null, actions: null
+}
+rule GenerateEvents {
+  when { c: Contact } then { ${code} }
+}`;
+
+  // rules mutation added in cht-conf 3.19.0
+  const actualCoreVersion = semver.coerce(coreVersion);
+  const addNoolsBoilerplate = settingsTasks.isDeclarative && semver.lt(actualCoreVersion, '4.2.0-dev');
+  const rules = addNoolsBoilerplate ? addNoolsBoilerplateToCode(settingsTasks.rules) : settingsTasks.rules;
+  // do not set the isDeclarative flag when the code has nools boilerplate
+  const rulesAreDeclarative = addNoolsBoilerplate && !!settingsTasks.isDeclarative;
+  return { rules, rulesAreDeclarative };
 };
 
 module.exports = CoreAdapter;
