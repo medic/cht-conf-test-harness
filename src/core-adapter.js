@@ -2,6 +2,7 @@
  * @module core-adapter
 */
 
+const _ = require('lodash');
 const md5 = require('md5');
 const PouchDB = require('pouchdb');
 const semver = require('semver');
@@ -64,6 +65,19 @@ class CoreAdapter {
     await this.lineageLib.fillContactsInDocs(lineage, contactDocs);
     lineage.shift();
     return lineage;
+  }
+
+  getReportsForContactSummary(contact, reports, contactId, state) {
+    if (Array.isArray(reports)) {
+      return [...reports];
+    }
+
+    const contactDocs = [contact, ...state.contacts];
+    const relevantContactDocs = contactDocs.filter(contact => contact?._id === contactId || contact?.parent?._id === contactId);
+    const subjectIds = _.flatten(relevantContactDocs.map(contact => this.core.RegistrationUtils.getSubjectIds(contact)));
+
+    const reportHasMatchingSubject = report => subjectIds.includes(this.core.RegistrationUtils.getSubjectId(report));
+    return state.reports.filter(reportHasMatchingSubject);
   }
 
   minify(doc) {
