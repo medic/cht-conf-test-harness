@@ -199,4 +199,11 @@ describe('contact forms', () => {
     );
     expect(result.errors).to.be.empty;
   });
+
+  it('#247 - forms using Android App Launcher cannot be filled', async () => {
+    await harness.setNow('2000-01-01');
+    const allDrugs = ['AZT300_3TC150','EFV600','TDF300_3TC300_EFV600','TDF300_3TC300','ATV_R300_100','ABC600_3TC300','LPV_R200_50','TDF300_3TC300_DTG50','DTG50'];
+    const result = await harness.fillContactCreateForm('patient', ['Patient', 'McPatient', '1990-02-01', 'P123', 'ARV-1', 'Male', 'FN', 'test-dp','custom',allDrugs]);
+    expect(result.errors).to.be.empty;
+  });
 });
