@@ -19,7 +19,7 @@ done
 if [ -d "build/cht-core" ]; then
     (cd build/cht-core && git fetch && git reset --hard origin/7462_forms_module_uplifted-enketo)
 else
-  git clone -b _forms_module_uplifted-enketo https://github.com/medic/cht-core.git build/cht-core
+  git clone -b 7462_forms_module_uplifted-enketo https://github.com/medic/cht-core.git build/cht-core
 fi
 
 (cd build/cht-core && npm ci)
