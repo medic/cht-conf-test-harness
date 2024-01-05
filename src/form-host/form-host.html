@@ -2,13 +2,13 @@
 
 <head>
   <title>xForm Test Host</title>
-  <script src="../../dist/cht-form/index.js"></script>
+  <script src="../../dist/form-host.dev.js"></script>
   <script>
     const params = new URL(window.location).searchParams;
-    const coreVersion = params.get('core') || '4-0';
+    const coreVersion = params.get('core') || '4-6';
 
     const script = document.createElement('script');
-    script.src = `../../dist/form-host-cht-core-${coreVersion}.dev.js`;
+    script.src = `../../dist/cht-core-${coreVersion}/index.js`;
     script.type = 'text/javascript';
     script.charset = 'UTF-8';
 

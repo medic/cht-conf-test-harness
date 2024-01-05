@@ -16,35 +16,31 @@ for item in `ls build | grep -v cht-core`; do
     rm -rf $item
 done
 
-if [ -d "build/cht-core" ]; then
-    (cd build/cht-core && git fetch && git reset --hard origin/7462_forms_module)
-else
-  git clone -b 7462_forms_module https://github.com/medic/cht-core.git build/cht-core
-fi
+declare -a versions=("cht-core-4-6")
+# TODO Eventually we should filter this based on which artifacts already exist
+for version in "${versions[@]}"; do
+  if [ -d build/"$version" ]; then
+    (cd build/"$version" && git fetch && git reset --hard origin/master)
+  else
+    git clone -b master https://github.com/medic/cht-core.git build/"$version"
+  fi
 
-(cd build/cht-core && npm ci)
+  (cd build/"$version" && npm ci)
 
-node ./compile-ddocs.js
+  node ./compile-ddocs.js "$version"
 
+  (cd build/"$version"/api && npm ci --legacy-peer-deps --production)
+  (cd build/"$version" && patch -f api/src/services/generate-xform.js < ../../patches/generate-xform.patch)
+  # 210 patch to disable db-object-widget
+  (cd build/"$version" && patch -f webapp/src/js/enketo/widgets.js < ../../patches/210-disable-db-object-widgets.patch)
+  (cd build/"$version" && npm run build-cht-form)
+done
+
+# TODO update this to split out xsl by cht version
 mkdir -p ext/xsl
 mkdir -p ext/enketo-transformer/xsl
-cp ./build/cht-core/api/src/xsl/openrosa2html5form.xsl ext/xsl
-cp ./build/cht-core/api/src/enketo-transformer/xsl/* ext/enketo-transformer/xsl
-
-#dirs=($(find node_modules/cht-* -maxdepth 0 -type d))
-#for dir in "${dirs[@]}"; do
-dir="build/cht-core"
-
-
-#  (cd "$dir"/webapp && npm ci --legacy-peer-deps --production)
-  (cd "$dir"/api && npm ci --legacy-peer-deps --production)
-  (cd "$dir" && patch -f api/src/services/generate-xform.js < ../../patches/generate-xform.patch)
-
-  # 210 patch to disable db-object-widget
-  (cd "$dir" && patch -f webapp/src/js/enketo/widgets.js < ../../patches/210-disable-db-object-widgets.patch)
-#done
-
-(cd build/cht-core && npm run build-cht-form)
+cp ./build/cht-core-4-6/api/src/xsl/openrosa2html5form.xsl ext/xsl
+cp ./build/cht-core-4-6/api/src/enketo-transformer/xsl/* ext/enketo-transformer/xsl
 
 npx webpack
 

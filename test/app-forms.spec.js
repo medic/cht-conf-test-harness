@@ -271,7 +271,7 @@ describe('forms that have caused bugs', () => {
   it('#148 - Support for parse-timestamp-to-date (added in 3.13)', async () => {
     await harness.setNow('2000-01-01');
     await harness.loadForm('covid19_rdt_provision');
-    await harness.page.evaluate(() => window.$$('input[name$="preview_session_state"]').removeAttr('data-required')); 
+    await harness.page.evaluate(() => window.$('input[name$="preview_session_state"]').removeAttr('data-required'));
     const result = await harness.fillForm(
       ['nasal', 'asymptomatic'],
       ['nasal', undefined, '2000-04-01', ''],
@@ -286,7 +286,7 @@ describe('forms that have caused bugs', () => {
     const result = await harness.fillForm('bikram', ['1999-11-01'], [], [1, 'yes', '1999-12-01'], [], ['no', 'no'], ['none'], Array(9).fill('no'), []);
     expect(result.errors).to.be.empty;
 
-    const bikramDate = await harness.page.evaluate(() => window.$$('[data-itext-id="/pregnancy/summary/r_pregnancy_details:label"]').text()); 
+    const bikramDate = await harness.page.evaluate(() => window.$('[data-itext-id="/pregnancy/summary/r_pregnancy_details:label"]').text());
     expect(bikramDate).to.include('३ साउन');
     expect(bikramDate).to.include('१५ कार्तिक २०५६');
   });
