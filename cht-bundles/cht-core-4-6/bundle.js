@@ -1,4 +1,3 @@
-const path = require('path');
 module.exports = {
   ddocs: require('../../build/cht-core-4-6-ddocs.json'),
   RegistrationUtils: require('../../build/cht-core-4-6/shared-libs/registration-utils'),

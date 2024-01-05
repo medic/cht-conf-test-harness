@@ -11,7 +11,7 @@ module.exports = [
     mode: 'development'
   },
   {
-    entry: './all-chts-bundle.js',
+    entry: './cht-bundles/all-chts-bundle.js',
     output: {
       path: path.join(__dirname, 'dist'),
       filename: 'all-chts-bundle.dev.js',

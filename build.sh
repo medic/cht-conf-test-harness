@@ -41,7 +41,7 @@ for version in "${versions[@]}"; do
   cp ./build/cht-core-4-6/api/src/enketo-transformer/xsl/* dist/"$version"/enketo-transformer/xsl
 done
 
-npx webpack --config webpack.config.cht-core.js --env.cht='cht-core-4-6'
+npx webpack --config cht-bundles/webpack.config.cht-core.js --env.cht='cht-core-4-6'
 
 npx webpack
 
