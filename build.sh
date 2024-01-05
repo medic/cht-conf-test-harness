@@ -42,6 +42,8 @@ mkdir -p ext/enketo-transformer/xsl
 cp ./build/cht-core-4-6/api/src/xsl/openrosa2html5form.xsl ext/xsl
 cp ./build/cht-core-4-6/api/src/enketo-transformer/xsl/* ext/enketo-transformer/xsl
 
+npx webpack --config webpack.config.cht-core.js --env.cht='cht-core-4-6'
+
 npx webpack
 
 printf "\033[0;32m== BUILD SUCCESSFUL ==\n"
