@@ -34,13 +34,12 @@ for version in "${versions[@]}"; do
   # 210 patch to disable db-object-widget
   (cd build/"$version" && patch -f webapp/src/js/enketo/widgets.js < ../../patches/210-disable-db-object-widgets.patch)
   (cd build/"$version" && npm run build-cht-form)
-done
 
-# TODO update this to split out xsl by cht version
-mkdir -p ext/xsl
-mkdir -p ext/enketo-transformer/xsl
-cp ./build/cht-core-4-6/api/src/xsl/openrosa2html5form.xsl ext/xsl
-cp ./build/cht-core-4-6/api/src/enketo-transformer/xsl/* ext/enketo-transformer/xsl
+  mkdir -p dist/"$version"/xsl
+  mkdir -p dist/"$version"/enketo-transformer/xsl
+  cp ./build/cht-core-4-6/api/src/xsl/openrosa2html5form.xsl dist/"$version"/xsl
+  cp ./build/cht-core-4-6/api/src/enketo-transformer/xsl/* dist/"$version"/enketo-transformer/xsl
+done
 
 npx webpack --config webpack.config.cht-core.js --env.cht='cht-core-4-6'
 

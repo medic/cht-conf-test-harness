@@ -19,12 +19,6 @@ module.exports = [
         type: 'commonjs',
       }
     },
-    resolve: {
-      alias: {
-        // inside cht-core/api/src/services/generate-xform.js
-        '../xsl/xsl-paths': path.join(__dirname, 'ext/xsl-paths.js'), // TODO Support multi cht versions
-      },
-    },
     target: 'node',
     mode: 'development',
     devtool: 'source-map',

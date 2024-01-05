@@ -2,7 +2,7 @@ const path = require('path');
 const WebpackCleanConsolePlugin = require('webpack-clean-console-plugin');
 module.exports = env => [
   {
-    entry: `./${env.cht}.js`,
+    entry: `./cht-bundles/${env.cht}/bundle.js`,
     output: {
       path: path.join(__dirname, 'dist', env.cht),
       filename: `cht-core-bundle.dev.js`,
@@ -13,7 +13,7 @@ module.exports = env => [
     resolve: {
       alias: {
         // inside cht-core/api/src/services/generate-xform.js
-        '../xsl/xsl-paths': path.join(__dirname, 'ext/xsl-paths.js'), // TODO Support multi cht versions
+        '../xsl/xsl-paths': path.join(__dirname, 'cht-bundles', env.cht, 'xsl-paths.js'),
       },
     },
     target: 'node',
