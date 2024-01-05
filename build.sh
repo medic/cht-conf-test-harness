@@ -44,13 +44,8 @@ dir="build/cht-core"
   (cd "$dir" && patch -f webapp/src/js/enketo/widgets.js < ../../patches/210-disable-db-object-widgets.patch)
 #done
 
-npx webpack
-
 (cd build/cht-core && npm run build-cht-form)
 
-cp build/cht-core/build/cht-form/main.js dist/cht-form_main.js
-cp build/cht-core/build/cht-form/polyfills.js dist/cht-form_polyfills.js
-cp build/cht-core/build/cht-form/runtime.js dist/cht-form_runtime.js
-cp build/cht-core/build/cht-form/scripts.js dist/cht-form_scripts.js
-cp build/cht-core/build/cht-form/styles.css dist/cht-form_styles.css
+npx webpack
+
 printf "\033[0;32m== BUILD SUCCESSFUL ==\n"

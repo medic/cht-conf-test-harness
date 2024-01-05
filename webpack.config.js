@@ -40,4 +40,40 @@ module.exports = [
       new WebpackCleanConsolePlugin({ include: ['debug'] }),
     ],
   },
+  {
+    entry: [
+      "./build/cht-core/build/cht-form/main.js",
+      "./build/cht-core/build/cht-form/polyfills.js",
+      "./build/cht-core/build/cht-form/runtime.js",
+      "./build/cht-core/build/cht-form/scripts.js",
+      "./build/cht-core/build/cht-form/styles.css",
+    ],
+    output: {
+      filename: 'index.js',
+      path: path.join(__dirname, 'dist', 'cht-form'),
+      assetModuleFilename: '[name][ext]'
+    },
+    resolve: {
+      alias: {
+        '/fonts/NotoSans-Regular.ttf': './fonts/NotoSans-Regular.ttf',
+        '/fonts/NotoSans-Bold.ttf': './fonts/NotoSans-Bold.ttf',
+        '/fonts/enketo-icons-v2.woff': './fonts/enketo-icons-v2.woff',
+        '/fonts/enketo-icons-v2.ttf': './fonts/enketo-icons-v2.ttf',
+        '/fonts/enketo-icons-v2.svg': './fonts/enketo-icons-v2.svg',
+      },
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(svg|ttf|woff)$/i,
+          type: 'asset/resource'
+        },
+        {
+          test: /\.css$/i,
+          use: ["style-loader", "css-loader"],
+        },
+      ],
+    },
+    optimization: { minimize: false },
+  }
 ];
