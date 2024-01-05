@@ -63,9 +63,7 @@ module.exports = [
     resolve: {
       alias: {
         // inside cht-core/api/src/services/generate-xform.js
-        '../xsl/xsl-paths': path.join(__dirname, 'ext/xsl-paths.js'),
-
-        '@medic/contact-types-utils': path.join(__dirname, 'build/cht-core-4-6/shared-libs/contact-types-utils'), // TODO Support multi cht versions
+        '../xsl/xsl-paths': path.join(__dirname, 'ext/xsl-paths.js'), // TODO Support multi cht versions
       },
     },
     target: 'node',
