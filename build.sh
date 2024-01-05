@@ -10,6 +10,10 @@ exit_on_error() {
 set -e
 trap exit_on_error EXIT
 
+if [ "$1" == "--force" ]; then
+  FORCE=true
+fi
+
 npm ci --legacy-peer-deps
 
 for item in `ls build | grep -v cht-core`; do
@@ -17,8 +21,12 @@ for item in `ls build | grep -v cht-core`; do
 done
 
 declare -a versions=("cht-core-4-6")
-# TODO Eventually we should filter this based on which artifacts already exist
 for version in "${versions[@]}"; do
+  if [ -z ${FORCE+x} ] && [ -d dist/"$version" ]; then
+    printf "\033[0;32m== SKIPPING $version ==\n"
+    continue
+  fi
+
   if [ -d build/"$version" ]; then
     (cd build/"$version" && git fetch && git reset --hard origin/master)
   else
