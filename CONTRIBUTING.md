@@ -26,3 +26,47 @@ All maintainers and contributors are required to act according to our [Code of C
 
 #### License
 The software is provided under AGPL-3.0. Contributions to this project are accepted under the same license.
+
+## Architecture
+
+```mermaid
+flowchart TB
+    cht-core-bundle
+    subgraph browser
+        form-host
+        cht-form
+        form-host --> cht-form
+    end
+
+    subgraph tests[Config Tests]
+        harness[Harness]
+    end
+
+    harness -->|tasks/targets/contact-summary| cht-core-bundle
+    harness -->|forms| form-host
+```
+
+The test harness leverages subsets of the actual cht-core code to recreate a close approximation of the production environment.
+
+- `Harness` - Simple api from cht-conf-test-harness for running config tests
+- `form-host` - Browser-side shim for integrating with cht-form
+- `cht-form` - Renders ODK forms. Built from cht-core/webapp.
+- `cht-core-bundle` - A bundle of code from cht-core used for calculating tasks, targets, and contact summaries. Also used to convert forms to xforms.
+
+## Maintaining CHT Artifacts
+
+### Adding new cht-core version
+
+Code for each CHT version is stored in [`cht-bundles`](./cht-bundles). To add a new version:
+
+1. Create a new folder in `cht-bundles` with the name of the version you want to add (e.g. `cht-core-5-0`).
+    1. Inside this folder create `bundle.js` and `xsl-paths.js` files following the pattern of the other versions.
+    1. Update the contents of these files to point to the (non-existent) `build` directory of the cht-core version you want to add. This build directory will be created/populated later.
+1. Update the [`all-chts-bundle.js`](./cht-bundles/all-chts-bundle.js) file to include the new version.
+1. Update the [`build.sh`](./build.sh) script to include the new version in the `cht_versions` map. Include the exact commit hash to use for the version. 
+
+### Updating existing cht-core artifacts
+
+It is not necessary to rebuild the cht-core artifacts for every change to the cht-conf-test-harness code. Many changes to the harness logic should be passive in regard to the cht-core integration and running `npm run build` should be sufficient to rebuild only the required artifacts.
+
+By default, the build script will not re-build the cht-core artifacts in the `dist/cht-core-x-x` directories if they already exist. To rebuild a particular version, delete the `dist/cht-core-x-x` directory before running the build script. To force a rebuild of all versions, you can run the `build.sh` script with the `--force` flag. Rebuilding the existing cht-core artifacts should only be necessary if changes to the harness logic require changes to the cht-core integration (e.g. pulling in additional logic from the cht-core code).
