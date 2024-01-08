@@ -1,0 +1,1936 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>Enrol into NCAP</h:title>
+    <model>
+      <itext>
+        <translation lang="default">
+          <text id="static_instance-distribution_points-0">
+            <value>Wanangwa SG</value>
+          </text>
+          <text id="static_instance-distribution_points-1">
+            <value>Senti SG</value>
+          </text>
+          <text id="static_instance-distribution_points-10">
+            <value>Chiuzira</value>
+          </text>
+          <text id="static_instance-distribution_points-100">
+            <value>Mtandire</value>
+          </text>
+          <text id="static_instance-distribution_points-101">
+            <value>Mtsiriza</value>
+          </text>
+          <text id="static_instance-distribution_points-102">
+            <value>Manondo (Nkhukwa)</value>
+          </text>
+          <text id="static_instance-distribution_points-103">
+            <value>Njewa</value>
+          </text>
+          <text id="static_instance-distribution_points-104">
+            <value>Maria Nthandizi</value>
+          </text>
+          <text id="static_instance-distribution_points-105">
+            <value>Kawale 1, Chilumba</value>
+          </text>
+          <text id="static_instance-distribution_points-106">
+            <value>Chilinde 1, Makwale</value>
+          </text>
+          <text id="static_instance-distribution_points-107">
+            <value>Kaliyeka 2</value>
+          </text>
+          <text id="static_instance-distribution_points-108">
+            <value>Kaliyeka MSG</value>
+          </text>
+          <text id="static_instance-distribution_points-109">
+            <value>Kachere (Likuni)</value>
+          </text>
+          <text id="static_instance-distribution_points-11">
+            <value>Chikondano MSG</value>
+          </text>
+          <text id="static_instance-distribution_points-110">
+            <value>St. Andrea (Airwing)</value>
+          </text>
+          <text id="static_instance-distribution_points-111">
+            <value>Tikondane M'buka</value>
+          </text>
+          <text id="static_instance-distribution_points-112">
+            <value>Kanyandule</value>
+          </text>
+          <text id="static_instance-distribution_points-113">
+            <value>Mwenyekondo</value>
+          </text>
+          <text id="static_instance-distribution_points-114">
+            <value>St Francis</value>
+          </text>
+          <text id="static_instance-distribution_points-115">
+            <value>Umodzi</value>
+          </text>
+          <text id="static_instance-distribution_points-116">
+            <value>Chadza</value>
+          </text>
+          <text id="static_instance-distribution_points-117">
+            <value>Chipampha</value>
+          </text>
+          <text id="static_instance-distribution_points-118">
+            <value>Masakamika</value>
+          </text>
+          <text id="static_instance-distribution_points-119">
+            <value>Chimwemwe</value>
+          </text>
+          <text id="static_instance-distribution_points-12">
+            <value>Ticheze</value>
+          </text>
+          <text id="static_instance-distribution_points-120">
+            <value>Chikondi</value>
+          </text>
+          <text id="static_instance-distribution_points-121">
+            <value>Chamende Moowa</value>
+          </text>
+          <text id="static_instance-distribution_points-122">
+            <value>Mwaiwathu</value>
+          </text>
+          <text id="static_instance-distribution_points-123">
+            <value>Kanyerere</value>
+          </text>
+          <text id="static_instance-distribution_points-124">
+            <value>Mpingu</value>
+          </text>
+          <text id="static_instance-distribution_points-125">
+            <value>Nakuwawa</value>
+          </text>
+          <text id="static_instance-distribution_points-126">
+            <value>Kandiyani</value>
+          </text>
+          <text id="static_instance-distribution_points-127">
+            <value>Chimwemwe</value>
+          </text>
+          <text id="static_instance-distribution_points-128">
+            <value>Liwoto</value>
+          </text>
+          <text id="static_instance-distribution_points-129">
+            <value>Namitete</value>
+          </text>
+          <text id="static_instance-distribution_points-13">
+            <value>Mphatso NA</value>
+          </text>
+          <text id="static_instance-distribution_points-130">
+            <value>Nseru</value>
+          </text>
+          <text id="static_instance-distribution_points-131">
+            <value>Mapuyu</value>
+          </text>
+          <text id="static_instance-distribution_points-132">
+            <value>Makala</value>
+          </text>
+          <text id="static_instance-distribution_points-133">
+            <value>Mkoko</value>
+          </text>
+          <text id="static_instance-distribution_points-134">
+            <value>Nkhwambala</value>
+          </text>
+          <text id="static_instance-distribution_points-135">
+            <value>Nsundwe</value>
+          </text>
+          <text id="static_instance-distribution_points-136">
+            <value>Chibungo</value>
+          </text>
+          <text id="static_instance-distribution_points-137">
+            <value>Chigonthi (Dziwazako)</value>
+          </text>
+          <text id="static_instance-distribution_points-138">
+            <value>Funsani</value>
+          </text>
+          <text id="static_instance-distribution_points-139">
+            <value>Chimwemwe</value>
+          </text>
+          <text id="static_instance-distribution_points-14">
+            <value>Rainbow</value>
+          </text>
+          <text id="static_instance-distribution_points-140">
+            <value>Chitukula</value>
+          </text>
+          <text id="static_instance-distribution_points-141">
+            <value>Mlumbwira</value>
+          </text>
+          <text id="static_instance-distribution_points-142">
+            <value>Nduwa</value>
+          </text>
+          <text id="static_instance-distribution_points-143">
+            <value>Mlezi</value>
+          </text>
+          <text id="static_instance-distribution_points-144">
+            <value>Chivala</value>
+          </text>
+          <text id="static_instance-distribution_points-145">
+            <value>Gumulira</value>
+          </text>
+          <text id="static_instance-distribution_points-146">
+            <value>Katola</value>
+          </text>
+          <text id="static_instance-distribution_points-147">
+            <value>Mtimaukanena</value>
+          </text>
+          <text id="static_instance-distribution_points-148">
+            <value>Talandira</value>
+          </text>
+          <text id="static_instance-distribution_points-149">
+            <value>Gogo</value>
+          </text>
+          <text id="static_instance-distribution_points-15">
+            <value>Tigwiranemanja</value>
+          </text>
+          <text id="static_instance-distribution_points-150">
+            <value>Khongo</value>
+          </text>
+          <text id="static_instance-distribution_points-151">
+            <value>Chisomo</value>
+          </text>
+          <text id="static_instance-distribution_points-152">
+            <value>Kalimabwera</value>
+          </text>
+          <text id="static_instance-distribution_points-153">
+            <value>Ufulu</value>
+          </text>
+          <text id="static_instance-distribution_points-154">
+            <value>Chimwala</value>
+          </text>
+          <text id="static_instance-distribution_points-155">
+            <value>Kanyanda</value>
+          </text>
+          <text id="static_instance-distribution_points-156">
+            <value>Chinsinsi</value>
+          </text>
+          <text id="static_instance-distribution_points-157">
+            <value>Bauleni</value>
+          </text>
+          <text id="static_instance-distribution_points-158">
+            <value>Kalumba</value>
+          </text>
+          <text id="static_instance-distribution_points-159">
+            <value>Grace Foundation</value>
+          </text>
+          <text id="static_instance-distribution_points-16">
+            <value>Chilinde 1 NA</value>
+          </text>
+          <text id="static_instance-distribution_points-160">
+            <value>Kaponda</value>
+          </text>
+          <text id="static_instance-distribution_points-161">
+            <value>Luzi</value>
+          </text>
+          <text id="static_instance-distribution_points-162">
+            <value>Balani</value>
+          </text>
+          <text id="static_instance-distribution_points-163">
+            <value>Kanthengele</value>
+          </text>
+          <text id="static_instance-distribution_points-164">
+            <value>Kanyadanchokere</value>
+          </text>
+          <text id="static_instance-distribution_points-165">
+            <value>Thunga</value>
+          </text>
+          <text id="static_instance-distribution_points-166">
+            <value>Kadzenele</value>
+          </text>
+          <text id="static_instance-distribution_points-167">
+            <value>Chidziwitso</value>
+          </text>
+          <text id="static_instance-distribution_points-168">
+            <value>Namilulu</value>
+          </text>
+          <text id="static_instance-distribution_points-169">
+            <value>Chikhulupiliro</value>
+          </text>
+          <text id="static_instance-distribution_points-17">
+            <value>Wanangwa NA</value>
+          </text>
+          <text id="static_instance-distribution_points-170">
+            <value>Chimpheso</value>
+          </text>
+          <text id="static_instance-distribution_points-171">
+            <value>Dunde</value>
+          </text>
+          <text id="static_instance-distribution_points-172">
+            <value>Chinkhombe</value>
+          </text>
+          <text id="static_instance-distribution_points-173">
+            <value>Sanjiko</value>
+          </text>
+          <text id="static_instance-distribution_points-174">
+            <value>Chibwata</value>
+          </text>
+          <text id="static_instance-distribution_points-175">
+            <value>Chikanga</value>
+          </text>
+          <text id="static_instance-distribution_points-176">
+            <value>Tisamalane</value>
+          </text>
+          <text id="static_instance-distribution_points-177">
+            <value>Mkokota</value>
+          </text>
+          <text id="static_instance-distribution_points-178">
+            <value>Takomana</value>
+          </text>
+          <text id="static_instance-distribution_points-179">
+            <value>Talandira (Dzenza)</value>
+          </text>
+          <text id="static_instance-distribution_points-18">
+            <value>Nchitanjiru</value>
+          </text>
+          <text id="static_instance-distribution_points-180">
+            <value>Nankhaka 2</value>
+          </text>
+          <text id="static_instance-distribution_points-181">
+            <value>test-dp</value>
+          </text>
+          <text id="static_instance-distribution_points-19">
+            <value>Chisomo</value>
+          </text>
+          <text id="static_instance-distribution_points-2">
+            <value>Chikondano SG</value>
+          </text>
+          <text id="static_instance-distribution_points-20">
+            <value>Nsambachikho</value>
+          </text>
+          <text id="static_instance-distribution_points-21">
+            <value>Mgona</value>
+          </text>
+          <text id="static_instance-distribution_points-22">
+            <value>Area 18 North NA</value>
+          </text>
+          <text id="static_instance-distribution_points-23">
+            <value>Biwi</value>
+          </text>
+          <text id="static_instance-distribution_points-24">
+            <value>Chikondano NA</value>
+          </text>
+          <text id="static_instance-distribution_points-25">
+            <value>Katondo</value>
+          </text>
+          <text id="static_instance-distribution_points-26">
+            <value>Malembe NA</value>
+          </text>
+          <text id="static_instance-distribution_points-27">
+            <value>St. Johns (Msamba)</value>
+          </text>
+          <text id="static_instance-distribution_points-28">
+            <value>Chikondi (Buluzi)</value>
+          </text>
+          <text id="static_instance-distribution_points-29">
+            <value>Kaggwa</value>
+          </text>
+          <text id="static_instance-distribution_points-3">
+            <value>Chimoka SG</value>
+          </text>
+          <text id="static_instance-distribution_points-30">
+            <value>Julio</value>
+          </text>
+          <text id="static_instance-distribution_points-31">
+            <value>Matseteka</value>
+          </text>
+          <text id="static_instance-distribution_points-32">
+            <value>Chigwirizano SG</value>
+          </text>
+          <text id="static_instance-distribution_points-33">
+            <value>Kachikho</value>
+          </text>
+          <text id="static_instance-distribution_points-34">
+            <value>Kaliyeka 1</value>
+          </text>
+          <text id="static_instance-distribution_points-35">
+            <value>Kasiyafumbi</value>
+          </text>
+          <text id="static_instance-distribution_points-36">
+            <value>Msambachikho</value>
+          </text>
+          <text id="static_instance-distribution_points-37">
+            <value>Kauma</value>
+          </text>
+          <text id="static_instance-distribution_points-38">
+            <value>Kawale 2</value>
+          </text>
+          <text id="static_instance-distribution_points-39">
+            <value>Timvane</value>
+          </text>
+          <text id="static_instance-distribution_points-4">
+            <value>Area 22 SG</value>
+          </text>
+          <text id="static_instance-distribution_points-40">
+            <value>Mchezi (chisomo)</value>
+          </text>
+          <text id="static_instance-distribution_points-41">
+            <value>Mpingu</value>
+          </text>
+          <text id="static_instance-distribution_points-42">
+            <value>Mtandire</value>
+          </text>
+          <text id="static_instance-distribution_points-43">
+            <value>Mtsiriza</value>
+          </text>
+          <text id="static_instance-distribution_points-44">
+            <value>Manondo (Nkhukwa)</value>
+          </text>
+          <text id="static_instance-distribution_points-45">
+            <value>Njewa</value>
+          </text>
+          <text id="static_instance-distribution_points-46">
+            <value>Maria Nthandizi</value>
+          </text>
+          <text id="static_instance-distribution_points-47">
+            <value>Kawale 1, Chilumba</value>
+          </text>
+          <text id="static_instance-distribution_points-48">
+            <value>Chilinde 1, Makwale</value>
+          </text>
+          <text id="static_instance-distribution_points-49">
+            <value>Kaliyeka 2</value>
+          </text>
+          <text id="static_instance-distribution_points-5">
+            <value>Tadala SG</value>
+          </text>
+          <text id="static_instance-distribution_points-50">
+            <value>Kaliyeka MSG</value>
+          </text>
+          <text id="static_instance-distribution_points-51">
+            <value>Kachere (Likuni)</value>
+          </text>
+          <text id="static_instance-distribution_points-52">
+            <value>St. Andrea (Airwing)</value>
+          </text>
+          <text id="static_instance-distribution_points-53">
+            <value>Tikondane M'buka</value>
+          </text>
+          <text id="static_instance-distribution_points-54">
+            <value>Kanyandule</value>
+          </text>
+          <text id="static_instance-distribution_points-55">
+            <value>Mwenyekondo</value>
+          </text>
+          <text id="static_instance-distribution_points-56">
+            <value>St Francis</value>
+          </text>
+          <text id="static_instance-distribution_points-57">
+            <value>Umodzi</value>
+          </text>
+          <text id="static_instance-distribution_points-58">
+            <value>Wanangwa SG</value>
+          </text>
+          <text id="static_instance-distribution_points-59">
+            <value>Senti SG</value>
+          </text>
+          <text id="static_instance-distribution_points-6">
+            <value>Fumbe</value>
+          </text>
+          <text id="static_instance-distribution_points-60">
+            <value>Chikondano SG</value>
+          </text>
+          <text id="static_instance-distribution_points-61">
+            <value>Chimoka SG</value>
+          </text>
+          <text id="static_instance-distribution_points-62">
+            <value>Area 22 SG</value>
+          </text>
+          <text id="static_instance-distribution_points-63">
+            <value>Tadala SG</value>
+          </text>
+          <text id="static_instance-distribution_points-64">
+            <value>Fumbe</value>
+          </text>
+          <text id="static_instance-distribution_points-65">
+            <value>Area 50</value>
+          </text>
+          <text id="static_instance-distribution_points-66">
+            <value>Ngomani</value>
+          </text>
+          <text id="static_instance-distribution_points-67">
+            <value>Mphatso SG</value>
+          </text>
+          <text id="static_instance-distribution_points-68">
+            <value>Chiuzira</value>
+          </text>
+          <text id="static_instance-distribution_points-69">
+            <value>Chikondano MSG</value>
+          </text>
+          <text id="static_instance-distribution_points-7">
+            <value>Area 50</value>
+          </text>
+          <text id="static_instance-distribution_points-70">
+            <value>Ticheze</value>
+          </text>
+          <text id="static_instance-distribution_points-71">
+            <value>Mphatso NA</value>
+          </text>
+          <text id="static_instance-distribution_points-72">
+            <value>Rainbow</value>
+          </text>
+          <text id="static_instance-distribution_points-73">
+            <value>Tigwiranemanja</value>
+          </text>
+          <text id="static_instance-distribution_points-74">
+            <value>Chilinde 1 NA</value>
+          </text>
+          <text id="static_instance-distribution_points-75">
+            <value>Wanangwa NA</value>
+          </text>
+          <text id="static_instance-distribution_points-76">
+            <value>Nchitanjiru</value>
+          </text>
+          <text id="static_instance-distribution_points-77">
+            <value>Chisomo</value>
+          </text>
+          <text id="static_instance-distribution_points-78">
+            <value>Nsambachikho</value>
+          </text>
+          <text id="static_instance-distribution_points-79">
+            <value>Mgona</value>
+          </text>
+          <text id="static_instance-distribution_points-8">
+            <value>Ngomani</value>
+          </text>
+          <text id="static_instance-distribution_points-80">
+            <value>Area 18 North NA</value>
+          </text>
+          <text id="static_instance-distribution_points-81">
+            <value>Biwi</value>
+          </text>
+          <text id="static_instance-distribution_points-82">
+            <value>Chikondano NA</value>
+          </text>
+          <text id="static_instance-distribution_points-83">
+            <value>Katondo</value>
+          </text>
+          <text id="static_instance-distribution_points-84">
+            <value>Malembe NA</value>
+          </text>
+          <text id="static_instance-distribution_points-85">
+            <value>St. Johns (Msamba)</value>
+          </text>
+          <text id="static_instance-distribution_points-86">
+            <value>Chikondi (Buluzi)</value>
+          </text>
+          <text id="static_instance-distribution_points-87">
+            <value>Kaggwa</value>
+          </text>
+          <text id="static_instance-distribution_points-88">
+            <value>Julio</value>
+          </text>
+          <text id="static_instance-distribution_points-89">
+            <value>Matseteka</value>
+          </text>
+          <text id="static_instance-distribution_points-9">
+            <value>Mphatso SG</value>
+          </text>
+          <text id="static_instance-distribution_points-90">
+            <value>Chigwirizano SG</value>
+          </text>
+          <text id="static_instance-distribution_points-91">
+            <value>Kachikho</value>
+          </text>
+          <text id="static_instance-distribution_points-92">
+            <value>Kaliyeka 1</value>
+          </text>
+          <text id="static_instance-distribution_points-93">
+            <value>Kasiyafumbi</value>
+          </text>
+          <text id="static_instance-distribution_points-94">
+            <value>Msambachikho</value>
+          </text>
+          <text id="static_instance-distribution_points-95">
+            <value>Kauma</value>
+          </text>
+          <text id="static_instance-distribution_points-96">
+            <value>Kawale 2</value>
+          </text>
+          <text id="static_instance-distribution_points-97">
+            <value>Timvane</value>
+          </text>
+          <text id="static_instance-distribution_points-98">
+            <value>Mchezi (chisomo)</value>
+          </text>
+          <text id="static_instance-distribution_points-99">
+            <value>Mpingu</value>
+          </text>
+          <text id="static_instance-drugs-0">
+            <value>AZT300/3TC150</value>
+          </text>
+          <text id="static_instance-drugs-1">
+            <value>EFV600</value>
+          </text>
+          <text id="static_instance-drugs-2">
+            <value>TDF300/3TC300/EFV600</value>
+          </text>
+          <text id="static_instance-drugs-3">
+            <value>TDF300/3TC300</value>
+          </text>
+          <text id="static_instance-drugs-4">
+            <value>ATV/R300/100</value>
+          </text>
+          <text id="static_instance-drugs-5">
+            <value>ABC600/3TC300</value>
+          </text>
+          <text id="static_instance-drugs-6">
+            <value>LPV/R200/50</value>
+          </text>
+          <text id="static_instance-drugs-7">
+            <value>TDF300/3TC300/DTG50</value>
+          </text>
+          <text id="static_instance-drugs-8">
+            <value>DTG50</value>
+          </text>
+          <text id="static_instance-gender-0">
+            <value>Male</value>
+          </text>
+          <text id="static_instance-gender-1">
+            <value>Female</value>
+          </text>
+          <text id="static_instance-regimens-0">
+            <value>4A-(AZT300/3TC150+EFV600)</value>
+          </text>
+          <text id="static_instance-regimens-1">
+            <value>5A-(TDF300/3TC300/EFV600)</value>
+          </text>
+          <text id="static_instance-regimens-10">
+            <value>Custom</value>
+          </text>
+          <text id="static_instance-regimens-2">
+            <value>7A-(TDF300/3TC300+ATV/r300/100)</value>
+          </text>
+          <text id="static_instance-regimens-3">
+            <value>8A-(AZT300/3TC150+ATV/r300/100)</value>
+          </text>
+          <text id="static_instance-regimens-4">
+            <value>9A-(ABC600/3TC300+LPV/r200/50)</value>
+          </text>
+          <text id="static_instance-regimens-5">
+            <value>10A-(TDF300/3TC300+LPV/r200/50)</value>
+          </text>
+          <text id="static_instance-regimens-6">
+            <value>11A-(AZT300/3TC150+LPV/r200/50)</value>
+          </text>
+          <text id="static_instance-regimens-7">
+            <value>13A-(TDF300/3TC300/DTG50)</value>
+          </text>
+          <text id="static_instance-regimens-8">
+            <value>14A-(AZT300/3TC150+DTG50)</value>
+          </text>
+          <text id="static_instance-regimens-9">
+            <value>15A-(ABC600/3TC300+DTG50)</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="enrol" prefix="J1!enrol!" delimiter="#" version="2020-03-10 00:00:00">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <user>
+              <contact_id/>
+              <facility_id/>
+              <prefix>test-prefix</prefix>
+            </user>
+          </inputs>
+          <c03_patient>
+            <parent>PARENT</parent>
+            <name/>
+            <type>contact</type>
+            <contact_type>c03_patient</contact_type>
+            <role>patient</role>
+            <patient_arv_number/>
+            <firstname/>
+            <lastname/>
+            <date_of_birth/>
+            <barcode tag="hidden">
+              <action>com.google.zxing.client.android.SCAN</action>
+              <android-app-inputs/>
+              <android-app-outputs>
+                <SCAN_RESULT/>
+              </android-app-outputs>
+            </barcode>
+            <national_patient_identifier/>
+            <arv_number/>
+            <gender/>
+            <filing_number>FN</filing_number>
+            <distribution_point/>
+            <select_regimen/>
+            <custom_regimen/>
+            <last_vl_sample_collection_date/>
+            <last_vl_test_result/>
+          </c03_patient>
+          <non_fixed_dose_regimen/>
+          <summary>
+            <patient_details/>
+            <submit_reminder/>
+            <d_national_patient_identifier/>
+            <d_name/>
+            <d_gender/>
+            <d_arv_number/>
+            <d_filing_number/>
+            <d_distribution_point/>
+            <c_regimen_string/>
+            <d_current_regimen/>
+            <d_last_vl_sample_collection_date/>
+            <d_last_vl_test_result/>
+          </summary>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <instance id="gender">
+        <root>
+          <item>
+            <itextId>static_instance-gender-0</itextId>
+            <name>Male</name>
+          </item>
+          <item>
+            <itextId>static_instance-gender-1</itextId>
+            <name>Female</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="regimens">
+        <root>
+          <item>
+            <itextId>static_instance-regimens-0</itextId>
+            <name>4A</name>
+          </item>
+          <item>
+            <itextId>static_instance-regimens-1</itextId>
+            <name>5A</name>
+          </item>
+          <item>
+            <itextId>static_instance-regimens-2</itextId>
+            <name>7A</name>
+          </item>
+          <item>
+            <itextId>static_instance-regimens-3</itextId>
+            <name>8A</name>
+          </item>
+          <item>
+            <itextId>static_instance-regimens-4</itextId>
+            <name>9A</name>
+          </item>
+          <item>
+            <itextId>static_instance-regimens-5</itextId>
+            <name>10A</name>
+          </item>
+          <item>
+            <itextId>static_instance-regimens-6</itextId>
+            <name>11A</name>
+          </item>
+          <item>
+            <itextId>static_instance-regimens-7</itextId>
+            <name>13A</name>
+          </item>
+          <item>
+            <itextId>static_instance-regimens-8</itextId>
+            <name>14A</name>
+          </item>
+          <item>
+            <itextId>static_instance-regimens-9</itextId>
+            <name>15A</name>
+          </item>
+          <item>
+            <itextId>static_instance-regimens-10</itextId>
+            <name>custom</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="drugs">
+        <root>
+          <item>
+            <itextId>static_instance-drugs-0</itextId>
+            <name>AZT300_3TC150</name>
+          </item>
+          <item>
+            <itextId>static_instance-drugs-1</itextId>
+            <name>EFV600</name>
+          </item>
+          <item>
+            <itextId>static_instance-drugs-2</itextId>
+            <name>TDF300_3TC300_EFV600</name>
+          </item>
+          <item>
+            <itextId>static_instance-drugs-3</itextId>
+            <name>TDF300_3TC300</name>
+          </item>
+          <item>
+            <itextId>static_instance-drugs-4</itextId>
+            <name>ATV_R300_100</name>
+          </item>
+          <item>
+            <itextId>static_instance-drugs-5</itextId>
+            <name>ABC600_3TC300</name>
+          </item>
+          <item>
+            <itextId>static_instance-drugs-6</itextId>
+            <name>LPV_R200_50</name>
+          </item>
+          <item>
+            <itextId>static_instance-drugs-7</itextId>
+            <name>TDF300_3TC300_DTG50</name>
+          </item>
+          <item>
+            <itextId>static_instance-drugs-8</itextId>
+            <name>DTG50</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="distribution_points">
+        <root>
+          <item>
+            <itextId>static_instance-distribution_points-0</itextId>
+            <name>Wanangwa SG</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-1</itextId>
+            <name>Senti SG</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-2</itextId>
+            <name>Chikondano SG</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-3</itextId>
+            <name>Chimoka SG</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-4</itextId>
+            <name>Area 22 SG</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-5</itextId>
+            <name>Tadala SG</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-6</itextId>
+            <name>Fumbe</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-7</itextId>
+            <name>Area 50</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-8</itextId>
+            <name>Ngomani</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-9</itextId>
+            <name>Mphatso SG</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-10</itextId>
+            <name>Chiuzira</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-11</itextId>
+            <name>Chikondano MSG</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-12</itextId>
+            <name>Ticheze</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-13</itextId>
+            <name>Mphatso NA</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-14</itextId>
+            <name>Rainbow</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-15</itextId>
+            <name>Tigwiranemanja</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-16</itextId>
+            <name>Chilinde 1 NA</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-17</itextId>
+            <name>Wanangwa NA</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-18</itextId>
+            <name>Nchitanjiru</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-19</itextId>
+            <name>Chisomo</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-20</itextId>
+            <name>Nsambachikho</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-21</itextId>
+            <name>Mgona</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-22</itextId>
+            <name>Area 18 North NA</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-23</itextId>
+            <name>Biwi</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-24</itextId>
+            <name>Chikondano NA</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-25</itextId>
+            <name>Katondo</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-26</itextId>
+            <name>Malembe NA</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-27</itextId>
+            <name>St. Johns (Msamba)</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-28</itextId>
+            <name>Chikondi (Buluzi)</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-29</itextId>
+            <name>Kaggwa</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-30</itextId>
+            <name>Julio</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-31</itextId>
+            <name>Matseteka</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-32</itextId>
+            <name>Chigwirizano SG</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-33</itextId>
+            <name>Kachikho</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-34</itextId>
+            <name>Kaliyeka 1</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-35</itextId>
+            <name>Kasiyafumbi</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-36</itextId>
+            <name>Msambachikho</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-37</itextId>
+            <name>Kauma</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-38</itextId>
+            <name>Kawale 2</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-39</itextId>
+            <name>Timvane</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-40</itextId>
+            <name>Mchezi (chisomo)</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-41</itextId>
+            <name>Mpingu</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-42</itextId>
+            <name>Mtandire</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-43</itextId>
+            <name>Mtsiriza</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-44</itextId>
+            <name>Manondo (Nkhukwa)</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-45</itextId>
+            <name>Njewa</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-46</itextId>
+            <name>Maria Nthandizi</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-47</itextId>
+            <name>Kawale1, chilumba</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-48</itextId>
+            <name>Chilinde 1 Makwale</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-49</itextId>
+            <name>Kaliyeka 2</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-50</itextId>
+            <name>Kaliyeka MSG</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-51</itextId>
+            <name>Kachere (Likuni)</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-52</itextId>
+            <name>St. Andrea (Airwing)</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-53</itextId>
+            <name>Tikondane M'buka</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-54</itextId>
+            <name>Kanyandule</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-55</itextId>
+            <name>Mwenyekondo</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-56</itextId>
+            <name>St Francis</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-57</itextId>
+            <name>Umodzi</name>
+            <source_facility>LLH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-58</itextId>
+            <name>Wanangwa SG</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-59</itextId>
+            <name>Senti SG</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-60</itextId>
+            <name>Chikondano SG</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-61</itextId>
+            <name>Chimoka SG</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-62</itextId>
+            <name>Area 22 SG</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-63</itextId>
+            <name>Tadala SG</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-64</itextId>
+            <name>Fumbe</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-65</itextId>
+            <name>Area 50</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-66</itextId>
+            <name>Ngomani</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-67</itextId>
+            <name>Mphatso SG</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-68</itextId>
+            <name>Chiuzira</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-69</itextId>
+            <name>Chikondano MSG</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-70</itextId>
+            <name>Ticheze</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-71</itextId>
+            <name>Mphatso NA</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-72</itextId>
+            <name>Rainbow</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-73</itextId>
+            <name>Tigwiranemanja</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-74</itextId>
+            <name>Chilinde 1 NA</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-75</itextId>
+            <name>Wanangwa NA</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-76</itextId>
+            <name>Nchitanjiru</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-77</itextId>
+            <name>Chisomo</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-78</itextId>
+            <name>Nsambachikho</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-79</itextId>
+            <name>Mgona</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-80</itextId>
+            <name>Area 18 North NA</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-81</itextId>
+            <name>Biwi</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-82</itextId>
+            <name>Chikondano NA</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-83</itextId>
+            <name>Katondo</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-84</itextId>
+            <name>Malembe NA</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-85</itextId>
+            <name>St. Johns (Msamba)</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-86</itextId>
+            <name>Chikondi (Buluzi)</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-87</itextId>
+            <name>Kaggwa</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-88</itextId>
+            <name>Julio</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-89</itextId>
+            <name>Matseteka</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-90</itextId>
+            <name>Chigwirizano SG</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-91</itextId>
+            <name>Kachikho</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-92</itextId>
+            <name>Kaliyeka 1</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-93</itextId>
+            <name>Kasiyafumbi</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-94</itextId>
+            <name>Msambachikho</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-95</itextId>
+            <name>Kauma</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-96</itextId>
+            <name>Kawale 2</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-97</itextId>
+            <name>Timvane</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-98</itextId>
+            <name>Mchezi (chisomo)</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-99</itextId>
+            <name>Mpingu</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-100</itextId>
+            <name>Mtandire</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-101</itextId>
+            <name>Mtsiriza</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-102</itextId>
+            <name>Manondo (Nkhukwa)</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-103</itextId>
+            <name>Njewa</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-104</itextId>
+            <name>Maria Nthandizi</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-105</itextId>
+            <name>Kawale1, chilumba</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-106</itextId>
+            <name>Chilinde 1 Makwale</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-107</itextId>
+            <name>Kaliyeka 2</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-108</itextId>
+            <name>Kaliyeka MSG</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-109</itextId>
+            <name>Kachere (Likuni)</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-110</itextId>
+            <name>St. Andrea (Airwing)</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-111</itextId>
+            <name>Tikondane M'buka</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-112</itextId>
+            <name>Kanyandule</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-113</itextId>
+            <name>Mwenyekondo</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-114</itextId>
+            <name>St Francis</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-115</itextId>
+            <name>Umodzi</name>
+            <source_facility>MPC-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-116</itextId>
+            <name>Chadza</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-117</itextId>
+            <name>Chipampha</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-118</itextId>
+            <name>Masakamika</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-119</itextId>
+            <name>Chimwemwe</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-120</itextId>
+            <name>Chikondi</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-121</itextId>
+            <name>Chamende Moowa</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-122</itextId>
+            <name>Mwaiwathu</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-123</itextId>
+            <name>Kanyerere</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-124</itextId>
+            <name>Mpingu</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-125</itextId>
+            <name>Nakuwawa</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-126</itextId>
+            <name>Kandiyani</name>
+            <source_facility>CTZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-127</itextId>
+            <name>Chimwemwe</name>
+            <source_facility>CLKA-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-128</itextId>
+            <name>Liwoto</name>
+            <source_facility>CLKA-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-129</itextId>
+            <name>Namitete</name>
+            <source_facility>CLKA-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-130</itextId>
+            <name>Nseru</name>
+            <source_facility>CLKA-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-131</itextId>
+            <name>Mapuyu</name>
+            <source_facility>CLKA-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-132</itextId>
+            <name>Makala</name>
+            <source_facility>CLKA-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-133</itextId>
+            <name>Mkoko</name>
+            <source_facility>CLKA-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-134</itextId>
+            <name>Nkhwambala</name>
+            <source_facility>CLKA-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-135</itextId>
+            <name>Nsundwe</name>
+            <source_facility>CLKA-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-136</itextId>
+            <name>Chibungo</name>
+            <source_facility>CLKA-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-137</itextId>
+            <name>Chigonthi (Dziwazako)</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-138</itextId>
+            <name>Funsani</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-139</itextId>
+            <name>Chimwemwe</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-140</itextId>
+            <name>Chitukula</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-141</itextId>
+            <name>Mlumbwira</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-142</itextId>
+            <name>Nduwa</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-143</itextId>
+            <name>Mlezi</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-144</itextId>
+            <name>Chivala</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-145</itextId>
+            <name>Gumulira</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-146</itextId>
+            <name>Katola</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-147</itextId>
+            <name>Mtimaukanena</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-148</itextId>
+            <name>Talandira</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-149</itextId>
+            <name>Gogo</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-150</itextId>
+            <name>Khongo</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-151</itextId>
+            <name>Chisomo</name>
+            <source_facility>LBDZ-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-152</itextId>
+            <name>Kalimabwera</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-153</itextId>
+            <name>Ufulu</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-154</itextId>
+            <name>Chimwala</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-155</itextId>
+            <name>Kanyanda</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-156</itextId>
+            <name>Chinsinsi</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-157</itextId>
+            <name>Bauleni</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-158</itextId>
+            <name>Kalumba</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-159</itextId>
+            <name>Grace Foundation</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-160</itextId>
+            <name>Kaponda</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-161</itextId>
+            <name>Luzi</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-162</itextId>
+            <name>Balani</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-163</itextId>
+            <name>Kanthengele</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-164</itextId>
+            <name>Kanyadanchokere</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-165</itextId>
+            <name>Thunga</name>
+            <source_facility>MTCH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-166</itextId>
+            <name>Kadzenele</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-167</itextId>
+            <name>Chidziwitso</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-168</itextId>
+            <name>Namilulu</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-169</itextId>
+            <name>Chikhulupiliro</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-170</itextId>
+            <name>Chimpheso</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-171</itextId>
+            <name>Dunde</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-172</itextId>
+            <name>Chinkhombe</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-173</itextId>
+            <name>Sanjiko</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-174</itextId>
+            <name>Chibwata</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-175</itextId>
+            <name>Chikanga</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-176</itextId>
+            <name>Tisamalane</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-177</itextId>
+            <name>Mkokota</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-178</itextId>
+            <name>Takomana</name>
+            <source_facility>NTJH-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-179</itextId>
+            <name>Talandira (Dzenza)</name>
+            <source_facility>A18-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-180</itextId>
+            <name>Nankhaka 2</name>
+            <source_facility>A18-ARV</source_facility>
+          </item>
+          <item>
+            <itextId>static_instance-distribution_points-181</itextId>
+            <name>test-dp</name>
+            <source_facility>test-prefix</source_facility>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/inputs" relevant="0"/>
+      <bind nodeset="/data/inputs/user/contact_id" type="string"/>
+      <bind nodeset="/data/inputs/user/facility_id" type="string"/>
+      <bind nodeset="/data/inputs/user/prefix" type="string"/>
+      <bind nodeset="/data/c03_patient/parent" type="string"/>
+      <bind nodeset="/data/c03_patient/name" type="string" calculate="concat( /data/c03_patient/firstname , ' ',  /data/c03_patient/lastname )"/>
+      <bind nodeset="/data/c03_patient/type" type="string"/>
+      <bind nodeset="/data/c03_patient/contact_type" type="string"/>
+      <bind nodeset="/data/c03_patient/role" type="string"/>
+      <bind nodeset="/data/c03_patient/patient_arv_number" type="string" calculate="concat( /data/inputs/user/prefix , '-',  /data/c03_patient/arv_number )"/>
+      <bind nodeset="/data/c03_patient/firstname" type="string" required="true()"/>
+      <bind nodeset="/data/c03_patient/lastname" type="string" required="true()"/>
+      <bind nodeset="/data/c03_patient/date_of_birth" type="date" constraint=". &lt; now()" required="true()" jr:constraintMsg="The birth date cannot be in the future."/>
+      <bind nodeset="/data/c03_patient/barcode/action" type="string"/>
+      <bind nodeset="/data/c03_patient/barcode/android-app-outputs/SCAN_RESULT" type="string"/>
+      <bind nodeset="/data/c03_patient/national_patient_identifier" type="string" calculate="if(string-length(string( /data/c03_patient/barcode/android-app-outputs/SCAN_RESULT )) &gt; 0,  /data/c03_patient/barcode/android-app-outputs/SCAN_RESULT ,  /data/c03_patient/national_patient_identifier )" required="true()"/>
+      <bind nodeset="/data/c03_patient/arv_number" type="string"/>
+      <bind nodeset="/data/c03_patient/gender" type="select1" required="true()"/>
+      <bind nodeset="/data/c03_patient/filing_number" type="string"/>
+      <bind nodeset="/data/c03_patient/distribution_point" type="select1" required="true()"/>
+      <bind nodeset="/data/c03_patient/select_regimen" type="select1" required="true()"/>
+      <bind nodeset="/data/c03_patient/custom_regimen" type="select" required="true()" relevant="selected( /data/c03_patient/select_regimen , 'custom')"/>
+      <bind nodeset="/data/c03_patient/last_vl_sample_collection_date" type="date" constraint=". &lt; now()" required="false()" jr:constraintMsg="The sample collection date cannot be in the future."/>
+      <bind nodeset="/data/c03_patient/last_vl_test_result" type="string" constraint="regex(.,'^(&lt;LDL|[1-9]\d*|&lt;[1-9]\d*)$')" required="false()" jr:constraintMsg="Please enter a valid result. Expected &lt;LDL or &lt;number or a number."/>
+      <bind nodeset="/data/non_fixed_dose_regimen" type="string" calculate="translate( /data/c03_patient/custom_regimen , ' ', '+')"/>
+      <bind nodeset="/data/summary/patient_details" readonly="true()" type="string"/>
+      <bind nodeset="/data/summary/submit_reminder" readonly="true()" type="string"/>
+      <bind nodeset="/data/summary/d_national_patient_identifier" readonly="true()" type="string"/>
+      <bind nodeset="/data/summary/d_name" readonly="true()" type="string"/>
+      <bind nodeset="/data/summary/d_gender" readonly="true()" type="string"/>
+      <bind nodeset="/data/summary/d_arv_number" readonly="true()" type="string"/>
+      <bind nodeset="/data/summary/d_filing_number" readonly="true()" type="string"/>
+      <bind nodeset="/data/summary/d_distribution_point" readonly="true()" type="string"/>
+      <bind nodeset="/data/summary/c_regimen_string" type="string" calculate="if(selected( /data/c03_patient/select_regimen , 'custom'),  /data/non_fixed_dose_regimen ,  /data/c03_patient/select_regimen )"/>
+      <bind nodeset="/data/summary/d_current_regimen" readonly="true()" type="string"/>
+      <bind nodeset="/data/summary/d_last_vl_sample_collection_date" readonly="true()" type="string" relevant="string-length(string( /data/c03_patient/last_vl_sample_collection_date )) &gt; 0"/>
+      <bind nodeset="/data/summary/d_last_vl_test_result" readonly="true()" type="string" relevant="string-length(string( /data/c03_patient/last_vl_test_result )) &gt; 0"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/data/inputs">
+      <label>Patient</label>
+      <group ref="/data/inputs/user">
+        <input ref="/data/inputs/user/contact_id"/>
+        <input appearance="select-contact type-c01_health_center" ref="/data/inputs/user/facility_id"/>
+        <input ref="/data/inputs/user/prefix">
+          <label>Prefix</label>
+        </input>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/data/c03_patient">
+      <label>New Patient</label>
+      <input ref="/data/c03_patient/firstname">
+        <label>First Name</label>
+      </input>
+      <input ref="/data/c03_patient/lastname">
+        <label>Last Name</label>
+      </input>
+      <input ref="/data/c03_patient/date_of_birth">
+        <label>Date of birth</label>
+      </input>
+      <group appearance="android-app-launcher field-list" ref="/data/c03_patient/barcode">
+        <label></label>
+        <input appearance="hidden" ref="/data/c03_patient/barcode/action">
+          <label></label>
+        </input>
+        <group appearance="android-app-inputs" ref="/data/c03_patient/barcode/android-app-inputs">
+          <label></label>
+        </group>
+        <group appearance="android-app-outputs" ref="/data/c03_patient/barcode/android-app-outputs">
+          <label></label>
+          <input appearance="hidden" ref="/data/c03_patient/barcode/android-app-outputs/SCAN_RESULT">
+            <label>Result</label>
+          </input>
+        </group>
+      </group>
+      <input ref="/data/c03_patient/national_patient_identifier">
+        <label>National Patient Identifier</label>
+      </input>
+      <input ref="/data/c03_patient/arv_number">
+        <label>ARV number</label>
+        <hint>Ex: 123 appears as <output value=" /data/inputs/user/prefix "/>-123</hint>
+      </input>
+      <select1 ref="/data/c03_patient/gender">
+        <label>Gender</label>
+        <item>
+          <label>Male</label>
+          <value>Male</value>
+        </item>
+        <item>
+          <label>Female</label>
+          <value>Female</value>
+        </item>
+      </select1>
+      <input ref="/data/c03_patient/filing_number">
+        <label>Filing Number</label>
+      </input>
+      <select1 appearance="minimal" ref="/data/c03_patient/distribution_point">
+        <label>Distribution Point</label>
+        <itemset nodeset="instance('distribution_points')/root/item[source_facility= /data/inputs/user/prefix ]">
+          <value ref="name"/>
+          <label ref="jr:itext(itextId)"/>
+        </itemset>
+      </select1>
+      <select1 appearance="minimal" ref="/data/c03_patient/select_regimen">
+        <label>Current Regimen</label>
+        <item>
+          <label>4A-(AZT300/3TC150+EFV600)</label>
+          <value>4A</value>
+        </item>
+        <item>
+          <label>5A-(TDF300/3TC300/EFV600)</label>
+          <value>5A</value>
+        </item>
+        <item>
+          <label>7A-(TDF300/3TC300+ATV/r300/100)</label>
+          <value>7A</value>
+        </item>
+        <item>
+          <label>8A-(AZT300/3TC150+ATV/r300/100)</label>
+          <value>8A</value>
+        </item>
+        <item>
+          <label>9A-(ABC600/3TC300+LPV/r200/50)</label>
+          <value>9A</value>
+        </item>
+        <item>
+          <label>10A-(TDF300/3TC300+LPV/r200/50)</label>
+          <value>10A</value>
+        </item>
+        <item>
+          <label>11A-(AZT300/3TC150+LPV/r200/50)</label>
+          <value>11A</value>
+        </item>
+        <item>
+          <label>13A-(TDF300/3TC300/DTG50)</label>
+          <value>13A</value>
+        </item>
+        <item>
+          <label>14A-(AZT300/3TC150+DTG50)</label>
+          <value>14A</value>
+        </item>
+        <item>
+          <label>15A-(ABC600/3TC300+DTG50)</label>
+          <value>15A</value>
+        </item>
+        <item>
+          <label>Custom</label>
+          <value>custom</value>
+        </item>
+      </select1>
+      <select ref="/data/c03_patient/custom_regimen">
+        <label>Custom regimen</label>
+        <item>
+          <label>AZT300/3TC150</label>
+          <value>AZT300_3TC150</value>
+        </item>
+        <item>
+          <label>EFV600</label>
+          <value>EFV600</value>
+        </item>
+        <item>
+          <label>TDF300/3TC300/EFV600</label>
+          <value>TDF300_3TC300_EFV600</value>
+        </item>
+        <item>
+          <label>TDF300/3TC300</label>
+          <value>TDF300_3TC300</value>
+        </item>
+        <item>
+          <label>ATV/R300/100</label>
+          <value>ATV_R300_100</value>
+        </item>
+        <item>
+          <label>ABC600/3TC300</label>
+          <value>ABC600_3TC300</value>
+        </item>
+        <item>
+          <label>LPV/R200/50</label>
+          <value>LPV_R200_50</value>
+        </item>
+        <item>
+          <label>TDF300/3TC300/DTG50</label>
+          <value>TDF300_3TC300_DTG50</value>
+        </item>
+        <item>
+          <label>DTG50</label>
+          <value>DTG50</value>
+        </item>
+      </select>
+      <input ref="/data/c03_patient/last_vl_sample_collection_date">
+        <label>Last Viral Load Sample Collection Date</label>
+      </input>
+      <input ref="/data/c03_patient/last_vl_test_result">
+        <label>Last Viral Load Test Result</label>
+        <hint>Viral load is measured as copies/ml.</hint>
+      </input>
+    </group>
+    <group appearance="field-list summary" ref="/data/summary">
+      <label>Summary Page</label>
+      <input appearance="h1 blue" ref="/data/summary/patient_details">
+        <label>&lt;I class="fa fa-user"&gt;&lt;/i&gt; Details</label>
+      </input>
+      <input ref="/data/summary/submit_reminder">
+        <label>&lt;span style="color:orange"&gt;Be sure to submit form, to complete this action.&lt;/span&gt;</label>
+      </input>
+      <input ref="/data/summary/d_national_patient_identifier">
+        <label>National Patient Identifier: <output value=" /data/c03_patient/national_patient_identifier "/></label>
+      </input>
+      <input ref="/data/summary/d_name">
+        <label>Name: <output value=" /data/c03_patient/name "/></label>
+      </input>
+      <input ref="/data/summary/d_gender">
+        <label>Gender: <output value=" /data/c03_patient/gender "/></label>
+      </input>
+      <input ref="/data/summary/d_arv_number">
+        <label>ARV #: <output value=" /data/c03_patient/patient_arv_number "/></label>
+      </input>
+      <input ref="/data/summary/d_filing_number">
+        <label>Filing #: <output value=" /data/c03_patient/filing_number "/></label>
+      </input>
+      <input ref="/data/summary/d_distribution_point">
+        <label>Distribution Point: <output value=" /data/c03_patient/distribution_point "/></label>
+      </input>
+      <input ref="/data/summary/d_current_regimen">
+        <label>Regimen: <output value=" /data/summary/c_regimen_string "/></label>
+      </input>
+      <input ref="/data/summary/d_last_vl_sample_collection_date">
+        <label>Last Viral Load Sample Collection Date: <output value=" /data/c03_patient/last_vl_sample_collection_date "/></label>
+      </input>
+      <input ref="/data/summary/d_last_vl_test_result">
+        <label>Last Viral Load Test Result: <output value=" /data/c03_patient/last_vl_test_result "/></label>
+      </input>
+    </group>
+  </h:body>
+</h:html>

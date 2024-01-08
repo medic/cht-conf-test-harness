@@ -5,7 +5,7 @@
     "jquery": true
   },
   "parserOptions": {
-    "ecmaVersion": 9
+    "ecmaVersion": 11
   },
   "ignorePatterns": ["docs/", "build/cht-core"],
   "rules": {

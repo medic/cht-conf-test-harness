@@ -13,9 +13,9 @@ const harness = new Harness({
   reportFormErrors: false,
 });
 
-
 describe('getContactSummary', () => {
   let functionStub;
+  const withFunctionStub = test => async () => Harness.__with__({ Function: function () { return functionStub; } })(test);
   let basicReport;
 
   before(async () => {
@@ -33,7 +33,7 @@ describe('getContactSummary', () => {
   });
   afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
 
-  it('passthrough if all args given', async () => Harness.__with__({ Function: function () { return functionStub; } })(async () => {
+  it('passthrough if all args given', withFunctionStub(async () => {
     const contact = {};
     const reports = [];
     const lineage = [];
@@ -48,7 +48,7 @@ describe('getContactSummary', () => {
     expect(new Date().getTime()).to.eq(expectedTime);
   });
 
-  it('state used when no args given', async () => Harness.__with__({ Function: function () { return functionStub; } })(async () => {
+  it('state used when no args given', withFunctionStub(async () => {
     await harness.getContactSummary();
 
     const args = functionStub.args[0];
@@ -71,19 +71,34 @@ describe('getContactSummary', () => {
     expect(args[2][2]).to.be.undefined;
   }));
 
-  it('state used for reports and lineage but not contact', async () => Harness.__with__({ Function: function () { return functionStub; } })(async () => {
+  it('#240 - contact summary includes reports of the selected contacts children', withFunctionStub(async () => {
+    await harness.getContactSummary('family_id');
+    expect(functionStub.args[0][1]).to.deep.eq([basicReport.report]);
+  }));
+
+  it('state used for reports and lineage but not contact', withFunctionStub(async () => {
     const mockContact = { _id: 'foo' };
     await harness.getContactSummary(mockContact);
     expect(functionStub.args[0]).to.deep.include.members([mockContact, [], []]);
     expect(functionStub.args[0][3].v1).to.not.be.undefined;
   }));
 
-  it('#71 - mocked reports in state are passed to contact-summary', async () => Harness.__with__({ Function: function () { return functionStub; } })(async () => {
+  it('#71 - mocked reports in state are passed to contact-summary', withFunctionStub(async () => {
     const mockContact = { _id: 'foo', type: 'person' };
     const mockReport = { _id: 'bar', patient_id: mockContact._id };
     harness.pushMockedDoc(mockReport);
     await harness.getContactSummary(mockContact);
     expect(functionStub.args[0]).to.deep.include.members([mockContact, [mockReport], []]);
+    expect(functionStub.args[0][3].v1).to.not.be.undefined;
+  }));
+
+  it('#240 - mocked reports in state are passed to contact-summary via string value for contact_id', withFunctionStub(async () => {
+    const mockContact = { _id: 'foo', type: 'person' };
+    const mockReport = { _id: 'bar', patient_id: mockContact._id };
+    harness.pushMockedDoc(mockContact, mockReport);
+    await harness.getContactSummary(mockContact._id);
+    expect(functionStub.args[0][0]).to.include(mockContact);
+    expect(functionStub.args[0][1]).to.deep.eq([mockReport]);
     expect(functionStub.args[0][3].v1).to.not.be.undefined;
   }));
 

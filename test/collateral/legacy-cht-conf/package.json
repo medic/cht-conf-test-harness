@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "devDependencies": {
-    "cht-conf": "^3.19.0"
+    "cht-conf": "^3.9.3"
   }
 }

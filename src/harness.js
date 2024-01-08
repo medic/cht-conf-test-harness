@@ -664,9 +664,7 @@ class Harness {
       throw `Harness: Cannot get summary for unknown or invalid contact.`;
     }
 
-    const reportHasMatchingSubject = report => self.core.RegistrationUtils.getSubjectId(report) === resolvedContact._id;
-    const resolvedReports = Array.isArray(reports) ? [...reports] : self._state.reports.filter(reportHasMatchingSubject);
-
+    const resolvedReports = self.coreAdapter.getReportsForContactSummary(resolvedContact, reports, resolvedContact._id, this.state);
     let resolvedLineage = [];
     if (Array.isArray(lineage)) {
       resolvedLineage.push(...lineage);
