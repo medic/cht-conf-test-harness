@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 declare -A cht_versions=(
-  ["cht-core-4-6"]="42807deaae818bf2085d0457f9f161073493aec1"
+  ["cht-core-4-5"]="15bd199eff7468b23acae5e39b2245ce4b4a5220" # Commit that added cht-form (technically after of 4.5, but before the Enekto uplift in 4.6)
+  ["cht-core-4-6"]="42807deaae818bf2085d0457f9f161073493aec1" # TODO update this to point to 4.6 tag
 )
 
 exit_on_error() {
@@ -51,8 +52,8 @@ for version in "${!cht_versions[@]}"; do
 
   mkdir -p dist/"$version"/xsl
   mkdir -p dist/"$version"/enketo-transformer/xsl
-  cp ./build/cht-core-4-6/api/src/xsl/openrosa2html5form.xsl dist/"$version"/xsl
-  cp ./build/cht-core-4-6/api/src/enketo-transformer/xsl/* dist/"$version"/enketo-transformer/xsl
+  cp ./build/"$version"/api/src/xsl/openrosa2html5form.xsl dist/"$version"/xsl
+  cp ./build/"$version"/api/src/enketo-transformer/xsl/* dist/"$version"/enketo-transformer/xsl
 
   npx webpack --config cht-bundles/webpack.config.cht-core.js --env.cht="$version"
 done

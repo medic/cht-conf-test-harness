@@ -63,7 +63,12 @@ Code for each CHT version is stored in [`cht-bundles`](./cht-bundles). To add a 
     1. Inside this folder create `bundle.js` and `xsl-paths.js` files following the pattern of the other versions.
     1. Update the contents of these files to point to the (non-existent) `build` directory of the cht-core version you want to add. This build directory will be created/populated later.
 1. Update the [`all-chts-bundle.js`](./cht-bundles/all-chts-bundle.js) file to include the new version.
+    1. Note that the key given here will represent the value consumers should set in the `coreVersion` field of their harness configuration.
 1. Update the [`build.sh`](./build.sh) script to include the new version in the `cht_versions` map. Include the exact commit hash to use for the version. 
+1. Run `npm run build` to create the new artifacts.
+1. Update the [`harness.defaults.json` config](./test/collateral/harness.defaults.json) so that `coreVersion` points to the new version.
+    1. Run `npm run test` to ensure the new artifacts are working as expected.
+1. Do not forget to commit the newly generated contents of `./dist`!
 
 ### Updating existing cht-core artifacts
 
