@@ -169,7 +169,7 @@ describe('forms that have caused bugs', () => {
     ]);
   });
 
-  it.skip('support for input type tel', async () => {
+  it('support for input type tel', async () => {
     const singleTel = await harness.fillForm('tel', [1, '17786043495', '']);
     expect(singleTel.errors).to.be.empty;
     expect(singleTel.report).to.nested.deep.include({
@@ -183,7 +183,7 @@ describe('forms that have caused bugs', () => {
     expect(twoTels.report).to.nested.deep.include({
       form: 'tel',
       'fields.contacts.n_contacts': '',
-      'fields.contacts.contact_repeat': [{ text: '17786041234' }, { text: '17786042345' }],
+      'fields.contacts.contact_repeat': [{ text: '+17786041234' }, { text: '+17786042345' }],
     });
   });
 
