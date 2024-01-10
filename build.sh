@@ -59,5 +59,4 @@ for version in "${!cht_versions[@]}"; do
 done
 
 npx webpack
-
 printf "\033[0;32m== BUILD SUCCESSFUL ==\n"

@@ -7,7 +7,7 @@
   "parserOptions": {
     "ecmaVersion": 11
   },
-  "ignorePatterns": ["docs/", "build/cht-core"],
+  "ignorePatterns": ["docs/"],
   "rules": {
     "max-len": ["error", 200, { "ignoreStrings": true, "ignoreComments": true }],
     "no-console": "off",
