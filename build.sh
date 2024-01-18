@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 declare -A cht_versions=(
-  ["cht-core-4-5"]="15bd199eff7468b23acae5e39b2245ce4b4a5220" # Commit that added cht-form (technically after of 4.5, but before the Enekto uplift in 4.6)
   ["cht-core-4-6"]="42807deaae818bf2085d0457f9f161073493aec1" # TODO update this to point to 4.6 tag
 )
 
