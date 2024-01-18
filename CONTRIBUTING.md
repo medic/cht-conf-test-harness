@@ -46,9 +46,9 @@ flowchart TB
     harness -->|forms| form-host
 ```
 
-The test harness leverages subsets of the actual cht-core code to recreate a close approximation of the production environment.
+The test harness leverages subsets of the actual cht-core code to recreate an approximation of the production environment.
 
-- `Harness` - Simple api from cht-conf-test-harness for running config tests
+- `Harness` - The external interface exposed to users via cht-conf-test-harness for writing config tests
 - `form-host` - Browser-side shim for integrating with cht-form
 - `cht-form` - Renders ODK forms. Built from cht-core/webapp.
 - `cht-core-bundle` - A bundle of code from cht-core used for calculating tasks, targets, and contact summaries. Also used to convert forms to xforms.
