@@ -25,7 +25,7 @@ if [[ 1 == "$FORCE" ]]; then
   rm -Rf dist
 else
   for item in `ls dist | grep -v cht-core`; do
-      rm -rf dist/"$item"
+    rm -rf dist/"$item"
   done
 fi
 
