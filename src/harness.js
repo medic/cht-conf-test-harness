@@ -515,13 +515,13 @@ class Harness {
     return this._state.console
       .filter(msg => msg.type() !== 'log')
       .filter(msg => !msg.text().startsWith('Error submitting form data:'))
+      .filter(msg => !msg.text().startsWith('Slow network is detected. See https://www.chromestatus.com/feature/5636954674692096 for more details. Fallback font will be used while loading:'))
       .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_REQUEST_RANGE_NOT_SATISFIABLE') // BUG: #219
       .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_UNKNOWN_URL_SCHEME') // BUG: #220
       .filter(msg => msg.text() !== 'Failed to load resource: net::ERR_FILE_NOT_FOUND') // BUG: #221
       .filter(msg => !msg.text().startsWith('Error fetching media file')) // BUG: #222
       .filter(msg => !msg.text().startsWith('Deprecation warning:')) // BUG: #223
       .filter(msg => !msg.text().includes('with null-based index')) // BUG: #224
-      .filter(msg => msg.text() !== 'Data node: /*/meta/deprecatedID with null-based index: undefined not found. Ignored.') // BUG
     ;
 
   }
