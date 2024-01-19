@@ -26,4 +26,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: sudo apt install -y xsltproc
     - run: npm ci --legacy-peer-deps
-    - run: npm run travis
+    - run: npm run build-ci

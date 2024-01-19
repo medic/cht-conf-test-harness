@@ -15,7 +15,7 @@ The Community Health Toolkit is powered by people like you. Your contributions h
     - Include the issue/PR number in the test title. This provides context for future debugging if the test ever regresses.
   - Update the project's version number in the [package.json](./package.json) by running `npm version <major|minor|patch>`
 - Before you submit a pull request, please make sure your contribution passes all tests. Test failures need to be addressed before we can merge your contribution.
-  - You can run `npm run travis` to build the project, lint the source code, and execute the tests.
+  - You can run `npm run build-ci` to build the project, lint the source code, and execute the tests.
 - Provide detail about the issue you are solving in the pull request description. Note: If your pull request addresses a specific issue, please reference it using medic/<repo>#<issue number>
 - Our CI will automatically schedule a build; monitor the build to ensure it passes.
 - Your PR will be reviewed by one of the repository's maintainers. Most PRs have at least one change requested before they're merged so don't be offended if your change doesn't get accepted on the first try!
