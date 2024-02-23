@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Bug 249</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/bug_249/inputs/source:label">
+            <value>Source</value>
+          </text>
+          <text id="/bug_249/inputs/source_id:label">
+            <value>Source ID</value>
+          </text>
+          <text id="/bug_249/inputs:label">
+            <value>Patient</value>
+          </text>
+          <text id="/bug_249/items/desc:label">
+            <value>A form with only a Time input element</value>
+          </text>
+          <text id="/bug_249/items/time_input:label">
+            <value>Example Time</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <bug_249 delimiter="#" id="Bug_249" prefix="J1!Bug_249!" version="2024-02-23">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <source>user</source>
+            <source_id/>
+          </inputs>
+          <items>
+            <desc/>
+            <time_input/>
+          </items>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </bug_249>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/bug_249/inputs" relevant="./source = 'user'"/>
+      <bind nodeset="/bug_249/inputs/source" type="string"/>
+      <bind nodeset="/bug_249/inputs/source_id" type="string"/>
+      <bind nodeset="/bug_249/items/desc" readonly="true()" type="string"/>
+      <bind nodeset="/bug_249/items/time_input" required="true()" type="time"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/bug_249/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group appearance="field-list" ref="/bug_249/inputs">
+      <label ref="jr:itext('/bug_249/inputs:label')"/>
+      <input appearance="hidden" ref="/bug_249/inputs/source">
+        <label ref="jr:itext('/bug_249/inputs/source:label')"/>
+      </input>
+      <input appearance="hidden" ref="/bug_249/inputs/source_id">
+        <label ref="jr:itext('/bug_249/inputs/source_id:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/bug_249/items">
+      <input ref="/bug_249/items/desc">
+        <label ref="jr:itext('/bug_249/items/desc:label')"/>
+      </input>
+      <input ref="/bug_249/items/time_input">
+        <label ref="jr:itext('/bug_249/items/time_input:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>
