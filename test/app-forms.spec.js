@@ -315,6 +315,7 @@ describe('forms that have caused bugs', () => {
   it('#234 - datetime field with correct input format', async () => {
     const result = await harness.fillForm('bug_234', ['2023-01-01 1:22']);
     expect(result.errors).to.be.empty;
+    expect(result.report.fields.items.two_three_four).to.match(/^2023-01-01T01:22:00\.000/);
   });
 
   it('#234 - datetime field fails to fill due to invalid input', () => {
@@ -326,6 +327,13 @@ describe('forms that have caused bugs', () => {
     const result = await harness.fillForm('bug_234', ['2023-01-01 x']);
     expect(result.errors).to.not.be.empty;
     expect(result.errors[1].msg).to.eq('enketo.constraint.required');
+  });
+
+  it('#249 - time field with correct input format', async () => {
+    await harness.setNow('2000-01-01 01:22:00.000+03:00');
+    const result = await harness.fillForm('bug_249', ['1:22']);
+    expect(result.errors).to.be.empty;
+    expect(result.report.fields.items.time_input).to.match(/^01:22:00\.000/);
   });
 
   it('explicit set of contact-summary context', async () => {
