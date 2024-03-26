@@ -1,5 +1,121 @@
 # cht-conf-test-harness Release Notes
 
+## 4.0.0
+
+### Breaking Changes
+
+Adds support for CHT Core Framework version `4.6`. This version of the test harness is not backwards compatible with earlier versions of the CHT Core Framework.
+
+- Uplift to use cht-form web component (#245)
+
+## 3.0.15
+
+- Fix filling out `time` questions (#250) ([3eb9bc0f](https://github.com/medic/cht-conf-test-harness/commit/3eb9bc0f))
+
+## 3.0.14
+
+- fix(#240): contact-summary should be passed reports of selected contact and its children (#246) ([bb51e1db](https://github.com/medic/cht-conf-test-harness/commit/bb51e1db))
+- fix(#247): fill forms using the android app launcher (#248) ([7a6b16d1](https://github.com/medic/cht-conf-test-harness/commit/7a6b16d1))
+
+## 3.0.13
+
+- Support for cht-conf v3.19.0 and above (#243) ([93ad986f](https://github.com/medic/cht-conf-test-harness/commit/93ad986f))
+
+## 3.0.12
+
+- #239: fail to save app form due to TypeError (#241) ([b9ce73be](https://github.com/medic/cht-conf-test-harness/commit/b9ce73be))
+
+## 3.0.11
+
+- #234: Update test harness name ([d42ddc7a](https://github.com/medic/cht-conf-test-harness/commit/d42ddc7a))
+- Update formfiller to support elements with type datetime([6a327de9](https://github.com/medic/cht-conf-test-harness/commit/6a327de9))
+
+## 2.4.4
+
+- Log errors thrown when filling a form ([478e3426](https://github.com/medic/cht-conf-test-harness/commit/478e3426))
+
+## 3.0.10
+
+- Fix script paths for project-explorer js resources (#231) ([ab7e4f9d](https://github.com/medic/cht-conf-test-harness/commit/ab7e4f9d))
+- Disable db-object-widget (#210) ([bf773b4e](https://github.com/medic/cht-conf-test-harness/commit/bf773b4e))
+
+## 2.4.3
+
+- Strip console.debug from cht-conf-test-harness build output (#227) ([3c672753](https://github.com/medic/cht-conf-test-harness/commit/3c672753))
+
+## 3.0.8
+
+- Workaround for ERR_REQUEST_RANGE_NOT_SATISFIABLE (#225) ([ce40429f](https://github.com/medic/cht-conf-test-harness/commit/ce40429f))
+
+## 3.0.7
+
+- Add missing jQuery boilerplate from cht-core to handle self-closing tags in model.xml (#228) ([3bda9f47](https://github.com/medic/cht-conf-test-harness/commit/3bda9f47))
+
+## 3.0.6
+
+- 113 - strip console debug statements (#226) ([a93c267c](https://github.com/medic/cht-conf-test-harness/commit/a93c267c))
+
+## 3.0.5
+
+- Add cht API as global to contact-summary (#215) ([9a91335c](https://github.com/medic/cht-conf-test-harness/commit/9a91335c))
+
+## 3.0.3
+
+- Label semver a production dependency (#209) ([b1b2954e](https://github.com/medic/cht-conf-test-harness/commit/b1b2954e))
+
+## 3.0.2
+
+- Convert DateTime and Date objects to strings before passing to Form-Filler (#206) ([19f22fb1](https://github.com/medic/cht-conf-test-harness/commit/19f22fb1))
+
+## 3.0.1
+
+- Re-build with latest cht-4-0 branch (#198) ([cd7ebb34](https://github.com/medic/cht-conf-test-harness/commit/cd7ebb34))
+- Reference xsltproc dependencies from ext folder instead of node_modules (#202) ([e03b2a64](https://github.com/medic/cht-conf-test-harness/commit/e03b2a64))
+
+## 3.0.0
+
+- Update jsdocs.js (#172) ([ce6040d4](https://github.com/medic/cht-conf-test-harness/commit/ce6040d4))
+- Support for cht-core v4.0 Enketo Uplift (#159) ([02df52c0](https://github.com/medic/cht-conf-test-harness/commit/02df52c0))
+
+## 2.4.2
+
+- Update run-tests.yml (#171) ([8a697223](https://github.com/medic/cht-conf-test-harness/commit/8a697223))
+- Fill contact edit forms (#162) ([bdca4952](https://github.com/medic/cht-conf-test-harness/commit/bdca4952))
+
+## 2.4.0
+
+- Add support for cht-core 3.13 (including parse-timestamp-to-date) (#153) ([562ed5b4](https://github.com/medic/cht-conf-test-harness/commit/562ed5b4))
+- Improve check for DateTime/Duration (#146) ([501c1ee6](https://github.com/medic/cht-conf-test-harness/commit/501c1ee6))
+- Revert change in behaviour for RFC2822 date strings (#161) ([983562b9](https://github.com/medic/cht-conf-test-harness/commit/983562b9))
+- Support for cht-core v3.14 including new xpath functions for Bikram Sambat ([55fd75e7](https://github.com/medic/cht-conf-test-harness/commit/55fd75e7))
+-  ([a3615516](https://github.com/medic/cht-conf-test-harness/commit/a3615516))
+
+## 2.3.0
+
+- Support for cht-core v3.12 and the cht-script-api (#151) ([764ca934](https://github.com/medic/cht-conf-test-harness/commit/764ca934))
+
+## 2.2.5
+
+- Gracefully handle empty forms (#132) ([9478fcd0](https://github.com/medic/cht-conf-test-harness/commit/9478fcd0))
+
+## 2.2.4
+
+- Add CONTRIBUTING guide (#129) ([6dbef598](https://github.com/medic/cht-conf-test-harness/commit/6dbef598))
+- Bump chromium resolver (#140) ([1ddf0781](https://github.com/medic/cht-conf-test-harness/commit/1ddf0781))
+
+## 2.2.3
+
+- Improve date handling (#118) ([39fe990f](https://github.com/medic/cht-conf-test-harness/commit/39fe990f))
+- FillForm - Fails to answer questions with "falsey answers" like 0 (#128) ([93de03c5](https://github.com/medic/cht-conf-test-harness/commit/93de03c5))
+
+## 2.2.2
+
+- BUG - Fix compatibility for projects using rules.nools.js (#119) ([a42a2ac2](https://github.com/medic/cht-conf-test-harness/commit/a42a2ac2))
+
+## 2.2.1
+
+- Pass the userSettingsDoc into Enketo not the userContactDoc (#109) ([a3615516](https://github.com/medic/cht-conf-test-harness/commit/a3615516))
+
 ## 2.2.0
 
 The repository and npm package have been renamed to `cht-conf-test-harness`.

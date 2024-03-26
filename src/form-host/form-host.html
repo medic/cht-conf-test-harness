@@ -2,14 +2,13 @@
 
 <head>
   <title>xForm Test Host</title>
-  <link rel="stylesheet" type="text/css" href="../../ext/styles.css" />
-  <style>body { overflow-y: auto; }</style>
+  <script src="../../dist/form-host.dev.js"></script>
   <script>
     const params = new URL(window.location).searchParams;
-    const coreVersion = params.get('core') || '4-0';
+    const coreVersion = params.get('core') || '4-6';
 
     const script = document.createElement('script');
-    script.src = `../../dist/form-host-cht-core-${coreVersion}.dev.js`;
+    script.src = `../../dist/cht-core-${coreVersion}/cht-form.js`;
     script.type = 'text/javascript';
     script.charset = 'UTF-8';
 
@@ -18,18 +17,6 @@
 </head>
 
 <body>
-  <div class="content-pane">
-    <div class="enketo" id="task-report">
-      <div id="enketo-wrapper">
-        <div class="container pages"></div>
-        <div class="form-footer">
-          <button class="btn btn-default previous-page disabled">Prev</button>
-          <button class="btn btn-primary next-page disabled">Next</button>
-          <a class="btn submit btn-primary">Submit</a>
-        </div>
-      </div>
-    </div>
-  </div>
+  <cht-form id="enketo-wrapper"></cht-form>
 </body>
-
 </html>

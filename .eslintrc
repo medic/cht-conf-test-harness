@@ -1,7 +1,8 @@
 {
   "extends": "@medic",
   "env": {
-    "node": true
+    "node": true,
+    "jquery": true
   },
   "parserOptions": {
     "ecmaVersion": 11

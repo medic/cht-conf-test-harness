@@ -86,8 +86,10 @@ if (!fs.existsSync(formPath)) {
       console.log(`Converting ${formPath}`);
       try {
         const { form, model } = await harness.core.convertFormXmlToXFormModel(appFormContent);
-        const outputHtmlPath = path.resolve(__dirname, '../build', path.basename(formPath, '.xml') + '.html');
-        const outputModelPath = path.resolve(__dirname, '../build', path.basename(formPath, '.xml') + '.model');
+        const buildPath = path.resolve(__dirname, '../build');
+        fs.mkdirSync(buildPath, { recursive: true });
+        const outputHtmlPath = path.resolve(buildPath, path.basename(formPath, '.xml') + '.html');
+        const outputModelPath = path.resolve(buildPath, path.basename(formPath, '.xml') + '.model');
         fs.writeFileSync(outputHtmlPath, form);
         fs.writeFileSync(outputModelPath, model);
 

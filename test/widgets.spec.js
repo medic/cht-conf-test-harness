@@ -25,8 +25,8 @@ describe('widget tests', () => {
         'chw', '123', 'full name', '1990-10-08', undefined, 'male', '555-123-4567', 'no', 'english',
         'yes', 'second', 'no', 'unknown', ['diabetes'], 'true', 'notes'
       ]);
-      expect(result.errors.length).to.eq(2);
-      expect(result.errors[1].msg).to.include('valid local number');
+      expect(result.errors.length).to.eq(1);
+      expect(result.errors[0].msg).to.include('valid local number');
     });
   });
 });

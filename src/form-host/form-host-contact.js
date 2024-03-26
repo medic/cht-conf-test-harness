@@ -1,23 +1,9 @@
-const createFormManager = require('./create-enketo-form-manager');
+const FormWireup = require('./form-wireup');
 
-class ContactFormWireup {
-  constructor(formHtml, formModel, formXml, userSettingsDoc, contactSummary) {
-    this.enketoFormMgr = createFormManager(formHtml, formModel, formXml, userSettingsDoc, contactSummary);
-  }
-
-  render(content) {
-    const selector = '#enketo-wrapper';
-    const formContext = {
-      selector,
-      formDoc: { _id: 'contact-form', title: 'cht-conf-test-harness Contact Form' },
-      instanceData: content,
-    };
-    return this.enketoFormMgr.renderContactForm(formContext);
-  }
-
-  async save(formInternalId, form, geoHandle, docId) {
-    await this.enketoFormMgr.validate(form);
-    return (await this.enketoFormMgr.saveContactForm(form, docId, formInternalId)).preparedDocs;
+class ContactFormWireup extends FormWireup {
+  constructor(formHtml, formModel, formXml, userSettingsDoc, contactSummary, contactType) {
+    super(formHtml, formModel, formXml, userSettingsDoc, contactSummary, contactType);
+    this._getFormWrapper().contactType = contactType;
   }
 
   transformResult(resultObj) {
@@ -30,10 +16,6 @@ class ContactFormWireup {
       section: resultObj.section,
       contacts: resultObj.result || [],
     };
-  }
-
-  unload(form) {
-    this.enketoFormMgr.unload(form);
   }
 }
 

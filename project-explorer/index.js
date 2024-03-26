@@ -19,6 +19,11 @@ ${htmlLinksToAppForms}
 ${htmlLinksToContactForms}`);
 
   $('.formLink').click(function() {
+    if(window.unload) {
+      // Unload current form
+      window.unload();
+    }
+
     const formType = $(this).attr('data-type');
     const formName = $(this).attr('data-name');
 

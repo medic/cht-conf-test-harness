@@ -251,7 +251,7 @@ rule GenerateEvents {
   const addNoolsBoilerplate = settingsTasks.isDeclarative && semver.lt(actualCoreVersion, '4.2.0-dev');
   const rules = addNoolsBoilerplate ? addNoolsBoilerplateToCode(settingsTasks.rules) : settingsTasks.rules;
   // do not set the isDeclarative flag when the code has nools boilerplate
-  const rulesAreDeclarative = addNoolsBoilerplate && !!settingsTasks.isDeclarative;
+  const rulesAreDeclarative = !addNoolsBoilerplate && settingsTasks.isDeclarative;
   return { rules, rulesAreDeclarative };
 };
 

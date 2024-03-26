@@ -183,7 +183,7 @@ describe('forms that have caused bugs', () => {
     expect(twoTels.report).to.nested.deep.include({
       form: 'tel',
       'fields.contacts.n_contacts': '',
-      'fields.contacts.contact_repeat': [{ text: '17786041234' }, { text: '17786042345' }],
+      'fields.contacts.contact_repeat': [{ text: '+17786041234' }, { text: '+17786042345' }],
     });
   });
 
@@ -271,7 +271,7 @@ describe('forms that have caused bugs', () => {
   it('#148 - Support for parse-timestamp-to-date (added in 3.13)', async () => {
     await harness.setNow('2000-01-01');
     await harness.loadForm('covid19_rdt_provision');
-    await harness.page.evaluate(() => window.$$('input[name$="preview_session_state"]').removeAttr('data-required')); 
+    await harness.page.evaluate(() => window.$('input[name$="preview_session_state"]').removeAttr('data-required'));
     const result = await harness.fillForm(
       ['nasal', 'asymptomatic'],
       ['nasal', undefined, '2000-04-01', ''],
@@ -286,7 +286,7 @@ describe('forms that have caused bugs', () => {
     const result = await harness.fillForm('bikram', ['1999-11-01'], [], [1, 'yes', '1999-12-01'], [], ['no', 'no'], ['none'], Array(9).fill('no'), []);
     expect(result.errors).to.be.empty;
 
-    const bikramDate = await harness.page.evaluate(() => window.$$('[data-itext-id="/pregnancy/summary/r_pregnancy_details:label"]').text()); 
+    const bikramDate = await harness.page.evaluate(() => window.$('[data-itext-id="/pregnancy/summary/r_pregnancy_details:label"]').text());
     expect(bikramDate).to.include('३ साउन');
     expect(bikramDate).to.include('१५ कार्तिक २०५६');
   });
@@ -326,7 +326,7 @@ describe('forms that have caused bugs', () => {
   it('#234 - datetime field fails enketo validation', async () => {
     const result = await harness.fillForm('bug_234', ['2023-01-01 x']);
     expect(result.errors).to.not.be.empty;
-    expect(result.errors[0].msg).to.eq('enketo.constraint.required');
+    expect(result.errors[1].msg).to.eq('enketo.constraint.required');
   });
 
   it('#249 - time field with correct input format', async () => {

@@ -1,9 +1,53 @@
 const _ = require('lodash');
-const $ = require('jquery');
+
+const getForm = () => $('form');
+const getValidationErrors = () => getForm()
+  .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
+  .children('span.active:not(.question-label)')
+  .filter(function() {
+    return $(this).css('display') === 'block';
+  });
+
+const getSiblingElement = ( element, selector = '*' ) =>{
+  let found;
+  let current = element.parentElement.firstElementChild;
+
+  while ( current && !found ) {
+    if ( current !== element && current.matches( selector ) ) {
+      found = current;
+    }
+    current = current.nextElementSibling;
+  }
+
+  return found;
+};
+
+// Copied from https://github.com/enketo/enketo-core/blob/master/src/js/page.js
+const getPages = () => {
+  const form = getForm()[0];
+  if(!form.classList.contains('pages')) {
+    // This is not a multipage form
+    return [form];
+  }
+
+  const allPages = [...getForm()[0].querySelectorAll( '[role="page"]' )];
+  return allPages.filter( el => {
+    return !el.closest( '.disabled' ) &&
+      ( el.matches( '.question' ) || el.querySelector( '.question:not(.disabled)' ) ||
+        // or-repeat-info is only considered a page by itself if it has no sibling repeats
+        // When there are siblings repeats, we use CSS trickery to show the + button underneath the last
+        // repeat.
+        ( el.matches( '.or-repeat-info' ) && !getSiblingElement( el, '.or-repeat' ) ) );
+  } );
+};
+
+const getCurrentPage = () => {
+  const pages = getPages();
+  return pages.find( page => page.classList.contains( 'current' ) ) || pages[pages.length - 1];
+};
 
 class FormFiller {
-  constructor(form, options) {
-    this.form = form;
+  constructor(options) {
     this.options = _.defaults(options, {
       verbose: true,
     });
@@ -33,14 +77,7 @@ class FormFiller {
 
   // Modified from enketo-core/src/js/Form.js validateContent
   async getVisibleValidationErrors() {
-    const self = this;
-    const $container = self.form.view.$;
-    const validationErrors = $container
-      .find('.invalid-required:not(.disabled), .invalid-constraint:not(.disabled), .invalid-relevant:not(.disabled)')
-      .children('span.active:not(.question-label)')
-      .filter(function() {
-        return $(this).css('display') === 'block';
-      });
+    const validationErrors = getValidationErrors();
 
     return Array.from(validationErrors)
       .map(span => ({
@@ -73,11 +110,11 @@ const fillForm = async (self, multiPageAnswer) => {
   let pageHasAdvanced;
   // attempt to submit all the way to the end (replacement for validateAll)
   do {
-    pageHasAdvanced = await nextPage(self.form);
+    pageHasAdvanced = await nextPage();
     errors = await self.getVisibleValidationErrors();
-    
-    const lastPage = self.form.pages.activePages[self.form.pages.activePages.length - 1];
-    isComplete = !lastPage || self.form.pages.current === lastPage;
+
+    const pages = getPages();
+    isComplete = pages.indexOf(getCurrentPage()) === pages.length - 1;
   } while (pageHasAdvanced && !isComplete && !errors.length);
   const incompleteError = isComplete ? [] : [{ type: 'general', msg: 'Form is incomplete' }];
 
@@ -93,7 +130,7 @@ const fillPage = async (self, pageAnswer) => {
   const answeredQuestions = new Set();
   for (let i = 0; i < pageAnswer.length; i++) {
     const answer = pageAnswer[i];
-    const $questions = getVisibleQuestions(self.form);
+    const $questions = getVisibleQuestions();
     if ($questions.length <= i) {
       return {
         errors: [{
@@ -110,7 +147,7 @@ const fillPage = async (self, pageAnswer) => {
     fillQuestion(nextUnansweredQuestion, answer);
   }
 
-  const allPagesSuccessful = hasPages(self.form) ? await nextPage(self.form) : true;
+  const allPagesSuccessful = await nextPage();
   const validationErrors = await self.getVisibleValidationErrors();
   const advanceFailure = allPagesSuccessful || validationErrors.length ? [] : [{
     type: 'general',
@@ -215,11 +252,8 @@ const fillQuestion = (question, answer) => {
   }
 };
 
-const getVisibleQuestions = form => {
-  const currentPage = !form.pages.current ? 
-    // in cases where forms have a single page, the current page is undefined
-    form.view.$ :  
-    $(form.pages.current);
+const getVisibleQuestions = () => {
+  const currentPage = $(getCurrentPage());
   
   if (!currentPage) {
     throw Error('Form has no active pages');
@@ -252,19 +286,32 @@ const getVisibleQuestions = form => {
   return findQuestionsInSection(currentPage);
 };
 
-const nextPage = async form => {
-  const valid = await form.pages._next();
+const nextPage = async () => {
+  const currentPageIndex = getPages().indexOf(getCurrentPage());
+  const nextButton = $('button.next-page');
+  if(nextButton.is(':hidden')) {
+    return !getValidationErrors().length;
+  }
 
-  // Work-around for stale jr:choice-name() references in labels.  ref #3870
-  form.calc.update();
+  return new Promise(resolve => {
+    const observer = new MutationObserver(() => {
+      if(getPages().indexOf(getCurrentPage()) > currentPageIndex) {
+        observer.disconnect();
+        return resolve(true);
+      }
+      if(getValidationErrors().length) {
+        observer.disconnect();
+        return resolve(false);
+      }
+    });
 
-  // Force forms to update jr:itext references in output fields that contain
-  // calculated values.  ref #4111
-  form.output.update();
-
-  return valid;
+    observer.observe(getForm().get(0), {
+      childList: true,
+      subtree: true,
+      attributeFilter: ['class', 'display'],
+    });
+    nextButton.click();
+  });
 };
-
-const hasPages = form => form.pages.activePages.length > 0;
 
 module.exports = FormFiller;

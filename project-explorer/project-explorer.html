@@ -2,16 +2,16 @@
 
 <head>
   <title>Project Explorer</title>
-  <link rel="stylesheet" type="text/css" href="../ext/styles.css" />
   <link rel="stylesheet" type="text/css" href="./project-explorer.css" />
   <script type="text/javascript" src="../dist/project-explorer.dev.js"></script>
+  <script src="../dist/form-host.dev.js"></script>
   <style>body { overflow-y: auto; }</style>
   <script>
     const params = new URL(window.location).searchParams;
-    const coreVersion = params.get('core') || '4-0';
+    const coreVersion = params.get('core') || '4-6';
 
     const script = document.createElement('script');
-    script.src = `../dist/form-host-cht-core-${coreVersion}.dev.js`;
+    script.src = `../dist/cht-core-${coreVersion}/cht-form.js`;
     script.type = 'text/javascript';
     script.charset = 'UTF-8';
 
@@ -20,21 +20,14 @@
 </head>
 
 <body>
-  <div class="content-pane">
-    <div class="enketo" id="task-report">
-      <div class="left">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 left">
         <a href='#' id='reload' class='btn btn-default'>Reload</a>
         <div id='formList'></div>
       </div>
-      <div class="right">
-        <div id="enketo-wrapper">
-          <div class="container pages"></div>
-          <div class="form-footer">
-            <button class="btn btn-default previous-page disabled">Prev</button>
-            <button class="btn btn-primary next-page disabled">Next</button>
-            <a class="btn submit btn-primary">Submit</a>
-          </div>
-        </div>
+      <div class="col-sm-8 item-content">
+        <cht-form id="enketo-wrapper"></cht-form>
       </div>
     </div>
   </div>
