@@ -14,6 +14,7 @@ The Community Health Toolkit is powered by people like you. Your contributions h
   - Include tests for any new/updated logic.
     - Include the issue/PR number in the test title. This provides context for future debugging if the test ever regresses.
   - Update the project's version number in the [package.json](./package.json) by running `npm version <major|minor|patch>`
+  - Update the [release-notes.md](./release-notes.md) with a description of your change.
 - Before you submit a pull request, please make sure your contribution passes all tests. Test failures need to be addressed before we can merge your contribution.
   - You can run `npm run build-ci` to build the project, lint the source code, and execute the tests.
 - Provide detail about the issue you are solving in the pull request description. Note: If your pull request addresses a specific issue, please reference it using medic/<repo>#<issue number>
@@ -68,6 +69,7 @@ Code for each CHT version is stored in [`cht-bundles`](./cht-bundles). To add a 
 1. Run `npm run build` to create the new artifacts.
 1. Update the [`harness.defaults.json` config](./test/collateral/harness.defaults.json) so that `coreVersion` points to the new version.
     1. Run `npm run test` to ensure the new artifacts are working as expected.
+1. Update the compatibility matrix in the [`README.md`](./README.md) to include the new version.
 1. Do not forget to commit the newly generated contents of `./dist`!
 
 ### Updating existing cht-core artifacts
