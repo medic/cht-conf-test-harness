@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 declare -A cht_versions=(
-  ["cht-core-4-6"]="42807deaae818bf2085d0457f9f161073493aec1" # TODO update this to point to 4.6 tag
+  ["cht-core-4-6"]="4.6.0"
 )
 
 exit_on_error() {

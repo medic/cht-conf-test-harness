@@ -30,7 +30,7 @@ module.exports = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('[{"_id":"_design/medic-client","views":{"contacts_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_last_visited":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n    if (typeof date !== \'number\' || isNaN(date)) {\\n      date = 0;\\n    }\\n    // Is a visit report about a family\\n    emit(doc.fields.visited_contact_uuid, date);\\n  } else if (doc.type === \'contact\' ||\\n             doc.type === \'clinic\' ||\\n             doc.type === \'health_center\' ||\\n             doc.type === \'district_hospital\' ||\\n             doc.type === \'person\') {\\n    // Is a contact type\\n    emit(doc._id, 0);\\n  }\\n}","reduce":"_stats"},"contacts_by_parent":{"map":"function(doc) {\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'person\') {\\n    var parentId = doc.parent && doc.parent._id;\\n    var type = doc.type === \'contact\' ? doc.contact_type : doc.type;\\n    if (parentId) {\\n      emit([parentId, type]);\\n    }\\n  }\\n}"},"contacts_by_place":{"map":"function(doc) {\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n  if (idx !== -1) {\\n    var place = doc.parent;\\n    var order = idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], order);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"contacts_by_phone":{"map":"function(doc) {\\n  if (doc.phone) {\\n    var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n    if (types.indexOf(doc.type) !== -1) {\\n      emit(doc.phone);\\n    }\\n  }\\n}"},"contacts_by_type_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(type, key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([ type, key ], value);\\n    }\\n  };\\n\\n  var emitField = function(type, key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(type, word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(type, key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(type, key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_reference":{"map":"function(doc) {\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'national_office\' ||\\n      doc.type === \'person\') {\\n\\n    var emitReference = function(prefix, key) {\\n      emit([ prefix, String(key) ], doc.reported_date);\\n    };\\n\\n    if (doc.place_id) {\\n      emitReference(\'shortcode\', doc.place_id);\\n    }\\n    if (doc.patient_id) {\\n      emitReference(\'shortcode\', doc.patient_id);\\n    }\\n    if (doc.rc_code) {\\n      // need String because rewriter wraps everything in quotes\\n      // keep refid case-insenstive since data is usually coming from SMS\\n      emitReference(\'external\', String(doc.rc_code).toUpperCase());\\n    }\\n  }\\n}"},"contacts_by_type":{"map":"function(doc) {\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    emit([ type ], order);\\n  }\\n}"},"data_records_by_type":{"map":"function(doc) {\\n  if (doc.type === \'data_record\') {\\n    emit(doc.form ? \'report\' : \'message\');\\n  }\\n}","reduce":"_count"},"doc_by_type":{"map":"function(doc) {\\n  if (doc.type === \'translations\') {\\n    emit([ \'translations\', doc.enabled ], {\\n      code: doc.code,\\n      name: doc.name\\n    });\\n    return;\\n  }\\n  emit([ doc.type ]);\\n}"},"docs_by_id_lineage":{"map":"function(doc) {\\n\\n  var emitLineage = function(contact, depth) {\\n    while (contact && contact._id) {\\n      emit([ doc._id, depth++ ], { _id: contact._id });\\n      contact = contact.parent;\\n    }\\n  };\\n\\n  var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n\\n  if (types.indexOf(doc.type) !== -1) {\\n    // contact\\n    emitLineage(doc, 0);\\n  } else if (doc.type === \'data_record\' && doc.form) {\\n    // report\\n    emit([ doc._id, 0 ]);\\n    emitLineage(doc.contact, 1);\\n  }\\n}"},"messages_by_contact_date":{"map":"function(doc) {\\n\\n  var emitMessage = function(doc, contact, phone) {\\n    var id = (contact && contact._id) || phone || doc._id;\\n    emit([ id, doc.reported_date ], {\\n      id: doc._id,\\n      date: doc.reported_date,\\n      contact: contact && contact._id\\n    });\\n  };\\n\\n  if (doc.type === \'data_record\' && !doc.form) {\\n    if (doc.kujua_message && doc.tasks) {\\n      // outgoing\\n      doc.tasks.forEach(function(task) {\\n        var message = task.messages && task.messages[0];\\n        if(message) {\\n          emitMessage(doc, message.contact, message.to);\\n        }\\n      });\\n    } else if (doc.sms_message) {\\n      // incoming\\n      emitMessage(doc, doc.contact, doc.from);\\n    }\\n  }\\n}","reduce":"function(key, values) {\\n  var latest = { date: 0 };\\n  values.forEach(function(value) {\\n    if (value.date > latest.date) {\\n      latest = value;\\n    }\\n  });\\n  return latest;\\n}"},"registered_patients":{"map":"// NB: This returns *registrations* for contacts. If contacts are created by\\n//     means other then sending in a registration report (eg created in the UI)\\n//     they will not show up in this view.\\n//\\n//     For a view with all patients by their shortcode, use:\\n//        medic/docs_by_shortcode\\nfunction(doc) {\\n  var patientId = doc.patient_id || (doc.fields && doc.fields.patient_id);\\n  var placeId = doc.place_id || (doc.fields && doc.fields.place_id);\\n\\n  if (!doc.form || doc.type !== \'data_record\' || (doc.errors && doc.errors.length)) {\\n    return;\\n  }\\n\\n  if (patientId) {\\n    emit(String(patientId));\\n  }\\n\\n  if (placeId) {\\n    emit(String(placeId));\\n  }\\n}"},"reports_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.reported_date], doc.reported_date);\\n  }\\n}"},"reports_by_form":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.form], doc.reported_date);\\n  }\\n}","reduce":"function() {\\n  return true;\\n}"},"reports_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'content\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, reportedDate) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, reportedDate);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, reportedDate);\\n    }\\n  };\\n\\n  if (doc.type === \'data_record\' && doc.form) {\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], doc.reported_date);\\n    });\\n    if (doc.fields) {\\n      Object.keys(doc.fields).forEach(function(key) {\\n        emitField(key, doc.fields[key], doc.reported_date);\\n      });\\n    }\\n    if (doc.contact && doc.contact._id) {\\n      emitMaybe(\'contact:\' + doc.contact._id.toLowerCase(), doc.reported_date);\\n    }\\n  }\\n}"},"reports_by_place":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var place = doc.contact && doc.contact.parent;\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], doc.reported_date);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"reports_by_subject":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var emitField = function(obj, field) {\\n      if (obj[field]) {\\n        emit(obj[field], doc.reported_date);\\n      }\\n    };\\n\\n    emitField(doc, \'patient_id\');\\n    emitField(doc, \'place_id\');\\n    emitField(doc, \'case_id\');\\n\\n    if (doc.fields) {\\n      emitField(doc.fields, \'patient_id\');\\n      emitField(doc.fields, \'place_id\');\\n      emitField(doc.fields, \'case_id\');\\n      emitField(doc.fields, \'patient_uuid\');\\n      emitField(doc.fields, \'place_uuid\');\\n    }\\n  }\\n}"},"reports_by_validity":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([!doc.errors || doc.errors.length === 0], doc.reported_date);\\n  }\\n}"},"reports_by_verification":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.verified], doc.reported_date);\\n  }\\n}"},"tasks_by_contact":{"map":"function(doc) {\\n  if (doc.type === \'task\') {\\n    var isTerminalState = [\'Cancelled\', \'Completed\', \'Failed\'].indexOf(doc.state) >= 0;\\n    var owner = (doc.owner || \'_unassigned\');\\n\\n    if (!isTerminalState) {\\n      emit(\'owner-\' + owner);\\n    }\\n\\n    if (doc.requester) {\\n      emit(\'requester-\' + doc.requester);\\n    }\\n\\n    emit([\'owner\', \'all\', owner], { state: doc.state });\\n  }\\n}"},"total_clinics_by_facility":{"map":"function(doc) {\\n  var districtId = doc.parent && doc.parent.parent && doc.parent.parent._id;\\n  if (doc.type === \'clinic\' || (doc.type === \'contact\' && districtId)) {\\n    var healthCenterId = doc.parent && doc.parent._id;\\n    emit([ districtId, healthCenterId, doc._id, 0 ]);\\n    if (doc.contact && doc.contact._id) {\\n      emit([ districtId, healthCenterId, doc._id, 1 ], { _id: doc.contact._id });\\n    }\\n    var index = 2;\\n    var parent = doc.parent;\\n    while(parent) {\\n      if (parent._id) {\\n        emit([ districtId, healthCenterId, doc._id, index++ ], { _id: parent._id });\\n      }\\n      parent = parent.parent;\\n    }\\n  }\\n}"},"visits_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var visited_date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n\\n    // Is a visit report about a family\\n    emit(visited_date, doc.fields.visited_contact_uuid);\\n    emit([doc.fields.visited_contact_uuid, visited_date]);\\n  }\\n}"}},"validate_doc_update":"function(newDoc, oldDoc, userCtx) {\\n  /*\\n    LOCAL DOCUMENT VALIDATION\\n\\n    This is for validating document structure, irrespective of authority, so it\\n    can be run both on couchdb and pouchdb (where you are technically admin).\\n\\n    For validations around authority check lib/validate_doc_update.js, which is\\n    only run on the server.\\n  */\\n\\n  var _err = function(msg) {\\n    throw({ forbidden: msg });\\n  };\\n\\n  /**\\n   * Ensure that type=\'form\' documents are created with correctly formatted _id\\n   * property.\\n   */\\n  var validateForm = function(newDoc) {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var form_id = id_parts.slice(1).join(\':\');\\n    if (prefix !== \'form\') {\\n      _err(\'_id property must be prefixed with \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (!form_id) {\\n      _err(\'_id property must define a value after \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id property must be lower case. e.g. \\"form:registration\\"\');\\n    }\\n  };\\n\\n  var validateUserSettings = function(newDoc) {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var username = id_parts.slice(1).join(\':\');\\n    var idExample = \' e.g. \\"org.couchdb.user:sally\\"\';\\n    if (prefix !== \'org.couchdb.user\') {\\n      _err(\'_id must be prefixed with \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (!username) {\\n      _err(\'_id must define a value after \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id must be lower case.\' + idExample);\\n    }\\n    if (typeof newDoc.name === \'undefined\' || newDoc.name !== username) {\\n      _err(\'name property must be equivalent to username.\' + idExample);\\n    }\\n    if (newDoc.name.toLowerCase() !== username.toLowerCase()) {\\n      _err(\'name must be equivalent to username\');\\n    }\\n    if (typeof newDoc.known !== \'undefined\' && typeof newDoc.known !== \'boolean\') {\\n      _err(\'known is not a boolean.\');\\n    }\\n    if (typeof newDoc.roles !== \'object\') {\\n      _err(\'roles is a required array\');\\n    }\\n  };\\n\\n  if (userCtx.facility_id === newDoc._id) {\\n    _err(\'You are not authorized to edit your own place\');\\n  }\\n  if (newDoc.type === \'form\') {\\n    validateForm(newDoc);\\n  }\\n  if (newDoc.type === \'user-settings\') {\\n    validateUserSettings(newDoc);\\n  }\\n\\n  log(\\n    \'medic-client validate_doc_update passed for User \\"\' + userCtx.name +\\n    \'\\" changing document \\"\' +  newDoc._id + \'\\"\'\\n  );\\n}"}]');
+module.exports = JSON.parse('[{"views":{"contacts_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_last_visited":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n    if (typeof date !== \'number\' || isNaN(date)) {\\n      date = 0;\\n    }\\n    // Is a visit report about a family\\n    emit(doc.fields.visited_contact_uuid, date);\\n  } else if (doc.type === \'contact\' ||\\n             doc.type === \'clinic\' ||\\n             doc.type === \'health_center\' ||\\n             doc.type === \'district_hospital\' ||\\n             doc.type === \'person\') {\\n    // Is a contact type\\n    emit(doc._id, 0);\\n  }\\n}","reduce":"_stats"},"contacts_by_parent":{"map":"function(doc) {\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'person\') {\\n    var parentId = doc.parent && doc.parent._id;\\n    var type = doc.type === \'contact\' ? doc.contact_type : doc.type;\\n    if (parentId) {\\n      emit([parentId, type]);\\n    }\\n  }\\n}"},"contacts_by_phone":{"map":"function(doc) {\\n  if (doc.phone) {\\n    var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n    if (types.indexOf(doc.type) !== -1) {\\n      emit(doc.phone);\\n    }\\n  }\\n}"},"contacts_by_place":{"map":"function(doc) {\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n  if (idx !== -1) {\\n    var place = doc.parent;\\n    var order = idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], order);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"contacts_by_reference":{"map":"function(doc) {\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'national_office\' ||\\n      doc.type === \'person\') {\\n\\n    var emitReference = function(prefix, key) {\\n      emit([ prefix, String(key) ], doc.reported_date);\\n    };\\n\\n    if (doc.place_id) {\\n      emitReference(\'shortcode\', doc.place_id);\\n    }\\n    if (doc.patient_id) {\\n      emitReference(\'shortcode\', doc.patient_id);\\n    }\\n    if (doc.rc_code) {\\n      // need String because rewriter wraps everything in quotes\\n      // keep refid case-insenstive since data is usually coming from SMS\\n      emitReference(\'external\', String(doc.rc_code).toUpperCase());\\n    }\\n  }\\n}"},"contacts_by_type_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(type, key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([ type, key ], value);\\n    }\\n  };\\n\\n  var emitField = function(type, key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(type, word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(type, key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(type, key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_type":{"map":"function(doc) {\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    emit([ type ], order);\\n  }\\n}"},"data_records_by_type":{"reduce":"_count","map":"function(doc) {\\n  if (doc.type === \'data_record\') {\\n    emit(doc.form ? \'report\' : \'message\');\\n  }\\n}"},"doc_by_type":{"map":"function(doc) {\\n  if (doc.type === \'translations\') {\\n    emit([ \'translations\', doc.enabled ], {\\n      code: doc.code,\\n      name: doc.name\\n    });\\n    return;\\n  }\\n  emit([ doc.type ]);\\n}"},"docs_by_id_lineage":{"map":"function(doc) {\\n\\n  var emitLineage = function(contact, depth) {\\n    while (contact && contact._id) {\\n      emit([ doc._id, depth++ ], { _id: contact._id });\\n      contact = contact.parent;\\n    }\\n  };\\n\\n  var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n\\n  if (types.indexOf(doc.type) !== -1) {\\n    // contact\\n    emitLineage(doc, 0);\\n  } else if (doc.type === \'data_record\' && doc.form) {\\n    // report\\n    emit([ doc._id, 0 ]);\\n    emitLineage(doc.contact, 1);\\n  }\\n}"},"messages_by_contact_date":{"map":"function(doc) {\\n\\n  var emitMessage = function(doc, contact, phone) {\\n    var id = (contact && contact._id) || phone || doc._id;\\n    emit([ id, doc.reported_date ], {\\n      id: doc._id,\\n      date: doc.reported_date,\\n      contact: contact && contact._id\\n    });\\n  };\\n\\n  if (doc.type === \'data_record\' && !doc.form) {\\n    if (doc.kujua_message && doc.tasks) {\\n      // outgoing\\n      doc.tasks.forEach(function(task) {\\n        var message = task.messages && task.messages[0];\\n        if(message) {\\n          emitMessage(doc, message.contact, message.to);\\n        }\\n      });\\n    } else if (doc.sms_message) {\\n      // incoming\\n      emitMessage(doc, doc.contact, doc.from);\\n    }\\n  }\\n}","reduce":"function(key, values) {\\n  var latest = { date: 0 };\\n  values.forEach(function(value) {\\n    if (value.date > latest.date) {\\n      latest = value;\\n    }\\n  });\\n  return latest;\\n}"},"registered_patients":{"map":"// NB: This returns *registrations* for contacts. If contacts are created by\\n//     means other then sending in a registration report (eg created in the UI)\\n//     they will not show up in this view.\\n//\\n//     For a view with all patients by their shortcode, use:\\n//        medic/docs_by_shortcode\\nfunction(doc) {\\n  var patientId = doc.patient_id || (doc.fields && doc.fields.patient_id);\\n  var placeId = doc.place_id || (doc.fields && doc.fields.place_id);\\n\\n  if (!doc.form || doc.type !== \'data_record\' || (doc.errors && doc.errors.length)) {\\n    return;\\n  }\\n\\n  if (patientId) {\\n    emit(String(patientId));\\n  }\\n\\n  if (placeId) {\\n    emit(String(placeId));\\n  }\\n}"},"reports_by_form":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.form], doc.reported_date);\\n  }\\n}","reduce":"function() {\\n  return true;\\n}"},"reports_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.reported_date], doc.reported_date);\\n  }\\n}"},"reports_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'content\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, reportedDate) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, reportedDate);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, reportedDate);\\n    }\\n  };\\n\\n  if (doc.type === \'data_record\' && doc.form) {\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], doc.reported_date);\\n    });\\n    if (doc.fields) {\\n      Object.keys(doc.fields).forEach(function(key) {\\n        emitField(key, doc.fields[key], doc.reported_date);\\n      });\\n    }\\n    if (doc.contact && doc.contact._id) {\\n      emitMaybe(\'contact:\' + doc.contact._id.toLowerCase(), doc.reported_date);\\n    }\\n  }\\n}"},"reports_by_place":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var place = doc.contact && doc.contact.parent;\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], doc.reported_date);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"reports_by_subject":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var emitField = function(obj, field) {\\n      if (obj[field]) {\\n        emit(obj[field], doc.reported_date);\\n      }\\n    };\\n\\n    emitField(doc, \'patient_id\');\\n    emitField(doc, \'place_id\');\\n    emitField(doc, \'case_id\');\\n\\n    if (doc.fields) {\\n      emitField(doc.fields, \'patient_id\');\\n      emitField(doc.fields, \'place_id\');\\n      emitField(doc.fields, \'case_id\');\\n      emitField(doc.fields, \'patient_uuid\');\\n      emitField(doc.fields, \'place_uuid\');\\n    }\\n  }\\n}"},"reports_by_validity":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([!doc.errors || doc.errors.length === 0], doc.reported_date);\\n  }\\n}"},"reports_by_verification":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.verified], doc.reported_date);\\n  }\\n}"},"tasks_by_contact":{"map":"function(doc) {\\n  if (doc.type === \'task\') {\\n    var isTerminalState = [\'Cancelled\', \'Completed\', \'Failed\'].indexOf(doc.state) >= 0;\\n    var owner = (doc.owner || \'_unassigned\');\\n\\n    if (!isTerminalState) {\\n      emit(\'owner-\' + owner);\\n    }\\n\\n    if (doc.requester) {\\n      emit(\'requester-\' + doc.requester);\\n    }\\n\\n    emit([\'owner\', \'all\', owner], { state: doc.state });\\n  }\\n}"},"total_clinics_by_facility":{"map":"function(doc) {\\n  var districtId = doc.parent && doc.parent.parent && doc.parent.parent._id;\\n  if (doc.type === \'clinic\' || (doc.type === \'contact\' && districtId)) {\\n    var healthCenterId = doc.parent && doc.parent._id;\\n    emit([ districtId, healthCenterId, doc._id, 0 ]);\\n    if (doc.contact && doc.contact._id) {\\n      emit([ districtId, healthCenterId, doc._id, 1 ], { _id: doc.contact._id });\\n    }\\n    var index = 2;\\n    var parent = doc.parent;\\n    while(parent) {\\n      if (parent._id) {\\n        emit([ districtId, healthCenterId, doc._id, index++ ], { _id: parent._id });\\n      }\\n      parent = parent.parent;\\n    }\\n  }\\n}"},"visits_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var visited_date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n\\n    // Is a visit report about a family\\n    emit(visited_date, doc.fields.visited_contact_uuid);\\n    emit([doc.fields.visited_contact_uuid, visited_date]);\\n  }\\n}"}},"validate_doc_update":"function(newDoc, oldDoc, userCtx) {\\n  /*\\n    LOCAL DOCUMENT VALIDATION\\n\\n    This is for validating document structure, irrespective of authority, so it\\n    can be run both on couchdb and pouchdb (where you are technically admin).\\n\\n    For validations around authority check lib/validate_doc_update.js, which is\\n    only run on the server.\\n  */\\n\\n  var _err = function(msg) {\\n    throw({ forbidden: msg });\\n  };\\n\\n  /**\\n   * Ensure that type=\'form\' documents are created with correctly formatted _id\\n   * property.\\n   */\\n  var validateForm = function(newDoc) {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var form_id = id_parts.slice(1).join(\':\');\\n    if (prefix !== \'form\') {\\n      _err(\'_id property must be prefixed with \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (!form_id) {\\n      _err(\'_id property must define a value after \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id property must be lower case. e.g. \\"form:registration\\"\');\\n    }\\n  };\\n\\n  var validateUserSettings = function(newDoc) {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var username = id_parts.slice(1).join(\':\');\\n    var idExample = \' e.g. \\"org.couchdb.user:sally\\"\';\\n    if (prefix !== \'org.couchdb.user\') {\\n      _err(\'_id must be prefixed with \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (!username) {\\n      _err(\'_id must define a value after \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id must be lower case.\' + idExample);\\n    }\\n    if (typeof newDoc.name === \'undefined\' || newDoc.name !== username) {\\n      _err(\'name property must be equivalent to username.\' + idExample);\\n    }\\n    if (newDoc.name.toLowerCase() !== username.toLowerCase()) {\\n      _err(\'name must be equivalent to username\');\\n    }\\n    if (typeof newDoc.known !== \'undefined\' && typeof newDoc.known !== \'boolean\') {\\n      _err(\'known is not a boolean.\');\\n    }\\n    if (typeof newDoc.roles !== \'object\') {\\n      _err(\'roles is a required array\');\\n    }\\n  };\\n\\n  if (userCtx.facility_id === newDoc._id) {\\n    _err(\'You are not authorized to edit your own place\');\\n  }\\n  if (newDoc.type === \'form\') {\\n    validateForm(newDoc);\\n  }\\n  if (newDoc.type === \'user-settings\') {\\n    validateUserSettings(newDoc);\\n  }\\n\\n  log(\\n    \'medic-client validate_doc_update passed for User \\"\' + userCtx.name +\\n    \'\\" changing document \\"\' +  newDoc._id + \'\\"\'\\n  );\\n}","_id":"_design/medic-client"}]');
 
 /***/ }),
 
@@ -100003,13 +100003,14 @@ module.exports = db => {
  * Wireup for accessing rules document data via medic pouch db
  */
 
-// TODO work out how to pass in the logger from node/browser
 /* eslint-disable no-console */
 const moment = __nested_webpack_require_3546181__(/*! moment */ "./build/cht-core-4-6/node_modules/moment/moment.js");
 const registrationUtils = __nested_webpack_require_3546181__(/*! @medic/registration-utils */ "./build/cht-core-4-6/shared-libs/registration-utils/src/index.js");
 const uniqBy = __nested_webpack_require_3546181__(/*! lodash/uniqBy */ "./build/cht-core-4-6/node_modules/lodash/uniqBy.js");
 
 const RULES_STATE_DOCID = '_local/rulesStateStore';
+const MAX_QUERY_KEYS = 500;
+
 const docsOf = (query) => {
   return query.then(result => {
     const rows = uniqBy(result.rows, 'id');
@@ -100020,19 +100021,31 @@ const docsOf = (query) => {
 const rowsOf = (query) => query.then(result => uniqBy(result.rows, 'id'));
 
 const medicPouchProvider = db => {
+  const dbQuery = async (view, params) => {
+    if (!params?.keys || params.keys.length < MAX_QUERY_KEYS) {
+      return db.query(view, params);
+    }
+
+    const keys = new Set(params.keys);
+    delete params.keys;
+    const results = await db.query(view, params);
+    const rows = results.rows.filter(row => keys.has(row.key));
+    return { ...results, rows };
+  };
+
   const self = {
     // PouchDB.query slows down when provided with a large keys array.
     // For users with ~1000 contacts it is ~50x faster to provider a start/end key instead of specifying all ids
     allTasks: prefix => {
       const options = { startkey: `${prefix}-`, endkey: `${prefix}-\ufff0`, include_docs: true };
-      return docsOf(db.query('medic-client/tasks_by_contact', options));
+      return docsOf(dbQuery('medic-client/tasks_by_contact', options));
     },
 
     allTaskData: userSettingsDoc => {
-      const userSettingsId = userSettingsDoc && userSettingsDoc._id;
+      const userSettingsId = userSettingsDoc?._id;
       return Promise.all([
-        docsOf(db.query('medic-client/contacts_by_type', { include_docs: true })),
-        docsOf(db.query('medic-client/reports_by_subject', { include_docs: true })),
+        docsOf(dbQuery('medic-client/contacts_by_type', { include_docs: true })),
+        docsOf(dbQuery('medic-client/reports_by_subject', { include_docs: true })),
         self.allTasks('requester'),
       ])
         .then(([contactDocs, reportDocs, taskDocs]) => ({ contactDocs, reportDocs, taskDocs, userSettingsId }));
@@ -100040,7 +100053,7 @@ const medicPouchProvider = db => {
 
     contactsBySubjectId: subjectIds => {
       const keys = subjectIds.map(key => ['shortcode', key]);
-      return db.query('medic-client/contacts_by_reference', { keys, include_docs: true })
+      return dbQuery('medic-client/contacts_by_reference', { keys, include_docs: true })
         .then(results => {
           const shortcodeIds = results.rows.map(result => result.doc._id);
           const idsThatArentShortcodes = subjectIds.filter(id => !results.rows.map(row => row.key[1]).includes(id));
@@ -100051,9 +100064,9 @@ const medicPouchProvider = db => {
 
     stateChangeCallback: docUpdateClosure(db),
 
-    commitTargetDoc: (targets, userContactDoc, userSettingsDoc, docTag, force = false) => {
-      const userContactId = userContactDoc && userContactDoc._id;
-      const userSettingsId = userSettingsDoc && userSettingsDoc._id;
+    commitTargetDoc: (targets, userContactDoc, userSettingsDoc, docTag, force = false) => { // NOSONAR
+      const userContactId = userContactDoc?._id;
+      const userSettingsId = userSettingsDoc?._id;
       const _id = `target~${docTag}~${userContactId}~${userSettingsId}`;
       const createNew = () => ({
         _id,
@@ -100091,12 +100104,12 @@ const medicPouchProvider = db => {
 
     tasksByRelation: (contactIds, prefix) => {
       const keys = contactIds.map(contactId => `${prefix}-${contactId}`);
-      return docsOf(db.query('medic-client/tasks_by_contact', { keys, include_docs: true }));
+      return docsOf(dbQuery( 'medic-client/tasks_by_contact', { keys, include_docs: true }));
     },
 
     allTaskRowsByOwner: (contactIds) => {
       const keys = contactIds.map(contactId => (['owner', 'all', contactId]));
-      return rowsOf(db.query('medic-client/tasks_by_contact', { keys }));
+      return rowsOf(dbQuery( 'medic-client/tasks_by_contact', { keys }));
     },
 
     allTaskRows: () => {
@@ -100105,7 +100118,7 @@ const medicPouchProvider = db => {
         endkey: ['owner', 'all', '\ufff0'],
       };
 
-      return rowsOf(db.query('medic-client/tasks_by_contact', options));
+      return rowsOf(dbQuery( 'medic-client/tasks_by_contact', options));
     },
 
     taskDataFor: (contactIds, userSettingsDoc) => {
@@ -100121,10 +100134,11 @@ const medicPouchProvider = db => {
           }, new Set(contactIds));
 
           const keys = Array.from(subjectIds);
-          return Promise.all([
-            docsOf(db.query('medic-client/reports_by_subject', { keys, include_docs: true })),
-            self.tasksByRelation(contactIds, 'requester'),
-          ])
+          return Promise
+            .all([
+              docsOf(dbQuery('medic-client/reports_by_subject', { keys, include_docs: true })),
+              self.tasksByRelation(contactIds, 'requester'),
+            ])
             .then(([reportDocs, taskDocs]) => {
               // tighten the connection between reports and contacts
               // a report will only be allowed to generate tasks for a single contact!
@@ -100134,7 +100148,7 @@ const medicPouchProvider = db => {
               });
 
               return {
-                userSettingsId: userSettingsDoc && userSettingsDoc._id,
+                userSettingsId: userSettingsDoc?._id,
                 contactDocs,
                 reportDocs,
                 taskDocs,
@@ -100177,7 +100191,7 @@ module.exports = medicPouchProvider;
 /*!****************************************************************************!*\
   !*** ./build/cht-core-4-6/shared-libs/rules-engine/src/provider-wireup.js ***!
   \****************************************************************************/
-/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3552903__) => {
+/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3553193__) => {
 
 /**
  * @module wireup
@@ -100185,15 +100199,15 @@ module.exports = medicPouchProvider;
  * Wireup a data provider to the rules-engine
  */
 
-const moment = __nested_webpack_require_3552903__(/*! moment */ "./build/cht-core-4-6/node_modules/moment/moment.js");
-const registrationUtils = __nested_webpack_require_3552903__(/*! @medic/registration-utils */ "./build/cht-core-4-6/shared-libs/registration-utils/src/index.js");
+const moment = __nested_webpack_require_3553193__(/*! moment */ "./build/cht-core-4-6/node_modules/moment/moment.js");
+const registrationUtils = __nested_webpack_require_3553193__(/*! @medic/registration-utils */ "./build/cht-core-4-6/shared-libs/registration-utils/src/index.js");
 
-const TaskStates = __nested_webpack_require_3552903__(/*! ./task-states */ "./build/cht-core-4-6/shared-libs/rules-engine/src/task-states.js");
-const refreshRulesEmissions = __nested_webpack_require_3552903__(/*! ./refresh-rules-emissions */ "./build/cht-core-4-6/shared-libs/rules-engine/src/refresh-rules-emissions.js");
-const rulesEmitter = __nested_webpack_require_3552903__(/*! ./rules-emitter */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/index.js");
-const rulesStateStore = __nested_webpack_require_3552903__(/*! ./rules-state-store */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-state-store.js");
-const updateTemporalStates = __nested_webpack_require_3552903__(/*! ./update-temporal-states */ "./build/cht-core-4-6/shared-libs/rules-engine/src/update-temporal-states.js");
-const calendarInterval = __nested_webpack_require_3552903__(/*! @medic/calendar-interval */ "./build/cht-core-4-6/shared-libs/calendar-interval/src/index.js");
+const TaskStates = __nested_webpack_require_3553193__(/*! ./task-states */ "./build/cht-core-4-6/shared-libs/rules-engine/src/task-states.js");
+const refreshRulesEmissions = __nested_webpack_require_3553193__(/*! ./refresh-rules-emissions */ "./build/cht-core-4-6/shared-libs/rules-engine/src/refresh-rules-emissions.js");
+const rulesEmitter = __nested_webpack_require_3553193__(/*! ./rules-emitter */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/index.js");
+const rulesStateStore = __nested_webpack_require_3553193__(/*! ./rules-state-store */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-state-store.js");
+const updateTemporalStates = __nested_webpack_require_3553193__(/*! ./update-temporal-states */ "./build/cht-core-4-6/shared-libs/rules-engine/src/update-temporal-states.js");
+const calendarInterval = __nested_webpack_require_3553193__(/*! @medic/calendar-interval */ "./build/cht-core-4-6/shared-libs/calendar-interval/src/index.js");
 
 let wireupOptions;
 
@@ -100506,7 +100520,7 @@ const handleIntervalTurnover = (provider, { monthStartDate }) => {
 /*!************************************************************************************!*\
   !*** ./build/cht-core-4-6/shared-libs/rules-engine/src/refresh-rules-emissions.js ***!
   \************************************************************************************/
-/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3566515__) => {
+/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3566805__) => {
 
 /**
  * @module refresh-rules-emissions
@@ -100517,9 +100531,9 @@ const handleIntervalTurnover = (provider, { monthStartDate }) => {
  * @requires rules-emitter to be initialized
  */
 
-const rulesEmitter = __nested_webpack_require_3566515__(/*! ./rules-emitter */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/index.js");
-const TaskStates = __nested_webpack_require_3566515__(/*! ./task-states */ "./build/cht-core-4-6/shared-libs/rules-engine/src/task-states.js");
-const transformTaskEmissionToDoc = __nested_webpack_require_3566515__(/*! ./transform-task-emission-to-doc */ "./build/cht-core-4-6/shared-libs/rules-engine/src/transform-task-emission-to-doc.js");
+const rulesEmitter = __nested_webpack_require_3566805__(/*! ./rules-emitter */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/index.js");
+const TaskStates = __nested_webpack_require_3566805__(/*! ./task-states */ "./build/cht-core-4-6/shared-libs/rules-engine/src/task-states.js");
+const transformTaskEmissionToDoc = __nested_webpack_require_3566805__(/*! ./transform-task-emission-to-doc */ "./build/cht-core-4-6/shared-libs/rules-engine/src/transform-task-emission-to-doc.js");
 
 /**
  * @param {Object[]} freshData.contactDocs A set of contact documents
@@ -100763,7 +100777,7 @@ const emitCallback = (instanceType, instance) => {
 /*!****************************************************************************************!*\
   !*** ./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/emitter.nools.js ***!
   \****************************************************************************************/
-/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3576351__) => {
+/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3576641__) => {
 
 /**
  * @module emitter.nools
@@ -100771,7 +100785,7 @@ const emitCallback = (instanceType, instance) => {
  * Promisifies the execution of partner "rules" code
  * Ensures memory allocated by nools is freed after each run
  */
-const nools = __nested_webpack_require_3576351__(/*! nools */ "./build/cht-core-4-6/node_modules/nools/index.js");
+const nools = __nested_webpack_require_3576641__(/*! nools */ "./build/cht-core-4-6/node_modules/nools/index.js");
 
 let flow;
 
@@ -100855,7 +100869,7 @@ module.exports = {
 /*!********************************************************************************!*\
   !*** ./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/index.js ***!
   \********************************************************************************/
-/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3579010__) => {
+/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3579300__) => {
 
 /**
  * @module rules-emitter
@@ -100863,11 +100877,11 @@ module.exports = {
  * 
  * @typedef {Object} RulesEmitter Responsible for executing the logic in _rules_ and returning _emissions_
  */
-const nootils = __nested_webpack_require_3579010__(/*! cht-nootils */ "./build/cht-core-4-6/node_modules/cht-nootils/src/nootils.js");
-const registrationUtils = __nested_webpack_require_3579010__(/*! @medic/registration-utils */ "./build/cht-core-4-6/shared-libs/registration-utils/src/index.js");
+const nootils = __nested_webpack_require_3579300__(/*! cht-nootils */ "./build/cht-core-4-6/node_modules/cht-nootils/src/nootils.js");
+const registrationUtils = __nested_webpack_require_3579300__(/*! @medic/registration-utils */ "./build/cht-core-4-6/shared-libs/registration-utils/src/index.js");
 
-const javascriptEmitter = __nested_webpack_require_3579010__(/*! ./emitter.javascript */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/emitter.javascript.js");
-const noolsEmitter = __nested_webpack_require_3579010__(/*! ./emitter.nools */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/emitter.nools.js");
+const javascriptEmitter = __nested_webpack_require_3579300__(/*! ./emitter.javascript */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/emitter.javascript.js");
+const noolsEmitter = __nested_webpack_require_3579300__(/*! ./emitter.nools */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/emitter.nools.js");
 
 let emitter;
 
@@ -101044,7 +101058,7 @@ const resolveEmitter = (settings = {}) => {
 /*!******************************************************************************!*\
   !*** ./build/cht-core-4-6/shared-libs/rules-engine/src/rules-state-store.js ***!
   \******************************************************************************/
-/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3585635__) => {
+/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3585925__) => {
 
 /**
  * @module rules-state-store
@@ -101052,9 +101066,9 @@ const resolveEmitter = (settings = {}) => {
  * 1. Details on the state of each contact's rules calculations
  * 2. Target emissions @see target-state
  */
-const md5 = __nested_webpack_require_3585635__(/*! md5 */ "./build/cht-core-4-6/node_modules/md5/md5.js");
-const calendarInterval = __nested_webpack_require_3585635__(/*! @medic/calendar-interval */ "./build/cht-core-4-6/shared-libs/calendar-interval/src/index.js");
-const targetState = __nested_webpack_require_3585635__(/*! ./target-state */ "./build/cht-core-4-6/shared-libs/rules-engine/src/target-state.js");
+const md5 = __nested_webpack_require_3585925__(/*! md5 */ "./build/cht-core-4-6/node_modules/md5/md5.js");
+const calendarInterval = __nested_webpack_require_3585925__(/*! @medic/calendar-interval */ "./build/cht-core-4-6/shared-libs/calendar-interval/src/index.js");
+const targetState = __nested_webpack_require_3585925__(/*! ./target-state */ "./build/cht-core-4-6/shared-libs/rules-engine/src/target-state.js");
 
 const EXPIRE_CALCULATION_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
 let state;
@@ -101545,14 +101559,14 @@ module.exports = {
 /*!************************************************************************!*\
   !*** ./build/cht-core-4-6/shared-libs/rules-engine/src/task-states.js ***!
   \************************************************************************/
-/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3602507__) => {
+/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3602797__) => {
 
 /**
  * @module task-states
  * As defined by the FHIR task standard https://www.hl7.org/fhir/task.html#statemachine
  */
 
-const moment = __nested_webpack_require_3602507__(/*! moment */ "./build/cht-core-4-6/node_modules/moment/moment.js");
+const moment = __nested_webpack_require_3602797__(/*! moment */ "./build/cht-core-4-6/node_modules/moment/moment.js");
 
 /**
  * Problems:
@@ -101718,7 +101732,7 @@ Object.assign(module.exports, States);
 /*!*******************************************************************************************!*\
   !*** ./build/cht-core-4-6/shared-libs/rules-engine/src/transform-task-emission-to-doc.js ***!
   \*******************************************************************************************/
-/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3607741__) => {
+/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3608031__) => {
 
 /**
  * @module transform-task-emission-to-doc
@@ -101727,7 +101741,7 @@ Object.assign(module.exports, States);
  * Merges emission data into an existing document, or creates a new task document (as appropriate)
  */
 
-const TaskStates = __nested_webpack_require_3607741__(/*! ./task-states */ "./build/cht-core-4-6/shared-libs/rules-engine/src/task-states.js");
+const TaskStates = __nested_webpack_require_3608031__(/*! ./task-states */ "./build/cht-core-4-6/shared-libs/rules-engine/src/task-states.js");
 
 /**
  * @param {Object} taskEmission A task emission from the rules engine
@@ -101817,14 +101831,14 @@ const newTaskDoc = (emission, userSettingsId, calculatedAt) => ({
 /*!***********************************************************************************!*\
   !*** ./build/cht-core-4-6/shared-libs/rules-engine/src/update-temporal-states.js ***!
   \***********************************************************************************/
-/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3611688__) => {
+/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3611978__) => {
 
 /**
  * @module update-temporal-states
  * As time elapses, documents change state because the timing window has been reached.
  * Eg. Documents with state Draft move to state Ready just because it is now after midnight
  */
-const TaskStates = __nested_webpack_require_3611688__(/*! ./task-states */ "./build/cht-core-4-6/shared-libs/rules-engine/src/task-states.js");
+const TaskStates = __nested_webpack_require_3611978__(/*! ./task-states */ "./build/cht-core-4-6/shared-libs/rules-engine/src/task-states.js");
 
 /**
  * @param {Object[]} taskDocs A list of task documents to evaluate
@@ -101854,18 +101868,18 @@ module.exports = (taskDocs, timestamp = Date.now()) => {
 /*!********************************************!*\
   !*** ./cht-bundles/cht-core-4-6/bundle.js ***!
   \********************************************/
-/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3613022__) => {
+/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3613312__) => {
 
 module.exports = {
-  ddocs: __nested_webpack_require_3613022__(/*! ../../build/cht-core-4-6-ddocs.json */ "./build/cht-core-4-6-ddocs.json"),
-  RegistrationUtils: __nested_webpack_require_3613022__(/*! ../../build/cht-core-4-6/shared-libs/registration-utils */ "./build/cht-core-4-6/shared-libs/registration-utils/src/index.js"),
-  CalendarInterval: __nested_webpack_require_3613022__(/*! ../../build/cht-core-4-6/shared-libs/calendar-interval */ "./build/cht-core-4-6/shared-libs/calendar-interval/src/index.js"),
-  RulesEngineCore: __nested_webpack_require_3613022__(/*! ../../build/cht-core-4-6/shared-libs/rules-engine */ "./build/cht-core-4-6/shared-libs/rules-engine/src/index.js"),
-  RulesEmitter: __nested_webpack_require_3613022__(/*! ../../build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/index.js"),
-  nootils: __nested_webpack_require_3613022__(/*! ../../build/cht-core-4-6/node_modules/cht-nootils */ "./build/cht-core-4-6/node_modules/cht-nootils/src/nootils.js"),
-  Lineage: __nested_webpack_require_3613022__(/*! ../../build/cht-core-4-6/shared-libs/lineage */ "./build/cht-core-4-6/shared-libs/lineage/src/index.js"),
-  ChtScriptApi: __nested_webpack_require_3613022__(/*! ../../build/cht-core-4-6/shared-libs/cht-script-api */ "./build/cht-core-4-6/shared-libs/cht-script-api/src/index.js"),
-  convertFormXmlToXFormModel: __nested_webpack_require_3613022__(/*! ../../build/cht-core-4-6/api/src/services/generate-xform.js */ "./build/cht-core-4-6/api/src/services/generate-xform.js").generate,
+  ddocs: __nested_webpack_require_3613312__(/*! ../../build/cht-core-4-6-ddocs.json */ "./build/cht-core-4-6-ddocs.json"),
+  RegistrationUtils: __nested_webpack_require_3613312__(/*! ../../build/cht-core-4-6/shared-libs/registration-utils */ "./build/cht-core-4-6/shared-libs/registration-utils/src/index.js"),
+  CalendarInterval: __nested_webpack_require_3613312__(/*! ../../build/cht-core-4-6/shared-libs/calendar-interval */ "./build/cht-core-4-6/shared-libs/calendar-interval/src/index.js"),
+  RulesEngineCore: __nested_webpack_require_3613312__(/*! ../../build/cht-core-4-6/shared-libs/rules-engine */ "./build/cht-core-4-6/shared-libs/rules-engine/src/index.js"),
+  RulesEmitter: __nested_webpack_require_3613312__(/*! ../../build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter */ "./build/cht-core-4-6/shared-libs/rules-engine/src/rules-emitter/index.js"),
+  nootils: __nested_webpack_require_3613312__(/*! ../../build/cht-core-4-6/node_modules/cht-nootils */ "./build/cht-core-4-6/node_modules/cht-nootils/src/nootils.js"),
+  Lineage: __nested_webpack_require_3613312__(/*! ../../build/cht-core-4-6/shared-libs/lineage */ "./build/cht-core-4-6/shared-libs/lineage/src/index.js"),
+  ChtScriptApi: __nested_webpack_require_3613312__(/*! ../../build/cht-core-4-6/shared-libs/cht-script-api */ "./build/cht-core-4-6/shared-libs/cht-script-api/src/index.js"),
+  convertFormXmlToXFormModel: __nested_webpack_require_3613312__(/*! ../../build/cht-core-4-6/api/src/services/generate-xform.js */ "./build/cht-core-4-6/api/src/services/generate-xform.js").generate,
 };
 
 
@@ -101875,9 +101889,9 @@ module.exports = {
 /*!***********************************************!*\
   !*** ./cht-bundles/cht-core-4-6/xsl-paths.js ***!
   \***********************************************/
-/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3614771__) => {
+/***/ ((module, __unused_webpack_exports, __nested_webpack_require_3615061__) => {
 
-const path = __nested_webpack_require_3614771__(/*! path */ "path");
+const path = __nested_webpack_require_3615061__(/*! path */ "path");
 
 module.exports = {
   FORM_STYLESHEET: path.join(__dirname, '../dist/cht-core-4-6/xsl/openrosa2html5form.xsl'),
@@ -102047,7 +102061,7 @@ module.exports = __webpack_require__(/*! zlib */ "zlib");;
 /******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function __nested_webpack_require_3617971__(moduleId) {
+/******/ 	function __nested_webpack_require_3618261__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
@@ -102061,7 +102075,7 @@ module.exports = __webpack_require__(/*! zlib */ "zlib");;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_3617971__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_3618261__);
 /******/ 	
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -102071,17 +102085,17 @@ module.exports = __webpack_require__(/*! zlib */ "zlib");;
 /******/ 	}
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	__nested_webpack_require_3617971__.c = __webpack_module_cache__;
+/******/ 	__nested_webpack_require_3618261__.c = __webpack_module_cache__;
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nested_webpack_require_3617971__.n = (module) => {
+/******/ 		__nested_webpack_require_3618261__.n = (module) => {
 /******/ 			var getter = module && module.__esModule ?
 /******/ 				() => (module['default']) :
 /******/ 				() => (module);
-/******/ 			__nested_webpack_require_3617971__.d(getter, { a: getter });
+/******/ 			__nested_webpack_require_3618261__.d(getter, { a: getter });
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
@@ -102089,9 +102103,9 @@ module.exports = __webpack_require__(/*! zlib */ "zlib");;
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__nested_webpack_require_3617971__.d = (exports, definition) => {
+/******/ 		__nested_webpack_require_3618261__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
-/******/ 				if(__nested_webpack_require_3617971__.o(definition, key) && !__nested_webpack_require_3617971__.o(exports, key)) {
+/******/ 				if(__nested_webpack_require_3618261__.o(definition, key) && !__nested_webpack_require_3618261__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
@@ -102100,13 +102114,13 @@ module.exports = __webpack_require__(/*! zlib */ "zlib");;
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__nested_webpack_require_3617971__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 		__nested_webpack_require_3618261__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__nested_webpack_require_3617971__.r = (exports) => {
+/******/ 		__nested_webpack_require_3618261__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
@@ -102116,7 +102130,7 @@ module.exports = __webpack_require__(/*! zlib */ "zlib");;
 /******/ 	
 /******/ 	/* webpack/runtime/node module decorator */
 /******/ 	(() => {
-/******/ 		__nested_webpack_require_3617971__.nmd = (module) => {
+/******/ 		__nested_webpack_require_3618261__.nmd = (module) => {
 /******/ 			module.paths = [];
 /******/ 			if (!module.children) module.children = [];
 /******/ 			return module;
@@ -102128,7 +102142,7 @@ module.exports = __webpack_require__(/*! zlib */ "zlib");;
 /******/ 	// module cache are used so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	var __webpack_exports__ = __nested_webpack_require_3617971__(__nested_webpack_require_3617971__.s = "./cht-bundles/cht-core-4-6/bundle.js");
+/******/ 	var __webpack_exports__ = __nested_webpack_require_3618261__(__nested_webpack_require_3618261__.s = "./cht-bundles/cht-core-4-6/bundle.js");
 /******/ 	var __webpack_export_target__ = exports;
 /******/ 	for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_exports__[i];
 /******/ 	if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
