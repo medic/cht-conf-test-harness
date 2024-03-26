@@ -3,6 +3,7 @@ require('./cht-environment');
 const FormWireupApp = require('./form-host-app');
 const FormWireupContact = require('./form-host-contact');
 const FormFiller = require('./form-filler');
+window.formFiller = formFiller;
 
 /* Register global hook so new forms can be rendered from Puppeteer */
 window.loadForm = (formName, formType, formHtml, formModel, formXml, content, userSettingsDoc, contactSummary) => {
