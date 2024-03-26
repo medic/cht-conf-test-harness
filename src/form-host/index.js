@@ -3,7 +3,6 @@ require('./cht-environment');
 const FormWireupApp = require('./form-host-app');
 const FormWireupContact = require('./form-host-contact');
 const FormFiller = require('./form-filler');
-window.formFiller = formFiller;
 
 /* Register global hook so new forms can be rendered from Puppeteer */
 window.loadForm = (formName, formType, formHtml, formModel, formXml, content, userSettingsDoc, contactSummary) => {
@@ -15,6 +14,8 @@ const loadForm = async (FormWireup, formName, formHtml, formModel, formXml, cont
   const wireup = new FormWireup(formHtml, formModel, formXml, userSettingsDoc, contactSummary, formName);
   await wireup.render(content);
   const formFiller = new FormFiller({ verbose: true });
+
+  window.formFiller = formFiller;
 
   const untransformedFillAndSave = async (multipageAnswer) => {
     const { isComplete, errors } = await formFiller.fillForm(multipageAnswer);
