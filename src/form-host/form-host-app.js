@@ -1,21 +1,8 @@
-const $ = require('jquery');
-const createFormManager = require('./create-enketo-form-manager');
+const FormWireup = require('./form-wireup');
 
-class AppFormWireup {
-  constructor(formHtml, formModel, formXml, userSettingsDoc, contactSummary) {
-    this.enketoFormMgr = createFormManager(formHtml, formModel, formXml, userSettingsDoc, contactSummary);
-  }
-
-  render(content) {
-    const selector = '#enketo-wrapper';
-    const formDoc = { _id: 'app-form', title: 'cht-conf-test-harness Application Form' };
-    return this.enketoFormMgr.render(selector, formDoc, content);
-  }
-
-  async save(formInternalId, form, geoHandle, docId) {
-    await this.enketoFormMgr.validate(form);
-    $('form.or').trigger('beforesave');
-    return await this.enketoFormMgr.save(formInternalId, form, geoHandle, docId);
+class AppFormWireup extends FormWireup {
+  constructor(formHtml, formModel, formXml, userSettingsDoc, contactSummary, formName) {
+    super(formHtml, formModel, formXml, userSettingsDoc, contactSummary, formName);
   }
 
   transformResult(resultObj) {
@@ -30,10 +17,6 @@ class AppFormWireup {
       report,
       additionalDocs,
     };
-  }
-
-  unload(form) {
-    this.enketoFormMgr.unload(form);
   }
 }
 

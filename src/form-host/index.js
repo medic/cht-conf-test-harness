@@ -11,11 +11,10 @@ window.loadForm = (formName, formType, formHtml, formModel, formXml, content, us
 };
 
 const loadForm = async (FormWireup, formName, formHtml, formModel, formXml, content, userSettingsDoc, contactSummary) => {
-  const wireup = new FormWireup(formHtml, formModel, formXml, userSettingsDoc, contactSummary);
-  const form = await wireup.render(content);
-  const formFiller = new FormFiller(form, { verbose: true });
+  const wireup = new FormWireup(formHtml, formModel, formXml, userSettingsDoc, contactSummary, formName);
+  await wireup.render(content);
+  const formFiller = new FormFiller({ verbose: true });
 
-  window.form = form;
   window.formFiller = formFiller;
 
   const untransformedFillAndSave = async (multipageAnswer) => {
@@ -32,7 +31,7 @@ const loadForm = async (FormWireup, formName, formHtml, formModel, formXml, cont
       return {
         errors: [],
         section: 'general',
-        result: await wireup.save(formName, form),
+        result: await wireup.save(),
       };
     }
     catch (e) {
@@ -51,5 +50,5 @@ const loadForm = async (FormWireup, formName, formHtml, formModel, formXml, cont
   };
 
   window.fillAndSave = async multipageAnswer => wireup.transformResult(await untransformedFillAndSave(multipageAnswer));
-  window.unload = () => wireup.unload(form);
+  window.unload = () => wireup.unload();
 };
