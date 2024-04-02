@@ -21,6 +21,23 @@ The Community Health Toolkit is powered by people like you. Your contributions h
 - Our CI will automatically schedule a build; monitor the build to ensure it passes.
 - Your PR will be reviewed by one of the repository's maintainers. Most PRs have at least one change requested before they're merged so don't be offended if your change doesn't get accepted on the first try!
 
+## Releasing
+1. Create a pull request with prep for the new release (see [above](#submitting-code)). 
+2. Get the pull request reviewed and approved.
+3. When doing the squash and merge, make sure that your commit message is clear and readable and follows the strict format described in the commit format section [bellow](#commit-format). If the commit message does not comply, automatic release will fail.
+4. In case you are planning to merge the pull request with a merge commit, make sure that every commit in your branch respects the [format](#commit-format).
+
+### Commit format
+The commit format should follow this [conventional-changelog angular preset](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular). Examples are provided below.
+
+Type | Example commit message | Release type
+-- | -- | --
+Bug fixes | fix(#123): infinite loop when materialized views doesn't exist | patch
+Performance | perf(#789): Refresh materialized views faster | patch
+Features | feat(#456): Support real-time sync | minor
+Non-code | chore(#123): update README | none
+Breaking| perf(#2): remove support for pg 7 <br/> BREAKING CHANGE: postgres 7 no longer supported | major
+
 ### Code of Conduct
 
 All maintainers and contributors are required to act according to our [Code of Conduct](https://github.com/medic/cht-core/blob/master/CODE_OF_CONDUCT.md). Thank you for your help building a positive community and a safe environment for everyone.
