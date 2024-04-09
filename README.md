@@ -2,7 +2,7 @@
 
 ## Usage
 
-View the documentation [here](http://docs.communityhealthtoolkit.org/cht-conf-test-harness/).
+View the documentation on [CHT Docs](http://docs.communityhealthtoolkit.org/cht-conf-test-harness/).
 
 ### Compatibility
 
