@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/medic/cht-conf-test-harness/compare/v1.0.0...v1.0.1) (2024-04-16)
+
+
+### Bug Fixes
+
+* **#254:** release version fix ([7928ac3](https://github.com/medic/cht-conf-test-harness/commit/7928ac33bd9b546701fd9cdc1dcd4e1e555358aa)), closes [#254](https://github.com/medic/cht-conf-test-harness/issues/254) [#254](https://github.com/medic/cht-conf-test-harness/issues/254)
+
 # 4.0.2 (2024-04-16)
 
 
