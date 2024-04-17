@@ -4,6 +4,14 @@
 ### Bug Fixes
 
 * **#254:** update copyright text on readme ([705c625](https://github.com/medic/cht-conf-test-harness/commit/705c625af3f561b38be276642f9b87d0b568fcf4)), closes [#254](https://github.com/medic/cht-conf-test-harness/issues/254)
+* release version ([#261](https://github.com/medic/cht-conf-test-harness/issues/261)) ([11cb4c7](https://github.com/medic/cht-conf-test-harness/commit/11cb4c7437380eb0f2a63b59291676a3082343d3)), closes [#254](https://github.com/medic/cht-conf-test-harness/issues/254)
+
+## [4.0.1](https://github.com/medic/cht-conf-test-harness/compare/v4.0.0...v4.0.1) (2024-04-17)
+
+
+### Bug Fixes
+
+* **#254:** update copyright text on readme ([705c625](https://github.com/medic/cht-conf-test-harness/commit/705c625af3f561b38be276642f9b87d0b568fcf4)), closes [#254](https://github.com/medic/cht-conf-test-harness/issues/254)
 
 ## [1.0.1](https://github.com/medic/cht-conf-test-harness/compare/v1.0.0...v1.0.1) (2024-04-16)
 
