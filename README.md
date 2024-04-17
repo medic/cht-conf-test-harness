@@ -6,7 +6,7 @@ View the documentation on [CHT Docs](http://docs.communityhealthtoolkit.org/cht-
 
 ### Compatibility
 
-The cht-conf-test-harness is targeted at specific versions of the CHT Core Framework. This allows you to run your tests and validate your config against a specific version of the CHT before deploying it to a live environment.
+The **cht-conf-test-harness** is targeted at specific versions of the CHT Core Framework. This allows you to run your tests and validate your config against a specific version of the CHT before deploying it to a live environment.
 
 The following table shows the compatibility between the test harness and the CHT Core Framework (including the `coreVersion` values you can use in your harness configuration):
 
