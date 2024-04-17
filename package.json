@@ -1,6 +1,6 @@
 {
   "name": "cht-conf-test-harness",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Test Framework for CHT Projects",
   "repository": {
     "type": "git",
