@@ -22,7 +22,7 @@ At Medic we are the technical steward of the [Community Health Toolkit](https://
 
 ## Copyright
 
-Copyright 2013-2021 Medic Mobile, Inc. <hello@medic.org>
+Copyright 2013-2024 Medic Mobile, Inc. <hello@medic.org>
 
 ## License
 
