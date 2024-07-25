@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 declare -A cht_versions=(
-  ["cht-core-4-6"]="4.6.0"
+  ["cht-core-4-8"]="4.8.1"
 )
 
 exit_on_error() {
@@ -36,7 +36,8 @@ for version in "${!cht_versions[@]}"; do
   fi
 
   git clone https://github.com/medic/cht-core.git build/"$version"
-  (cd build/"$version" && git reset --hard "${cht_versions[$version]}")
+  (cd build/"$version" && git checkout 4.8.1-FR-improved-contact-summary-targets)
+  (cd build/"$version" && git reset --hard)
   (cd build/"$version" && git clean -df)
 
   (cd build/"$version" && npm ci)

@@ -3,7 +3,7 @@
 *** 6,13 ****
   const path = require('path');
   const htmlParser = require('node-html-parser');
-  const logger = require('../logger');
+  const logger = require('@medic/logger');
 ! const db = require('../db');
 ! const formsService = require('./forms');
   const markdown = require('../enketo-transformer/markdown');
