@@ -10,6 +10,9 @@ const uuid = require('uuid/v4');
 
 PouchDB.plugin(require('pouchdb-adapter-memory'));
 
+const ChtScriptApiFactory = require('./cht-script-api-factory');
+const { getMonthStartDate } = require('./dateUtils');
+
 class CoreAdapter {
   constructor(core, appSettings) {
     this.appSettings = appSettings;
@@ -18,10 +21,12 @@ class CoreAdapter {
     this.rulesEngine = core.RulesEngineCore(this.pouchdb);
     this.pouchdbStateHash = {};
     this.lineageLib = core.Lineage(Promise, this.pouchdb);
+
+    this.chtScriptApiFactory = new ChtScriptApiFactory(core, this.pouchdb, appSettings);
   }
 
   async fetchTargets(user, userRoles, state) {
-    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, userRoles, state);
+    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, this.chtScriptApiFactory, user, userRoles, state);
 
     const uhcMonthStartDate = getMonthStartDate(this.appSettings);
     const relevantInterval = this.core.CalendarInterval.getCurrent(uhcMonthStartDate);
@@ -29,7 +34,7 @@ class CoreAdapter {
   }
 
   async fetchTasksFor(user, userRoles, state) {
-    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, user, userRoles, state);
+    this.pouchdbStateHash = await prepare(this.core, this.rulesEngine, this.appSettings, this.pouchdb, this.pouchdbStateHash, this.chtScriptApiFactory, user, userRoles, state);
     return this.rulesEngine.fetchTasksFor();
   }
 
@@ -84,20 +89,20 @@ class CoreAdapter {
     return this.lineageLib.minify(doc);
   }
 
-  chtScriptApi(userRoles) {
-    return chtScriptApiWithDefaults(this.core.ChtScriptApi, this.appSettings, userRoles);
+  async chtScriptApi(contact, userFacilityId, userContactId, userRoles) {
+    return await this.chtScriptApiFactory.getForContactSummary(contact, userFacilityId, userContactId, userRoles);
   }
 }
 
-const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateHash, user, userRoles, state) => {
-  await prepareRulesEngine(chtCore, rulesEngine, appSettings, user, userRoles, pouchdb.name);
+const prepare = async (chtCore, rulesEngine, appSettings, pouchdb, pouchdbStateHash, chtScriptApiFactory, user, userRoles, state) => {
+  await prepareRulesEngine(chtCore, rulesEngine, appSettings, chtScriptApiFactory, user, userRoles, pouchdb.name);
   const { updatedSubjectIds, newPouchdbState } = await syncPouchWithState(chtCore, pouchdb, pouchdbStateHash, state);
   await rulesEngine.updateEmissionsFor(updatedSubjectIds);
   return newPouchdbState;
 };
 
-const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, user, userRoles, sessionId) => {
-  const rulesSettings = getRulesSettings(chtCore, appSettings, user, userRoles, sessionId);
+const prepareRulesEngine = async (chtCore, rulesEngine, appSettings, chtScriptApiFactory, user, userRoles, sessionId) => {
+  const rulesSettings = await getRulesSettings(chtCore, appSettings, chtScriptApiFactory, user, userRoles, sessionId);
 
   if (!rulesEngine.isEnabled()) {
     await rulesEngine.initialize(rulesSettings);
@@ -182,42 +187,14 @@ const upsert = async (pouchdb, doc) => {
   await pouchdb.put(docWithRev);
 };
 
-// cht-core/src/ts/services/uhc-settings.service.ts
-const getMonthStartDate = settings => {
-  return settings &&
-    settings.uhc &&
-    (
-      settings.uhc.month_start_date ||
-      settings.uhc.visit_count &&
-      settings.uhc.visit_count.month_start_date
-    );
-};
-
-// cht-core/src/ts/services/cht-script-api.service.ts
-const chtScriptApiWithDefaults = (chtScriptApi, settingsDoc, defaultUserRoles) => {
-  if (!chtScriptApi) {
-    return;
-  }
-
-  const defaultChtPermissionSettings = settingsDoc.permissions;
-  return {
-    v1: {
-      hasPermissions: (permissions, userRoles = defaultUserRoles, chtPermissionsSettings = defaultChtPermissionSettings) => {
-        return chtScriptApi.v1.hasPermissions(permissions, userRoles, chtPermissionsSettings);
-      },
-      hasAnyPermission: (permissionsGroupList, userRoles = defaultUserRoles, chtPermissionsSettings = defaultChtPermissionSettings) => {
-        return chtScriptApi.v1.hasAnyPermission(permissionsGroupList, userRoles, chtPermissionsSettings);
-      }
-    }
-  };
-};
-
-const getRulesSettings = (chtCore, settingsDoc, userContactDoc, userRoles, sessionId) => {
-  const settingsTasks = settingsDoc && settingsDoc.tasks || {};
+const getRulesSettings = async (chtCore, settingsDoc, chtScriptApiFactory, userContactDoc, userRoles, sessionId) => {
+  const settingsTasks = settingsDoc?.tasks || {};
   // https://github.com/medic/cht-conf-test-harness/issues/106
   // const filterTargetByContext = (target) => target.context ? !!this.parseProvider.parse(target.context)({ user: userContactDoc }) : true;
-  const targets = settingsTasks.targets && settingsTasks.targets.items || [];
+  const targets = settingsTasks.targets?.items || [];
   const rules = getRules(chtCore.version, settingsTasks);
+
+  const chtScriptApi = await chtScriptApiFactory.getForRulesEngine(userRoles);
   return {
     ...rules,
     taskSchedules: settingsTasks.schedules,
@@ -231,7 +208,7 @@ const getRulesSettings = (chtCore, settingsDoc, userContactDoc, userRoles, sessi
     },
     monthStartDate: getMonthStartDate(settingsDoc),
     sessionId,
-    chtScriptApi: chtScriptApiWithDefaults(chtCore.ChtScriptApi, settingsDoc, userRoles),
+    chtScriptApi,
   };
 };
 

@@ -152,6 +152,7 @@ describe('cht.v1 in contact summary ', () => {
     expect(contactSummary.context).to.not.be.undefined;
     expect(contactSummary.context.hasPermissions).to.be.true;
     expect(contactSummary.context.hasAnyPermission).to.be.true;
+    expect(contactSummary.context.chtApiContext).to.deep.eq({ targetDocs: [] });
   });
 
   it('#214 - cht API in contact summary - user has no permissions ', async () => {
@@ -161,7 +162,52 @@ describe('cht.v1 in contact summary ', () => {
     expect(contactSummary.context).to.not.be.undefined;
     expect(contactSummary.context.hasPermissions).to.be.false;
     expect(contactSummary.context.hasAnyPermission).to.be.false;
+    expect(contactSummary.context.chtApiContext).to.deep.eq({ targetDocs: [] });
   });
 
+  it('context.targetDocs undefined when subject is not user facility', async () => {
+    const targets = await harness.getTargets();
+    expect(targets).to.not.be.empty;
+
+    const contactSummary = await harness.getContactSummary();
+    expect(contactSummary.context.chtApiContext.targetDocs).to.be.empty;
+  });
+
+  it('4.8 adds context.targetDocs onto the user facility', async () => {
+    harness.subject = 'chw_area_id';
+
+    const targets = await harness.getTargets();
+    expect(targets).to.not.be.empty;
+
+    const contactSummary = await harness.getContactSummary();
+    expect(contactSummary.context.chtApiContext.targetDocs).to.not.be.empty;
+
+    const targetFromDocs = contactSummary.context.chtApiContext.targetDocs.map(t => t.targets[0]);
+    expect(targetFromDocs).to.deep.eq(targets);
+  });
+});
+
+describe('cht.v1 in contact summary (core v4.6)', () => {
+  const harness = new Harness({
+    coreVersion: '4.6',
+    directory: path.join(__dirname, 'collateral', 'project-with-source'),
+    harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
+    verbose: true,
+  });
+
+  before(async () => { return await harness.start(); });
+  after(async () => { return await harness.stop(); });
+  beforeEach(async () => { return await harness.clear(); });
+  afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
+
+  it('context.targetDocs undefined on core 4.6', async () => {
+    harness.subject = 'chw_area_id';
+
+    const targets = await harness.getTargets();
+    expect(targets).to.not.be.empty;
+
+    const contactSummary = await harness.getContactSummary();
+    expect(contactSummary.context.chtApiContext?.targetDocs).to.be.undefined;
+  });
 });
 
