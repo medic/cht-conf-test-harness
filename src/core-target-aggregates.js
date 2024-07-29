@@ -88,7 +88,7 @@ class CoreTargetAggregates {
     const settings = this.settingsDoc;
     const targetDocs = await this._fetchTargetDocs(settings, targetContact);
     return targetDocs.map(targetDoc => this._getTargetDetails(targetDoc, settings));
-  };
-};
+  }
+}
 
 module.exports = CoreTargetAggregates;
