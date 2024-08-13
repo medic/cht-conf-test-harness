@@ -376,7 +376,7 @@ class Harness {
    * @example
    * const summary = await countTaskDocsByState({ title: 'my-task-title' });
    * expect(summary).to.nested.include({
-   *   Complete: 1, // 1 task events were marked as resolved
+   *   Completed: 1, // 1 task events were marked as resolved
    *   Failed: 2,   // 2 task events were not marked as resolved prior to expiring
    *   Draft: 3,    // 3 task events are in the future
    * });
