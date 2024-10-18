@@ -1,6 +1,9 @@
 /**
- * @module cht-script-api-factory Creates the option `cht.api.v1`
+ * @module cht-script-api-factory 
+ * Creates the object `cht.api.v1`
 */
+
+const semver = require('semver');
 
 const CoreTargetAggregates = require('./core-target-aggregates');
 
@@ -21,30 +24,41 @@ class ChtScriptApiFactory {
 
   // cht-core/src/ts/services/cht-script-api.service.ts
   async getForContactSummary(contact, userFacilityId, userContactId, defaultUserRoles) {
-    const chtScriptApi = this.core.ChtScriptApi;
-    if (!chtScriptApi) {
-      throw Error('this.core.ChtScriptApi is undefined');
+    const datasource = this._getFromDatasource() || this.core.ChtScriptApi;
+    if (!datasource) {
+      throw Error('DataSource and ChtScriptApi are undefined for this core version');
     }
 
     const defaultChtPermissionSettings = this.appSettings.permissions;
     const result = {
       v1: {
         hasPermissions: (permissions, userRoles = defaultUserRoles, chtPermissionsSettings = defaultChtPermissionSettings) => {
-          return chtScriptApi.v1.hasPermissions(permissions, userRoles, chtPermissionsSettings);
+          return datasource.v1.hasPermissions(permissions, userRoles, chtPermissionsSettings);
         },
         hasAnyPermission: (permissionsGroupList, userRoles = defaultUserRoles, chtPermissionsSettings = defaultChtPermissionSettings) => {
-          return chtScriptApi.v1.hasAnyPermission(permissionsGroupList, userRoles, chtPermissionsSettings);
+          return datasource.v1.hasAnyPermission(permissionsGroupList, userRoles, chtPermissionsSettings);
         },
       }
     };
 
-    if (this.core.version === '4.8') {
-      result.v1.context = {
-        targetDocs: await this.coreTargetAggregator.getTargetDocs(contact, userFacilityId, userContactId),
+    const coreVersion = semver.coerce(this.core.version);
+    if (semver.gte(coreVersion, '4.11.0')) {
+      const targets = await this.coreTargetAggregator.getTargetDocs(contact, userFacilityId, userContactId);
+      result.v1.analytics = {
+        getTargetDocs: () => targets,
       };
     }
 
     return result;
+  }
+  
+  _getFromDatasource() {
+    if (!this.core.DataSource) {
+      return;
+    }
+  
+    const context = this.core.DataSource.getRemoteDataContext();
+    return this.core.DataSource.getDatasource(context);
   }
 }
 

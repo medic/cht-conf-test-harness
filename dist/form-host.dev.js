@@ -538,7 +538,7 @@ eval("\n\nvar forEach = __webpack_require__(/*! for-each */ \"./node_modules/for
   \******************************************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-eval("const { useFakeTimers } = __webpack_require__(/*! sinon/lib/sinon/util/fake-timers */ \"./node_modules/sinon/lib/sinon/util/fake-timers.js\");\n\nlet clock;\nwindow.fakeTimers = (...args) => {\n  window.restoreTimers();\n  clock = useFakeTimers(...args);\n};\nwindow.restoreTimers = () => clock && clock.uninstall();\n\n\n//# sourceURL=webpack://cht-conf-test-harness/./src/form-host/cht-environment.js?");
+eval("const { useFakeTimers } = __webpack_require__(/*! sinon/lib/sinon/util/fake-timers */ \"./node_modules/sinon/lib/sinon/util/fake-timers.js\");\n\nlet clock;\nwindow.process = undefined;\nwindow.fakeTimers = (...args) => {\n  window.restoreTimers();\n  clock = useFakeTimers(...args);\n};\nwindow.restoreTimers = () => clock && clock.uninstall();\n\n\n//# sourceURL=webpack://cht-conf-test-harness/./src/form-host/cht-environment.js?");
 
 /***/ }),
 

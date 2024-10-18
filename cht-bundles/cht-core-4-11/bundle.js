@@ -7,5 +7,6 @@ module.exports = {
   RulesEmitter: require('../../build/cht-core-4-11/shared-libs/rules-engine/src/rules-emitter'),
   nootils: require('../../build/cht-core-4-11/node_modules/cht-nootils'),
   Lineage: require('../../build/cht-core-4-11/shared-libs/lineage'),
+  DataSource: require('../../build/cht-core-4-11/shared-libs/cht-datasource'),
   convertFormXmlToXFormModel: require('../../build/cht-core-4-11/api/src/services/generate-xform.js').generate,
 };

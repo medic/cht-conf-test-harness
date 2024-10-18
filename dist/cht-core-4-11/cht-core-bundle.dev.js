@@ -70515,6 +70515,1375 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/auth.js":
+/*!*********************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/auth.js ***!
+  \*********************************************************************/
+/***/ ((module, exports) => {
+
+"use strict";
+
+/**
+ * CHT Script API - Auth module
+ * Provides tools related to Authentication.
+ */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const ADMIN_ROLE = '_admin';
+const DISALLOWED_PERMISSION_PREFIX = '!';
+const isAdmin = (userRoles) => {
+    if (!Array.isArray(userRoles)) {
+        return false;
+    }
+    return userRoles.includes(ADMIN_ROLE);
+};
+const groupPermissions = (permissions) => {
+    const groups = { allowed: [], disallowed: [] };
+    permissions.forEach(permission => {
+        if (permission.indexOf(DISALLOWED_PERMISSION_PREFIX) === 0) {
+            // Removing the DISALLOWED_PERMISSION_PREFIX and keeping the permission name.
+            groups.disallowed.push(permission.substring(1));
+        }
+        else {
+            groups.allowed.push(permission);
+        }
+    });
+    return groups;
+};
+const debug = (reason, permissions, roles) => {
+    // eslint-disable-next-line no-console
+     ;
+};
+const checkUserHasPermissions = (permissions, userRoles, chtPermissionsSettings, expectedToHave) => {
+    return permissions.every(permission => {
+        const roles = chtPermissionsSettings[permission];
+        if (!roles) {
+            return !expectedToHave;
+        }
+        return expectedToHave === userRoles.some(role => roles.includes(role));
+    });
+};
+const verifyParameters = (permissions, userRoles, chtPermissionsSettings) => {
+    if (!Array.isArray(permissions) || !permissions.length) {
+        debug('Permissions to verify are not provided or have invalid type');
+        return false;
+    }
+    if (!Array.isArray(userRoles)) {
+        debug('User roles are not provided or have invalid type');
+        return false;
+    }
+    if (!chtPermissionsSettings || !Object.keys(chtPermissionsSettings).length) {
+        debug('CHT-Core\'s configured permissions are not provided');
+        return false;
+    }
+    return true;
+};
+const normalizePermissions = (permissions) => {
+    if (permissions && typeof permissions === 'string') {
+        return [permissions];
+    }
+    return permissions;
+};
+const checkAdminPermissions = (disallowedGroupList, permissions, userRoles) => {
+    if (disallowedGroupList.every(permissions => permissions.length)) {
+        debug('Disallowed permission(s) found for admin', permissions, userRoles);
+        return false;
+    }
+    // Admin has the permissions automatically.
+    return true;
+};
+/**
+ * Verify if the user's role has the permission(s).
+ * @param permissions {string | string[]} Permission(s) to verify
+ * @param userRoles {string[]} Array of user roles.
+ * @param chtPermissionsSettings {object} Object of configured permissions in CHT-Core's settings.
+ * @return {boolean}
+ */
+const hasPermissions = (permissions, userRoles, chtPermissionsSettings) => {
+    permissions = normalizePermissions(permissions);
+    if (!verifyParameters(permissions, userRoles, chtPermissionsSettings)) {
+        return false;
+    }
+    const { allowed, disallowed } = groupPermissions(permissions);
+    if (isAdmin(userRoles)) {
+        return checkAdminPermissions([disallowed], permissions, userRoles);
+    }
+    const hasDisallowed = !checkUserHasPermissions(disallowed, userRoles, chtPermissionsSettings, false);
+    const hasAllowed = checkUserHasPermissions(allowed, userRoles, chtPermissionsSettings, true);
+    if (hasDisallowed) {
+        debug('Found disallowed permission(s)', permissions, userRoles);
+        return false;
+    }
+    if (!hasAllowed) {
+        debug('Missing permission(s)', permissions, userRoles);
+        return false;
+    }
+    return true;
+};
+/**
+ * Verify if the user's role has all the permissions of any of the provided groups.
+ * @param permissionsGroupList {string[][]} Array of groups of permissions due to the complexity of permission grouping
+ * @param userRoles {string[]} Array of user roles.
+ * @param chtPermissionsSettings {object} Object of configured permissions in CHT-Core's settings.
+ * @return {boolean}
+ */
+const hasAnyPermission = (permissionsGroupList, userRoles, chtPermissionsSettings) => {
+    if (!verifyParameters(permissionsGroupList, userRoles, chtPermissionsSettings)) {
+        return false;
+    }
+    const validGroup = permissionsGroupList.every(permissions => Array.isArray(permissions));
+    if (!validGroup) {
+        debug('Permission groups to verify are invalid');
+        return false;
+    }
+    const allowedGroupList = [];
+    const disallowedGroupList = [];
+    permissionsGroupList.forEach(permissions => {
+        const { allowed, disallowed } = groupPermissions(permissions);
+        allowedGroupList.push(allowed);
+        disallowedGroupList.push(disallowed);
+    });
+    if (isAdmin(userRoles)) {
+        return checkAdminPermissions(disallowedGroupList, permissionsGroupList, userRoles);
+    }
+    const hasAnyPermissionGroup = permissionsGroupList.some((permissions, i) => {
+        const hasAnyAllowed = checkUserHasPermissions(allowedGroupList[i], userRoles, chtPermissionsSettings, true);
+        const hasAnyDisallowed = !checkUserHasPermissions(disallowedGroupList[i], userRoles, chtPermissionsSettings, false);
+        // Checking the 'permission group' is valid.
+        return hasAnyAllowed && !hasAnyDisallowed;
+    });
+    if (!hasAnyPermissionGroup) {
+        debug('No matching permissions', permissionsGroupList, userRoles);
+        return false;
+    }
+    return true;
+};
+module.exports = {
+    hasPermissions,
+    hasAnyPermission
+};
+//# sourceMappingURL=auth.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/index.js":
+/*!**********************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/index.js ***!
+  \**********************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getDatasource = exports.Qualifier = exports.Place = exports.Person = exports.InvalidArgumentError = exports.getRemoteDataContext = exports.getLocalDataContext = void 0;
+/**
+ * CHT datasource.
+ *
+ * This module provides a simple API for interacting with CHT data. To get started, obtain a {@link DataContext}. Then
+ * use the context to perform data operations. There are two different usage modes available for performing the same
+ * operations.
+ * @example Get Data Context:
+ * import { getRemoteDataContext, getLocalDataContext } from '@medic/cht-datasource';
+ *
+ * const dataContext = isOnlineOnly
+ *   ? getRemoteDataContext(...)
+ *   : getLocalDataContext(...);
+ * @example Declarative usage mode:
+ * import { Person, Qualifier } from '@medic/cht-datasource';
+ *
+ * const getPerson = Person.v1.get(dataContext);
+ * // Or
+ * const getPerson = dataContext.bind(Person.v1.get);
+ *
+ * const myUuid = 'my-uuid';
+ * const myPerson = await getPerson(Qualifier.byUuid(uuid));
+ * @example Imperative usage mode:
+ * import { getDatasource } from '@medic/cht-datasource';
+ *
+ * const datasource = getDatasource(dataContext);
+ * const myUuid = 'my-uuid';
+ * const myPerson = await datasource.v1.person.getByUuid(myUuid);
+ */
+const auth_1 = __webpack_require__(/*! ./auth */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/auth.js");
+const data_context_1 = __webpack_require__(/*! ./libs/data-context */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/data-context.js");
+const Person = __importStar(__webpack_require__(/*! ./person */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/person.js"));
+const Place = __importStar(__webpack_require__(/*! ./place */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/place.js"));
+const Qualifier = __importStar(__webpack_require__(/*! ./qualifier */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/qualifier.js"));
+var local_1 = __webpack_require__(/*! ./local */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/index.js");
+Object.defineProperty(exports, "getLocalDataContext", ({ enumerable: true, get: function () { return local_1.getLocalDataContext; } }));
+var remote_1 = __webpack_require__(/*! ./remote */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/index.js");
+Object.defineProperty(exports, "getRemoteDataContext", ({ enumerable: true, get: function () { return remote_1.getRemoteDataContext; } }));
+var error_1 = __webpack_require__(/*! ./libs/error */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/error.js");
+Object.defineProperty(exports, "InvalidArgumentError", ({ enumerable: true, get: function () { return error_1.InvalidArgumentError; } }));
+exports.Person = __importStar(__webpack_require__(/*! ./person */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/person.js"));
+exports.Place = __importStar(__webpack_require__(/*! ./place */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/place.js"));
+exports.Qualifier = __importStar(__webpack_require__(/*! ./qualifier */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/qualifier.js"));
+/**
+ * Returns the source for CHT data.
+ * @param ctx the current data context
+ * @returns the CHT datasource API
+ * @throws Error if the provided context is invalid
+ */
+const getDatasource = (ctx) => {
+    (0, data_context_1.assertDataContext)(ctx);
+    return {
+        v1: {
+            hasPermissions: auth_1.hasPermissions,
+            hasAnyPermission: auth_1.hasAnyPermission,
+            place: {
+                /**
+                 * Returns a place by its UUID.
+                 * @param uuid the UUID of the place to retrieve
+                 * @returns the place or `null` if no place is found for the UUID
+                 * @throws Error if no UUID is provided
+                 */
+                getByUuid: (uuid) => ctx.bind(Place.v1.get)(Qualifier.byUuid(uuid)),
+                /**
+                 * Returns a place by its UUID along with the place's parent lineage.
+                 * @param uuid the UUID of the place to retrieve
+                 * @returns the place or `null` if no place is found for the UUID
+                 * @throws Error if no UUID is provided
+                 */
+                getByUuidWithLineage: (uuid) => ctx.bind(Place.v1.getWithLineage)(Qualifier.byUuid(uuid)),
+            },
+            person: {
+                /**
+                 * Returns a person by their UUID.
+                 * @param uuid the UUID of the person to retrieve
+                 * @returns the person or `null` if no person is found for the UUID
+                 * @throws Error if no UUID is provided
+                 */
+                getByUuid: (uuid) => ctx.bind(Person.v1.get)(Qualifier.byUuid(uuid)),
+                /**
+                 * Returns a person by their UUID along with the person's parent lineage.
+                 * @param uuid the UUID of the person to retrieve
+                 * @returns the person or `null` if no person is found for the UUID
+                 * @throws Error if no UUID is provided
+                 */
+                getByUuidWithLineage: (uuid) => ctx.bind(Person.v1.getWithLineage)(Qualifier.byUuid(uuid)),
+                /**
+                 * Returns an array of people for the provided page specifications.
+                 * @param personType the type of people to return
+                 * @param cursor the token identifying which page to retrieve. A `null` value indicates the first page should be
+                 * returned. Subsequent pages can be retrieved by providing the cursor returned with the previous page.
+                 * @param limit the maximum number of people to return. Default is 100.
+                 * @returns a page of people for the provided specifications
+                 * @throws Error if no type is provided or if the type is not for a person
+                 * @throws Error if the provided limit is `<= 0`
+                 * @throws Error if the provided cursor is not a valid page token or `null`
+                 * @see {@link getByType} which provides the same data, but without having to manually account for paging
+                 */
+                getPageByType: (personType, cursor = null, limit = 100) => ctx.bind(Person.v1.getPage)(Qualifier.byContactType(personType), cursor, limit),
+                /**
+                 * Returns a generator for fetching all people with the given type.
+                 * @param personType the type of people to return
+                 * @returns a generator for fetching all people with the given type
+                 * @throws Error if no type is provided or if the type is not for a person
+                 */
+                getByType: (personType) => ctx.bind(Person.v1.getAll)(Qualifier.byContactType(personType)),
+            }
+        }
+    };
+};
+exports.getDatasource = getDatasource;
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js":
+/*!**************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getPagedGenerator = exports.AbstractDataContext = exports.findById = exports.isIdentifiable = exports.hasFields = exports.hasField = exports.isRecord = exports.isString = exports.deepCopy = exports.isDataObject = exports.getLastElement = exports.isNonEmptyArray = exports.isNotNull = void 0;
+/** @internal */
+const isNotNull = (value) => value !== null;
+exports.isNotNull = isNotNull;
+/** @internal */
+const isNonEmptyArray = (value) => !!value.length;
+exports.isNonEmptyArray = isNonEmptyArray;
+/** @internal */
+const getLastElement = (array) => array[array.length - 1];
+exports.getLastElement = getLastElement;
+const isDataPrimitive = (value) => {
+    return value === null
+        || value === undefined
+        || typeof value === 'string'
+        || typeof value === 'number'
+        || typeof value === 'boolean'
+        || value instanceof Date;
+};
+const isDataArray = (value) => {
+    return Array.isArray(value) && value.every(v => isDataPrimitive(v) || isDataArray(v) || (0, exports.isDataObject)(v));
+};
+/** @internal */
+const isDataObject = (value) => {
+    if (!(0, exports.isRecord)(value)) {
+        return false;
+    }
+    return Object
+        .values(value)
+        .every((v) => isDataPrimitive(v) || isDataArray(v) || (0, exports.isDataObject)(v));
+};
+exports.isDataObject = isDataObject;
+/**
+ * Ideally, this function should only be used at the edge of this library (when returning potentially cross-referenced
+ * data objects) to avoid unintended consequences if any of the objects are edited in-place. This function should not
+ * be used for logic internal to this library since all data objects are marked as immutable.
+ * This could be replaced by [structuredClone](https://developer.mozilla.org/en-US/docs/Web/API/structuredClone)
+ * in CHT 5.x, or earlier if using a polyfill or a similar implementation like `_.cloneDeep()`.
+ * @internal
+ */
+const deepCopy = (value) => {
+    if (isDataPrimitive(value)) {
+        return value;
+    }
+    if (isDataArray(value)) {
+        return value.map(exports.deepCopy);
+    }
+    return Object.fromEntries(Object
+        .entries(value)
+        .map(([key, value]) => [key, (0, exports.deepCopy)(value)]));
+};
+exports.deepCopy = deepCopy;
+/** @internal */
+const isString = (value) => {
+    return typeof value === 'string';
+};
+exports.isString = isString;
+/** @internal */
+const isRecord = (value) => {
+    return value !== null && typeof value === 'object';
+};
+exports.isRecord = isRecord;
+/** @internal */
+const hasField = (value, field) => {
+    const valueField = value[field.name];
+    return typeof valueField === field.type;
+};
+exports.hasField = hasField;
+/** @internal */
+const hasFields = (value, fields) => fields.every(field => (0, exports.hasField)(value, field));
+exports.hasFields = hasFields;
+/** @internal */
+const isIdentifiable = (value) => (0, exports.isRecord)(value)
+    && (0, exports.hasField)(value, { name: '_id', type: 'string' });
+exports.isIdentifiable = isIdentifiable;
+/** @internal */
+const findById = (values, id) => values
+    .find(v => v._id === id) ?? null;
+exports.findById = findById;
+/** @internal */
+class AbstractDataContext {
+    bind = (fn) => fn(this);
+}
+exports.AbstractDataContext = AbstractDataContext;
+/** @internal */
+const getPagedGenerator = async function* (fetchFunction, fetchFunctionArgs) {
+    const limit = 100;
+    let cursor = null;
+    do {
+        const docs = await fetchFunction(fetchFunctionArgs, cursor, limit);
+        for (const doc of docs.data) {
+            yield doc;
+        }
+        cursor = docs.cursor;
+    } while (cursor);
+    return null;
+};
+exports.getPagedGenerator = getPagedGenerator;
+//# sourceMappingURL=core.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/data-context.js":
+/*!**********************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/data-context.js ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.adapt = exports.assertDataContext = void 0;
+const core_1 = __webpack_require__(/*! ./core */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js");
+const data_context_1 = __webpack_require__(/*! ../local/libs/data-context */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/data-context.js");
+const data_context_2 = __webpack_require__(/*! ../remote/libs/data-context */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/libs/data-context.js");
+const isDataContext = (context) => {
+    return (0, core_1.isRecord)(context) && (0, core_1.hasField)(context, { name: 'bind', type: 'function' });
+};
+/** @internal */
+const assertDataContext = (context) => {
+    if (!isDataContext(context) || !((0, data_context_1.isLocalDataContext)(context) || (0, data_context_2.isRemoteDataContext)(context))) {
+        throw new Error(`Invalid data context [${JSON.stringify(context)}].`);
+    }
+};
+exports.assertDataContext = assertDataContext;
+/** @internal */
+const adapt = (context, local, remote) => {
+    if ((0, data_context_1.isLocalDataContext)(context)) {
+        return local(context);
+    }
+    (0, data_context_2.assertRemoteDataContext)(context);
+    return remote(context);
+};
+exports.adapt = adapt;
+//# sourceMappingURL=data-context.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/doc.js":
+/*!*************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/doc.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isDoc = void 0;
+const core_1 = __webpack_require__(/*! ./core */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js");
+/** @internal */
+const isDoc = (value) => (0, core_1.isRecord)(value)
+    && (0, core_1.isIdentifiable)(value)
+    && (0, core_1.hasField)(value, { name: '_rev', type: 'string' });
+exports.isDoc = isDoc;
+//# sourceMappingURL=doc.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/error.js":
+/*!***************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/error.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InvalidArgumentError = void 0;
+/**
+ * Represents an error that occurs when an invalid argument is provided.
+ * This error is typically thrown when a function or method receives an argument
+ * that doesn't meet the expected criteria or constraints.
+ */
+class InvalidArgumentError extends Error {
+    /**
+     * Constructor
+     * @param message a descriptive error message why the error was raised
+     */
+    constructor(message) {
+        super(message);
+        this.name = 'InvalidArgumentError';
+    }
+}
+exports.InvalidArgumentError = InvalidArgumentError;
+//# sourceMappingURL=error.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/index.js":
+/*!****************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/index.js ***!
+  \****************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getLocalDataContext = exports.Place = exports.Person = void 0;
+exports.Person = __importStar(__webpack_require__(/*! ./person */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/person.js"));
+exports.Place = __importStar(__webpack_require__(/*! ./place */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/place.js"));
+var data_context_1 = __webpack_require__(/*! ./libs/data-context */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/data-context.js");
+Object.defineProperty(exports, "getLocalDataContext", ({ enumerable: true, get: function () { return data_context_1.getLocalDataContext; } }));
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/data-context.js":
+/*!****************************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/data-context.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getLocalDataContext = exports.isLocalDataContext = exports.LocalDataContext = void 0;
+const core_1 = __webpack_require__(/*! ../../libs/core */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js");
+/** @internal */
+class LocalDataContext extends core_1.AbstractDataContext {
+    medicDb;
+    settings;
+    /** @internal */
+    constructor(medicDb, settings) {
+        super();
+        this.medicDb = medicDb;
+        this.settings = settings;
+    }
+}
+exports.LocalDataContext = LocalDataContext;
+const assertSettingsService = (settings) => {
+    if (!(0, core_1.isRecord)(settings) || !(0, core_1.hasField)(settings, { name: 'getAll', type: 'function' })) {
+        throw new Error(`Invalid settings service [${JSON.stringify(settings)}].`);
+    }
+};
+const assertSourceDatabases = (sourceDatabases) => {
+    if (!(0, core_1.isRecord)(sourceDatabases) || !(0, core_1.hasField)(sourceDatabases, { name: 'medic', type: 'object' })) {
+        throw new Error(`Invalid source databases [${JSON.stringify(sourceDatabases)}].`);
+    }
+};
+/** @internal */
+const isLocalDataContext = (context) => {
+    return 'settings' in context && 'medicDb' in context;
+};
+exports.isLocalDataContext = isLocalDataContext;
+/**
+ * Returns the data context for accessing data via the provided local sources This functionality is intended for use
+ * cases requiring offline functionality. For all other use cases, use {@link getRemoteDataContext}.
+ * @param settings service providing access to the app settings
+ * @param sourceDatabases the PouchDB databases to use as the local datasource
+ * @returns the local data context
+ * @throws Error if the provided settings or source databases are invalid
+ */
+const getLocalDataContext = (settings, sourceDatabases) => {
+    assertSettingsService(settings);
+    assertSourceDatabases(sourceDatabases);
+    return new LocalDataContext(sourceDatabases.medic, settings);
+};
+exports.getLocalDataContext = getLocalDataContext;
+//# sourceMappingURL=data-context.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/doc.js":
+/*!*******************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/doc.js ***!
+  \*******************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.queryDocsByKey = exports.queryDocsByRange = exports.getDocsByIds = exports.getDocById = void 0;
+const logger_1 = __importDefault(__webpack_require__(/*! @medic/logger */ "./build/cht-core-4-11/shared-libs/logger/src/index.js"));
+const doc_1 = __webpack_require__(/*! ../../libs/doc */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/doc.js");
+/** @internal */
+const getDocById = (db) => async (uuid) => db
+    .get(uuid)
+    .then(doc => (0, doc_1.isDoc)(doc) ? doc : null)
+    .catch((err) => {
+    if (err.status === 404) {
+        return null;
+    }
+    logger_1.default.error(`Failed to fetch doc with id [${uuid}]`, err);
+    throw err;
+});
+exports.getDocById = getDocById;
+/** @internal */
+const getDocsByIds = (db) => async (uuids) => {
+    const keys = Array.from(new Set(uuids.filter(uuid => uuid.length)));
+    if (!keys.length) {
+        return [];
+    }
+    const response = await db.allDocs({ keys, include_docs: true });
+    return response.rows
+        .map(({ doc }) => doc)
+        .filter((doc) => (0, doc_1.isDoc)(doc));
+};
+exports.getDocsByIds = getDocsByIds;
+const queryDocs = (db, view, options) => db
+    .query(view, options)
+    .then(({ rows }) => rows.map(({ doc }) => (0, doc_1.isDoc)(doc) ? doc : null));
+/** @internal */
+const queryDocsByRange = (db, view) => async (startkey, endkey) => queryDocs(db, view, { include_docs: true, startkey, endkey });
+exports.queryDocsByRange = queryDocsByRange;
+/** @internal */
+const queryDocsByKey = (db, view) => async (key, limit, skip) => queryDocs(db, view, { include_docs: true, key, limit, skip });
+exports.queryDocsByKey = queryDocsByKey;
+//# sourceMappingURL=doc.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/lineage.js":
+/*!***********************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/lineage.js ***!
+  \***********************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.hydrateLineage = exports.hydratePrimaryContact = exports.getPrimaryContactIds = exports.getLineageDocsById = void 0;
+const core_1 = __webpack_require__(/*! ../../libs/core */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js");
+const doc_1 = __webpack_require__(/*! ./doc */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/doc.js");
+const logger_1 = __importDefault(__webpack_require__(/*! @medic/logger */ "./build/cht-core-4-11/shared-libs/logger/src/index.js"));
+/**
+ * Returns the identified document along with the parent documents recorded for its lineage. The returned array is
+ * sorted such that the identified document is the first element and the parent documents are in order of lineage.
+ * @internal
+ */
+const getLineageDocsById = (medicDb) => {
+    const fn = (0, doc_1.queryDocsByRange)(medicDb, 'medic-client/docs_by_id_lineage');
+    return (id) => fn([id], [id, {}]);
+};
+exports.getLineageDocsById = getLineageDocsById;
+/** @internal */
+const getPrimaryContactIds = (places) => places
+    .filter(core_1.isNotNull)
+    .map(({ contact }) => contact)
+    .filter(core_1.isIdentifiable)
+    .map(({ _id }) => _id)
+    .filter((_id) => _id.length > 0);
+exports.getPrimaryContactIds = getPrimaryContactIds;
+/** @internal */
+const hydratePrimaryContact = (contacts) => (place) => {
+    if (!place || !(0, core_1.isIdentifiable)(place.contact)) {
+        return place;
+    }
+    const contact = (0, core_1.findById)(contacts, place.contact._id);
+    if (!contact) {
+        logger_1.default.debug(`No contact found with identifier [${place.contact._id}] for the place [${place._id}].`);
+        return place;
+    }
+    return {
+        ...place,
+        contact
+    };
+};
+exports.hydratePrimaryContact = hydratePrimaryContact;
+const getParentUuid = (index, contact) => {
+    if (!contact) {
+        return null;
+    }
+    if (index === 0) {
+        return contact._id;
+    }
+    return getParentUuid(index - 1, contact.parent);
+};
+const mergeLineage = (lineage, parent) => {
+    if (!(0, core_1.isNonEmptyArray)(lineage)) {
+        return parent;
+    }
+    const child = (0, core_1.getLastElement)(lineage);
+    const mergedChild = {
+        ...child,
+        parent: parent
+    };
+    return mergeLineage(lineage.slice(0, -1), mergedChild);
+};
+/** @internal */
+const hydrateLineage = (contact, lineage) => {
+    const fullLineage = lineage
+        .map((place, index) => {
+        if (place) {
+            return place;
+        }
+        const parentId = getParentUuid(index, contact.parent);
+        // If no doc was found, just add a placeholder object with the id from the contact
+        logger_1.default.debug(`Lineage place with identifier [${parentId ?? ''}] was not found when getting lineage for [${contact._id}].`);
+        return { _id: parentId };
+    });
+    const hierarchy = [contact, ...fullLineage];
+    return mergeLineage(hierarchy.slice(0, -1), (0, core_1.getLastElement)(hierarchy));
+};
+exports.hydrateLineage = hydrateLineage;
+//# sourceMappingURL=lineage.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/person.js":
+/*!*****************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/person.js ***!
+  \*****************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.v1 = void 0;
+const contact_types_utils_1 = __importDefault(__webpack_require__(/*! @medic/contact-types-utils */ "./build/cht-core-4-11/shared-libs/contact-types-utils/src/index.js"));
+const core_1 = __webpack_require__(/*! ../libs/core */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js");
+const doc_1 = __webpack_require__(/*! ./libs/doc */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/doc.js");
+const logger_1 = __importDefault(__webpack_require__(/*! @medic/logger */ "./build/cht-core-4-11/shared-libs/logger/src/index.js"));
+const lineage_1 = __webpack_require__(/*! ./libs/lineage */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/lineage.js");
+const error_1 = __webpack_require__(/*! ../libs/error */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/error.js");
+/** @internal */
+var v1;
+(function (v1) {
+    const isPerson = (settings, doc, uuid = '') => {
+        if (!doc) {
+            logger_1.default.warn(`No person found for identifier [${uuid}].`);
+            return false;
+        }
+        const hasPersonType = contact_types_utils_1.default.isPerson(settings.getAll(), doc);
+        if (!hasPersonType) {
+            logger_1.default.warn(`Document [${uuid}] is not a valid person.`);
+            return false;
+        }
+        return true;
+    };
+    /** @internal */
+    v1.get = ({ medicDb, settings }) => {
+        const getMedicDocById = (0, doc_1.getDocById)(medicDb);
+        return async (identifier) => {
+            const doc = await getMedicDocById(identifier.uuid);
+            if (!isPerson(settings, doc, identifier.uuid)) {
+                return null;
+            }
+            return doc;
+        };
+    };
+    /** @internal */
+    v1.getWithLineage = ({ medicDb, settings }) => {
+        const getLineageDocs = (0, lineage_1.getLineageDocsById)(medicDb);
+        const getMedicDocsById = (0, doc_1.getDocsByIds)(medicDb);
+        return async (identifier) => {
+            const [person, ...lineagePlaces] = await getLineageDocs(identifier.uuid);
+            if (!isPerson(settings, person, identifier.uuid)) {
+                return null;
+            }
+            // Intentionally not further validating lineage. For passivity, lineage problems should not block retrieval.
+            if (!(0, core_1.isNonEmptyArray)(lineagePlaces)) {
+                logger_1.default.debug(`No lineage places found for person [${identifier.uuid}].`);
+                return person;
+            }
+            const contactUuids = (0, lineage_1.getPrimaryContactIds)(lineagePlaces)
+                .filter(uuid => uuid !== person._id);
+            const contacts = [person, ...await getMedicDocsById(contactUuids)];
+            const linagePlacesWithContact = lineagePlaces.map((0, lineage_1.hydratePrimaryContact)(contacts));
+            const personWithLineage = (0, lineage_1.hydrateLineage)(person, linagePlacesWithContact);
+            return (0, core_1.deepCopy)(personWithLineage);
+        };
+    };
+    /** @internal */
+    v1.getPage = ({ medicDb, settings }) => {
+        const getDocsByPage = (0, doc_1.queryDocsByKey)(medicDb, 'medic-client/contacts_by_type');
+        return async (personType, cursor, limit) => {
+            const personTypes = contact_types_utils_1.default.getPersonTypes(settings.getAll());
+            const personTypesIds = personTypes.map((item) => item.id);
+            if (!personTypesIds.includes(personType.contactType)) {
+                throw new error_1.InvalidArgumentError(`Invalid contact type [${personType.contactType}]`);
+            }
+            // Adding a number skip variable here so as not to confuse ourselves
+            const skip = Number(cursor);
+            if (isNaN(skip) || skip < 0 || !Number.isInteger(skip)) {
+                throw new error_1.InvalidArgumentError(`Invalid cursor token: [${String(cursor)}]`);
+            }
+            const fetchAndFilter = async (currentLimit, currentSkip, currentPersonDocs = []) => {
+                const docs = await getDocsByPage([personType.contactType], currentLimit, currentSkip);
+                const noMoreResults = docs.length < currentLimit;
+                const newPersonDocs = docs.filter((doc) => isPerson(settings, doc, doc?._id));
+                const overFetchCount = currentPersonDocs.length + newPersonDocs.length - limit || 0;
+                const totalPeople = [...currentPersonDocs, ...newPersonDocs].slice(0, limit);
+                if (noMoreResults) {
+                    return { data: totalPeople, cursor: null };
+                }
+                if (totalPeople.length === limit) {
+                    const nextSkip = currentSkip + currentLimit - overFetchCount;
+                    return { data: totalPeople, cursor: nextSkip.toString() };
+                }
+                // Re-fetch twice as many docs as we need to limit number of recursions
+                const missingCount = currentLimit - newPersonDocs.length;
+                logger_1.default.debug(`Found [${missingCount.toString()}] invalid persons. Re-fetching additional records.`);
+                const nextLimit = missingCount * 2;
+                const nextSkip = currentSkip + currentLimit;
+                return fetchAndFilter(nextLimit, nextSkip, totalPeople);
+            };
+            return fetchAndFilter(limit, skip);
+        };
+    };
+})(v1 || (exports.v1 = v1 = {}));
+//# sourceMappingURL=person.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/place.js":
+/*!****************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/place.js ***!
+  \****************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.v1 = void 0;
+const contact_types_utils_1 = __importDefault(__webpack_require__(/*! @medic/contact-types-utils */ "./build/cht-core-4-11/shared-libs/contact-types-utils/src/index.js"));
+const core_1 = __webpack_require__(/*! ../libs/core */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js");
+const doc_1 = __webpack_require__(/*! ./libs/doc */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/doc.js");
+const logger_1 = __importDefault(__webpack_require__(/*! @medic/logger */ "./build/cht-core-4-11/shared-libs/logger/src/index.js"));
+const lineage_1 = __webpack_require__(/*! ./libs/lineage */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/libs/lineage.js");
+/** @internal */
+var v1;
+(function (v1) {
+    const isPlace = (settings, uuid, doc) => {
+        if (!doc) {
+            logger_1.default.warn(`No place found for identifier [${uuid}].`);
+            return false;
+        }
+        const hasPlaceType = contact_types_utils_1.default.isPlace(settings.getAll(), doc);
+        if (!hasPlaceType) {
+            logger_1.default.warn(`Document [${uuid}] is not a valid place.`);
+            return false;
+        }
+        return true;
+    };
+    /** @internal */
+    v1.get = ({ medicDb, settings }) => {
+        const getMedicDocById = (0, doc_1.getDocById)(medicDb);
+        return async (identifier) => {
+            const doc = await getMedicDocById(identifier.uuid);
+            const validPlace = isPlace(settings, identifier.uuid, doc);
+            return validPlace ? doc : null;
+        };
+    };
+    /** @internal */
+    v1.getWithLineage = ({ medicDb, settings }) => {
+        const getLineageDocs = (0, lineage_1.getLineageDocsById)(medicDb);
+        const getMedicDocsById = (0, doc_1.getDocsByIds)(medicDb);
+        return async (identifier) => {
+            const [place, ...lineagePlaces] = await getLineageDocs(identifier.uuid);
+            if (!isPlace(settings, identifier.uuid, place)) {
+                return null;
+            }
+            // Intentionally not further validating lineage. For passivity, lineage problems should not block retrieval.
+            if (!(0, core_1.isNonEmptyArray)(lineagePlaces)) {
+                logger_1.default.debug(`No lineage places found for place [${identifier.uuid}].`);
+                return place;
+            }
+            const places = [place, ...lineagePlaces];
+            const contactUuids = (0, lineage_1.getPrimaryContactIds)(places);
+            const contacts = await getMedicDocsById(contactUuids);
+            const [placeWithContact, ...linagePlacesWithContact] = places.map((0, lineage_1.hydratePrimaryContact)(contacts));
+            const placeWithLineage = (0, lineage_1.hydrateLineage)(placeWithContact, linagePlacesWithContact);
+            return (0, core_1.deepCopy)(placeWithLineage);
+        };
+    };
+})(v1 || (exports.v1 = v1 = {}));
+//# sourceMappingURL=place.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/person.js":
+/*!***********************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/person.js ***!
+  \***********************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.v1 = void 0;
+const qualifier_1 = __webpack_require__(/*! ./qualifier */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/qualifier.js");
+const data_context_1 = __webpack_require__(/*! ./libs/data-context */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/data-context.js");
+const Remote = __importStar(__webpack_require__(/*! ./remote */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/index.js"));
+const Local = __importStar(__webpack_require__(/*! ./local */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/index.js"));
+const error_1 = __webpack_require__(/*! ./libs/error */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/error.js");
+const core_1 = __webpack_require__(/*! ./libs/core */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js");
+/** */
+var v1;
+(function (v1) {
+    const assertPersonQualifier = (qualifier) => {
+        if (!(0, qualifier_1.isUuidQualifier)(qualifier)) {
+            throw new error_1.InvalidArgumentError(`Invalid identifier [${JSON.stringify(qualifier)}].`);
+        }
+    };
+    const assertTypeQualifier = (qualifier) => {
+        if (!(0, qualifier_1.isContactTypeQualifier)(qualifier)) {
+            throw new error_1.InvalidArgumentError(`Invalid contact type [${JSON.stringify(qualifier)}].`);
+        }
+    };
+    const assertLimit = (limit) => {
+        if (typeof limit !== 'number' || !Number.isInteger(limit) || limit <= 0) {
+            throw new error_1.InvalidArgumentError(`The limit must be a positive number: [${String(limit)}]`);
+        }
+    };
+    const assertCursor = (cursor) => {
+        if (cursor !== null && (typeof cursor !== 'string' || !cursor.length)) {
+            throw new error_1.InvalidArgumentError(`Invalid cursor token: [${String(cursor)}]`);
+        }
+    };
+    const getPerson = (localFn, remoteFn) => (context) => {
+        (0, data_context_1.assertDataContext)(context);
+        const fn = (0, data_context_1.adapt)(context, localFn, remoteFn);
+        return async (qualifier) => {
+            assertPersonQualifier(qualifier);
+            return fn(qualifier);
+        };
+    };
+    /**
+     * Returns a person for the given qualifier.
+     * @param context the current data context
+     * @returns the person or `null` if no person is found for the qualifier
+     * @throws Error if the provided context or qualifier is invalid
+     */
+    v1.get = getPerson(Local.Person.v1.get, Remote.Person.v1.get);
+    /**
+     * Returns a person for the given qualifier with the person's parent lineage.
+     * @param context the current data context
+     * @returns the person or `null` if no person is found for the qualifier
+     * @throws Error if the provided context or qualifier is invalid
+     */
+    v1.getWithLineage = getPerson(Local.Person.v1.getWithLineage, Remote.Person.v1.getWithLineage);
+    /**
+     * Returns a function for retrieving a paged array of people from the given data context.
+     * @param context the current data context
+     * @returns a function for retrieving a paged array of people
+     * @throws Error if a data context is not provided
+     * @see {@link getAll} which provides the same data, but without having to manually account for paging
+     */
+    v1.getPage = (context) => {
+        (0, data_context_1.assertDataContext)(context);
+        const fn = (0, data_context_1.adapt)(context, Local.Person.v1.getPage, Remote.Person.v1.getPage);
+        /**
+         * Returns an array of people for the provided page specifications.
+         * @param personType the type of people to return
+         * @param cursor the token identifying which page to retrieve. A `null` value indicates the first page should be
+         * returned. Subsequent pages can be retrieved by providing the cursor returned with the previous page.
+         * @param limit the maximum number of people to return. Default is 100.
+         * @returns a page of people for the provided specification
+         * @throws Error if no type is provided or if the type is not for a person
+         * @throws Error if the provided `limit` value is `<=0`
+         * @throws Error if the provided cursor is not a valid page token or `null`
+         */
+        const curriedFn = async (personType, cursor = null, limit = 100) => {
+            assertTypeQualifier(personType);
+            assertCursor(cursor);
+            assertLimit(limit);
+            return fn(personType, cursor, limit);
+        };
+        return curriedFn;
+    };
+    /**
+     * Returns a function for getting a generator that fetches people from the given data context.
+     * @param context the current data context
+     * @returns a function for getting a generator that fetches people
+     * @throws Error if a data context is not provided
+     */
+    v1.getAll = (context) => {
+        (0, data_context_1.assertDataContext)(context);
+        const getPage = context.bind(v1.getPage);
+        /**
+         * Returns a generator for fetching all people with the given type
+         * @param personType the type of people to return
+         * @returns a generator for fetching all people with the given type
+         * @throws Error if no type is provided or if the type is not for a person
+         */
+        const curriedGen = (personType) => {
+            assertTypeQualifier(personType);
+            return (0, core_1.getPagedGenerator)(getPage, personType);
+        };
+        return curriedGen;
+    };
+})(v1 || (exports.v1 = v1 = {}));
+//# sourceMappingURL=person.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/place.js":
+/*!**********************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/place.js ***!
+  \**********************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.v1 = void 0;
+const qualifier_1 = __webpack_require__(/*! ./qualifier */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/qualifier.js");
+const data_context_1 = __webpack_require__(/*! ./libs/data-context */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/data-context.js");
+const Local = __importStar(__webpack_require__(/*! ./local */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/local/index.js"));
+const Remote = __importStar(__webpack_require__(/*! ./remote */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/index.js"));
+/** */
+var v1;
+(function (v1) {
+    const assertPlaceQualifier = (qualifier) => {
+        if (!(0, qualifier_1.isUuidQualifier)(qualifier)) {
+            throw new Error(`Invalid identifier [${JSON.stringify(qualifier)}].`);
+        }
+    };
+    const getPlace = (localFn, remoteFn) => (context) => {
+        (0, data_context_1.assertDataContext)(context);
+        const fn = (0, data_context_1.adapt)(context, localFn, remoteFn);
+        return async (qualifier) => {
+            assertPlaceQualifier(qualifier);
+            return fn(qualifier);
+        };
+    };
+    /**
+     * Returns a place for the given qualifier.
+     * @param context the current data context
+     * @returns the place or `null` if no place is found for the qualifier
+     * @throws Error if the provided context or qualifier is invalid
+     */
+    v1.get = getPlace(Local.Place.v1.get, Remote.Place.v1.get);
+    /**
+     * Returns a place for the given qualifier with the place's parent lineage.
+     * @param context the current data context
+     * @returns the place or `null` if no place is found for the qualifier
+     * @throws Error if the provided context or qualifier is invalid
+     */
+    v1.getWithLineage = getPlace(Local.Place.v1.getWithLineage, Remote.Place.v1.getWithLineage);
+})(v1 || (exports.v1 = v1 = {}));
+//# sourceMappingURL=place.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/qualifier.js":
+/*!**************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/qualifier.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isContactTypeQualifier = exports.byContactType = exports.isUuidQualifier = exports.byUuid = void 0;
+const core_1 = __webpack_require__(/*! ./libs/core */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js");
+const error_1 = __webpack_require__(/*! ./libs/error */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/error.js");
+/**
+ * Builds a qualifier that identifies an entity by its UUID.
+ * @param uuid the UUID of the entity
+ * @returns the qualifier
+ * @throws Error if the UUID is invalid
+ */
+const byUuid = (uuid) => {
+    if (!(0, core_1.isString)(uuid) || uuid.length === 0) {
+        throw new error_1.InvalidArgumentError(`Invalid UUID [${JSON.stringify(uuid)}].`);
+    }
+    return { uuid };
+};
+exports.byUuid = byUuid;
+/**
+ * Returns `true` if the given qualifier is a {@link UuidQualifier}, otherwise `false`.
+ * @param identifier the identifier to check
+ * @returns `true` if the given identifier is a {@link UuidQualifier}, otherwise
+ * `false`
+ */
+const isUuidQualifier = (identifier) => {
+    return (0, core_1.isRecord)(identifier) && (0, core_1.hasField)(identifier, { name: 'uuid', type: 'string' });
+};
+exports.isUuidQualifier = isUuidQualifier;
+/**
+ * Build the TypeQualifier that categorizes an entity by its type
+ * @param contactType the type of the entity
+ * @returns the type
+ * @throws Error if the type is invalid
+ */
+const byContactType = (contactType) => {
+    if (!(0, core_1.isString)(contactType) || contactType.length === 0) {
+        throw new error_1.InvalidArgumentError(`Invalid contact type [${JSON.stringify(contactType)}].`);
+    }
+    return { contactType };
+};
+exports.byContactType = byContactType;
+/**
+ * Returns `true` if the given qualifier is a {@link ContactTypeQualifier} otherwise `false`.
+ * @param contactType the type to check
+ * @returns `true` if the given type is a {@link ContactTypeQualifier}, otherwise `false`.
+ */
+const isContactTypeQualifier = (contactType) => {
+    return (0, core_1.isRecord)(contactType) && (0, core_1.hasField)(contactType, { name: 'contactType', type: 'string' });
+};
+exports.isContactTypeQualifier = isContactTypeQualifier;
+//# sourceMappingURL=qualifier.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/index.js":
+/*!*****************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/index.js ***!
+  \*****************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getRemoteDataContext = exports.Place = exports.Person = void 0;
+exports.Person = __importStar(__webpack_require__(/*! ./person */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/person.js"));
+exports.Place = __importStar(__webpack_require__(/*! ./place */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/place.js"));
+var data_context_1 = __webpack_require__(/*! ./libs/data-context */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/libs/data-context.js");
+Object.defineProperty(exports, "getRemoteDataContext", ({ enumerable: true, get: function () { return data_context_1.getRemoteDataContext; } }));
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/libs/data-context.js":
+/*!*****************************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/libs/data-context.js ***!
+  \*****************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getResources = exports.getResource = exports.getRemoteDataContext = exports.assertRemoteDataContext = exports.isRemoteDataContext = exports.RemoteDataContext = void 0;
+const logger_1 = __importDefault(__webpack_require__(/*! @medic/logger */ "./build/cht-core-4-11/shared-libs/logger/src/index.js"));
+const core_1 = __webpack_require__(/*! ../../libs/core */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/libs/core.js");
+/** @internal */
+class RemoteDataContext extends core_1.AbstractDataContext {
+    url;
+    /** @internal */
+    constructor(url) {
+        super();
+        this.url = url;
+    }
+}
+exports.RemoteDataContext = RemoteDataContext;
+/** @internal */
+const isRemoteDataContext = (context) => 'url' in context;
+exports.isRemoteDataContext = isRemoteDataContext;
+/** @internal */
+const assertRemoteDataContext = (context) => {
+    if (!(0, exports.isRemoteDataContext)(context)) {
+        throw new Error(`Invalid remote data context [${JSON.stringify(context)}].`);
+    }
+};
+exports.assertRemoteDataContext = assertRemoteDataContext;
+/**
+ * Returns the data context based on a remote CHT API server. This function should not be used when offline
+ * functionality is required.
+ * @param url the URL of the remote CHT API server. If not provided, requests will be made relative to the current
+ * location.
+ * @returns the data context
+ */
+const getRemoteDataContext = (url = '') => {
+    if (!(0, core_1.isString)(url)) {
+        throw new Error(`Invalid URL [${JSON.stringify(url)}].`);
+    }
+    return new RemoteDataContext(url);
+};
+exports.getRemoteDataContext = getRemoteDataContext;
+/** @internal */
+const getResource = (context, path) => async (identifier, queryParams) => {
+    const params = new URLSearchParams(queryParams).toString();
+    try {
+        const response = await fetch(`${context.url}/${path}/${identifier}?${params}`);
+        if (!response.ok) {
+            if (response.status === 404) {
+                return null;
+            }
+            throw new Error(response.statusText);
+        }
+        return (await response.json());
+    }
+    catch (error) {
+        logger_1.default.error(`Failed to fetch ${identifier} from ${context.url}/${path}`, error);
+        throw error;
+    }
+};
+exports.getResource = getResource;
+/** @internal */
+const getResources = (context, path) => async (queryParams) => {
+    const params = new URLSearchParams(queryParams).toString();
+    try {
+        const response = await fetch(`${context.url}/${path}?${params}`);
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return (await response.json());
+    }
+    catch (error) {
+        logger_1.default.error(`Failed to fetch resources from ${context.url}/${path} with params: ${params}`, error);
+        throw error;
+    }
+};
+exports.getResources = getResources;
+//# sourceMappingURL=data-context.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/person.js":
+/*!******************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/person.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.v1 = void 0;
+const data_context_1 = __webpack_require__(/*! ./libs/data-context */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/libs/data-context.js");
+/** @internal */
+var v1;
+(function (v1) {
+    const getPerson = (remoteContext) => (0, data_context_1.getResource)(remoteContext, 'api/v1/person');
+    const getPeople = (remoteContext) => (0, data_context_1.getResources)(remoteContext, 'api/v1/person');
+    /** @internal */
+    v1.get = (remoteContext) => (identifier) => getPerson(remoteContext)(identifier.uuid);
+    /** @internal */
+    v1.getWithLineage = (remoteContext) => (identifier) => getPerson(remoteContext)(identifier.uuid, { with_lineage: 'true' });
+    /** @internal */
+    v1.getPage = (remoteContext) => (personType, cursor, limit) => {
+        const queryParams = {
+            'limit': limit.toString(),
+            'type': personType.contactType,
+            ...(cursor ? { cursor } : {})
+        };
+        return getPeople(remoteContext)(queryParams);
+    };
+})(v1 || (exports.v1 = v1 = {}));
+//# sourceMappingURL=person.js.map
+
+/***/ }),
+
+/***/ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/place.js":
+/*!*****************************************************************************!*\
+  !*** ./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/place.js ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.v1 = void 0;
+const data_context_1 = __webpack_require__(/*! ./libs/data-context */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/remote/libs/data-context.js");
+/** @internal */
+var v1;
+(function (v1) {
+    const getPlace = (remoteContext) => (0, data_context_1.getResource)(remoteContext, 'api/v1/place');
+    /** @internal */
+    v1.get = (remoteContext) => (identifier) => getPlace(remoteContext)(identifier.uuid);
+    /** @internal */
+    v1.getWithLineage = (remoteContext) => (identifier) => getPlace(remoteContext)(identifier.uuid, { with_lineage: 'true' });
+})(v1 || (exports.v1 = v1 = {}));
+//# sourceMappingURL=place.js.map
+
+/***/ }),
+
 /***/ "./build/cht-core-4-11/shared-libs/contact-types-utils/src/index.js":
 /*!**************************************************************************!*\
   !*** ./build/cht-core-4-11/shared-libs/contact-types-utils/src/index.js ***!
@@ -73491,6 +74860,7 @@ module.exports = {
   RulesEmitter: __webpack_require__(/*! ../../build/cht-core-4-11/shared-libs/rules-engine/src/rules-emitter */ "./build/cht-core-4-11/shared-libs/rules-engine/src/rules-emitter/index.js"),
   nootils: __webpack_require__(/*! ../../build/cht-core-4-11/node_modules/cht-nootils */ "./build/cht-core-4-11/node_modules/cht-nootils/src/nootils.js"),
   Lineage: __webpack_require__(/*! ../../build/cht-core-4-11/shared-libs/lineage */ "./build/cht-core-4-11/shared-libs/lineage/src/index.js"),
+  DataSource: __webpack_require__(/*! ../../build/cht-core-4-11/shared-libs/cht-datasource */ "./build/cht-core-4-11/shared-libs/cht-datasource/dist/index.js"),
   convertFormXmlToXFormModel: (__webpack_require__(/*! ../../build/cht-core-4-11/api/src/services/generate-xform.js */ "./build/cht-core-4-11/api/src/services/generate-xform.js").generate),
 };
 
@@ -79206,7 +80576,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('[{"_id":"_design/medic-client","validate_doc_update":"function(newDoc, oldDoc, userCtx, secObj) {\\n  /*\\n    LOCAL DOCUMENT VALIDATION\\n\\n    This is for validating document structure, irrespective of authority, so it\\n    can be run both on couchdb and pouchdb (where you are technically admin).\\n\\n    For validations around authority check lib/validate_doc_update.js, which is\\n    only run on the server.\\n  */\\n\\n  var _err = function(msg) {\\n    throw({ forbidden: msg });\\n  };\\n\\n  var hasRole = function(roles, role) {\\n    if (roles) {\\n      for (var i = 0; i < roles.length; i++) {\\n        if (roles[i] === role) {\\n          return true;\\n        }\\n      }\\n    }\\n    return false;\\n  };\\n\\n  var isDbAdmin = function(userCtx, secObj) {\\n    if (hasRole(userCtx.roles, \'_admin\')) {\\n      return true;\\n    }\\n\\n    if (secObj.admins && secObj.admins.names && secObj.admins.names.indexOf(userCtx.name) !== -1) {\\n      return true;\\n    }\\n\\n    if (secObj.admins && secObj.admins.roles) {\\n      for (var i = 0; i < userCtx.roles.length; i++) {\\n        if (hasRole(secObj.admins.roles, userCtx.roles[i])) {\\n          return true;\\n        }\\n      }\\n    }\\n\\n    return false;\\n  };\\n\\n  /**\\n   * Ensure that type=\'form\' documents are created with correctly formatted _id\\n   * property.\\n   */\\n  var validateForm = function() {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var form_id = id_parts.slice(1).join(\':\');\\n    if (prefix !== \'form\') {\\n      _err(\'_id property must be prefixed with \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (!form_id) {\\n      _err(\'_id property must define a value after \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id property must be lower case. e.g. \\"form:registration\\"\');\\n    }\\n  };\\n\\n  var validateUserSettings = function() {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var username = id_parts.slice(1).join(\':\');\\n    var idExample = \' e.g. \\"org.couchdb.user:sally\\"\';\\n    if (prefix !== \'org.couchdb.user\') {\\n      _err(\'_id must be prefixed with \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (!username) {\\n      _err(\'_id must define a value after \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id must be lower case.\' + idExample);\\n    }\\n    if (typeof newDoc.name === \'undefined\' || newDoc.name !== username) {\\n      _err(\'name property must be equivalent to username.\' + idExample);\\n    }\\n    if (newDoc.name.toLowerCase() !== username.toLowerCase()) {\\n      _err(\'name must be equivalent to username\');\\n    }\\n    if (typeof newDoc.known !== \'undefined\' && typeof newDoc.known !== \'boolean\') {\\n      _err(\'known is not a boolean.\');\\n    }\\n    if (typeof newDoc.roles !== \'object\') {\\n      _err(\'roles is a required array\');\\n    }\\n  };\\n\\n  var authorizeUserSettings = function() {\\n    if (!oldDoc) {\\n      _err(\'You are not authorized to create user-settings\');\\n    }\\n    if (typeof oldDoc.roles !== \'object\') {\\n      _err(\'You are not authorized to edit roles\');\\n    }\\n    if (newDoc.roles.length !== oldDoc.roles.length) {\\n      _err(\'You are not authorized to edit roles\');\\n    }\\n    for (var i = 0; i < oldDoc.roles.length; i++) {\\n      if (oldDoc.roles[i] !== newDoc.roles[i]) {\\n        _err(\'You are not authorized to edit roles\');\\n      }\\n    }\\n  }\\n\\n  // admins can do anything\\n  if (isDbAdmin(userCtx, secObj)) {\\n    return;\\n  }\\n  if (userCtx.facility_id === newDoc._id ||\\n    (Array.isArray(userCtx.facility_id) && userCtx.facility_id.includes(newDoc._id ))\\n  ) {\\n    _err(\'You are not authorized to edit your own place\');\\n  }\\n  if (newDoc.type === \'form\') {\\n    validateForm();\\n  }\\n  if (newDoc.type === \'user-settings\') {\\n    validateUserSettings();\\n    authorizeUserSettings();\\n  }\\n\\n  log(\\n    \'medic-client validate_doc_update passed for User \\"\' + userCtx.name +\\n    \'\\" changing document \\"\' +  newDoc._id + \'\\"\'\\n  );\\n}","views":{"contacts_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_last_visited":{"reduce":"_stats","map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n    if (typeof date !== \'number\' || isNaN(date)) {\\n      date = 0;\\n    }\\n    // Is a visit report about a family\\n    emit(doc.fields.visited_contact_uuid, date);\\n  } else if (doc.type === \'contact\' ||\\n             doc.type === \'clinic\' ||\\n             doc.type === \'health_center\' ||\\n             doc.type === \'district_hospital\' ||\\n             doc.type === \'person\') {\\n    // Is a contact type\\n    emit(doc._id, 0);\\n  }\\n}"},"contacts_by_parent":{"map":"function(doc) {\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'person\') {\\n    var parentId = doc.parent && doc.parent._id;\\n    var type = doc.type === \'contact\' ? doc.contact_type : doc.type;\\n    if (parentId) {\\n      emit([parentId, type]);\\n    }\\n  }\\n}"},"contacts_by_phone":{"map":"function(doc) {\\n  if (doc.phone) {\\n    var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n    if (types.indexOf(doc.type) !== -1) {\\n      emit(doc.phone);\\n    }\\n  }\\n}"},"contacts_by_type_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(type, key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([ type, key ], value);\\n    }\\n  };\\n\\n  var emitField = function(type, key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(type, word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(type, key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(type, key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_place":{"map":"function(doc) {\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n  if (idx !== -1) {\\n    var place = doc.parent;\\n    var order = idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], order);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"contacts_by_reference":{"map":"function(doc) {\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'national_office\' ||\\n      doc.type === \'person\') {\\n\\n    var emitReference = function(prefix, key) {\\n      emit([ prefix, String(key) ], doc.reported_date);\\n    };\\n\\n    if (doc.place_id) {\\n      emitReference(\'shortcode\', doc.place_id);\\n    }\\n    if (doc.patient_id) {\\n      emitReference(\'shortcode\', doc.patient_id);\\n    }\\n    if (doc.rc_code) {\\n      // need String because rewriter wraps everything in quotes\\n      // keep refid case-insenstive since data is usually coming from SMS\\n      emitReference(\'external\', String(doc.rc_code).toUpperCase());\\n    }\\n  }\\n}"},"doc_by_type":{"map":"function(doc) {\\n  if (doc.type === \'translations\') {\\n    emit([ \'translations\', doc.enabled ], {\\n      code: doc.code,\\n      name: doc.name\\n    });\\n    return;\\n  }\\n  emit([ doc.type ]);\\n}"},"data_records_by_type":{"reduce":"_count","map":"function(doc) {\\n  if (doc.type === \'data_record\') {\\n    emit(doc.form ? \'report\' : \'message\');\\n  }\\n}"},"docs_by_id_lineage":{"map":"function(doc) {\\n\\n  var emitLineage = function(contact, depth) {\\n    while (contact && contact._id) {\\n      emit([ doc._id, depth++ ], { _id: contact._id });\\n      contact = contact.parent;\\n    }\\n  };\\n\\n  var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n\\n  if (types.indexOf(doc.type) !== -1) {\\n    // contact\\n    emitLineage(doc, 0);\\n  } else if (doc.type === \'data_record\' && doc.form) {\\n    // report\\n    emit([ doc._id, 0 ]);\\n    emitLineage(doc.contact, 1);\\n  }\\n}"},"contacts_by_type":{"map":"function(doc) {\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    emit([ type ], order);\\n  }\\n}"},"messages_by_contact_date":{"map":"function(doc) {\\n\\n  var emitMessage = function(doc, contact, phone) {\\n    var id = (contact && contact._id) || phone || doc._id;\\n    emit([ id, doc.reported_date ], {\\n      id: doc._id,\\n      date: doc.reported_date,\\n      contact: contact && contact._id\\n    });\\n  };\\n\\n  if (doc.type === \'data_record\' && !doc.form) {\\n    if (doc.kujua_message && doc.tasks) {\\n      // outgoing\\n      doc.tasks.forEach(function(task) {\\n        var message = task.messages && task.messages[0];\\n        if(message) {\\n          emitMessage(doc, message.contact, message.to);\\n        }\\n      });\\n    } else if (doc.sms_message) {\\n      // incoming\\n      emitMessage(doc, doc.contact, doc.from);\\n    }\\n  }\\n}","reduce":"function(key, values) {\\n  var latest = { date: 0 };\\n  values.forEach(function(value) {\\n    if (value.date > latest.date) {\\n      latest = value;\\n    }\\n  });\\n  return latest;\\n}"},"registered_patients":{"map":"// NB: This returns *registrations* for contacts. If contacts are created by\\n//     means other then sending in a registration report (eg created in the UI)\\n//     they will not show up in this view.\\n//\\n//     For a view with all patients by their shortcode, use:\\n//        medic/docs_by_shortcode\\nfunction(doc) {\\n  var patientId = doc.patient_id || (doc.fields && doc.fields.patient_id);\\n  var placeId = doc.place_id || (doc.fields && doc.fields.place_id);\\n\\n  if (!doc.form || doc.type !== \'data_record\' || (doc.errors && doc.errors.length)) {\\n    return;\\n  }\\n\\n  if (patientId) {\\n    emit(String(patientId));\\n  }\\n\\n  if (placeId) {\\n    emit(String(placeId));\\n  }\\n}"},"reports_by_form":{"reduce":"function() {\\n  return true;\\n}","map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.form], doc.reported_date);\\n  }\\n}"},"reports_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'content\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, reportedDate) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, reportedDate);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, reportedDate);\\n    }\\n  };\\n\\n  if (doc.type === \'data_record\' && doc.form) {\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], doc.reported_date);\\n    });\\n    if (doc.fields) {\\n      Object.keys(doc.fields).forEach(function(key) {\\n        emitField(key, doc.fields[key], doc.reported_date);\\n      });\\n    }\\n    if (doc.contact && doc.contact._id) {\\n      emitMaybe(\'contact:\' + doc.contact._id.toLowerCase(), doc.reported_date);\\n    }\\n  }\\n}"},"reports_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.reported_date], doc.reported_date);\\n  }\\n}"},"reports_by_place":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var place = doc.contact && doc.contact.parent;\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], doc.reported_date);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"reports_by_validity":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([!doc.errors || doc.errors.length === 0], doc.reported_date);\\n  }\\n}"},"reports_by_subject":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var emitField = function(obj, field) {\\n      if (obj[field]) {\\n        emit(obj[field], doc.reported_date);\\n      }\\n    };\\n\\n    emitField(doc, \'patient_id\');\\n    emitField(doc, \'place_id\');\\n    emitField(doc, \'case_id\');\\n\\n    if (doc.fields) {\\n      emitField(doc.fields, \'patient_id\');\\n      emitField(doc.fields, \'place_id\');\\n      emitField(doc.fields, \'case_id\');\\n      emitField(doc.fields, \'patient_uuid\');\\n      emitField(doc.fields, \'place_uuid\');\\n    }\\n  }\\n}"},"tasks_by_contact":{"map":"function(doc) {\\n  if (doc.type === \'task\') {\\n    var isTerminalState = [\'Cancelled\', \'Completed\', \'Failed\'].indexOf(doc.state) >= 0;\\n    var owner = (doc.owner || \'_unassigned\');\\n\\n    if (!isTerminalState) {\\n      emit(\'owner-\' + owner);\\n    }\\n\\n    if (doc.requester) {\\n      emit(\'requester-\' + doc.requester);\\n    }\\n\\n    emit([\'owner\', \'all\', owner], { state: doc.state });\\n  }\\n}"},"total_clinics_by_facility":{"map":"function(doc) {\\n  var districtId = doc.parent && doc.parent.parent && doc.parent.parent._id;\\n  if (doc.type === \'clinic\' || (doc.type === \'contact\' && districtId)) {\\n    var healthCenterId = doc.parent && doc.parent._id;\\n    emit([ districtId, healthCenterId, doc._id, 0 ]);\\n    if (doc.contact && doc.contact._id) {\\n      emit([ districtId, healthCenterId, doc._id, 1 ], { _id: doc.contact._id });\\n    }\\n    var index = 2;\\n    var parent = doc.parent;\\n    while(parent) {\\n      if (parent._id) {\\n        emit([ districtId, healthCenterId, doc._id, index++ ], { _id: parent._id });\\n      }\\n      parent = parent.parent;\\n    }\\n  }\\n}"},"reports_by_verification":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.verified], doc.reported_date);\\n  }\\n}"},"visits_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var visited_date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n\\n    // Is a visit report about a family\\n    emit(visited_date, doc.fields.visited_contact_uuid);\\n    emit([doc.fields.visited_contact_uuid, visited_date]);\\n  }\\n}"}}}]');
+module.exports = /*#__PURE__*/JSON.parse('[{"_id":"_design/medic-client","validate_doc_update":"function(newDoc, oldDoc, userCtx, secObj) {\\n  /*\\n    LOCAL DOCUMENT VALIDATION\\n\\n    This is for validating document structure, irrespective of authority, so it\\n    can be run both on couchdb and pouchdb (where you are technically admin).\\n\\n    For validations around authority check lib/validate_doc_update.js, which is\\n    only run on the server.\\n  */\\n\\n  var _err = function(msg) {\\n    throw({ forbidden: msg });\\n  };\\n\\n  var hasRole = function(roles, role) {\\n    if (roles) {\\n      for (var i = 0; i < roles.length; i++) {\\n        if (roles[i] === role) {\\n          return true;\\n        }\\n      }\\n    }\\n    return false;\\n  };\\n\\n  var isDbAdmin = function(userCtx, secObj) {\\n    if (hasRole(userCtx.roles, \'_admin\')) {\\n      return true;\\n    }\\n\\n    if (secObj.admins && secObj.admins.names && secObj.admins.names.indexOf(userCtx.name) !== -1) {\\n      return true;\\n    }\\n\\n    if (secObj.admins && secObj.admins.roles) {\\n      for (var i = 0; i < userCtx.roles.length; i++) {\\n        if (hasRole(secObj.admins.roles, userCtx.roles[i])) {\\n          return true;\\n        }\\n      }\\n    }\\n\\n    return false;\\n  };\\n\\n  /**\\n   * Ensure that type=\'form\' documents are created with correctly formatted _id\\n   * property.\\n   */\\n  var validateForm = function() {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var form_id = id_parts.slice(1).join(\':\');\\n    if (prefix !== \'form\') {\\n      _err(\'_id property must be prefixed with \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (!form_id) {\\n      _err(\'_id property must define a value after \\"form:\\". e.g. \\"form:registration\\"\');\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id property must be lower case. e.g. \\"form:registration\\"\');\\n    }\\n  };\\n\\n  var validateUserSettings = function() {\\n    var id_parts = newDoc._id.split(\':\');\\n    var prefix = id_parts[0];\\n    var username = id_parts.slice(1).join(\':\');\\n    var idExample = \' e.g. \\"org.couchdb.user:sally\\"\';\\n    if (prefix !== \'org.couchdb.user\') {\\n      _err(\'_id must be prefixed with \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (!username) {\\n      _err(\'_id must define a value after \\"org.couchdb.user:\\".\' + idExample);\\n    }\\n    if (newDoc._id !== newDoc._id.toLowerCase()) {\\n      _err(\'_id must be lower case.\' + idExample);\\n    }\\n    if (typeof newDoc.name === \'undefined\' || newDoc.name !== username) {\\n      _err(\'name property must be equivalent to username.\' + idExample);\\n    }\\n    if (newDoc.name.toLowerCase() !== username.toLowerCase()) {\\n      _err(\'name must be equivalent to username\');\\n    }\\n    if (typeof newDoc.known !== \'undefined\' && typeof newDoc.known !== \'boolean\') {\\n      _err(\'known is not a boolean.\');\\n    }\\n    if (typeof newDoc.roles !== \'object\') {\\n      _err(\'roles is a required array\');\\n    }\\n  };\\n\\n  var authorizeUserSettings = function() {\\n    if (!oldDoc) {\\n      _err(\'You are not authorized to create user-settings\');\\n    }\\n    if (typeof oldDoc.roles !== \'object\') {\\n      _err(\'You are not authorized to edit roles\');\\n    }\\n    if (newDoc.roles.length !== oldDoc.roles.length) {\\n      _err(\'You are not authorized to edit roles\');\\n    }\\n    for (var i = 0; i < oldDoc.roles.length; i++) {\\n      if (oldDoc.roles[i] !== newDoc.roles[i]) {\\n        _err(\'You are not authorized to edit roles\');\\n      }\\n    }\\n  }\\n\\n  // admins can do anything\\n  if (isDbAdmin(userCtx, secObj)) {\\n    return;\\n  }\\n  if (userCtx.facility_id === newDoc._id ||\\n    (Array.isArray(userCtx.facility_id) && userCtx.facility_id.includes(newDoc._id ))\\n  ) {\\n    _err(\'You are not authorized to edit your own place\');\\n  }\\n  if (newDoc.type === \'form\') {\\n    validateForm();\\n  }\\n  if (newDoc.type === \'user-settings\') {\\n    validateUserSettings();\\n    authorizeUserSettings();\\n  }\\n\\n  log(\\n    \'medic-client validate_doc_update passed for User \\"\' + userCtx.name +\\n    \'\\" changing document \\"\' +  newDoc._id + \'\\"\'\\n  );\\n}","views":{"contacts_by_last_visited":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n    if (typeof date !== \'number\' || isNaN(date)) {\\n      date = 0;\\n    }\\n    // Is a visit report about a family\\n    emit(doc.fields.visited_contact_uuid, date);\\n  } else if (doc.type === \'contact\' ||\\n             doc.type === \'clinic\' ||\\n             doc.type === \'health_center\' ||\\n             doc.type === \'district_hospital\' ||\\n             doc.type === \'person\') {\\n    // Is a contact type\\n    emit(doc._id, 0);\\n  }\\n}","reduce":"_stats"},"contacts_by_parent":{"map":"function(doc) {\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'person\') {\\n    var parentId = doc.parent && doc.parent._id;\\n    var type = doc.type === \'contact\' ? doc.contact_type : doc.type;\\n    if (parentId) {\\n      emit([parentId, type]);\\n    }\\n  }\\n}"},"contacts_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], order);\\n    });\\n  }\\n}"},"contacts_by_place":{"map":"function(doc) {\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  if (doc.type === \'contact\') {\\n    idx = types.indexOf(doc.contact_type);\\n    if (idx === -1) {\\n      idx = doc.contact_type;\\n    }\\n  } else {\\n    idx = types.indexOf(doc.type);\\n  }\\n  if (idx !== -1) {\\n    var place = doc.parent;\\n    var order = idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], order);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"contacts_by_reference":{"map":"function(doc) {\\n  if (doc.type === \'contact\' ||\\n      doc.type === \'clinic\' ||\\n      doc.type === \'health_center\' ||\\n      doc.type === \'district_hospital\' ||\\n      doc.type === \'national_office\' ||\\n      doc.type === \'person\') {\\n\\n    var emitReference = function(prefix, key) {\\n      emit([ prefix, String(key) ], doc.reported_date);\\n    };\\n\\n    if (doc.place_id) {\\n      emitReference(\'shortcode\', doc.place_id);\\n    }\\n    if (doc.patient_id) {\\n      emitReference(\'shortcode\', doc.patient_id);\\n    }\\n    if (doc.rc_code) {\\n      // need String because rewriter wraps everything in quotes\\n      // keep refid case-insenstive since data is usually coming from SMS\\n      emitReference(\'external\', String(doc.rc_code).toUpperCase());\\n    }\\n  }\\n}"},"contacts_by_phone":{"map":"function(doc) {\\n  if (doc.phone) {\\n    var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n    if (types.indexOf(doc.type) !== -1) {\\n      emit(doc.phone);\\n    }\\n  }\\n}"},"contacts_by_type":{"map":"function(doc) {\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    emit([ type ], order);\\n  }\\n}"},"data_records_by_type":{"map":"function(doc) {\\n  if (doc.type === \'data_record\') {\\n    emit(doc.form ? \'report\' : \'message\');\\n  }\\n}","reduce":"_count"},"contacts_by_type_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'geolocation\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(type, key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([ type, key ], value);\\n    }\\n  };\\n\\n  var emitField = function(type, key, value, order) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(type, word, order);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(type, key + \':\' + value, order);\\n    }\\n  };\\n\\n  var types = [ \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n  var idx;\\n  var type;\\n  if (doc.type === \'contact\') {\\n    type = doc.contact_type;\\n    idx = types.indexOf(type);\\n    if (idx === -1) {\\n      idx = type;\\n    }\\n  } else {\\n    type = doc.type;\\n    idx = types.indexOf(type);\\n  }\\n  if (idx !== -1) {\\n    var dead = !!doc.date_of_death;\\n    var muted = !!doc.muted;\\n    var order = dead + \' \' + muted + \' \' + idx + \' \' + (doc.name && doc.name.toLowerCase());\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(type, key, doc[key], order);\\n    });\\n  }\\n}"},"doc_by_type":{"map":"function(doc) {\\n  if (doc.type === \'translations\') {\\n    emit([ \'translations\', doc.enabled ], {\\n      code: doc.code,\\n      name: doc.name\\n    });\\n    return;\\n  }\\n  emit([ doc.type ]);\\n}"},"docs_by_id_lineage":{"map":"function(doc) {\\n\\n  var emitLineage = function(contact, depth) {\\n    while (contact && contact._id) {\\n      emit([ doc._id, depth++ ], { _id: contact._id });\\n      contact = contact.parent;\\n    }\\n  };\\n\\n  var types = [ \'contact\', \'district_hospital\', \'health_center\', \'clinic\', \'person\' ];\\n\\n  if (types.indexOf(doc.type) !== -1) {\\n    // contact\\n    emitLineage(doc, 0);\\n  } else if (doc.type === \'data_record\' && doc.form) {\\n    // report\\n    emit([ doc._id, 0 ]);\\n    emitLineage(doc.contact, 1);\\n  }\\n}"},"reports_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.reported_date], doc.reported_date);\\n  }\\n}"},"messages_by_contact_date":{"reduce":"function(key, values) {\\n  var latest = { date: 0 };\\n  values.forEach(function(value) {\\n    if (value.date > latest.date) {\\n      latest = value;\\n    }\\n  });\\n  return latest;\\n}","map":"function(doc) {\\n\\n  var emitMessage = function(doc, contact, phone) {\\n    var id = (contact && contact._id) || phone || doc._id;\\n    emit([ id, doc.reported_date ], {\\n      id: doc._id,\\n      date: doc.reported_date,\\n      contact: contact && contact._id\\n    });\\n  };\\n\\n  if (doc.type === \'data_record\' && !doc.form) {\\n    if (doc.kujua_message && doc.tasks) {\\n      // outgoing\\n      doc.tasks.forEach(function(task) {\\n        var message = task.messages && task.messages[0];\\n        if(message) {\\n          emitMessage(doc, message.contact, message.to);\\n        }\\n      });\\n    } else if (doc.sms_message) {\\n      // incoming\\n      emitMessage(doc, doc.contact, doc.from);\\n    }\\n  }\\n}"},"registered_patients":{"map":"// NB: This returns *registrations* for contacts. If contacts are created by\\n//     means other then sending in a registration report (eg created in the UI)\\n//     they will not show up in this view.\\n//\\n//     For a view with all patients by their shortcode, use:\\n//        medic/docs_by_shortcode\\nfunction(doc) {\\n  var patientId = doc.patient_id || (doc.fields && doc.fields.patient_id);\\n  var placeId = doc.place_id || (doc.fields && doc.fields.place_id);\\n\\n  if (!doc.form || doc.type !== \'data_record\' || (doc.errors && doc.errors.length)) {\\n    return;\\n  }\\n\\n  if (patientId) {\\n    emit(String(patientId));\\n  }\\n\\n  if (placeId) {\\n    emit(String(placeId));\\n  }\\n}"},"reports_by_freetext":{"map":"function(doc) {\\n  var skip = [ \'_id\', \'_rev\', \'type\', \'refid\', \'content\' ];\\n\\n  var usedKeys = [];\\n  var emitMaybe = function(key, value) {\\n    if (usedKeys.indexOf(key) === -1 && // Not already used\\n        key.length > 2 // Not too short\\n    ) {\\n      usedKeys.push(key);\\n      emit([key], value);\\n    }\\n  };\\n\\n  var emitField = function(key, value, reportedDate) {\\n    if (!key || !value) {\\n      return;\\n    }\\n    key = key.toLowerCase();\\n    if (skip.indexOf(key) !== -1 || /_date$/.test(key)) {\\n      return;\\n    }\\n    if (typeof value === \'string\') {\\n      value = value.toLowerCase();\\n      value.split(/\\\\s+/).forEach(function(word) {\\n        emitMaybe(word, reportedDate);\\n      });\\n    }\\n    if (typeof value === \'number\' || typeof value === \'string\') {\\n      emitMaybe(key + \':\' + value, reportedDate);\\n    }\\n  };\\n\\n  if (doc.type === \'data_record\' && doc.form) {\\n    Object.keys(doc).forEach(function(key) {\\n      emitField(key, doc[key], doc.reported_date);\\n    });\\n    if (doc.fields) {\\n      Object.keys(doc.fields).forEach(function(key) {\\n        emitField(key, doc.fields[key], doc.reported_date);\\n      });\\n    }\\n    if (doc.contact && doc.contact._id) {\\n      emitMaybe(\'contact:\' + doc.contact._id.toLowerCase(), doc.reported_date);\\n    }\\n  }\\n}"},"reports_by_place":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var place = doc.contact && doc.contact.parent;\\n    while (place) {\\n      if (place._id) {\\n        emit([ place._id ], doc.reported_date);\\n      }\\n      place = place.parent;\\n    }\\n  }\\n}"},"reports_by_form":{"reduce":"function() {\\n  return true;\\n}","map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.form], doc.reported_date);\\n  }\\n}"},"reports_by_subject":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    var emitField = function(obj, field) {\\n      if (obj[field]) {\\n        emit(obj[field], doc.reported_date);\\n      }\\n    };\\n\\n    emitField(doc, \'patient_id\');\\n    emitField(doc, \'place_id\');\\n    emitField(doc, \'case_id\');\\n\\n    if (doc.fields) {\\n      emitField(doc.fields, \'patient_id\');\\n      emitField(doc.fields, \'place_id\');\\n      emitField(doc.fields, \'case_id\');\\n      emitField(doc.fields, \'patient_uuid\');\\n      emitField(doc.fields, \'place_uuid\');\\n    }\\n  }\\n}"},"reports_by_verification":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([doc.verified], doc.reported_date);\\n  }\\n}"},"tasks_by_contact":{"map":"function(doc) {\\n  if (doc.type === \'task\') {\\n    var isTerminalState = [\'Cancelled\', \'Completed\', \'Failed\'].indexOf(doc.state) >= 0;\\n    var owner = (doc.owner || \'_unassigned\');\\n\\n    if (!isTerminalState) {\\n      emit(\'owner-\' + owner);\\n    }\\n\\n    if (doc.requester) {\\n      emit(\'requester-\' + doc.requester);\\n    }\\n\\n    emit([\'owner\', \'all\', owner], { state: doc.state });\\n  }\\n}"},"reports_by_validity":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' && doc.form) {\\n    emit([!doc.errors || doc.errors.length === 0], doc.reported_date);\\n  }\\n}"},"visits_by_date":{"map":"function(doc) {\\n  if (doc.type === \'data_record\' &&\\n      doc.form &&\\n      doc.fields &&\\n      doc.fields.visited_contact_uuid) {\\n\\n    var visited_date = doc.fields.visited_date ? Date.parse(doc.fields.visited_date) : doc.reported_date;\\n\\n    // Is a visit report about a family\\n    emit(visited_date, doc.fields.visited_contact_uuid);\\n    emit([doc.fields.visited_contact_uuid, visited_date]);\\n  }\\n}"},"total_clinics_by_facility":{"map":"function(doc) {\\n  var districtId = doc.parent && doc.parent.parent && doc.parent.parent._id;\\n  if (doc.type === \'clinic\' || (doc.type === \'contact\' && districtId)) {\\n    var healthCenterId = doc.parent && doc.parent._id;\\n    emit([ districtId, healthCenterId, doc._id, 0 ]);\\n    if (doc.contact && doc.contact._id) {\\n      emit([ districtId, healthCenterId, doc._id, 1 ], { _id: doc.contact._id });\\n    }\\n    var index = 2;\\n    var parent = doc.parent;\\n    while(parent) {\\n      if (parent._id) {\\n        emit([ districtId, healthCenterId, doc._id, index++ ], { _id: parent._id });\\n      }\\n      parent = parent.parent;\\n    }\\n  }\\n}"}}}]');
 
 /***/ }),
 

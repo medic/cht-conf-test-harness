@@ -1,9 +1,13 @@
 const { DateTime } = require('luxon');
 const { getMonthStartDate } = require('./dateUtils');
 
-const NBR_MONTHS = 3;
+const MAX_TARGET_MONTHS = 3;
 
-class CoreTargetAggregates {
+const ReportingPeriod = {
+  PREVIOUS: 'previous',
+};
+
+class TargetAggregatesService {
   constructor(chtCore, pouchDb, settingsDoc) {
     this.chtCore = chtCore;
     this.pouchDb = pouchDb;
@@ -11,12 +15,12 @@ class CoreTargetAggregates {
   }
 
   _getIntervalTag(targetInterval) {
-    // return moment(targetInterval.end).format('Y-MM'); // 2024-06
+    // return moment(targetInterval.end).format(this.INTERVAL_TAG_FORMAT);
     return DateTime.fromMillis(targetInterval.end).toFormat('yyyy-MM');
   }
 
-  _getCurrentInterval(settings) {
-    const uhcMonthStartDate = getMonthStartDate(settings);
+  _getCurrentInterval(appSettings) {
+    const uhcMonthStartDate = getMonthStartDate(appSettings);
     const targetInterval = this.chtCore.CalendarInterval.getCurrent(uhcMonthStartDate);
 
     return {
@@ -25,11 +29,44 @@ class CoreTargetAggregates {
     };
   }
 
-  _getOldIntervalTag(currentInterval, uhcMonthStartDate, monthsOld) {
-    // const oldDate = moment(currentInterval.end).subtract(monthsOld, 'months');
-    const oldDate = DateTime.fromMillis(currentInterval.end).minus({ months: monthsOld });
-    const targetInterval = this.chtCore.CalendarInterval.getInterval(uhcMonthStartDate, oldDate.toMillis());
+  /**
+   * Targets reporting intervals cover a calendaristic month, starting on a configurable day (uhcMonthStartDate)
+   * Each target doc will use the end date of its reporting interval, in YYYY-MM format, as part of its _id
+   * ex: uhcMonthStartDate is 12, current date is 2020-02-03, the <interval_tag> will be 2020-02
+   * ex: uhcMonthStartDate is 15, current date is 2020-02-21, the <interval_tag> will be 2020-03
+   *
+   * @param appSettings - The application settings containing uhcMonthStartDate
+   * @param reportingPeriod - Optional. ReportingPeriod enum value (CURRENT or PREVIOUS)
+   * @param monthsAgo - Optional. Number of reporting periods ago.
+   * @returns A string representing the interval tag in YYYY-MM format
+   */
+
+  _getTargetIntervalTag(appSettings, reportingPeriod, monthsAgo = 1) {
+    const { uhcMonthStartDate, targetInterval: currentInterval } = this._getCurrentInterval(appSettings);
+    if (!reportingPeriod || reportingPeriod === ReportingPeriod.CURRENT) {
+      return this._getIntervalTag(currentInterval);
+    }
+
+    const oldDate = DateTime.fromMillis(currentInterval.end).minus({ months: monthsAgo });
+    const targetInterval = this.chtCore.CalendarInterval.getInterval(uhcMonthStartDate, oldDate.valueOf());
     return this._getIntervalTag(targetInterval);
+  }
+
+  /**
+   * Every target doc follows the _id scheme `target~<interval_tag>~<contact_uuid>~<user_id>`
+   * In order to retrieve the latest target document(s), we compute the current interval <interval_tag>
+   */
+  async _fetchLatestTargetDocs(appSettings, reportingPeriod) {
+    const tag = this._getTargetIntervalTag(appSettings, reportingPeriod);
+
+    const opts = {
+      start_key: `target~${tag}~`,
+      end_key: `target~${tag}~\ufff0`,
+      include_docs: true,
+    };
+
+    const results = await this.pouchDb.allDocs(opts);
+    return results.rows.map(row => row.doc).filter(doc => doc);
   }
 
   async _fetchTargetDocsForInterval(contactUuid, intervalTag) {
@@ -43,11 +80,10 @@ class CoreTargetAggregates {
     return results.rows.map(row => row.doc);
   }
 
-  async _fetchTargetDocs(settings, contactUuid) {
+  async _fetchTargetDocs(appSettings, contactUuid) {
     const allTargetDocs = [];
-    const { targetInterval, uhcMonthStartDate } = this._getCurrentInterval(settings);
-    for (let monthsOld = 0; monthsOld < NBR_MONTHS; monthsOld++) {
-      const intervalTag = this._getOldIntervalTag(targetInterval, uhcMonthStartDate, monthsOld);
+    for (let monthsOld = 0; monthsOld < MAX_TARGET_MONTHS; monthsOld++) {
+      const intervalTag = this._getTargetIntervalTag(appSettings, ReportingPeriod.PREVIOUS, monthsOld);
       const intervalTargetDocs = await this._fetchTargetDocsForInterval(contactUuid, intervalTag);
       allTargetDocs.push(...intervalTargetDocs);
     }
@@ -72,13 +108,17 @@ class CoreTargetAggregates {
     return targetDoc;
   }
 
-  async getTargetDocs(contact, userFacilityId, userContactId) {
+  async getTargetDocs(
+    contact,
+    userFacilityIds,
+    userContactId
+  ) {
     const contactUuid = contact?._id;
     if (!contactUuid) {
       return [];
     }
 
-    const isUserFacility = contactUuid === userFacilityId;
+    const isUserFacility = userFacilityIds?.includes(contactUuid);
     const shouldLoadTargetDocs = isUserFacility || await this.chtCore.ContactTypesUtils.isPerson(contact);
     if (!shouldLoadTargetDocs) {
       return [];
@@ -91,4 +131,4 @@ class CoreTargetAggregates {
   }
 }
 
-module.exports = CoreTargetAggregates;
+module.exports = TargetAggregatesService;
