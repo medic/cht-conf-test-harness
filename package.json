@@ -13,7 +13,7 @@
     "docs": "npx jsdoc src/*.js src/**/*.js ./JSDOC.md -d docs",
     "explore": "node ./project-explorer/build-assets.js --path=./test/collateral/project-without-source --formPath=./test/collateral && cd project-explorer && webpack && google-chrome ./project-explorer.html",
     "eslint": "npx eslint .",
-    "build-ci": "npm run docs && npm run eslint && npm ci --legacy-peer-deps && npm test",
+    "build-ci": "npm run docs && npm run eslint && npm test",
     "semantic-release": "semantic-release",
     "prepare": "husky"
   },
