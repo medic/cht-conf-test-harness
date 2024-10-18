@@ -173,7 +173,7 @@ describe('cht.v1 in contact summary ', () => {
     expect(contactSummary.context.chtApiContext.targetDocs).to.be.empty;
   });
 
-  it('4.8 adds context.targetDocs onto the user facility', async () => {
+  it('4.11 adds context.targetDocs onto the user facility', async () => {
     harness.subject = 'chw_area_id';
 
     const targets = await harness.getTargets();

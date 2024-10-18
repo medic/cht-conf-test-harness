@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 declare -A cht_versions=(
-  ["cht-core-4-8"]="4.8.1"
+  ["cht-core-4-11"]="4.11.0"
 )
 
 exit_on_error() {
@@ -21,9 +21,7 @@ fi
 npm ci --legacy-peer-deps
 rm -Rf build
 
-if [[ 1 == "$FORCE" ]]; then
-  rm -Rf dist
-else
+if [[ 1 != "$FORCE" ]]; then
   for item in `ls dist | grep -v cht-core`; do
     rm -rf dist/"$item"
   done
@@ -31,12 +29,12 @@ fi
 
 for version in "${!cht_versions[@]}"; do
   if [[ ! 1 == "$FORCE" ]] && [ -d dist/"$version" ]; then
-    printf "\033[0;32m== SKIPPING $version ==\n"
+    printf "\033[0;32m== SKIPPING $version ==\033[0m\n"
     continue
   fi
 
   git clone https://github.com/medic/cht-core.git build/"$version"
-  (cd build/"$version" && git checkout 4.8.1-FR-improved-contact-summary-targets)
+  (cd build/"$version" && git reset --hard "${cht_versions[$version]}")
   (cd build/"$version" && git reset --hard)
   (cd build/"$version" && git clean -df)
 
@@ -44,7 +42,6 @@ for version in "${!cht_versions[@]}"; do
 
   node ./compile-ddocs.js "$version"
 
-  (cd build/"$version"/api && npm ci --legacy-peer-deps --production)
   (cd build/"$version" && patch -f api/src/services/generate-xform.js < ../../patches/generate-xform.patch)
   # 210 patch to disable db-object-widget
   (cd build/"$version" && patch -f webapp/src/js/enketo/widgets.js < ../../patches/210-disable-db-object-widgets.patch)
