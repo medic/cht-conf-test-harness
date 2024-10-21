@@ -1,8 +1,3 @@
-/**
- * @module cht-script-api-factory 
- * Creates the object `cht.api.v1`
-*/
-
 const semver = require('semver');
 
 const CoreTargetAggregates = require('./core-target-aggregates');
@@ -41,9 +36,10 @@ class ChtScriptApiFactory {
       }
     };
 
+    const userFacilityIds = [userFacilityId];
     const coreVersion = semver.coerce(this.core.version);
     if (semver.gte(coreVersion, '4.11.0')) {
-      const targets = await this.coreTargetAggregator.getTargetDocs(contact, userFacilityId, userContactId);
+      const targets = await this.coreTargetAggregator.getTargetDocs(contact, userFacilityIds, userContactId);
       result.v1.analytics = {
         getTargetDocs: () => targets,
       };
