@@ -25,4 +25,4 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci --legacy-peer-deps
-    - run: ./build --force
+    - run: ./build.sh --force
