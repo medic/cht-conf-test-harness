@@ -17,13 +17,9 @@ class ChtScriptApiFactory {
     return this.getForContactSummary(undefined, undefined, undefined, defaultUserRoles);
   }
 
-  // cht-core/src/ts/services/cht-script-api.service.ts
   async getForContactSummary(contact, userFacilityId, userContactId, defaultUserRoles) {
-    const datasource = this._getFromDatasource() || this.core.ChtScriptApi;
-    if (!datasource) {
-      throw Error('DataSource and ChtScriptApi are undefined for this core version');
-    }
-
+    const context = this.core.DataSource.getRemoteDataContext();
+    const datasource = this.core.DataSource.getDatasource(context);
     const defaultChtPermissionSettings = this.appSettings.permissions;
     const result = {
       v1: {
@@ -37,24 +33,12 @@ class ChtScriptApiFactory {
     };
 
     const userFacilityIds = [userFacilityId];
-    const coreVersion = semver.coerce(this.core.version);
-    if (semver.gte(coreVersion, '4.11.0')) {
-      const targets = await this.coreTargetAggregator.getTargetDocs(contact, userFacilityIds, userContactId);
-      result.v1.analytics = {
-        getTargetDocs: () => targets,
-      };
-    }
+    const targets = await this.coreTargetAggregator.getTargetDocs(contact, userFacilityIds, userContactId);
+    result.v1.analytics = {
+      getTargetDocs: () => targets,
+    };
 
     return result;
-  }
-  
-  _getFromDatasource() {
-    if (!this.core.DataSource) {
-      return;
-    }
-  
-    const context = this.core.DataSource.getRemoteDataContext();
-    return this.core.DataSource.getDatasource(context);
   }
 }
 

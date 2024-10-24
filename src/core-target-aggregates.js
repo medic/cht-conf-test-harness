@@ -15,7 +15,6 @@ class TargetAggregatesService {
   }
 
   _getIntervalTag(targetInterval) {
-    // return moment(targetInterval.end).format(this.INTERVAL_TAG_FORMAT);
     return DateTime.fromMillis(targetInterval.end).toFormat('yyyy-MM');
   }
 
