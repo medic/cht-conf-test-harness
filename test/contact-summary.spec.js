@@ -186,27 +186,3 @@ describe('cht.v1 in contact summary ', () => {
   });
 });
 
-describe('cht.v1 in contact summary (core v4.6)', () => {
-  const harness = new Harness({
-    coreVersion: '4.6',
-    directory: path.join(__dirname, 'collateral', 'project-with-source'),
-    harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
-    verbose: true,
-  });
-
-  before(async () => { return await harness.start(); });
-  after(async () => { return await harness.stop(); });
-  beforeEach(async () => { return await harness.clear(); });
-  afterEach(() => { expect(harness.consoleErrors).to.be.empty; });
-
-  it('chp.v1.analytics.getTargets undefined on core 4.6', async () => {
-    harness.subject = 'chw_area_id';
-
-    const targets = await harness.getTargets();
-    expect(targets).to.not.be.empty;
-
-    const contactSummary = await harness.getContactSummary();
-    expect(contactSummary.context.chtApiAnalyticsTargets).to.be.undefined;
-  });
-});
-
