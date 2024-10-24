@@ -15,6 +15,7 @@ The following table shows the compatibility between the test harness and the CHT
 | 2.x                   | 3.9.x+             | `3.9`, `3.10`, `3.11`, `3.12`, `3.13`, `3.14` |
 | 3.x                   | 4.0.x-4.5.x        | `4.0`                                         |
 | 4.x                   | 4.6.x+             | `4.6`                                         |
+| 5.x                   | 4.11.x+            | `4.11`                                         |
 
 ## Contributing
 

@@ -1,4 +1,4 @@
-name: CI
+name: Run CI Scripts
 
 on: 
   push:
@@ -26,4 +26,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: sudo apt install -y xsltproc
     - run: npm ci --legacy-peer-deps
-    - run: npm run build-ci
+    - run: npm run git-ci

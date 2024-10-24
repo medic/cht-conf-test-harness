@@ -1,5 +1,5 @@
 {
-  "coreVersion": "4.6",
+  "coreVersion": "4.11.0",
   "user": "chw_area_contact_id",
   "userRoles": ["chw_role", "role_dne"],
   "subject": "patient_id",

@@ -674,7 +674,7 @@ class Harness {
       resolvedLineage = await this.coreAdapter.buildLineage(resolvedContact._id, stateEnsuringPresenceOfMocks(this.state, user, subject));
     }
 
-    const chtScriptApi = this.coreAdapter.chtScriptApi(this.options.userRoles);
+    const chtScriptApi = await this.coreAdapter.chtScriptApi(resolvedContact, this.userSettingsDoc.facility_id, this.userSettingsDoc.contact_id, this.options.userRoles);
     if (this.options.useDevMode) {
       return devMode.runContactSummary(this.options.appSettingsPath, resolvedContact, resolvedReports, resolvedLineage, chtScriptApi);
     } else {

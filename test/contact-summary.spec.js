@@ -134,7 +134,6 @@ describe('getContactSummary', () => {
 });
 
 describe('cht.v1 in contact summary ', () => {
-
   const harness = new Harness({
     directory: path.join(__dirname, 'collateral', 'project-with-source'),
     harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
@@ -152,6 +151,7 @@ describe('cht.v1 in contact summary ', () => {
     expect(contactSummary.context).to.not.be.undefined;
     expect(contactSummary.context.hasPermissions).to.be.true;
     expect(contactSummary.context.hasAnyPermission).to.be.true;
+    expect(contactSummary.context.chtApiAnalyticsTargets).to.deep.eq([]);
   });
 
   it('#214 - cht API in contact summary - user has no permissions ', async () => {
@@ -161,7 +161,28 @@ describe('cht.v1 in contact summary ', () => {
     expect(contactSummary.context).to.not.be.undefined;
     expect(contactSummary.context.hasPermissions).to.be.false;
     expect(contactSummary.context.hasAnyPermission).to.be.false;
+    expect(contactSummary.context.chtApiAnalyticsTargets).to.deep.eq([]);
   });
 
+  it('chp.v1.analytics.getTargets undefined when subject is not user facility', async () => {
+    const targets = await harness.getTargets();
+    expect(targets).to.not.be.empty;
+
+    const contactSummary = await harness.getContactSummary();
+    expect(contactSummary.context.chtApiAnalyticsTargets).to.be.empty;
+  });
+
+  it('4.11 adds chp.v1.analytics.getTargets onto the user facility', async () => {
+    harness.subject = 'chw_area_id';
+
+    const targets = await harness.getTargets();
+    expect(targets).to.not.be.empty;
+
+    const contactSummary = await harness.getContactSummary();
+    expect(contactSummary.context.chtApiAnalyticsTargets).to.not.be.empty;
+
+    const targetFromDocs = contactSummary.context.chtApiAnalyticsTargets.map(t => t.targets[0]);
+    expect(targetFromDocs).to.deep.eq(targets);
+  });
 });
 
