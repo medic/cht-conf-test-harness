@@ -1,5 +1,3 @@
-const semver = require('semver');
-
 const CoreTargetAggregates = require('./core-target-aggregates');
 
 class ChtScriptApiFactory {
