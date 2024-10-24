@@ -21,17 +21,18 @@ fi
 npm ci --legacy-peer-deps
 rm -Rf build
 
-if [[ 1 != "$FORCE" ]]; then
-  for item in `ls dist | grep -v cht-core`; do
-    rm -rf dist/"$item"
-  done
-fi
+for item in `ls dist | grep -v cht-core`; do
+  rm -rf dist/"$item"
+done
 
 for version in "${!cht_versions[@]}"; do
   if [[ ! 1 == "$FORCE" ]] && [ -d dist/"$version" ]; then
     printf "\033[0;32m== SKIPPING $version ==\033[0m\n"
     continue
   fi
+
+  printf "\033[0;32m== BUILDING $version ==\033[0m\n"
+  rm -rf dist/"$version"
 
   git clone https://github.com/medic/cht-core.git build/"$version"
   (cd build/"$version" && git reset --hard "${cht_versions[$version]}")
@@ -56,4 +57,4 @@ for version in "${!cht_versions[@]}"; do
 done
 
 npx webpack
-printf "\033[0;32m== BUILD SUCCESSFUL ==\n"
+printf "\033[0;32m== BUILD SUCCESSFUL ==\033[0m\n"
