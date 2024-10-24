@@ -36,7 +36,6 @@ for version in "${!cht_versions[@]}"; do
 
   git clone https://github.com/medic/cht-core.git build/"$version"
   (cd build/"$version" && git reset --hard "${cht_versions[$version]}")
-  (cd build/"$version" && git reset --hard)
   (cd build/"$version" && git clean -df)
 
   (cd build/"$version" && npm ci)
