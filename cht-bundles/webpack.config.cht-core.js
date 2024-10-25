@@ -24,6 +24,7 @@ module.exports = env => [
     ],
   },
   {
+    mode: 'development',
     entry: [
       `./build/${env.cht}/build/cht-form/main.js`,
       `./build/${env.cht}/build/cht-form/polyfills.js`,
