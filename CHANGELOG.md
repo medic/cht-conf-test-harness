@@ -1,3 +1,13 @@
+# [5.0.0](https://github.com/medic/cht-conf-test-harness/compare/v4.0.1...v5.0.0) (2024-10-25)
+
+
+* feat(#263) - BREAKING - Support for CHT Core 4.11 (#264) ([74dac6d](https://github.com/medic/cht-conf-test-harness/commit/74dac6d6ee5837e3599d1ec26d077e2b8d153c94)), closes [#263](https://github.com/medic/cht-conf-test-harness/issues/263) [#264](https://github.com/medic/cht-conf-test-harness/issues/264)
+
+
+### BREAKING CHANGES
+
+* to remove CHT Core 4.6 support and add support for 4.11
+
 ## [4.0.1](https://github.com/medic/cht-conf-test-harness/compare/v4.0.0...v4.0.1) (2024-04-17)
 
 
