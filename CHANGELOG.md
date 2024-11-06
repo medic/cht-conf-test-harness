@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/medic/cht-conf-test-harness/compare/v5.0.0...v5.0.1) (2024-11-06)
+
+
+### Bug Fixes
+
+* **#267:** ignore console errors from cht-form ([#268](https://github.com/medic/cht-conf-test-harness/issues/268)) ([a01b930](https://github.com/medic/cht-conf-test-harness/commit/a01b930c49f1877c23710823242621b0d8a48617)), closes [#267](https://github.com/medic/cht-conf-test-harness/issues/267)
+
 # [5.0.0](https://github.com/medic/cht-conf-test-harness/compare/v4.0.1...v5.0.0) (2024-10-25)
 
 
