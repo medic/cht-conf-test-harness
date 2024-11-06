@@ -522,6 +522,10 @@ class Harness {
       .filter(msg => !msg.text().startsWith('Error fetching media file')) // BUG: #222
       .filter(msg => !msg.text().startsWith('Deprecation warning:')) // BUG: #223
       .filter(msg => !msg.text().includes('with null-based index')) // BUG: #224
+
+      .filter(msg => !msg.text().includes('Initiating changes service')) // BUG: #267
+      .filter(msg => !msg.text().includes('Error initialising watching for db changes')) // BUG: #267
+      .filter(msg => !msg.text().includes('Attempting changes initialisation')) // BUG: #267
     ;
 
   }
