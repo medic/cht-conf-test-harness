@@ -523,9 +523,9 @@ class Harness {
       .filter(msg => !msg.text().startsWith('Deprecation warning:')) // BUG: #223
       .filter(msg => !msg.text().includes('with null-based index')) // BUG: #224
 
-      .filter(msg => !msg.text().includes('Initiating changes service')) // BUG: #267
-      .filter(msg => !msg.text().includes('Error initialising watching for db changes')) // BUG: #267
-      .filter(msg => !msg.text().includes('Attempting changes initialisation')) // BUG: #267
+      .filter(msg => !msg.text().startsWith('Initiating changes service')) // BUG: #267
+      .filter(msg => !msg.text().startsWith('Error initialising watching for db changes')) // BUG: #267
+      .filter(msg => !msg.text().startsWith('Attempting changes initialisation')) // BUG: #267
     ;
 
   }
