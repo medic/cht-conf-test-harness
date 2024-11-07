@@ -326,7 +326,7 @@ describe('forms that have caused bugs', () => {
   it('#234 - datetime field fails enketo validation', async () => {
     const result = await harness.fillForm('bug_234', ['2023-01-01 x']);
     expect(result.errors).to.not.be.empty;
-    expect(result.errors[1].msg).to.eq('enketo.constraint.required');
+    expect(result.errors[0].msg).to.eq('enketo.constraint.required');
   });
 
   it('#249 - time field with correct input format', async () => {
