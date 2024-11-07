@@ -289,7 +289,10 @@ const getVisibleQuestions = () => {
 const nextPage = async () => {
   const currentPageIndex = getPages().indexOf(getCurrentPage());
   const nextButton = $('button.next-page');
-  if(nextButton.is(':hidden')) {
+  const submitButton = $('button.submit');
+  const toClick = submitButton.is(':hidden') ? nextButton : submitButton;
+
+  if(toClick.is(':hidden')) {
     return !getValidationErrors().length;
   }
 
@@ -299,10 +302,10 @@ const nextPage = async () => {
         observer.disconnect();
         return resolve(true);
       }
-      if(getValidationErrors().length) {
-        observer.disconnect();
-        return resolve(false);
-      }
+
+      const success = !getValidationErrors().length;
+      observer.disconnect();
+      return resolve(success);
     });
 
     observer.observe(getForm().get(0), {
@@ -310,7 +313,7 @@ const nextPage = async () => {
       subtree: true,
       attributeFilter: ['class', 'display'],
     });
-    nextButton.click();
+    toClick.click();
   });
 };
 
