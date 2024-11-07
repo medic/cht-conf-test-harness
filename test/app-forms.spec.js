@@ -360,7 +360,7 @@ describe('forms that have caused bugs', () => {
   });
 
   it('#269 - submit before checking for errors', async () => {
-    const result = await harness.fillForm('bug_123', ['1', '1']);
+    const result = await harness.fillForm('bug_269', ['1', '1']);
     await new Promise(resolve => {});
     expect(result.errors).to.be.empty;
   });
