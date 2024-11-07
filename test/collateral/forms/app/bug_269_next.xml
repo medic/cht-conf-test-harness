@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>U5 Assessment</h:title>
+    <model>
+      <instance>
+        <bug_269_2 id="u5_assessment" prefix="J1!u5_assessment!" delimiter="#" version="2022-09-01 00:00:00">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <source>user</source>
+            <source_id/>
+          </inputs>
+          <r_sum/>
+          <reproducing>
+            <first/>
+            <second/>
+          </reproducing>
+          <another_screen>
+            <question/>
+          </another_screen>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </bug_269_2>
+      </instance>
+      <instance id="contact-summary"/>
+      <bind nodeset="/bug_269_2/inputs" relevant="./source = 'user'"/>
+      <bind nodeset="/bug_269_2/inputs/source" type="string"/>
+      <bind nodeset="/bug_269_2/inputs/source_id" type="string"/>
+      <bind nodeset="/bug_269_2/r_sum" type="string" calculate="int( /bug_269_2/reproducing/first )+int( /bug_269_2/reproducing/second )"/>
+      <bind nodeset="/bug_269_2/reproducing/first" type="select1" constraint="int( /bug_269_2/r_sum ) = 2" required="true()" jr:constraintMsg="Sum to Two"/>
+      <bind nodeset="/bug_269_2/reproducing/second" type="select1" constraint="int( /bug_269_2/r_sum ) = 2" required="true()" jr:constraintMsg="Sum to Two"/>
+      <bind nodeset="/bug_269_2/another_screen/question" type="string" required="true()"/>
+      <bind nodeset="/bug_269_2/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/bug_269_2/inputs">
+      <label>Inputs</label>
+    </group>
+    <group appearance="field-list" ref="/bug_269_2/reproducing">
+      <label>Reproducing Bug</label>
+      <select1 ref="/bug_269_2/reproducing/first">
+        <label>Value One</label>
+        <item>
+          <label>Zero</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>One</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>Two</label>
+          <value>2</value>
+        </item>
+      </select1>
+      <select1 ref="/bug_269_2/reproducing/second">
+        <label>Value Two</label>
+        <item>
+          <label>Zero</label>
+          <value>0</value>
+        </item>
+        <item>
+          <label>One</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>Two</label>
+          <value>2</value>
+        </item>
+      </select1>
+    </group>
+    <group appearance="field-list" ref="/bug_269_2/another_screen">
+      <label>Another Screen</label>
+      <input ref="/bug_269_2/another_screen/question">
+        <label>What is the question</label>
+      </input>
+    </group>
+  </h:body>
+</h:html>

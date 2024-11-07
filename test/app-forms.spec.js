@@ -359,8 +359,13 @@ describe('forms that have caused bugs', () => {
     expect(result.report.fields.fp_follow_up.display_is_muted).to.eq(actual);
   });
 
-  it('#269 - submit before checking for errors', async () => {
-    const result = await harness.fillForm('bug_269', ['1', '1']);
+  it('#269 - submit clears erroneous constraints before reporting errors', async () => {
+    const result = await harness.fillForm('bug_269_submit', ['1', '1']);
+    expect(result.errors).to.be.empty;
+  });
+
+  it('#269 - next clears erroneous constraints before reporting errors', async () => {
+    const result = await harness.fillForm('bug_269_next', ['1', '1'], ['answer']);
     expect(result.errors).to.be.empty;
   });
 });
