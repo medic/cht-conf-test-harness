@@ -326,7 +326,7 @@ describe('forms that have caused bugs', () => {
   it('#234 - datetime field fails enketo validation', async () => {
     const result = await harness.fillForm('bug_234', ['2023-01-01 x']);
     expect(result.errors).to.not.be.empty;
-    expect(result.errors[1].msg).to.eq('enketo.constraint.required');
+    expect(result.errors[0].msg).to.eq('enketo.constraint.required');
   });
 
   it('#249 - time field with correct input format', async () => {
@@ -357,5 +357,15 @@ describe('forms that have caused bugs', () => {
     }, []);
     expect(result.errors).to.be.empty;
     expect(result.report.fields.fp_follow_up.display_is_muted).to.eq(actual);
+  });
+
+  it('#269 - submit clears erroneous constraints before reporting errors', async () => {
+    const result = await harness.fillForm('bug_269_submit', ['1', '1']);
+    expect(result.errors).to.be.empty;
+  });
+
+  it('#269 - next clears erroneous constraints before reporting errors', async () => {
+    const result = await harness.fillForm('bug_269_next', ['1', '1'], ['answer']);
+    expect(result.errors).to.be.empty;
   });
 });

@@ -290,6 +290,12 @@ const nextPage = async () => {
   const currentPageIndex = getPages().indexOf(getCurrentPage());
   const nextButton = $('button.next-page');
   if(nextButton.is(':hidden')) {
+    const submitButton = $('button.submit');
+    if (!submitButton.is(':hidden')) {
+      // revalidate constraints before checking errors
+      submitButton.click();
+    }
+    
     return !getValidationErrors().length;
   }
 
@@ -299,6 +305,7 @@ const nextPage = async () => {
         observer.disconnect();
         return resolve(true);
       }
+
       if(getValidationErrors().length) {
         observer.disconnect();
         return resolve(false);
