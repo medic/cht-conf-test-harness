@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/medic/cht-conf-test-harness/compare/v5.0.1...v5.0.2) (2024-11-12)
+
+
+### Bug Fixes
+
+* **#269:** constraints which are cleared by clicking next  ([#270](https://github.com/medic/cht-conf-test-harness/issues/270)) ([c3ed67f](https://github.com/medic/cht-conf-test-harness/commit/c3ed67f0e2448511c6b14d1c39bdd8e1ec04f459)), closes [#269](https://github.com/medic/cht-conf-test-harness/issues/269)
+
 ## [5.0.1](https://github.com/medic/cht-conf-test-harness/compare/v5.0.0...v5.0.1) (2024-11-06)
 
 
