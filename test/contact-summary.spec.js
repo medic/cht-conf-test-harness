@@ -68,7 +68,10 @@ describe('getContactSummary', () => {
     expect(args[2][1]).to.deep.contain({
       _id: 'chw_area_id',
     });
-    expect(args[2][2]).to.be.undefined;
+    expect(args[2][2]).to.deep.contain({
+      _id: 'supervisor_area_id',
+    });
+    expect(args[2][3]).to.be.undefined;
   }));
 
   it('#240 - contact summary includes reports of the selected contacts children', withFunctionStub(async () => {
