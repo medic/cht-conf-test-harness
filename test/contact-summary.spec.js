@@ -184,5 +184,20 @@ describe('cht.v1 in contact summary ', () => {
     const targetFromDocs = contactSummary.context.chtApiAnalyticsTargets.map(t => t.targets[0]);
     expect(targetFromDocs).to.deep.eq(targets);
   });
+
+  it('#272 - reports of places children should not appear when child is also a place', async () => {
+    harness.pushMockedDoc({
+      type: 'data_record',
+      form: 'abc',
+      reported_date: 1000,
+      fields: {
+        place_id: 'chw_area_id',
+        sp_count: '15'
+      }
+    });
+
+    const cs = await harness.getContactSummary('supervisor_area_id');
+    expect(cs.context.reportCount).to.deep.eq(0);
+  });
 });
 

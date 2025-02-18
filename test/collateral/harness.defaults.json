@@ -89,6 +89,12 @@
     },
 
     {
+      "_id": "supervisor_area_id",
+      "name": "Supervisor",
+      "type": "district_hospital"
+    },
+
+    {
       "_id": "family_head_id",
       "name": "CHP Area 001 Contact",
       "type": "person",
