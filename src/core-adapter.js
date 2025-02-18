@@ -78,7 +78,11 @@ class CoreAdapter {
     }
 
     const contactDocs = [contact, ...state.contacts];
-    const relevantContactDocs = contactDocs.filter(contact => contact?._id === contactId || contact?.parent?._id === contactId);
+    const relevantContactDocs = contactDocs.filter(contact => {
+      const isSelf = contact?._id === contactId;
+      const isChild = contact?.parent?._id === contactId;
+      return isSelf || (isChild && this.core.ContactTypesUtils.isPerson(this.appSettings, contact));
+    });
     const subjectIds = _.flatten(relevantContactDocs.map(contact => this.core.RegistrationUtils.getSubjectIds(contact)));
 
     const reportHasMatchingSubject = report => subjectIds.includes(this.core.RegistrationUtils.getSubjectId(report));

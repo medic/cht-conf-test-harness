@@ -192,12 +192,11 @@ describe('cht.v1 in contact summary ', () => {
       reported_date: 1000,
       fields: {
         place_id: 'chw_area_id',
-        sp_count: '15'
       }
     });
 
-    const cs = await harness.getContactSummary('supervisor_area_id');
-    expect(cs.context.reportCount).to.deep.eq(0);
+    const contactSummary = await harness.getContactSummary('supervisor_area_id');
+    expect(contactSummary.context.reportCount).to.eq(0);
   });
 });
 
