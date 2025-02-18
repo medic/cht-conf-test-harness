@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [20.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -26,4 +26,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: sudo apt install -y xsltproc
     - run: npm ci --legacy-peer-deps
+    - run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
     - run: npm run git-ci
