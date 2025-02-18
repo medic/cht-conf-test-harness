@@ -90,8 +90,17 @@
 
     {
       "_id": "supervisor_area_id",
-      "name": "Supervisor",
+      "name": "Supervisor Area",
       "type": "district_hospital"
+    },
+
+    {
+      "_id": "supervisor_id",
+      "name": "Supervisor",
+      "type": "person",
+      "parent": {
+        "_id": "supervisor_area_id"
+      }
     },
 
     {

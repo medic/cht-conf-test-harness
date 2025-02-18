@@ -136,7 +136,7 @@ describe('getContactSummary', () => {
   });
 });
 
-describe('cht.v1 in contact summary ', () => {
+describe('using project-with-source', () => {
   const harness = new Harness({
     directory: path.join(__dirname, 'collateral', 'project-with-source'),
     harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
@@ -188,7 +188,7 @@ describe('cht.v1 in contact summary ', () => {
     expect(targetFromDocs).to.deep.eq(targets);
   });
 
-  it('#272 - reports of places children should not appear when child is also a place', async () => {
+  it('#272 - reports of a place with place-child not visible', async () => {
     harness.pushMockedDoc({
       type: 'data_record',
       form: 'abc',
@@ -200,6 +200,20 @@ describe('cht.v1 in contact summary ', () => {
 
     const contactSummary = await harness.getContactSummary('supervisor_area_id');
     expect(contactSummary.context.reportCount).to.eq(0);
+  });
+
+  it('#272 - reports of a place with person-child is visible', async () => {
+    harness.pushMockedDoc({
+      type: 'data_record',
+      form: 'abc',
+      reported_date: 1000,
+      fields: {
+        patient_uuid: 'supervisor_id',
+      }
+    });
+
+    const contactSummary = await harness.getContactSummary('supervisor_area_id');
+    expect(contactSummary.context.reportCount).to.eq(1);
   });
 });
 
