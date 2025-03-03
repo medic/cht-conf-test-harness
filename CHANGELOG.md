@@ -1,3 +1,10 @@
+## [5.0.3](https://github.com/medic/cht-conf-test-harness/compare/v5.0.2...v5.0.3) (2025-03-03)
+
+
+### Bug Fixes
+
+* **#272:** contact summary of a place should not receive reports of children which are places ([fd844a1](https://github.com/medic/cht-conf-test-harness/commit/fd844a1d706483efd33a232059eb8f5ce0476f84)), closes [#272](https://github.com/medic/cht-conf-test-harness/issues/272)
+
 ## [5.0.2](https://github.com/medic/cht-conf-test-harness/compare/v5.0.1...v5.0.2) (2024-11-12)
 
 
