@@ -9,6 +9,7 @@
   "globals": {
     "cht": true,
     "Utils": true,
-    "user": true
+    "user": true,
+    "reports": true
   }
 }

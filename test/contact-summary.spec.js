@@ -68,7 +68,10 @@ describe('getContactSummary', () => {
     expect(args[2][1]).to.deep.contain({
       _id: 'chw_area_id',
     });
-    expect(args[2][2]).to.be.undefined;
+    expect(args[2][2]).to.deep.contain({
+      _id: 'supervisor_area_id',
+    });
+    expect(args[2][3]).to.be.undefined;
   }));
 
   it('#240 - contact summary includes reports of the selected contacts children', withFunctionStub(async () => {
@@ -133,7 +136,7 @@ describe('getContactSummary', () => {
   });
 });
 
-describe('cht.v1 in contact summary ', () => {
+describe('using project-with-source', () => {
   const harness = new Harness({
     directory: path.join(__dirname, 'collateral', 'project-with-source'),
     harnessDataPath: path.join(__dirname, 'collateral', 'harness.defaults.json'),
@@ -183,6 +186,34 @@ describe('cht.v1 in contact summary ', () => {
 
     const targetFromDocs = contactSummary.context.chtApiAnalyticsTargets.map(t => t.targets[0]);
     expect(targetFromDocs).to.deep.eq(targets);
+  });
+
+  it('#272 - reports of a place with place-child not visible', async () => {
+    harness.pushMockedDoc({
+      type: 'data_record',
+      form: 'abc',
+      reported_date: 1000,
+      fields: {
+        place_id: 'chw_area_id',
+      }
+    });
+
+    const contactSummary = await harness.getContactSummary('supervisor_area_id');
+    expect(contactSummary.context.reportCount).to.eq(0);
+  });
+
+  it('#272 - reports of a place with person-child is visible', async () => {
+    harness.pushMockedDoc({
+      type: 'data_record',
+      form: 'abc',
+      reported_date: 1000,
+      fields: {
+        patient_uuid: 'supervisor_id',
+      }
+    });
+
+    const contactSummary = await harness.getContactSummary('supervisor_area_id');
+    expect(contactSummary.context.reportCount).to.eq(1);
   });
 });
 
