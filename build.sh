@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 declare -A cht_versions=(
   ["cht-core-4-11"]="4.11.0"
+  ["cht-core-4-18"]="003734438cc886ce6911eb161211f99874ada1a1"
 )
 
 exit_on_error() {

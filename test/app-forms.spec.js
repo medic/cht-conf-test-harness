@@ -368,4 +368,13 @@ describe('forms that have caused bugs', () => {
     const result = await harness.fillForm('bug_269_next', ['1', '1'], ['answer']);
     expect(result.errors).to.be.empty;
   });
+
+  it('#275 - form includes extension-libs', async () => {
+    const result = await harness.fillForm('with_extension_libs', [1, 3]);
+    expect(result.errors).to.be.empty;
+    expect(result.report.fields.page.first).to.equal('1');
+    expect(result.report.fields.page.second).to.equal('3');
+    // extension-libs are currently not operable in cht-form. Should return empty string with no error.
+    expect(result.report.fields.page.average).to.equal('');
+  });
 });
