@@ -27,6 +27,8 @@ class ChtScriptApiFactory {
         hasAnyPermission: (permissionsGroupList, userRoles = defaultUserRoles, chtPermissionsSettings = defaultChtPermissionSettings) => {
           return datasource.v1.hasAnyPermission(permissionsGroupList, userRoles, chtPermissionsSettings);
         },
+        // TODO Implement
+        getExtensionLib: () => null
       }
     };
 
