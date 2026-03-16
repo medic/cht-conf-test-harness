@@ -144,7 +144,17 @@ const fillPage = async (self, pageAnswer) => {
 
     const nextUnansweredQuestion = Array.from($questions).find(question => !answeredQuestions.has(question));
     answeredQuestions.add(nextUnansweredQuestion);
-    fillQuestion(nextUnansweredQuestion, answer);
+    const questionFillResult = fillQuestion(nextUnansweredQuestion, answer);
+
+    if (questionFillResult?.error) {
+      return {
+        errors: [{
+          type: 'validation',
+          question: nextUnansweredQuestion.innerText,
+          msg: questionFillResult.error,
+        }]
+      };
+    }
   }
 
   const allPagesSuccessful = await nextPage();
@@ -229,6 +239,7 @@ const fillQuestion = (question, answer) => {
     const answerArray = Array.isArray(answer) ? answer.map(answer => answer.toString()) : answer.split(',');
     const isNonBooleanString = str => !str || !['true', 'false'].includes(str.toLowerCase());
     const answerContainsSpecificValues = answerArray.some(isNonBooleanString);
+    let error;
 
     // [value != ""] is necessary because blank lines in `choices` table of xlsx can cause empty unrendered input
     const options = $question.find('input[value!=""]');
@@ -236,13 +247,22 @@ const fillQuestion = (question, answer) => {
     if (!answerContainsSpecificValues) {
       answerArray.forEach((val, index) => {
         const propValue = val === true || val.toLowerCase() === 'true' ? 'checked' : '';
+        if (!options[index]) {
+          error = `No choice at position ${index + 1} is visible.`;
+        }
         $(options[index]).prop('checked', propValue).trigger('change');
       });
     } else {
       options.prop('checked', '');
-      answerArray.forEach(val => $question.find(`input[value="${val}"]`).prop('checked', 'checked').trigger('change'));
+      answerArray.forEach(val => {
+        const checkbox = $question.find(`input[value="${val}"]`);
+        if (val && !checkbox.length) {
+          error = `No choice for input "${val}" is visible.`;
+        }
+        return checkbox.prop('checked', 'checked').trigger('change');
+      });
     }
-    break;
+    return { error };
   }
   case 'select-one':
     allInputs.val(answer).trigger('change');

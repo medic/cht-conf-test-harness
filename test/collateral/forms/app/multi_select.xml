@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>Multi Select</h:title>
+    <model>
+      <instance>
+        <multi_select id="multi_select" prefix="J1!multi_select!" delimiter="#" version="2026-03-16 14:00:22">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <source>user</source>
+            <source_id/>
+          </inputs>
+          <multi_choice>
+            <first/>
+            <second/>
+          </multi_choice>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </multi_select>
+      </instance>
+      <instance id="contact-summary"/>
+      <instance id="user-contact-summary"/>
+      <bind nodeset="/multi_select/inputs" relevant="./source = 'user'"/>
+      <bind nodeset="/multi_select/inputs/source" type="string"/>
+      <bind nodeset="/multi_select/inputs/source_id" type="string"/>
+      <bind nodeset="/multi_select/multi_choice/first" type="select" required="true()"/>
+      <bind nodeset="/multi_select/multi_choice/second" type="select"/>
+      <bind nodeset="/multi_select/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/multi_select/inputs">
+      <label>Inputs</label>
+    </group>
+    <group appearance="field-list" ref="/multi_select/multi_choice">
+      <label>Choices</label>
+      <select ref="/multi_select/multi_choice/first">
+        <label>Question One</label>
+        <item>
+          <label>A</label>
+          <value>a</value>
+        </item>
+        <item>
+          <label>B</label>
+          <value>b</value>
+        </item>
+      </select>
+      <select ref="/multi_select/multi_choice/second">
+        <label>Question Two</label>
+        <item>
+          <label>A</label>
+          <value>a</value>
+        </item>
+        <item>
+          <label>B</label>
+          <value>b</value>
+        </item>
+      </select>
+    </group>
+  </h:body>
+</h:html>

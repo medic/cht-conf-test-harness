@@ -368,4 +368,21 @@ describe('forms that have caused bugs', () => {
     const result = await harness.fillForm('bug_269_next', ['1', '1'], ['answer']);
     expect(result.errors).to.be.empty;
   });
+
+  it('handles empty answers for non-mandatory multi select questions', async () => {
+    const result = await harness.fillForm('multi_select', [['a', 'b'], []]);
+    expect(result.errors).to.be.empty;
+  });
+
+  it('multi select returns form error for N/A choices', async () => {
+    const result = await harness.fillForm('multi_select', [['a', 'b'], ['a', 'b', 'c']]);
+    expect(result.errors).to.not.be.empty;
+    expect(result.errors[0].msg).to.eq('No choice for input "c" is visible.');
+  });
+
+  it('return error for boolean N/A options', async () => {
+    const result = await harness.fillForm('multi_select', [['true', 'false', 'false'], ['a', 'b']]);
+    expect(result.errors).to.not.be.empty;
+    expect(result.errors[0].msg).to.eq('No choice at position 3 is visible.');
+  });
 });
