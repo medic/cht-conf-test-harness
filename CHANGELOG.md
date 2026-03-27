@@ -1,3 +1,10 @@
+## [5.0.4](https://github.com/medic/cht-conf-test-harness/compare/v5.0.3...v5.0.4) (2026-03-27)
+
+
+### Bug Fixes
+
+* form error for N/A choices ([#283](https://github.com/medic/cht-conf-test-harness/issues/283)) ([216aa55](https://github.com/medic/cht-conf-test-harness/commit/216aa553402eacbc239a948f18bbd41f699d5b78))
+
 ## [5.0.3](https://github.com/medic/cht-conf-test-harness/compare/v5.0.2...v5.0.3) (2025-03-03)
 
 
